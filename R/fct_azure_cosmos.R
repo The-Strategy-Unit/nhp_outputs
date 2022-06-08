@@ -5,7 +5,7 @@ cosmos_get_container <- function(container) {
     Sys.getenv("COSMOS_KEY")
   )
 
-  db <- AzureCosmosR::get_cosmos_database(endp, "nhp_results")
+  db <- AzureCosmosR::get_cosmos_database(endp, Sys.getenv("COSMOS_DB"))
 
   AzureCosmosR::get_cosmos_container(db, container)
 }
