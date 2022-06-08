@@ -7,6 +7,9 @@ app_server <- function(input, output, session) {
   data_cache <- if (Sys.getenv("GOLEM_CONFIG_ACTIVE") == "dev") {
     cachem::cache_mem()
   } else {
+    if (!dir.exists(".cache")) {
+      dir.create(".cache")
+    }
     # create a 200 MiB cache on disk
     cachem::cache_disk(dir = ".cache/data_cache", max_size = 200 * 1024^2)
 
