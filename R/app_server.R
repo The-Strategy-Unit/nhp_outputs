@@ -4,14 +4,14 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  data_cache <- if (Sys.getenv("GOLEM_CONFIG_ACTIVE") == "dev") {
-    cachem::cache_mem()
+  if (Sys.getenv("GOLEM_CONFIG_ACTIVE") == "dev") {
+    data_cache <- cachem::cache_mem()
   } else {
     if (!dir.exists(".cache")) {
       dir.create(".cache")
     }
     # create a 200 MiB cache on disk
-    cachem::cache_disk(dir = ".cache/data_cache", max_size = 200 * 1024^2)
+    data_cache <- cachem::cache_disk(dir = ".cache/data_cache", max_size = 200 * 1024^2)
 
     # in case we need to invalidate the cache on rsconnect quickly, we can increment the "CACHE_VERSION" env var
     cache_version <- ifelse(
