@@ -166,10 +166,10 @@ mod_params_upload_ui <- function(id) {
 #' params_upload Server Functions
 #'
 #' @noRd
-mod_params_upload_server <- function(id) {
+mod_params_upload_server <- function(id, user_allowed_datasets) {
   moduleServer(id, function(input, output, session) {
     shiny::observe({
-      shiny::updateSelectInput(session, "dataset", choices = c("synthetic", "RL4"))
+      shiny::updateSelectInput(session, "dataset", choices = user_allowed_datasets())
     })
 
     status <- shiny::reactiveVal("waiting")

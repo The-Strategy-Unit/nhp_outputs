@@ -28,13 +28,27 @@ app_server <- function(input, output, session) {
     }
   }
 
+  user_allowed_datasets <- reactive({
+    user <- session$user
+    # when locally developing
+    if (!is.null(user)) {
+      "synthetic"
+    } else {
+      # TODO: this should be grabbed from cosmos
+      c(
+        "synthetic",
+        "RL4", "RXC", "RN5", "RYJ", "RGP", "RNQ", "RD8", "RBZ", "RX1", "RHW", "RA9", "RGR", "RXN_RTX", "RH5_RBA"
+      )
+    }
+  })
+
   # this module returns a reactive which contains the data path
-  selected_model_run <- mod_result_selection_server("result_selection")
+  selected_model_run <- mod_result_selection_server("result_selection", user_allowed_datasets)
   selected_model_run_id <- reactive({
     selected_model_run()$id
   })
 
-  mod_params_upload_server("params_upload_ui")
+  mod_params_upload_server("params_upload_ui", user_allowed_datasets)
   mod_running_models_server("running_models")
 
   mod_principal_high_level_server("principal_high_level", selected_model_run_id, data_cache)

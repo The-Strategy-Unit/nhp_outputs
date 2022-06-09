@@ -19,10 +19,11 @@ mod_result_selection_ui <- function(id) {
 #' result_selection Server Functions
 #'
 #' @noRd
-mod_result_selection_server <- function(id) {
+mod_result_selection_server <- function(id, user_allowed_datasets) {
   moduleServer(id, function(input, output, session) {
     results_sets <- reactive({
       cosmos_get_result_sets() |>
+        dplyr::filter(.data$dataset %in% user_allowed_datasets()) |>
         dplyr::relocate(.data$id, .after = tidyselect::everything()) |>
         dplyr::group_nest(.data$dataset, .data$scenario, .key = "create_datetime") |>
         dplyr::mutate(
