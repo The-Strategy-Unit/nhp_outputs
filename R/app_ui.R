@@ -7,51 +7,85 @@ app_ui <- function(request) {
   header <- bs4Dash::dashboardHeader(title = "NHP Model Results")
 
   sidebar <- bs4Dash::dashboardSidebar(
+    fixed = TRUE,
+    skin = "light",
+    status = "primary",
     bs4Dash::sidebarMenu(
       id = "sidebarMenu",
-      bs4Dash::sidebarHeader("Run Model"),
       bs4Dash::menuItem(
-        text = "Upload Params",
-        tabName = "tab_up"
+        "Home",
+        tabName = "tab_home",
+        icon = shiny::icon("home")
       ),
       bs4Dash::menuItem(
-        text = "Running Models",
-        tabName = "tab_rm"
-      ),
-      bs4Dash::sidebarHeader("Model Run Selection"),
-      mod_result_selection_ui("result_selection"),
-      bs4Dash::sidebarHeader("Principal Projection"),
-      bs4Dash::menuItem(
-        text = "High Level",
-        tabName = "tab_phl"
-      ),
-      bs4Dash::menuItem(
-        text = "Detailed",
-        tabName = "tab_pd"
-      ),
-      bs4Dash::menuItem(
-        text = "Change Factors",
-        tabName = "tab_pcf"
-      ),
-      bs4Dash::sidebarHeader("Model Results"),
-      bs4Dash::menuItem(
-        text = "Core Activity",
-        tabName = "tab_mc"
+        "Principal Projection",
+        startExpanded = FALSE,
+        bs4Dash::menuSubItem(
+          text = "High Level",
+          tabName = "tab_phl"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Detailed",
+          tabName = "tab_pd"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Change Factors",
+          tabName = "tab_pcf"
+        )
       ),
       bs4Dash::menuItem(
-        text = "Results Distribution",
-        tabName = "tab_md"
+        "Model Results",
+        startExpanded = FALSE,
+        bs4Dash::menuSubItem(
+          text = "Core Activity",
+          tabName = "tab_mc"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Results Distribution",
+          tabName = "tab_md"
+        )
       ),
-      bs4Dash::sidebarHeader("Capacity Conversion"),
       bs4Dash::menuItem(
-        text = "Beds",
-        tabName = "tab_cb"
+        "Capacity Conversion",
+        startExpanded = FALSE,
+        bs4Dash::menuSubItem(
+          text = "Beds",
+          tabName = "tab_cb"
+        )
+      ),
+      tags$hr(),
+      bs4Dash::menuItem(
+        "Run Model",
+        startExpanded = FALSE,
+        bs4Dash::menuSubItem(
+          text = "Upload Params",
+          tabName = "tab_up",
+          icon = shiny::icon("sliders-h")
+        ),
+        bs4Dash::menuSubItem(
+          text = "Running Models",
+          tabName = "tab_rm",
+          icon = shiny::icon("running")
+        )
       )
     )
   )
 
   body <- bs4Dash::dashboardBody(
     bs4Dash::tabItems(
+      bs4Dash::tabItem(
+        tabName = "tab_home",
+        fluidRow(
+          col_6(
+            h1("NHP Model")
+            # "About Text should go here"
+          ),
+          bs4Dash::box(
+            title = "Results Selection",
+            mod_result_selection_ui("result_selection")
+          )
+        )
+      ),
       bs4Dash::tabItem(
         tabName = "tab_up",
         mod_params_upload_ui("params_upload_ui")
