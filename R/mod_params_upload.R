@@ -346,6 +346,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       shiny::updateTextInput(session, "aae_am_a_hi_a2", value = p[["adult_walk-in"]]$interval[[2]])
     })
 
+    running_jobs <- rlang::new_environment()
     shiny::observeEvent(input$submit_model_run, {
       params <- shiny::req(params())
 
@@ -355,8 +356,29 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       shiny::updateActionButton(session, "submit_model_run", "Submitted...")
 
       job_name <- batch_add_job(params)
+      running_jobs[[job_name]] <- job_name
 
       status(paste("Submitted to batch:", job_name, "(Goto running models tab to view progress)"))
+    })
+
+    job_check_timer <- shiny::reactiveTimer(5000)
+    observeEvent(job_check_timer(), {
+      for (job_id in ls(running_jobs)) {
+        status <- batch_job_status(job_id)
+
+        cat(Sys.time(), "job_id:", job_id, "status:", status, "\n")
+
+        if (status == "success") {
+          bs4Dash::toast("Job Success", paste(job_id, "completed successfully"))
+        } else if (status == "failure") {
+          bs4Dash::toast("Job Failure", paste(job_id, "failed"))
+        }
+
+        if (status != "running") {
+          batch_delete_job(job_id)
+          rm(list = job_id, envir = running_jobs)
+        }
+      }
     })
 
     output$download_params <- shiny::downloadHandler(

@@ -94,6 +94,7 @@ batch_get_tasks <- function(job_id) {
 
   df <- httr::content(tasks_req) |>
     purrr::pluck("value") |>
+    purrr::map(purrr::discard, ~ length(.x) == 0) |>
     purrr::map_dfr(as.data.frame) |>
     tibble::as_tibble()
 
@@ -107,12 +108,12 @@ batch_get_tasks <- function(job_id) {
       .data$displayName,
       .data$state,
       .data$creationTime,
-      tidyselect::matches("executionInfo\\.(start|end|result|exitCode)Time")
+      tidyselect::matches("executionInfo\\.((start|end)Time)|result|exitCode)")
     ) |>
     dplyr::rename_with(
       stringr::str_remove,
       "^executionInfo\\.",
-      .cols = tidyselect::starts_with("executionInfo\\.")
+      .cols = tidyselect::starts_with("executionInfo.")
     ) |>
     dplyr::mutate(
       dplyr::across(
@@ -121,6 +122,32 @@ batch_get_tasks <- function(job_id) {
       )
     ) |>
     dplyr::arrange(.data$id)
+}
+
+batch_delete_job <- function(job_id) {
+  t <- batch_token_fn(BATCH_EP)
+  job_req <- httr::DELETE(
+    Sys.getenv("BATCH_URL"),
+    path = c("jobs", job_id),
+    query = list("api-version" = "2022-01-01.15.0"),
+    httr::add_headers(
+      "Authorization" = paste("Bearer", AzureAuth::extract_jwt(t))
+    )
+  )
+}
+
+batch_job_status <- function(job_id) {
+  tasks <- batch_get_tasks(job_id)
+
+  if (!"result" %in% colnames(tasks)) {
+    "running"
+  } else if (any(tasks$result == "failure", na.rm = TRUE)) {
+    "failure"
+  } else if (all(!is.na(tasks$result)) && all(tasks$result == "success")) {
+    "success"
+  } else {
+    "running"
+  }
 }
 
 batch_add_job <- function(params) {
@@ -137,7 +164,7 @@ batch_add_job <- function(params) {
   params[["create_datetime"]] <- cdt
 
   # create the name of the job and the filename
-  job_name <- glue::glue("{params[['input_data']]}_{params[['name']]}_{cdt}")
+  job_name <- glue::glue("{params[['input_data']]}__{params[['name']]}__{cdt}")
   filename <- glue::glue("{job_name}.json")
 
   # upload the params to blob storage
