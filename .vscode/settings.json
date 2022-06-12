@@ -1,0 +1,8 @@
+{
+  "triggerTaskOnSave.tasks": {
+    "R: Test": [
+      "R/*.R",
+      "tests/**/*.R"
+    ]
+  }
+}
