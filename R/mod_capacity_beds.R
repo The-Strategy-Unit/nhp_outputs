@@ -120,8 +120,3 @@ mod_capacity_beds_server <- function(id, selected_model_run, data_cache) {
     })
   })
 }
-
-## To be copied in the UI
-
-## To be copied in the server
-# mod_capacity_beds_server("capacity_beds_1")
