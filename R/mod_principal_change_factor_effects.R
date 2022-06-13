@@ -21,7 +21,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
     ),
     shinyjs::hidden(
       shiny::tags$div(
-        id = ns("individial_change_factors"),
+        id = ns("individual_change_factors"),
         shiny::h2("Individual Change Factors"),
         shiny::selectInput(ns("sort_type"), "Sort By", c("alphabetical", "descending value")),
         shinycssloaders::withSpinner(
@@ -35,13 +35,70 @@ mod_principal_change_factor_effects_ui <- function(id) {
   )
 }
 
+mod_principal_change_factor_effects_summarised <- function(data, measure, include_baseline) {
+  cfs <- data |>
+    dplyr::filter(
+      .data$measure == measure,
+      include_baseline | .data$change_factor != "baseline"
+    ) |>
+    dplyr::group_by(.data$change_factor) |>
+    dplyr::summarise(dplyr::across(.data$value, sum, na.rm = TRUE)) |>
+    dplyr::mutate(cuvalue = cumsum(.data$value)) |>
+    dplyr::mutate(
+      hidden = tidyr::replace_na(lag(.data$cuvalue) + pmin(.data$value, 0), 0),
+      colour = case_when(
+        .data$change_factor == "Baseline" ~ "#686f73",
+        .data$value >= 0 ~ "#f9bf07",
+        TRUE ~ "#2c2825"
+      ),
+      across(.data$value, abs)
+    ) |>
+    dplyr::select(-.data$cuvalue)
+
+  levels <- unique(c("baseline", levels(forcats::fct_drop(cfs$change_factor)), "Estimate"))
+
+  cfs |>
+    dplyr::bind_rows(
+      dplyr::tibble(
+        change_factor = "Estimate",
+        value = sum(cfs$value),
+        hidden = 0,
+        colour = "#ec6555"
+      )
+    ) |>
+    tidyr::pivot_longer(c(.data$value, .data$hidden)) |>
+    dplyr::mutate(
+      across(.data$colour, ~ ifelse(.data$name == "hidden", NA, .x)),
+      across(.data$name, forcats::fct_relevel, "hidden", "value"),
+      across(
+        .data$change_factor,
+        forcats::fct_relevel,
+        rev(levels)
+      )
+    )
+}
+
+mod_principal_change_factor_effects_cf_plot <- function(data) {
+  ggplot2::ggplot(data, aes(.data$value, .data$change_factor)) +
+    ggplot2::geom_col(aes(fill = .data$colour), show.legend = FALSE, position = "stack") +
+    ggplot2::scale_fill_identity() +
+    ggplot2::scale_x_continuous(labels = scales::comma)
+}
+
+mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour) {
+  data |>
+    dplyr::filter(.data$change_factor == .env$change_factor) |>
+    ggplot2::ggplot(aes(.data$value, .data$strategy)) +
+    ggplot2::geom_col(fill = "#f9bf07") +
+    ggplot2::scale_x_continuous(labels = scales::comma) +
+    labs(x = "", y = "")
+}
+
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
 mod_principal_change_factor_effects_server <- function(id, selected_model_run_id, data_cache) {
   moduleServer(id, function(input, output, session) {
-    ns <- session$ns
-
     observe({
       activity_types <- get_activity_type_pod_measure_options() |>
         dplyr::distinct(
@@ -84,63 +141,6 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       shiny::updateSelectInput(session, "measure", choices = measures)
     })
 
-    change_factors_summarised <- reactive({
-      m <- req(input$measure)
-
-      principal_change_factors() |>
-        dplyr::filter(
-          .data$measure == m,
-          input$include_baseline | .data$change_factor != "baseline"
-        ) |>
-        dplyr::group_by(.data$change_factor) |>
-        dplyr::summarise(dplyr::across(.data$value, sum, na.rm = TRUE)) |>
-        dplyr::mutate(cuvalue = cumsum(.data$value))
-    })
-
-    output$change_factors <- plotly::renderPlotly({
-      d <- change_factors_summarised() |>
-        dplyr::mutate(
-          hidden = tidyr::replace_na(lag(.data$cuvalue) + pmin(.data$value, 0), 0),
-          colour = case_when(
-            .data$change_factor == "Baseline" ~ "#686f73",
-            .data$value >= 0 ~ "#f9bf07",
-            TRUE ~ "#2c2825"
-          ),
-          across(.data$value, abs)
-        ) |>
-        dplyr::select(-.data$cuvalue)
-
-      levels <- c(levels(forcats::fct_drop(d$change_factor)), "Estimate")
-
-      d <- d |>
-        dplyr::bind_rows(
-          dplyr::tibble(
-            change_factor = "Estimate",
-            value = sum(change_factors_summarised()$value),
-            hidden = 0,
-            colour = "#ec6555"
-          )
-        ) |>
-        tidyr::pivot_longer(c(.data$value, .data$hidden)) |>
-        dplyr::mutate(
-          across(.data$colour, ~ ifelse(.data$name == "hidden", NA, .x)),
-          across(.data$name, forcats::fct_relevel, "hidden", "value"),
-          across(
-            .data$change_factor,
-            forcats::fct_relevel,
-            rev(levels)
-          )
-        )
-
-      p <- ggplot2::ggplot(d, aes(.data$value, .data$change_factor)) +
-        ggplot2::geom_col(aes(fill = .data$colour), show.legend = FALSE, position = "stack") +
-        ggplot2::scale_fill_identity() +
-        ggplot2::scale_x_continuous(labels = scales::comma)
-
-      plotly::ggplotly(p) |>
-        plotly::layout(showlegend = FALSE)
-    })
-
     individual_change_factors <- reactive({
       m <- req(input$measure)
 
@@ -161,25 +161,38 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
     observeEvent(individual_change_factors(), {
       d <- individual_change_factors()
 
-      shinyjs::toggle("individial_change_factors", condition = nrow(d) > 0)
+      shinyjs::toggle("individual_change_factors", condition = nrow(d) > 0)
+    })
+
+    output$change_factors <- plotly::renderPlotly({
+      measure <- req(input$measure)
+
+      p <- principal_change_factors() |>
+        mod_principal_change_factor_effects_summarised(measure, input$include_baseline) |>
+        mod_principal_change_factor_effects_cf_plot()
+
+      plotly::ggplotly(p) |>
+        plotly::layout(showlegend = FALSE)
     })
 
     output$admission_avoidance <- plotly::renderPlotly({
-      individual_change_factors() |>
-        dplyr::filter(.data$change_factor == "admission_avoidance") |>
-        ggplot2::ggplot(aes(.data$value, .data$strategy)) +
-        ggplot2::geom_col(fill = "#f9bf07") +
-        ggplot2::scale_x_continuous(labels = scales::comma) +
-        labs(x = "", y = "")
+      mod_principal_change_factor_effects_ind_plot(
+        individual_change_factors(),
+        "admission_avoidance",
+        "#f9bf07"
+      ) |>
+        plotly::ggplotly() |>
+        plotly::layout(showlegend = FALSE)
     })
 
     output$los_reduction <- plotly::renderPlotly({
-      individual_change_factors() |>
-        dplyr::filter(.data$change_factor == "los_reduction") |>
-        ggplot2::ggplot(aes(.data$value, .data$strategy)) +
-        ggplot2::geom_col(fill = "#ec6555") +
-        ggplot2::scale_x_continuous(labels = scales::comma) +
-        labs(x = "", y = "")
+      mod_principal_change_factor_effects_ind_plot(
+        individual_change_factors(),
+        "los_reduction",
+        "#ec6555"
+      ) |>
+        plotly::ggplotly() |>
+        plotly::layout(showlegend = FALSE)
     })
   })
 }
