@@ -15,6 +15,33 @@ mod_model_core_activity_ui <- function(id) {
     )
   )
 }
+mod_model_core_activity_server_table <- function(data) {
+  data |>
+    dplyr::select(
+      .data$activity_type_name,
+      .data$pod_name,
+      .data$measure,
+      .data$baseline,
+      .data$median,
+      .data$lwr_ci,
+      .data$upr_ci
+    ) |>
+    gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
+    gt::fmt_integer(c("baseline", "median", "lwr_ci", "upr_ci")) |>
+    gt::cols_label(
+      "measure" = "Measure",
+      "baseline" = "Baseline",
+      "median" = "Central Estimate",
+      "lwr_ci" = "Lower",
+      "upr_ci" = "Upper"
+    ) |>
+    gt::tab_spanner(
+      "90% Confidence Interval",
+      c("lwr_ci", "upr_ci")
+    ) |>
+    gt_theme()
+
+}
 
 #' model_core_activity Server Functions
 #'
@@ -33,29 +60,7 @@ mod_model_core_activity_server <- function(id, selected_model_run_id, data_cache
 
     output$core_activity <- gt::render_gt({
       summarised_data() |>
-        dplyr::select(
-          .data$activity_type_name,
-          .data$pod_name,
-          .data$measure,
-          .data$baseline,
-          .data$median,
-          .data$lwr_ci,
-          .data$upr_ci
-        ) |>
-        gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
-        gt::fmt_integer(c("baseline", "median", "lwr_ci", "upr_ci")) |>
-        gt::cols_label(
-          "measure" = "Measure",
-          "baseline" = "Baseline",
-          "median" = "Central Estimate",
-          "lwr_ci" = "Lower",
-          "upr_ci" = "Upper"
-        ) |>
-        gt::tab_spanner(
-          "90% Confidence Interval",
-          c("lwr_ci", "upr_ci")
-        ) |>
-        gt_theme()
+        mod_model_core_activity_server_table()
     })
   })
 }
