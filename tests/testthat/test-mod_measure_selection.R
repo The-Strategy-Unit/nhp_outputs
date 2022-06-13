@@ -6,28 +6,7 @@ library(mockery)
 
 atpmo_expected <- tibble::tribble(
   ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance",
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "walk-in",
-  "aae", "A&E", "aae_type-02", "Type 2 Department", "ambulance",
-  "aae", "A&E", "aae_type-02", "Type 2 Department", "walk-in",
-  "aae", "A&E", "aae_type-03", "Type 3 Department", "ambulance",
-  "aae", "A&E", "aae_type-03", "Type 3 Department", "walk-in",
-  "aae", "A&E", "aae_type-04", "Type 4 Department", "ambulance",
-  "aae", "A&E", "aae_type-04", "Type 4 Department", "walk-in",
-  "ip", "Inpatients", "ip_elective_admission", "Elective Admission", "admissions",
-  "ip", "Inpatients", "ip_elective_admission", "Elective Admission", "beddays",
-  "ip", "Inpatients", "ip_elective_daycase", "Daycase Admission", "admissions",
-  "ip", "Inpatients", "ip_elective_daycase", "Daycase Admission", "beddays",
-  "ip", "Inpatients", "ip_non-elective_admission", "Non-Elective Admission", "admissions",
-  "ip", "Inpatients", "ip_non-elective_admission", "Non-Elective Admission", "beddays",
-  "ip", "Inpatients", "ip_non-elective_birth-episode", "Birth Episode", "admissions",
-  "ip", "Inpatients", "ip_non-elective_birth-episode", "Birth Episode", "beddays",
-  "op", "Outpatients", "op_first", "First Outpatient Attendance", "attendances",
-  "op", "Outpatients", "op_first", "First Outpatient Attendance", "tele_attendances",
-  "op", "Outpatients", "op_follow-up", "Follow-up Outpatient Attendance", "attendances",
-  "op", "Outpatients", "op_follow-up", "Follow-up Outpatient Attendance", "tele_attendances",
-  "op", "Outpatients", "op_procedure", "Outpatient Procedure", "attendances",
-  "op", "Outpatients", "op_procedure", "Outpatient Procedure", "procedures"
+  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
 )
 
 set_names <- function(x) {
