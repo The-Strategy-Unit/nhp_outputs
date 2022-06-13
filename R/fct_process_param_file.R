@@ -5,7 +5,10 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-process_param_file <- function(path, input_data, demographics_file, scenario_name) {
+process_param_file <- function(path,
+                               input_data = "synthetic",
+                               demographics_file = "demographic_factors.csv",
+                               scenario_name = "test") {
   data <- c(
     "run_settings",
     "dsi_wl",
