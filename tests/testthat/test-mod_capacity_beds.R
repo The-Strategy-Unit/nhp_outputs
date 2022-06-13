@@ -2,6 +2,8 @@ library(mockery)
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # setup
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 specialties_expected <- tibble::tribble(
   ~type, ~code, ~main_specialty, ~treatment_function, ~description,
   "Surgical", "100", TRUE, TRUE, "General Surgery",
@@ -34,6 +36,7 @@ new_available_beds_expected <- tibble::tribble(
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
   expect_snapshot(mod_measure_selection_ui("id"))
@@ -41,6 +44,8 @@ test_that("ui is created correctly", {
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # helper functions
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 test_that("load_specialties loads the specialties csv", {
   m <- mock("specialties")
 
@@ -105,6 +110,7 @@ test_that("get_available_plot returns a ggplot object", {
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # server
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("it loads the specialties csv", {
   stub(mod_capacity_beds_server, "mod_capacity_beds_load_specialties", specialties_expected)
