@@ -11,16 +11,7 @@ mod_params_upload_ui <- function(id) {
   ns <- shiny::NS(id)
 
   card_file_selection <- shiny::tagList(
-    shiny::selectInput(ns("dataset"), "Dataset", choices = NULL),
-    shiny::selectInput(
-      ns("demographics_file"),
-      "Demographics File",
-      choices = c("default" = "demographic_factors.csv")
-    ),
-    shiny::textInput(ns("scenario_name"), "Scenario Name"),
-    shinyjs::disabled(
-      shiny::fileInput(ns("params_upload"), "Upload Params Excel File", accept = ".xlsx")
-    ),
+    shiny::fileInput(ns("params_upload"), "Upload Params Excel File", accept = ".xlsx"),
     shiny::textOutput(ns("status"))
   )
 
@@ -29,8 +20,17 @@ mod_params_upload_ui <- function(id) {
     shiny::textInput(ns("end_year"), "End Year"),
     shiny::textInput(ns("model_iterations"), "Model Iterations"),
     shiny::textInput(ns("user"), "Submitting User"),
-    shiny::actionButton(ns("submit_model_run"), "Submit Model Run"),
-    shiny::downloadButton(ns("download_params"), "Download params.json")
+    shiny::selectInput(ns("dataset"), "Dataset", choices = NULL),
+    shiny::selectInput(
+      ns("demographics_file"),
+      "Demographics File",
+      choices = c("default" = "demographic_factors.csv")
+    ),
+    shiny::textInput(ns("scenario_name"), "Scenario Name"),
+    shinyjs::disabled(
+      shiny::actionButton(ns("submit_model_run"), "Submit Model Run"),
+      shiny::downloadButton(ns("download_params"), "Download params.json")
+    )
   )
 
   tab_demographics <- shiny::tagList(
@@ -178,43 +178,35 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       valid <- c("dataset", "demographics_file", "scenario_name") |>
         purrr::every(~ shiny::isTruthy(input[[.x]]))
 
-      shinyjs::toggleState("params_upload", valid)
       shinyjs::toggleState("submit_model_run", valid)
       shinyjs::toggleState("download_params", valid)
-      shinyjs::toggleState("ip_am_a", valid)
-      shinyjs::toggleState("op_am_a", valid)
-      shinyjs::toggleState("aae_am_a", valid)
-      shinyjs::toggleState("ip_am_tc_bads", valid)
-      shinyjs::toggleState("op_am_tc_tele", valid)
-      shinyjs::toggleState("ip_am_e", valid)
-
-      shiny::updateActionButton(session, "submit_model_run", "Submit Model Run")
     })
 
     params <- shiny::reactive({
-      dataset <- input$dataset
-      demographics_file <- input$demographics_file
-      scenario_name <- input$scenario_name
-
       file <- shiny::req(input$params_upload)
       ext <- tools::file_ext(file$datapath)
       shiny::validate(
-        shiny::need(ext == "xlsx", "Please upload an xlsx file"),
-        shiny::need(shiny::isTruthy(dataset), "Select a dataset"),
-        shiny::need(shiny::isTruthy(demographics_file), "Select a demographics file"),
-        shiny::need(shiny::isTruthy(scenario_name), "Enter a scenario name")
+        shiny::need(ext == "xlsx", "Please upload an xlsx file")
       )
 
       status("processing file...")
       on.exit({
         status("file loaded, displaying loaded params")
       })
-      process_param_file(file$datapath, dataset, demographics_file, scenario_name)
+      process_param_file(file$datapath)
     }) |>
       shiny::bindEvent(input$params_upload) |>
       shiny::debounce(1000)
 
     shiny::observeEvent(params(), {
+      # enable some of the inputs
+      c(
+        "dataset",
+        "demographics_file",
+        "scenario_name"
+      ) |>
+        purrr::walk(shinyjs::enable)
+
       p <- params()
 
       # run settings
@@ -366,8 +358,6 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       for (job_id in ls(running_jobs)) {
         status <- batch_job_status(job_id)
 
-        cat(Sys.time(), "job_id:", job_id, "status:", status, "\n")
-
         if (status == "success") {
           bs4Dash::toast("Job Success", paste(job_id, "completed successfully"))
         } else if (status == "failure") {
@@ -383,12 +373,20 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
     output$download_params <- shiny::downloadHandler(
       filename = function() {
-        params <- shiny::req(params())
-        c(ds, sc) %<-% params[c("input_data", "name")]
+        shiny::req(params())
+
+        ds <- shiny::req(input$dataset)
+        sc <- shiny::req(input$scenario_name)
+
         glue::glue("{ds}_{sc}.json")
       },
       content = function(file) {
         params <- shiny::req(params())
+
+        params$input_data <- shiny::req(input$dataset)
+        params$demographic_factors$file <- shiny::req(input$demographics_file)
+        params$name <- shiny::req(input$scenario_name)
+
         jsonlite::write_json(params, file, pretty = TRUE, auto_unbox = TRUE)
       }
     )
