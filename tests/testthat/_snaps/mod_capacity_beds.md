@@ -1,32 +1,28 @@
 # ui is created correctly
 
     Code
-      mod_measure_selection_ui("id")
+      mod_capacity_beds_ui("id")
     Output
-      <div class="col-sm-4">
-        <div class="form-group shiny-input-container">
-          <label class="control-label" id="id-activity_type-label" for="id-activity_type">Activity Type</label>
-          <div>
-            <select id="id-activity_type"></select>
-            <script type="application/json" data-for="id-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+      <div class="form-group shiny-input-container">
+        <label class="control-label" id="id-occupancy_rate-label" for="id-occupancy_rate">Occupancy Rate (%)</label>
+        <input id="id-occupancy_rate" type="number" class="form-control" value="85" min="0" max="100" step="1"/>
+      </div>
+      <div class="row">
+        <div class="col-sm-9">
+          <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+            <div class="load-container shiny-spinner-hidden load1">
+              <div id="spinner-9397a5a127e1dca9743f22551f78e328" class="loader">Loading...</div>
+            </div>
+            <div id="id-available_plot" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
           </div>
         </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="form-group shiny-input-container">
-          <label class="control-label" id="id-pod-label" for="id-pod">POD</label>
-          <div>
-            <select id="id-pod"></select>
-            <script type="application/json" data-for="id-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="form-group shiny-input-container">
-          <label class="control-label" id="id-measure-label" for="id-measure">Measure</label>
-          <div>
-            <select id="id-measure"></select>
-            <script type="application/json" data-for="id-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+        <div class="col-sm-3">
+          <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+            <div class="load-container shiny-spinner-hidden load1">
+              <div id="spinner-4e764b7ceb9c8476aaba191ca44212aa" class="loader">Loading...</div>
+            </div>
+            <div style="height:400px" class="shiny-spinner-placeholder"></div>
+            <div id="id-available_table" class="shiny-html-output"></div>
           </div>
         </div>
       </div>

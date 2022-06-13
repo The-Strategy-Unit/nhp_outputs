@@ -39,7 +39,7 @@ new_available_beds_expected <- tibble::tribble(
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
-  expect_snapshot(mod_measure_selection_ui("id"))
+  expect_snapshot(mod_capacity_beds_ui("id"))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
