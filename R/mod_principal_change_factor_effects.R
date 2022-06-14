@@ -36,11 +36,21 @@ mod_principal_change_factor_effects_ui <- function(id) {
 }
 
 mod_principal_change_factor_effects_summarised <- function(data, measure, include_baseline) {
-  cfs <- data |>
+  data <- data |>
     dplyr::filter(
-      .data$measure == measure,
+      .data$measure == .env$measure,
       include_baseline | .data$change_factor != "baseline"
     ) |>
+    tidyr::drop_na(.data$value) |>
+    dplyr::mutate(
+      dplyr::across(
+        .data$change_factor,
+        forcats::fct_reorder,
+        -.data$value
+      )
+    )
+
+  cfs <- data |>
     dplyr::group_by(.data$change_factor) |>
     dplyr::summarise(dplyr::across(.data$value, sum, na.rm = TRUE)) |>
     dplyr::mutate(cuvalue = cumsum(.data$value)) |>
@@ -56,6 +66,9 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     dplyr::select(-.data$cuvalue)
 
   levels <- unique(c("baseline", levels(forcats::fct_drop(cfs$change_factor)), "Estimate"))
+  if (!include_baseline) {
+    levels <- levels[-1]
+  }
 
   cfs |>
     dplyr::bind_rows(

@@ -54,22 +54,22 @@ change_factors_expected <- list(
 
 change_factors_summarised_expected <- tibble::tribble(
   ~change_factor, ~colour, ~name, ~value,
-  "baseline", "#f9bf07", "value", 300000,
+  "baseline", "#f9bf07", "value", 100000,
   "baseline", NA, "hidden", 0,
-  "population_factors", "#f9bf07", "value", 45000,
-  "population_factors", NA, "hidden", 300000,
-  "health_status_adjustment", "#2c2825", "value", 3000,
-  "health_status_adjustment", NA, "hidden", 342000,
-  "admission_avoidance", "#2c2825", "value", 1950,
-  "admission_avoidance", NA, "hidden", 340050,
-  "Estimate", "#ec6555", "value", 340050,
+  "population_factors", "#f9bf07", "value", 15000,
+  "population_factors", NA, "hidden", 100000,
+  "admission_avoidance", "#2c2825", "value", 650,
+  "admission_avoidance", NA, "hidden", 114350,
+  "health_status_adjustment", "#2c2825", "value", 1000,
+  "health_status_adjustment", NA, "hidden", 113350,
+  "Estimate", "#ec6555", "value", 113350,
   "Estimate", NA, "hidden", 0
 ) |>
   mutate(
     across(
       change_factor,
       forcats::fct_relevel,
-      "Estimate", "admission_avoidance", "health_status_adjustment", "population_factors", "baseline"
+      "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors", "baseline"
     ),
     across(
       name, forcats::fct_relevel, c("hidden", "value")
@@ -89,12 +89,10 @@ test_that("ui is created correctly", {
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("mod_principal_change_factor_effects_summarised returns correct data", {
-  actual <- change_factors_expected$ip
-
-  expect_equal(
-    mod_principal_change_factor_effects_summarised(actual, "admissions", TRUE),
-    change_factors_summarised_expected
+  actual <- mod_principal_change_factor_effects_summarised(
+    change_factors_expected$ip, "admissions", TRUE
   )
+  expect_equal(actual, change_factors_summarised_expected)
 })
 
 test_that("mod_principal_change_factor_effects_cf_plot returns a ggplot", {
