@@ -62,7 +62,7 @@ change_factors_summarised_expected <- tibble::tribble(
   "health_status_adjustment", NA, "hidden", 342000,
   "admission_avoidance", "#2c2825", "value", 1950,
   "admission_avoidance", NA, "hidden", 340050,
-  "Estimate", "#ec6555", "value", 349950,
+  "Estimate", "#ec6555", "value", 340050,
   "Estimate", NA, "hidden", 0
 ) |>
   mutate(

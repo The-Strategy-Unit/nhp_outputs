@@ -61,7 +61,7 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     dplyr::bind_rows(
       dplyr::tibble(
         change_factor = "Estimate",
-        value = sum(cfs$value),
+        value = sum(data$value),
         hidden = 0,
         colour = "#ec6555"
       )
