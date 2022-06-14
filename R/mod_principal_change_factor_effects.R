@@ -83,11 +83,7 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     dplyr::mutate(
       across(.data$colour, ~ ifelse(.data$name == "hidden", NA, .x)),
       across(.data$name, forcats::fct_relevel, "hidden", "value"),
-      across(
-        .data$change_factor,
-        forcats::fct_relevel,
-        rev(levels)
-      )
+      across(.data$change_factor, factor, rev(levels))
     )
 }
 
