@@ -13,7 +13,7 @@ cosmos_get_container <- function(container) {
 cosmos_get_result_sets <- function() {
   container <- cosmos_get_container("results")
 
-  qry <- "SELECT c.id, c.dataset, c.scenario, c.create_datetime FROM c"
+  qry <- "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c"
   AzureCosmosR::query_documents(container, qry) |>
     dplyr::bind_rows() |>
     dplyr::arrange(dplyr::across(tidyselect::everything()))

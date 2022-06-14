@@ -24,7 +24,6 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
     results_sets <- reactive({
       cosmos_get_result_sets() |>
         dplyr::filter(.data$dataset %in% user_allowed_datasets()) |>
-        dplyr::relocate(.data$id, .after = tidyselect::everything()) |>
         dplyr::group_nest(.data$dataset, .data$scenario, .key = "create_datetime") |>
         dplyr::mutate(
           dplyr::across(.data$create_datetime, purrr::map, tibble::deframe)
