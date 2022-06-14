@@ -1,0 +1,9 @@
+R/golem*.R
+R/app_config.R
+R/run_app.R
+app.R
+
+# skip these as they won't be part of this app for long
+R/mod_params_upload.R
+R/fct_process_param_file.R
+R/mod_running_models.R
