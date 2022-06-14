@@ -10,6 +10,18 @@ cosmos_get_container <- function(container) {
   AzureCosmosR::get_cosmos_container(db, container)
 }
 
+cosmos_get_user_allowed_datasets <- function(user) {
+  # TODO: this should be grabbed from cosmos
+  if (is.null(user)) {
+    "synthetic"
+  } else {
+    c(
+      "synthetic",
+      "RL4", "RXC", "RN5", "RYJ", "RGP", "RNQ", "RD8", "RBZ", "RX1", "RHW", "RA9", "RGR", "RXN_RTX", "RH5_RBA"
+    )
+  }
+}
+
 cosmos_get_result_sets <- function() {
   container <- cosmos_get_container("results")
 
