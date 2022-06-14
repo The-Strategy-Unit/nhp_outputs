@@ -37,6 +37,8 @@ test_that("ui is created correctly", {
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("table returns a gt", {
+  set.seed(1)
+
   data <- aggregations_age_group_expected |>
     dplyr::transmute(
       sex,
