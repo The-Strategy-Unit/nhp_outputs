@@ -4,42 +4,10 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  if (Sys.getenv("GOLEM_CONFIG_ACTIVE") == "dev") {
-    data_cache <- cachem::cache_mem()
-  } else {
-    if (!dir.exists(".cache")) {
-      dir.create(".cache")
-    }
-    # create a 200 MiB cache on disk
-    data_cache <- cachem::cache_disk(dir = ".cache/data_cache", max_size = 200 * 1024^2)
-
-    # in case we need to invalidate the cache on rsconnect quickly, we can increment the "CACHE_VERSION" env var
-    cache_version <- ifelse(
-      file.exists(".cache/cache_version.txt"),
-      as.numeric(readLines(".cache/cache_version.txt")),
-      -1
-    )
-
-    if (Sys.getenv("CACHE_VERSION", 0) > cache_version) {
-      cat("Invalidating cache\n")
-      data_cache$reset()
-      cache_version <- Sys.getenv("CACHE_VERSION", 0)
-      writeLines(as.character(cache_version), ".cache/cache_version.txt")
-    }
-  }
+  data_cache <- get_data_cache()
 
   user_allowed_datasets <- reactive({
-    user <- session$user
-    # when locally developing
-    if (!is.null(user)) {
-      "synthetic"
-    } else {
-      # TODO: this should be grabbed from cosmos
-      c(
-        "synthetic",
-        "RL4", "RXC", "RN5", "RYJ", "RGP", "RNQ", "RD8", "RBZ", "RX1", "RHW", "RA9", "RGR", "RXN_RTX", "RH5_RBA"
-      )
-    }
+    cosmos_get_user_allowed_datasets(session$user)
   })
 
   # this module returns a reactive which contains the data path
