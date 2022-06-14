@@ -52,7 +52,7 @@ change_factors_expected <- list(
     )
   ))
 
-change_factors_summarised_expected <- tibble::tribble(
+change_factors_summarised_expected_inc_baseline <- tibble::tribble(
   ~change_factor, ~colour, ~name, ~value,
   "baseline", "#f9bf07", "value", 100000,
   "baseline", NA, "hidden", 0,
@@ -76,6 +76,28 @@ change_factors_summarised_expected <- tibble::tribble(
     )
   )
 
+change_factors_summarised_expected_exc_baseline <- tibble::tribble(
+  ~change_factor, ~colour, ~name, ~value,
+  "population_factors", "#f9bf07", "value", 15000,
+  "population_factors", NA, "hidden", 0,
+  "admission_avoidance", "#2c2825", "value", 650,
+  "admission_avoidance", NA, "hidden", 14350,
+  "health_status_adjustment", "#2c2825", "value", 1000,
+  "health_status_adjustment", NA, "hidden", 13350,
+  "Estimate", "#ec6555", "value", 13350,
+  "Estimate", NA, "hidden", 0
+) |>
+  mutate(
+    across(
+      change_factor,
+      forcats::fct_relevel,
+      "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors"
+    ),
+    across(
+      name, forcats::fct_relevel, c("hidden", "value")
+    )
+  )
+
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -92,11 +114,16 @@ test_that("mod_principal_change_factor_effects_summarised returns correct data",
   actual <- mod_principal_change_factor_effects_summarised(
     change_factors_expected$ip, "admissions", TRUE
   )
-  expect_equal(actual, change_factors_summarised_expected)
+  expect_equal(actual, change_factors_summarised_expected_inc_baseline)
+
+  actual <- mod_principal_change_factor_effects_summarised(
+    change_factors_expected$ip, "admissions", FALSE
+  )
+  expect_equal(actual, change_factors_summarised_expected_exc_baseline)
 })
 
 test_that("mod_principal_change_factor_effects_cf_plot returns a ggplot", {
-  p <- mod_principal_change_factor_effects_cf_plot(change_factors_summarised_expected)
+  p <- mod_principal_change_factor_effects_cf_plot(change_factors_summarised_expected_inc_baseline)
   expect_s3_class(p, "ggplot")
 })
 
