@@ -40,15 +40,13 @@ mod_model_core_activity_server_table <- function(data) {
       c("lwr_ci", "upr_ci")
     ) |>
     gt_theme()
-
 }
 
 #' model_core_activity Server Functions
 #'
 #' @noRd
-mod_model_core_activity_server <- function(id, selected_model_run_id, data_cache) {
+mod_model_core_activity_server <- function(id, selected_model_run_id) {
   moduleServer(id, function(input, output, session) {
-
     atpmo <- get_activity_type_pod_measure_options()
 
     summarised_data <- reactive({
@@ -56,7 +54,7 @@ mod_model_core_activity_server <- function(id, selected_model_run_id, data_cache
       cosmos_get_model_core_activity(id) |>
         inner_join(atpmo, by = c("pod", "measure" = "measures"))
     }) |>
-      shiny::bindCache(selected_model_run_id(), cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), cache = get_data_cache())
 
     output$core_activity <- gt::render_gt({
       summarised_data() |>

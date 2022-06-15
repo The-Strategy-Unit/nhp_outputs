@@ -42,12 +42,12 @@ test_that("mod_model_core_activity_server_table returns a gt", {
 
 test_that("it gets the activity type/pod/measure reference data", {
   m <- mock(atpmo_expected)
+  stub(mod_model_core_activity_server, "get_data_cache", "session")
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", m)
 
   selected_model_run_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id, data_cache), {
+  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id), {
     expect_called(m, 1)
     expect_equal(atpmo, atpmo_expected)
   })
@@ -55,13 +55,13 @@ test_that("it gets the activity type/pod/measure reference data", {
 
 test_that("it calls cosmos_get_model_core_activity", {
   m <- mock(model_core_activity_expected)
+  stub(mod_model_core_activity_server, "get_data_cache", "session")
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_model_core_activity_server, "cosmos_get_model_core_activity", m)
 
   selected_model_run_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id, data_cache), {
+  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id), {
     selected_model_run_id("id")
 
     expected <- model_core_activity_expected |>
@@ -76,15 +76,15 @@ test_that("it calls cosmos_get_model_core_activity", {
 test_that("it renders the table", {
   m <- mock()
 
+  stub(mod_model_core_activity_server, "get_data_cache", "session")
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_model_core_activity_server, "cosmos_get_model_core_activity", model_core_activity_expected)
   stub(mod_model_core_activity_server, "mod_model_core_activity_server_table", "table")
   stub(mod_model_core_activity_server, "gt::render_gt", m)
 
   selected_model_run_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id, data_cache), {
+  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id), {
     selected_model_run_id("id")
 
     expect_called(m, 1)

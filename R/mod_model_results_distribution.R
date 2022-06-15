@@ -78,14 +78,14 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
 #' model_results_distribution Server Functions
 #'
 #' @noRd
-mod_model_results_distribution_server <- function(id, selected_model_run_id, data_cache) {
+mod_model_results_distribution_server <- function(id, selected_model_run_id) {
   moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     selected_data <- reactive({
       mod_model_results_distribution_get_data(selected_model_run_id(), selected_measure())
     }) |>
-      shiny::bindCache(selected_model_run_id(), selected_measure(), cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), selected_measure(), cache = get_data_cache())
 
     output$distribution <- plotly::renderPlotly({
       mod_model_results_distibution_plot(selected_data(), input$show_origin)

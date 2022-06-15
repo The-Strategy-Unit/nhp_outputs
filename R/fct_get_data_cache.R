@@ -7,7 +7,7 @@
 #' @noRd
 
 get_data_cache <- function() {
-  env <- rlang::global_env()
+  env <- as.environment("package:outputs")
 
   dci <- "__data_cache_instance__"
   # if the data cache instance doesn't exist, create it

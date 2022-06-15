@@ -60,12 +60,12 @@ test_that("table returns a gt", {
 test_that("it sets up mod_measure_selection_server", {
   m <- mock("mod_measure_selection_server")
 
+  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
     expect_called(m, 1)
     expect_args(m, 1, "measure_selection")
     expect_equal(selected_measure, "mod_measure_selection_server")
@@ -75,13 +75,13 @@ test_that("it sets up mod_measure_selection_server", {
 test_that("it calls cosmos_get_available_aggregations", {
   m <- mock("cosmos_get_available_aggregations")
 
+  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", m)
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
     selected_model_id(1)
     expect_equal(available_aggregations(), "cosmos_get_available_aggregations")
     expect_called(m, 1)
@@ -92,6 +92,7 @@ test_that("it calls cosmos_get_available_aggregations", {
 test_that("it updates the aggregation drop down", {
   m <- mock()
 
+  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
@@ -99,7 +100,7 @@ test_that("it updates the aggregation drop down", {
   selected_model_id <- reactiveVal()
   data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
     selected_model_id(1)
     selected_measure(selected_measure_expected)
     session$private$flush() # manually trigger an invalidation
@@ -112,6 +113,7 @@ test_that("it updates the aggregation drop down", {
 test_that("it calls cosmos_get_aggregation", {
   m <- mock(aggregations_age_group_expected, aggregations_tretspef_expected)
 
+  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
   stub(mod_principal_detailed_server, "cosmos_get_aggregation", m)
@@ -119,7 +121,7 @@ test_that("it calls cosmos_get_aggregation", {
   selected_model_id <- reactiveVal()
   data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
     selected_model_id(1)
     selected_measure(selected_measure_expected)
 
@@ -156,6 +158,7 @@ test_that("it calls cosmos_get_aggregation", {
 test_that("it renders the table", {
   m <- mock()
 
+  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
   stub(mod_principal_detailed_server, "cosmos_get_aggregation", aggregations_age_group_expected)
@@ -165,7 +168,7 @@ test_that("it renders the table", {
   selected_model_id <- reactiveVal()
   data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
     selected_model_id(1)
     selected_measure(selected_measure_expected)
     session$setInputs(aggregation = "Age Group")

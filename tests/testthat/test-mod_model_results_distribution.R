@@ -87,12 +87,12 @@ test_that("plot returns a plotly subplot", {
 
 test_that("it creates a mod_measure_selection_server", {
   m <- mock(selected_measure_expected)
+  stub(mod_model_results_distribution_server, "get_data_cache", "session")
   stub(mod_model_results_distribution_server, "mod_measure_selection_server", m)
 
   selected_model_run_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id, data_cache), {
+  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id), {
     expect_called(m, 1)
     expect_equal(selected_measure, selected_measure_expected)
   })
@@ -100,13 +100,13 @@ test_that("it creates a mod_measure_selection_server", {
 
 test_that("it calls mod_model_results_distribution_get_data", {
   m <- mock(model_run_distribution_expected)
+  stub(mod_model_results_distribution_server, "get_data_cache", "session")
   stub(mod_model_results_distribution_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_model_results_distribution_server, "mod_model_results_distribution_get_data", m)
 
   selected_model_run_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id, data_cache), {
+  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id), {
     selected_model_run_id("id")
     selected_measure(selected_measure_expected)
 
@@ -120,6 +120,7 @@ test_that("it calls mod_model_results_distribution_get_data", {
 test_that("it renders the plot", {
   m <- mock()
 
+  stub(mod_model_results_distribution_server, "get_data_cache", "session")
   stub(
     mod_model_results_distribution_server, "mod_measure_selection_server", reactiveVal
   )
@@ -131,9 +132,8 @@ test_that("it renders the plot", {
   )
 
   selected_model_run_id <- reactiveVal("id")
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id, data_cache), {
+  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id), {
     selected_model_run_id("id")
     selected_measure(selected_measure_expected)
     session$setInputs(show_origin = FALSE)

@@ -49,7 +49,7 @@ mod_principal_high_level_ui <- function(id) {
 #' principal_high_level Server Functions
 #'
 #' @noRd
-mod_principal_high_level_server <- function(id, selected_model_run_id, data_cache) {
+mod_principal_high_level_server <- function(id, selected_model_run_id) {
   shiny::moduleServer(id, function(input, output, session) {
     fyear_str <- function(y) glue::glue("{y}/{(y + 1) %% 100}")
 
@@ -81,7 +81,7 @@ mod_principal_high_level_server <- function(id, selected_model_run_id, data_cach
         ) |>
         dplyr::ungroup()
     }) |>
-      shiny::bindCache(selected_model_run_id(), cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), cache = get_data_cache())
 
     output$activity <- gt::render_gt({
       summary_data() |>

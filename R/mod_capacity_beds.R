@@ -93,7 +93,7 @@ mod_capacity_beds_get_available_plot <- function(data) {
 #' capacity_beds Server Functions
 #'
 #' @noRd
-mod_capacity_beds_server <- function(id, selected_model_run, data_cache) {
+mod_capacity_beds_server <- function(id, selected_model_run) {
   specialties <- mod_capacity_beds_load_specialties()
 
   moduleServer(id, function(input, output, session) {
@@ -101,7 +101,7 @@ mod_capacity_beds_server <- function(id, selected_model_run, data_cache) {
       c(ds, sc, mr, id) %<-% selected_model_run() # nolint
       mod_capacity_beds_get_beds_data(ds, id) # nolint
     }) |>
-      shiny::bindCache(selected_model_run(), cache = data_cache)
+      shiny::bindCache(selected_model_run(), cache = get_data_cache())
 
     new_beds <- shiny::reactive({
       occupancy_rate <- shiny::req(input$occupancy_rate) / 100

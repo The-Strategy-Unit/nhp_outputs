@@ -139,13 +139,13 @@ test_that("mod_principal_change_factor_effects_ind_plot returns a ggplot", {
 test_that("it sets up the activity_type dropdown", {
   m <- mock()
 
+  stub(mod_principal_change_factor_effects_server, "get_data_cache", "session")
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "shiny::updateSelectInput", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     session$private$flush() # need to trigger an invalidation
     expect_called(m, 1)
     expect_args(m, 1, session, "activity_type", c("A&E" = "aae", "Inpatients" = "ip", "Outpatients" = "op"))
@@ -155,13 +155,13 @@ test_that("it sets up the activity_type dropdown", {
 test_that("it loads the data from cosmos when the activity_type or id changes", {
   m <- mock(change_factors_expected$aae, cycle = TRUE)
 
+  stub(mod_principal_change_factor_effects_server, "get_data_cache", "session")
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     selected_model_id(1)
     expect_called(m, 0)
 
@@ -181,14 +181,14 @@ test_that("it updates the measures dropdown when the change factors updates", {
   m <- mock()
   cfe <- \(id, at) change_factors_expected[[at]]
 
+  stub(mod_principal_change_factor_effects_server, "get_data_cache", "session")
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
   stub(mod_principal_change_factor_effects_server, "shiny::updateSelectInput", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     selected_model_id(1)
 
     session$setInputs("activity_type" = "aae")
@@ -206,13 +206,13 @@ test_that("it updates the measures dropdown when the change factors updates", {
 test_that("it sets up the individual change factors", {
   cfe <- \(id, at) change_factors_expected[[at]]
 
+  stub(mod_principal_change_factor_effects_server, "get_data_cache", "session")
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     selected_model_id(1)
     session$setInputs(
       activity_type = "ip", measure = "admissions", sort_type = "descending value", include_baseline = TRUE
@@ -238,14 +238,14 @@ test_that("it shows or hides the individual plots", {
   m <- mock()
   cfe <- \(id, at) change_factors_expected[[at]]
 
+  stub(mod_principal_change_factor_effects_server, "get_data_cache", "session")
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
   stub(mod_principal_change_factor_effects_server, "shinyjs::toggle", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     selected_model_id(1)
 
     session$setInputs(
@@ -266,6 +266,7 @@ test_that("it renders the plots", {
   m <- mock()
   cfe <- \(id, at) change_factors_expected[[at]]
 
+  stub(mod_principal_change_factor_effects_server, "get_data_cache", "session")
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
   stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_summarised", "cfd")
@@ -273,9 +274,8 @@ test_that("it renders the plots", {
   stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", m)
 
   selected_model_id <- reactiveVal(1)
-  data_cache <- cachem::cache_mem()
 
-  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id, data_cache), {
+  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     session$setInputs(
       activity_type = "ip", measure = "admissions", sort_type = "descending value", include_baseline = TRUE
     )

@@ -2,7 +2,7 @@ library(mockery)
 
 test_that("it assigns a cachem object in the global environment when it first runs", {
   e <- rlang::new_environment()
-  stub(get_data_cache, "rlang::global_env", e)
+  stub(get_data_cache, "as.environment", e)
   stub(get_data_cache, "cachem::cache_mem", "memory cache")
 
   withr::with_envvar(c("GOLEM_ACTIVE_CONFIG" = "dev"), get_data_cache())
@@ -14,7 +14,7 @@ test_that("it assigns a cachem object in the global environment when it first ru
 test_that("it retrieves the item from the global environment on subsequent runs", {
   m <- mock()
   e <- rlang::new_environment()
-  stub(get_data_cache, "rlang::global_env", e)
+  stub(get_data_cache, "as.environment", e)
   stub(get_data_cache, "cachem::cache_mem", m)
 
   assign("__data_cache_instance__", "cache instance", envir = e)
@@ -27,7 +27,7 @@ test_that("it retrieves the item from the global environment on subsequent runs"
 test_that("it creates a physical cache on disk when not dev", {
   m <- mock()
   e <- rlang::new_environment()
-  stub(get_data_cache, "rlang::global_env", e)
+  stub(get_data_cache, "as.environment", e)
   stub(get_data_cache, "dir.exists", FALSE)
   stub(get_data_cache, "dir.create", m)
   stub(get_data_cache, "cachem::cache_disk", "disk cache")
@@ -47,7 +47,7 @@ test_that("it creates a physical cache on disk when not dev", {
 test_that("changing the CACHE_VERSION env var invalidates the cache", {
   m <- mock()
   e <- rlang::new_environment()
-  stub(get_data_cache, "rlang::global_env", e)
+  stub(get_data_cache, "as.environment", e)
   stub(get_data_cache, "dir.exists", FALSE)
   stub(get_data_cache, "dir.create", NULL)
   stub(get_data_cache, "cachem::cache_disk", list(reset = m))

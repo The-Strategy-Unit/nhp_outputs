@@ -49,7 +49,7 @@ mod_principal_detailed_table <- function(data, aggregation) {
 #' principal_detailed Server Functions
 #'
 #' @noRd
-mod_principal_detailed_server <- function(id, selected_model_run_id, data_cache) {
+mod_principal_detailed_server <- function(id, selected_model_run_id) {
   moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
@@ -58,7 +58,7 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, data_cache)
 
       cosmos_get_available_aggregations(id)
     }) |>
-      shiny::bindCache(selected_model_run_id(), cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), cache = get_data_cache())
 
     shiny::observe({
       c(activity_type, pod, measure) %<-% selected_measure()
@@ -93,7 +93,7 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, data_cache)
           change_pcnt = .data$change / .data$baseline
         )
     }) |>
-      shiny::bindCache(selected_model_run_id(), selected_measure(), input$aggregation, cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), selected_measure(), input$aggregation, cache = get_data_cache())
 
     output$results <- gt::render_gt({
       d <- selected_data()

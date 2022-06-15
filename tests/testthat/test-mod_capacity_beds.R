@@ -113,9 +113,12 @@ test_that("get_available_plot returns a ggplot object", {
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("it loads the specialties csv", {
+  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "mod_capacity_beds_load_specialties", specialties_expected)
 
-  shiny::testServer(mod_capacity_beds_server, args = list(NULL, NULL), {
+  selected_model_run <- reactiveVal()
+
+  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run), {
     expect_equal(specialties, specialties_expected)
   })
 })
@@ -123,13 +126,13 @@ test_that("it loads the specialties csv", {
 test_that("it calls get_beds_data correctly", {
   m <- mock("beds_data")
 
+  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "mod_capacity_beds_load_specialties", specialties_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_beds_data", m)
 
   selected_model_run <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run, data_cache), {
+  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run), {
     selected_model_run(c(ds = "ds", sc = "sc", mr = "mr", id = "ds__sc__mr"))
 
     expect_equal(beds_data(), "beds_data")
@@ -142,14 +145,14 @@ test_that("it calls get_beds_data correctly", {
 test_that("it calls get_new_available_beds correctly", {
   m <- mock("new_beds")
 
+  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "mod_capacity_beds_load_specialties", specialties_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_beds_data", beds_data_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_new_available_beds", m)
 
   selected_model_run <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run, data_cache), {
+  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run), {
     selected_model_run(c(ds = "ds", sc = "sc", mr = "mr", id = "ds__sc__mr"))
     session$setInputs(occupancy_rate = 85)
 
@@ -164,15 +167,15 @@ test_that("it renders the table", {
   m <- mock(
     mod_capacity_beds_get_available_table(new_available_beds_expected)
   )
+  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "mod_capacity_beds_load_specialties", specialties_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_beds_data", beds_data_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_new_available_beds", new_available_beds_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_available_table", m)
 
   selected_model_run <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run, data_cache), {
+  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run), {
     selected_model_run(c(ds = "ds", sc = "sc", mr = "mr", id = "ds__sc__mr"))
     session$setInputs(occupancy_rate = 85)
 
@@ -183,6 +186,7 @@ test_that("it renders the table", {
 
 test_that("it renders the plot", {
   m <- mock()
+  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "mod_capacity_beds_load_specialties", specialties_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_beds_data", beds_data_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_new_available_beds", new_available_beds_expected)
@@ -192,9 +196,8 @@ test_that("it renders the plot", {
   stub(mod_capacity_beds_server, "plotly::renderPlotly", m)
 
   selected_model_run <- reactiveVal()
-  data_cache <- cachem::cache_mem()
 
-  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run, data_cache), {
+  shiny::testServer(mod_capacity_beds_server, args = list(selected_model_run), {
     selected_model_run(c(ds = "ds", sc = "sc", mr = "mr", id = "ds__sc__mr"))
     session$setInputs(occupancy_rate = 85)
 

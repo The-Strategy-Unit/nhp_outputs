@@ -106,7 +106,7 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
-mod_principal_change_factor_effects_server <- function(id, selected_model_run_id, data_cache) {
+mod_principal_change_factor_effects_server <- function(id, selected_model_run_id) {
   moduleServer(id, function(input, output, session) {
     observe({
       activity_types <- get_activity_type_pod_measure_options() |>
@@ -137,7 +137,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
           )
         )
     }) |>
-      shiny::bindCache(selected_model_run_id(), input$activity_type, cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), input$activity_type, cache = get_data_cache())
 
     observeEvent(principal_change_factors(), {
       at <- req(input$activity_type)
