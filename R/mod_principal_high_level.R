@@ -57,7 +57,7 @@ mod_principal_high_level_pods <- function() {
 mod_principal_high_level_summary_data <- function(id, pods) {
   c(start_year, end_year) %<-% cosmos_get_model_run_years(id)
 
-  cosmos_get_principal_highlevel(id) |>
+  cosmos_get_principal_high_level(id) |>
     tidyr::pivot_longer(-.data$pod, names_to = "model_run") |>
     dplyr::mutate(year = ifelse(.data$model_run == "baseline", start_year, end_year)) |>
     dplyr::select(-.data$model_run) |>

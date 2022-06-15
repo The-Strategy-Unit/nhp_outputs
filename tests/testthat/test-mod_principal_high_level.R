@@ -104,7 +104,7 @@ test_that("mod_principal_high_level_pods returns the correct list of pods", {
 test_that("mod_principal_high_level_summary_data processes data correctly", {
   m <- mock(c(2018, 2020), principal_high_level_expected)
   stub(mod_principal_high_level_summary_data, "cosmos_get_model_run_years", m)
-  stub(mod_principal_high_level_summary_data, "cosmos_get_principal_highlevel", m)
+  stub(mod_principal_high_level_summary_data, "cosmos_get_principal_high_level", m)
 
   actual <- mod_principal_high_level_summary_data(1, pods_expected)
   expect_equal(actual, summary_data_expected)

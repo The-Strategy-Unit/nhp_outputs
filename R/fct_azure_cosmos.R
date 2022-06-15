@@ -27,14 +27,13 @@ cosmos_get_result_sets <- function() {
 
   qry <- "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c"
   AzureCosmosR::query_documents(container, qry) |>
-    dplyr::bind_rows() |>
     dplyr::arrange(dplyr::across(tidyselect::everything()))
 }
 
 cosmos_get_available_aggregations <- function(id) {
   container <- cosmos_get_container("results")
 
-  qry <- glue::glue("SELECT c.available_aggregations FROM c")
+  qry <- "SELECT c.available_aggregations FROM c"
   AzureCosmosR::query_documents(container, qry, partition_key = id, as_data_frame = FALSE) |>
     purrr::pluck(1, "data", "available_aggregations")
 }
@@ -51,7 +50,7 @@ cosmos_get_model_run_years <- function(id) {
   )[[1]]$data
 }
 
-cosmos_get_principal_highlevel <- function(id) {
+cosmos_get_principal_high_level <- function(id) {
   container <- cosmos_get_container("results")
 
   qry <- paste(
@@ -61,7 +60,6 @@ cosmos_get_principal_highlevel <- function(id) {
   )
 
   AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::as_tibble() |>
     dplyr::mutate(
       dplyr::across(.data$pod, ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x))
     ) |>
@@ -72,7 +70,7 @@ cosmos_get_principal_highlevel <- function(id) {
 cosmos_get_model_core_activity <- function(id) {
   container <- cosmos_get_container("results")
 
-  qry <- glue::glue("
+  qry <- "
     SELECT
       r.pod,
       r.measure,
@@ -82,10 +80,9 @@ cosmos_get_model_core_activity <- function(id) {
       r.upr_ci
     FROM c
     JOIN r IN c.results[\"default\"]
-  ")
+  "
 
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::as_tibble()
+  AzureCosmosR::query_documents(container, qry, partition_key = id)
 }
 
 cosmos_get_model_run_distribution <- function(id, pod, measure) {
@@ -136,7 +133,8 @@ cosmos_get_model_run_distribution <- function(id, pod, measure) {
 cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
   stopifnot(
     "invalid characters in pod" = stringr::str_remove_all(pod, "[\\w-]") == "",
-    "invalid characters in measure" = stringr::str_remove_all(measure, "[\\w-]") == ""
+    "invalid characters in measure" = stringr::str_remove_all(measure, "[\\w-]") == "",
+    "invalid characters in agg_col" = stringr::str_remove_all(agg_col, "[\\w-]") == ""
   )
 
   container <- cosmos_get_container("results")
@@ -158,11 +156,14 @@ cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
     AND
       r.measure = '{measure}'
   ")
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::as_tibble()
+  AzureCosmosR::query_documents(container, qry, partition_key = id)
 }
 
 cosmos_get_principal_change_factors <- function(id, activity_type) {
+  stopifnot(
+    "Invalid activity_type" = activity_type %in% c("aae", "ip", "op")
+  )
+
   container <- cosmos_get_container("change_factors")
 
   qry <- glue::glue("
@@ -184,7 +185,7 @@ cosmos_get_principal_change_factors <- function(id, activity_type) {
 cosmos_get_mainspef_agg <- function(id) {
   container <- cosmos_get_container("results")
 
-  qry <- glue::glue("
+  qry <- "
     SELECT
         r.mainspef,
         r.baseline,
@@ -195,8 +196,7 @@ cosmos_get_mainspef_agg <- function(id) {
         r.model_runs
     FROM c
     JOIN r IN c.results[\"mainspef\"]
-  ")
+  "
 
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::as_tibble()
+  AzureCosmosR::query_documents(container, qry, partition_key = id)
 }
