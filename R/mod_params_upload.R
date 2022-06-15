@@ -338,11 +338,19 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       shiny::updateTextInput(session, "aae_am_a_hi_a2", value = p[["adult_walk-in"]]$interval[[2]])
     })
 
-    running_jobs <- rlang::new_environment()
-    shiny::observeEvent(input$submit_model_run, {
+    updated_params <- reactive({
       params <- shiny::req(params())
 
-      params[["submitted_by"]] <- session$user
+      params$input_data <- shiny::req(input$dataset)
+      params$demographic_factors$file <- shiny::req(input$demographics_file)
+      params$name <- shiny::req(input$scenario_name)
+
+      params
+    })
+
+    running_jobs <- rlang::new_environment()
+    shiny::observeEvent(input$submit_model_run, {
+      params <- shiny::req(updated_params())
 
       shinyjs::disable("submit_model_run")
       shiny::updateActionButton(session, "submit_model_run", "Submitted...")
@@ -381,13 +389,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
         glue::glue("{ds}_{sc}.json")
       },
       content = function(file) {
-        params <- shiny::req(params())
-
-        params$input_data <- shiny::req(input$dataset)
-        params$demographic_factors$file <- shiny::req(input$demographics_file)
-        params$name <- shiny::req(input$scenario_name)
-
-        jsonlite::write_json(params, file, pretty = TRUE, auto_unbox = TRUE)
+        jsonlite::write_json(updated_params(), file, pretty = TRUE, auto_unbox = TRUE)
       }
     )
 
