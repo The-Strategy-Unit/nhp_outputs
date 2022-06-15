@@ -20,3 +20,7 @@ model_run_type <- function(mr) {
     mr > 0 ~ "model"
   )
 }
+
+fyear_str <- function(y) {
+  glue::glue("{y}/{(y + 1) %% 100}")
+}
