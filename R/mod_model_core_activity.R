@@ -46,10 +46,10 @@ mod_model_core_activity_server_table <- function(data) {
 #'
 #' @noRd
 mod_model_core_activity_server <- function(id, selected_model_run_id) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     atpmo <- get_activity_type_pod_measure_options()
 
-    summarised_data <- reactive({
+    summarised_data <- shiny::reactive({
       id <- selected_model_run_id()
       cosmos_get_model_core_activity(id) |>
         inner_join(atpmo, by = c("pod", "measure" = "measures"))

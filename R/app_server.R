@@ -4,13 +4,13 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  user_allowed_datasets <- reactive({
+  user_allowed_datasets <- shiny::reactive({
     cosmos_get_user_allowed_datasets(session$user)
   })
 
   # this module returns a reactive which contains the data path
   selected_model_run <- mod_result_selection_server("result_selection", user_allowed_datasets)
-  selected_model_run_id <- reactive({
+  selected_model_run_id <- shiny::reactive({
     selected_model_run()$id
   })
 

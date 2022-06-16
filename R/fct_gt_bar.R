@@ -14,7 +14,7 @@ gt_bar <- function(value, display_value_format = NULL, negative_colour = "#ec655
   zero <- -r[[1]] / diff(r)
   # our bar consists of 2 parts: an empty bar, and the value bar
   # the empty bar will go from the far left to either then "end" of the negative bar, or the "start" of the positive bar
-  bar_data <- tibble(
+  bar_data <- tibble::tibble(
     ebar = ifelse(value > 0, zero, rvalue) * 50,
     vbar = ifelse(value <= 0, zero - rvalue, rvalue - zero) * 50,
     colour = ifelse(value <= 0, negative_colour, positive_colour)
@@ -39,5 +39,5 @@ gt_bar <- function(value, display_value_format = NULL, negative_colour = "#ec655
     "  <span style=\"width: 50%\" align=\"right\">{display_value}</span>",
     "</div>"
   ) |>
-    map(purrr::compose(gt::html, as.character))
+    purrr::map(purrr::compose(gt::html, as.character))
 }

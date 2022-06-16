@@ -21,11 +21,11 @@ mod_measure_selection_ui <- function(id, width = 4) {
 #'
 #' @noRd
 mod_measure_selection_server <- function(id) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     atpmo <- get_activity_type_pod_measure_options()
 
     # handle onload
-    observe({
+    shiny::observe({
       activity_types <- atpmo |>
         dplyr::distinct(
           dplyr::across(
@@ -38,7 +38,7 @@ mod_measure_selection_server <- function(id) {
     })
 
     shiny::observeEvent(input$activity_type, {
-      at <- req(input$activity_type)
+      at <- shiny::req(input$activity_type)
 
       pods <- atpmo |>
         dplyr::filter(.data$activity_type == at) |>
@@ -53,8 +53,8 @@ mod_measure_selection_server <- function(id) {
     })
 
     shiny::observeEvent(input$pod, {
-      at <- req(input$activity_type)
-      p <- req(input$pod)
+      at <- shiny::req(input$activity_type)
+      p <- shiny::req(input$pod)
 
       measures <- atpmo |>
         dplyr::filter(.data$activity_type == at, .data$pod == p) |>
@@ -63,13 +63,13 @@ mod_measure_selection_server <- function(id) {
       shiny::updateSelectInput(session, "measure", choices = measures)
     })
 
-    selected_measure <- reactive({
-      at <- req(input$activity_type)
-      p <- req(input$pod)
-      m <- req(input$measure)
+    selected_measure <- shiny::reactive({
+      at <- shiny::req(input$activity_type)
+      p <- shiny::req(input$pod)
+      m <- shiny::req(input$measure)
 
       # ensure a valid set of pod/measure has been selected. If activity type changes we may end up with invalid options
-      req(nrow(dplyr::filter(atpmo, .data$pod == p, .data$measures == m)) > 0)
+      shiny::req(nrow(dplyr::filter(atpmo, .data$pod == p, .data$measures == m)) > 0)
 
       c(activity_type = at, pod = p, measure = m)
     })

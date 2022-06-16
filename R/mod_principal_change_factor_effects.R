@@ -61,7 +61,7 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
         .data$value >= 0 ~ "#f9bf07",
         TRUE ~ "#2c2825"
       ),
-      across(.data$value, abs)
+      dplyr::across(.data$value, abs)
     ) |>
     dplyr::select(-.data$cuvalue)
 
@@ -81,9 +81,9 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     ) |>
     tidyr::pivot_longer(c(.data$value, .data$hidden)) |>
     dplyr::mutate(
-      across(.data$colour, ~ ifelse(.data$name == "hidden", NA, .x)),
-      across(.data$name, forcats::fct_relevel, "hidden", "value"),
-      across(.data$change_factor, factor, rev(levels))
+      dplyr::across(.data$colour, ~ ifelse(.data$name == "hidden", NA, .x)),
+      dplyr::across(.data$name, forcats::fct_relevel, "hidden", "value"),
+      dplyr::across(.data$change_factor, factor, rev(levels))
     )
 }
 

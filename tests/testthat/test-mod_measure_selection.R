@@ -125,7 +125,7 @@ test_that("it updates the measure dropdown when pod changes", {
 })
 
 test_that("it returns a reactive", {
-  stub(mod_measure_selection_server, "reactive", "reactive", 2)
+  stub(mod_measure_selection_server, "shiny::reactive", "reactive", 2)
 
   shiny::testServer(function(input, output, session) {
     r <- mod_measure_selection_server("id")

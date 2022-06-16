@@ -59,7 +59,7 @@ mod_capacity_beds_get_available_table <- function(data) {
       old_beds = .data$available,
       new_beds = .data$new_available
     ) |>
-    dplyr::arrange(desc(new_beds), desc(old_beds)) |>
+    dplyr::arrange(dplyr::desc(.data$new_beds), dplyr::desc(.data$old_beds)) |>
     dplyr::filter(new_beds > 0.5) |>
     gt::gt(rowname_col = "specialty", groupname_col = "specialty_group") |>
     gt::fmt_integer(c("old_beds", "new_beds")) |>
@@ -82,7 +82,7 @@ mod_capacity_beds_get_available_table <- function(data) {
 
 mod_capacity_beds_get_available_plot <- function(data) {
   data |>
-    dplyr::mutate(across(.data$description, forcats::fct_reorder, .data$new_available)) |>
+    dplyr::mutate(dplyr::across(.data$description, forcats::fct_reorder, .data$new_available)) |>
     dplyr::filter(.data$new_available > 5) |>
     ggplot2::ggplot(ggplot2::aes(.data$new_available, .data$description, fill = .data$type)) +
     ggplot2::geom_col() +
@@ -96,7 +96,7 @@ mod_capacity_beds_get_available_plot <- function(data) {
 mod_capacity_beds_server <- function(id, selected_model_run) {
   specialties <- mod_capacity_beds_load_specialties()
 
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     beds_data <- shiny::reactive({
       c(ds, sc, mr, id) %<-% selected_model_run() # nolint
       mod_capacity_beds_get_beds_data(ds, id) # nolint

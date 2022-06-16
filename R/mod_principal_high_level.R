@@ -131,7 +131,7 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
     output$aae <- plotly::renderPlotly({
       summary_data() |>
         mod_principal_high_level_plot("aae") |>
-        plotly::ggplotly() %>%
+        plotly::ggplotly() |>
         plotly::layout(legend = list(
           orientation = "h"
         ))
@@ -140,7 +140,7 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
     output$ip <- plotly::renderPlotly({
       summary_data() |>
         mod_principal_high_level_plot("ip") |>
-        plotly::ggplotly() %>%
+        plotly::ggplotly() |>
         plotly::layout(legend = list(
           orientation = "h"
         ))
@@ -149,7 +149,7 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
     output$op <- plotly::renderPlotly({
       summary_data() |>
         mod_principal_high_level_plot("op") |>
-        plotly::ggplotly() %>%
+        plotly::ggplotly() |>
         plotly::layout(legend = list(
           orientation = "h"
         ))

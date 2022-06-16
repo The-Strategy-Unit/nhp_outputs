@@ -1,5 +1,5 @@
 #' @importFrom zeallot %<-%
-#' @importFrom rlang .data
+#' @importFrom rlang .data .env
 NULL
 
 # converts a two column tibble into a named list suitable for shiny selectInput choices

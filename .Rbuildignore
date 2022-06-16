@@ -13,4 +13,6 @@ $run_dev.*
 ^app\.R$
 ^rsconnect$
 ^\.github$
-.covrignore.txt
+^\.covrignore$
+^\.lintr$
+^\.vscode$

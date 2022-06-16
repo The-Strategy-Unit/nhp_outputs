@@ -53,7 +53,7 @@ app_ui <- function(request) {
           tabName = "tab_cb"
         )
       ),
-      tags$hr(),
+      htmltools::tags$hr(),
       bs4Dash::menuItem(
         "Run Model",
         startExpanded = FALSE,
@@ -75,9 +75,9 @@ app_ui <- function(request) {
     bs4Dash::tabItems(
       bs4Dash::tabItem(
         tabName = "tab_home",
-        fluidRow(
+        shiny::fluidRow(
           col_6(
-            h1("NHP Model")
+            htmltools::h1("NHP Model")
             # "About Text should go here"
           ),
           bs4Dash::box(
@@ -143,7 +143,7 @@ golem_add_external_resources <- function() {
     "www", app_sys("app/www")
   )
 
-  shiny::tags$head(
+  htmltools::tags$head(
     golem::favicon(),
     golem::bundle_resources(
       path = app_sys("app/www"),
