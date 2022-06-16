@@ -21,10 +21,35 @@ mod_principal_detailed_ui <- function(id) {
   )
 }
 
+mod_principal_detailed_table <- function(data, aggregation) {
+  data |>
+    dplyr::mutate(
+      dplyr::across(.data$sex, ~ ifelse(.x == 1, "Male", "Female")),
+      dplyr::across(.data$final, gt_bar, scales::comma_format(1), "#686f73", "#686f73"),
+      dplyr::across(.data$change, gt_bar, scales::comma_format(1)),
+      dplyr::across(.data$change_pcnt, gt_bar, scales::percent_format(1))
+    ) |>
+    gt::gt(groupname_col = "sex") |>
+    gt::cols_label(
+      agg = aggregation,
+      baseline = "Baseline",
+      final = "Final",
+      change = "Change",
+      change_pcnt = "Percent Change",
+    ) |>
+    gt::fmt_integer(c(baseline)) |>
+    gt::cols_width(final ~ px(150), change ~ px(150), change_pcnt ~ px(150)) |>
+    gt::cols_align(
+      align = "left",
+      columns = c("agg", "final", "change", "change_pcnt")
+    ) |>
+    gt_theme()
+}
+
 #' principal_detailed Server Functions
 #'
 #' @noRd
-mod_principal_detailed_server <- function(id, selected_model_run_id, data_cache) {
+mod_principal_detailed_server <- function(id, selected_model_run_id) {
   moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
@@ -33,7 +58,7 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, data_cache)
 
       cosmos_get_available_aggregations(id)
     }) |>
-      shiny::bindCache(selected_model_run_id(), cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), cache = get_data_cache())
 
     shiny::observe({
       c(activity_type, pod, measure) %<-% selected_measure()
@@ -64,10 +89,11 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, data_cache)
           agg = .data[[agg_col]],
           .data$baseline,
           final = .data$principal,
-          change = final - baseline, change_pcnt = change / baseline
+          change = .data$final - .data$baseline,
+          change_pcnt = .data$change / .data$baseline
         )
     }) |>
-      shiny::bindCache(selected_model_run_id(), selected_measure(), input$aggregation, cache = data_cache)
+      shiny::bindCache(selected_model_run_id(), selected_measure(), input$aggregation, cache = get_data_cache())
 
     output$results <- gt::render_gt({
       d <- selected_data()
@@ -76,28 +102,7 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, data_cache)
       # data which causes a bunch of warning messages
       req(nrow(d) > 0)
 
-      d |>
-        dplyr::mutate(
-          dplyr::across(.data$sex, ~ ifelse(.x == 1, "Male", "Female")),
-          dplyr::across(.data$final, gt_bar, scales::comma_format(1), "#686f73", "#686f73"),
-          dplyr::across(.data$change, gt_bar, scales::comma_format(1)),
-          dplyr::across(.data$change_pcnt, gt_bar, scales::percent_format(1))
-        ) |>
-        gt::gt(groupname_col = "sex") |>
-        gt::cols_label(
-          agg = req(input$aggregation),
-          baseline = "Baseline",
-          final = "Final",
-          change = "Change",
-          change_pcnt = "Percent Change",
-        ) |>
-        gt::fmt_integer(c(baseline)) |>
-        gt::cols_width(final ~ px(150), change ~ px(150), change_pcnt ~ px(150)) |>
-        gt::cols_align(
-          align = "left",
-          columns = c("agg", "final", "change", "change_pcnt")
-        ) |>
-        gt_theme()
+      mod_principal_detailed_table(d, req(input$aggregation))
     })
   })
 }

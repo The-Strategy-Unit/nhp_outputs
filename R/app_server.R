@@ -4,42 +4,8 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  if (Sys.getenv("GOLEM_CONFIG_ACTIVE") == "dev") {
-    data_cache <- cachem::cache_mem()
-  } else {
-    if (!dir.exists(".cache")) {
-      dir.create(".cache")
-    }
-    # create a 200 MiB cache on disk
-    data_cache <- cachem::cache_disk(dir = ".cache/data_cache", max_size = 200 * 1024^2)
-
-    # in case we need to invalidate the cache on rsconnect quickly, we can increment the "CACHE_VERSION" env var
-    cache_version <- ifelse(
-      file.exists(".cache/cache_version.txt"),
-      as.numeric(readLines(".cache/cache_version.txt")),
-      -1
-    )
-
-    if (Sys.getenv("CACHE_VERSION", 0) > cache_version) {
-      cat("Invalidating cache\n")
-      data_cache$reset()
-      cache_version <- Sys.getenv("CACHE_VERSION", 0)
-      writeLines(as.character(cache_version), ".cache/cache_version.txt")
-    }
-  }
-
   user_allowed_datasets <- reactive({
-    user <- session$user
-    # when locally developing
-    if (!is.null(user)) {
-      "synthetic"
-    } else {
-      # TODO: this should be grabbed from cosmos
-      c(
-        "synthetic",
-        "RL4", "RXC", "RN5", "RYJ", "RGP", "RNQ", "RD8", "RBZ", "RX1", "RHW", "RA9", "RGR", "RXN_RTX", "RH5_RBA"
-      )
-    }
+    cosmos_get_user_allowed_datasets(session$user)
   })
 
   # this module returns a reactive which contains the data path
@@ -48,15 +14,15 @@ app_server <- function(input, output, session) {
     selected_model_run()$id
   })
 
-  mod_params_upload_server("params_upload_ui", user_allowed_datasets)
+  mod_params_upload_server("params_upload", user_allowed_datasets)
   mod_running_models_server("running_models")
 
-  mod_principal_high_level_server("principal_high_level", selected_model_run_id, data_cache)
-  mod_principal_detailed_server("principal_detailed", selected_model_run_id, data_cache)
-  mod_principal_change_factor_effects_server("principal_change_factor_effects", selected_model_run_id, data_cache)
+  mod_principal_high_level_server("principal_high_level", selected_model_run_id)
+  mod_principal_detailed_server("principal_detailed", selected_model_run_id)
+  mod_principal_change_factor_effects_server("principal_change_factor_effects", selected_model_run_id)
 
-  mod_model_core_activity_server("model_core_activity", selected_model_run_id, data_cache)
-  mod_model_results_distribution_server("model_results_distribution", selected_model_run_id, data_cache)
+  mod_model_core_activity_server("model_core_activity", selected_model_run_id)
+  mod_model_results_distribution_server("model_results_distribution", selected_model_run_id)
 
-  mod_capacity_beds_server("capacity_beds", selected_model_run, data_cache)
+  mod_capacity_beds_server("capacity_beds", selected_model_run)
 }

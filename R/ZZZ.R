@@ -13,10 +13,6 @@ utils::globalVariables("where")
 BATCH_EP <- "https://batch.core.windows.net/"
 STORAGE_EP <- "https://storage.azure.com/"
 
-model_run_type <- function(mr) {
-  case_when(
-    mr == -1 ~ "baseline",
-    mr == 0 ~ "principal",
-    mr > 0 ~ "model"
-  )
+fyear_str <- function(y) {
+  glue::glue("{y}/{stringr::str_pad((y + 1) %% 100, 2, pad = '0')}")
 }

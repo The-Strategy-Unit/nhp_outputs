@@ -8,12 +8,12 @@
 #'
 #' @importFrom shiny NS tagList
 mod_measure_selection_ui <- function(id, width = 4) {
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
-  tagList(
-    column(width, selectInput(ns("activity_type"), "Activity Type", NULL)),
-    column(width, selectInput(ns("pod"), "POD", NULL)),
-    column(width, selectInput(ns("measure"), "Measure", NULL))
+  shiny::tagList(
+    shiny::column(width, shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
+    shiny::column(width, shiny::selectInput(ns("pod"), "POD", NULL)),
+    shiny::column(width, shiny::selectInput(ns("measure"), "Measure", NULL))
   )
 }
 
