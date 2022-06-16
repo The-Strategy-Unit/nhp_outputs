@@ -150,7 +150,7 @@
                     </div>
                   </div>
                 </div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_up">params_upload_ui</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_up">params_upload</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_rm">running_models</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_high_level</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_detailed</div>

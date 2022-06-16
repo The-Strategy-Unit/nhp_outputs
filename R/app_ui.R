@@ -88,7 +88,7 @@ app_ui <- function(request) {
       ),
       bs4Dash::tabItem(
         tabName = "tab_up",
-        mod_params_upload_ui("params_upload_ui")
+        mod_params_upload_ui("params_upload")
       ),
       bs4Dash::tabItem(
         tabName = "tab_rm",
