@@ -108,7 +108,7 @@ batch_get_tasks <- function(job_id) {
       .data$displayName,
       .data$state,
       .data$creationTime,
-      tidyselect::matches("executionInfo\\.((start|end)Time)|result|exitCode)")
+      tidyselect::matches("executionInfo\\.((start|end)Time|result|exitCode)")
     ) |>
     dplyr::rename_with(
       stringr::str_remove,
