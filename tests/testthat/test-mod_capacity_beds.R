@@ -73,7 +73,7 @@ test_that("get_beds_data loads the data from cosmos", {
   bd <- mod_capacity_beds_get_beds_data("ds", "id")
 
   expect_called(files_mock, 1)
-  expect_args(file_path_mock, 1, "data", "kh03", "ds.csv")
+  expect_args(file_path_mock, 1, "app_data", "kh03", "ds.csv")
   expect_equal(bd, beds_data_expected)
 })
 
