@@ -7,8 +7,10 @@ set_names <- function(.x) {
   purrr::set_names(.x[[1]], .x[[2]])
 }
 
-# source: https://github.com/r-lib/tidyselect/issues/201#issuecomment-650547846
-utils::globalVariables("where")
+utils::globalVariables(c(
+  "where", # source: https://github.com/r-lib/tidyselect/issues/201#issuecomment-650547846
+  "ds", "sc", "cd" # because of the use of %<-%
+))
 
 BATCH_EP <- "https://batch.core.windows.net/"
 STORAGE_EP <- "https://storage.azure.com/"
