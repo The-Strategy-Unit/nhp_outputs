@@ -436,3 +436,273 @@ test_that("batch_job_status returns success when all tasks have successfully com
 
   expect_equal(batch_job_status("id"), "success")
 })
+
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# batch_create_job
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+test_that("batch_create_job gets a token", {
+  m <- mock()
+
+  stub(batch_create_job, "batch_token_fn", m)
+
+  stub(batch_create_job, "AzureAuth::extract_jwt", "token")
+
+  stub(batch_create_job, "httr::POST", "post")
+  stub(batch_create_job, "httr::add_headers", "headers")
+
+  batch_create_job("job name")
+
+  expect_called(m, 1)
+  expect_args(m, 1, "https://batch.core.windows.net/")
+})
+
+test_that("batch_create_job calls the correct API", {
+  m <- mock()
+
+  stub(batch_create_job, "batch_token_fn", "token")
+  stub(batch_create_job, "AzureAuth::extract_jwt", identity)
+
+  stub(batch_create_job, "httr::POST", m)
+  stub(batch_create_job, "httr::add_headers", list)
+
+  withr::local_envvar(c("BATCH_URL" = "url"))
+  batch_create_job("job name")
+
+  expect_called(m, 1)
+  expect_args(m, 1,
+    "url",
+    path = c("jobs"),
+    body = list(
+      id = "job name",
+      poolInfo = list(poolId = "nhp-model"),
+      onAllTasksComplete = "terminatejob",
+      usesTaskDependencies = TRUE
+    ),
+    query = list("api-version" = "2022-01-01.15.0"),
+    encode = "json",
+    list(
+      "Authorization" = "Bearer token",
+      "Content-Type" = "application/json;odata=minimalmetadata"
+    )
+  )
+})
+
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# batch_add_tasks_to_job
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+test_that("batch_add_tasks_to_job gets a token", {
+  m <- mock()
+
+  stub(batch_add_tasks_to_job, "batch_token_fn", m)
+
+  stub(batch_add_tasks_to_job, "AzureAuth::extract_jwt", "token")
+
+  stub(batch_add_tasks_to_job, "httr::POST", "post")
+  stub(batch_add_tasks_to_job, "httr::add_headers", "headers")
+
+  batch_add_tasks_to_job("job name")
+
+  expect_called(m, 1)
+  expect_args(m, 1, "https://batch.core.windows.net/")
+})
+
+test_that("batch_add_tasks_to_job calls the correct API", {
+  m <- mock()
+
+  stub(batch_add_tasks_to_job, "batch_token_fn", "token")
+  stub(batch_add_tasks_to_job, "AzureAuth::extract_jwt", identity)
+
+  stub(batch_add_tasks_to_job, "httr::POST", m)
+  stub(batch_add_tasks_to_job, "httr::add_headers", list)
+
+  withr::local_envvar(c("BATCH_URL" = "url"))
+  batch_add_tasks_to_job("job name", "tasks")
+
+  expect_called(m, 1)
+  expect_args(m, 1,
+    "url",
+    path = c("jobs", "job name", "addtaskcollection"),
+    body = "tasks",
+    query = list("api-version" = "2022-01-01.15.0"),
+    encode = "json",
+    list(
+      "Authorization" = "Bearer token",
+      "Content-Type" = "application/json;odata=minimalmetadata"
+    )
+  )
+})
+
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# batch_upload_params_to_queue
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+test_that("batch_upload_params_to_queue gets a token", {
+  m <- mock()
+
+  stub(batch_upload_params_to_queue, "batch_token_fn", m)
+  stub(batch_upload_params_to_queue, "AzureStor::storage_container", "container")
+  stub(batch_upload_params_to_queue, "AzureAuth::extract_jwt", "token")
+  stub(batch_upload_params_to_queue, "jsonlite::write_json", "write json")
+  stub(batch_upload_params_to_queue, "AzureStor::upload_blob", "upload blob")
+
+  batch_upload_params_to_queue("filename.json", "params")
+
+  expect_called(m, 1)
+  expect_args(m, 1, "https://storage.azure.com/")
+})
+
+test_that("batch_upload_params_to_queue connects to the right container", {
+  m <- mock()
+
+  stub(batch_upload_params_to_queue, "batch_token_fn", "token")
+  stub(batch_upload_params_to_queue, "AzureStor::storage_container", m)
+  stub(batch_upload_params_to_queue, "AzureAuth::extract_jwt", "token")
+  stub(batch_upload_params_to_queue, "jsonlite::write_json", "write json")
+  stub(batch_upload_params_to_queue, "AzureStor::upload_blob", "upload blob")
+
+  withr::local_envvar(c("STORAGE_URL" = "url"))
+  batch_upload_params_to_queue("filename.json", "params")
+
+  expect_called(m, 1)
+  expect_args(m, 1, "url/queue", token = "token")
+})
+
+test_that("batch_upload_params_to_queue writes the params to disk", {
+  m <- mock()
+
+  stub(batch_upload_params_to_queue, "batch_token_fn", "token")
+  stub(batch_upload_params_to_queue, "AzureStor::storage_container", "container")
+  stub(batch_upload_params_to_queue, "AzureAuth::extract_jwt", "token")
+  stub(batch_upload_params_to_queue, "jsonlite::write_json", m)
+  stub(batch_upload_params_to_queue, "AzureStor::upload_blob", "upload blob")
+
+  withr::local_envvar(c("STORAGE_URL" = "url"))
+  batch_upload_params_to_queue("filename.json", "params")
+
+  expect_called(m, 1)
+  expect_args(m, 1, "params", "filename.json", auto_unbox = TRUE, pretty = TRUE)
+})
+
+test_that("batch_upload_params_to_queue uploads the params to storage", {
+  m <- mock()
+
+  stub(batch_upload_params_to_queue, "batch_token_fn", "token")
+  stub(batch_upload_params_to_queue, "AzureStor::storage_container", "container")
+  stub(batch_upload_params_to_queue, "AzureAuth::extract_jwt", "token")
+  stub(batch_upload_params_to_queue, "jsonlite::write_json", "write json")
+  stub(batch_upload_params_to_queue, "AzureStor::upload_blob", m)
+
+  withr::local_envvar(c("STORAGE_URL" = "url"))
+  batch_upload_params_to_queue("filename.json", "params")
+
+  expect_called(m, 1)
+  expect_args(m, 1, "container", "filename.json")
+})
+
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# batch_submit_model_run
+# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+test_that("batch_submit_model_run calls the other functions", {
+  m <- mock()
+
+  expected_cdt <- as.POSIXct("2022-01-01 01:23:45", tz = "UTC")
+
+  stub(batch_submit_model_run, "Sys.time", expected_cdt)
+  stub(batch_submit_model_run, "uuid::UUIDgenerate", "uuid")
+
+  stub(batch_submit_model_run, "batch_upload_params_to_queue", m)
+  stub(batch_submit_model_run, "batch_create_job", m)
+  stub(batch_submit_model_run, "batch_add_tasks_to_job", m)
+
+  withr::local_envvar(c(
+    "MODEL_RUNS_PER_TASK" = 16,
+    "COSMOS_ENDPOINT" = "cosmos endpoint",
+    "COSMOS_KEY" = "cosmos key",
+    "COSMOS_DB" = "cosmos db"
+  ))
+
+  params <- list(
+    input_data = "synthetic",
+    name = "test",
+    model_runs = 64
+  )
+
+  expected_job_name <- "synthetic__test__20220101_012345"
+  expected_filename <- paste0(expected_job_name, ".json")
+
+  expect_equal(batch_submit_model_run(params), expected_job_name)
+
+  params$create_datetime <- "20220101_012345"
+  expect_called(m, 3)
+  expect_args(m, 1, expected_filename, params)
+  expect_args(m, 2, expected_job_name)
+
+  # Begin Exclude Linting
+  expected_all_tasks <- list(
+    list(
+      id = "run_01-16",
+      displayName = "Model Run [1 to 16]",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=1 --model-runs=16",
+      userIdentity = list(
+        autoUser = list(scope = "pool", elevationLevel = "admin")
+      )
+    ),
+    list(
+      id = "run_17-32",
+      displayName = "Model Run [17 to 32]",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=17 --model-runs=16",
+      userIdentity = list(
+        autoUser = list(scope = "pool", elevationLevel = "admin")
+      )
+    ),
+    list(
+      id = "run_33-48",
+      displayName = "Model Run [33 to 48]",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=33 --model-runs=16",
+      userIdentity = list(
+        autoUser = list(scope = "pool", elevationLevel = "admin")
+      )
+    ),
+    list(
+      id = "run_49-64",
+      displayName = "Model Run [49 to 64]",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=49 --model-runs=16",
+      userIdentity = list(
+        autoUser = list(scope = "pool", elevationLevel = "admin")
+      )
+    ),
+    list(
+      id = "upload_to_cosmos",
+      displayName = "Run Principal + Upload to Cosmos",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=-1 --model-runs=2 --run-postruns",
+      userIdentity = list(
+        autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      environmentSettings = list(
+        list(name = "COSMOS_ENDPOINT", value = "cosmos endpoint"),
+        list(name = "COSMOS_KEY", value = "cosmos key"),
+        list(name = "COSMOS_DB", value = "cosmos db")
+      ),
+      dependsOn = list(
+        taskIds = c("run_01-16", "run_17-32", "run_33-48", "run_49-64")
+      )
+    ),
+    list(
+      id = "clean_queue",
+      displayName = "Clean up queue",
+      commandLine = "rm -rf /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json",
+      userIdentity = list(
+        autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      dependsOn = list(
+        taskIds = c("run_01-16", "run_17-32", "run_33-48", "run_49-64", "upload_to_cosmos")
+      )
+    )
+  )
+  # End Exclude Linting
+
+  expect_args(m, 3, expected_job_name, list(value = expected_all_tasks))
+})

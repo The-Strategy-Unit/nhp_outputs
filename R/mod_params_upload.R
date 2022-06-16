@@ -355,7 +355,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       shinyjs::disable("submit_model_run")
       shiny::updateActionButton(session, "submit_model_run", "Submitted...")
 
-      job_name <- batch_add_job(params)
+      job_name <- batch_submit_model_run(params)
       running_jobs[[job_name]] <- job_name
 
       status(paste("Submitted to batch:", job_name, "(Goto running models tab to view progress)"))

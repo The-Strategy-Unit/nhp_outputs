@@ -150,30 +150,8 @@ batch_job_status <- function(job_id) {
   }
 }
 
-batch_add_job <- function(params) {
-  sa_t <- batch_token_fn(STORAGE_EP)
-  cont <- AzureStor::storage_container(
-    glue::glue("{Sys.getenv('STORAGE_URL')}/queue"),
-    token = AzureAuth::extract_jwt(sa_t)
-  )
-
-  # set create_datetime
-  cdt <- Sys.time() |>
-    lubridate::with_tz("UTC") |>
-    format("%Y%m%d_%H%M%S")
-  params[["create_datetime"]] <- cdt
-
-  # create the name of the job and the filename
-  job_name <- glue::glue("{params[['input_data']]}__{params[['name']]}__{cdt}")
-  filename <- glue::glue("{job_name}.json")
-
-  # upload the params to blob storage
-  withr::local_file(filename)
-  jsonlite::write_json(params, filename, auto_unbox = TRUE, pretty = TRUE)
-  AzureStor::upload_blob(cont, filename)
-
-  # create the job
-  ba_t <- batch_token_fn(BATCH_EP)
+batch_create_job <- function(job_name) {
+  t <- batch_token_fn(BATCH_EP)
   req <- httr::POST(
     Sys.getenv("BATCH_URL"),
     path = c("jobs"),
@@ -188,10 +166,57 @@ batch_add_job <- function(params) {
     ),
     encode = "json",
     httr::add_headers(
-      "Authorization" = paste("Bearer", AzureAuth::extract_jwt(ba_t)),
+      "Authorization" = paste("Bearer", AzureAuth::extract_jwt(t)),
       "Content-Type" = "application/json;odata=minimalmetadata"
     )
   )
+}
+
+batch_add_tasks_to_job <- function(job_name, tasks) {
+  t <- batch_token_fn(BATCH_EP)
+  httr::POST(
+    Sys.getenv("BATCH_URL"),
+    path = c("jobs", job_name, "addtaskcollection"),
+    body = tasks,
+    query = list(
+      "api-version" = "2022-01-01.15.0"
+    ),
+    encode = "json",
+    httr::add_headers(
+      "Authorization" = paste("Bearer", AzureAuth::extract_jwt(t)),
+      "Content-Type" = "application/json;odata=minimalmetadata"
+    )
+  )
+}
+
+batch_upload_params_to_queue <- function(filename, params) {
+  t <- batch_token_fn(STORAGE_EP)
+  cont <- AzureStor::storage_container(
+    glue::glue("{Sys.getenv('STORAGE_URL')}/queue"),
+    token = AzureAuth::extract_jwt(t)
+  )
+
+  withr::local_file(filename)
+  jsonlite::write_json(params, filename, auto_unbox = TRUE, pretty = TRUE)
+  AzureStor::upload_blob(cont, filename)
+}
+
+batch_submit_model_run <- function(params) {
+  # set create_datetime
+  cdt <- Sys.time() |>
+    lubridate::with_tz("UTC") |>
+    format("%Y%m%d_%H%M%S")
+  params[["create_datetime"]] <- cdt
+
+  # create the name of the job and the filename
+  job_name <- glue::glue("{params[['input_data']]}__{params[['name']]}__{cdt}")
+  filename <- glue::glue("{job_name}.json")
+
+  # upload the params to blob storage
+  batch_upload_params_to_queue(filename, params)
+
+  # create the job
+  batch_create_job(job_name)
 
   # add tasks
   user_id <- list(
@@ -269,19 +294,7 @@ batch_add_job <- function(params) {
 
   all_tasks <- list(value = c(tasks, list(upload_to_cosmos, clean_up_queue)))
 
-  httr::POST(
-    Sys.getenv("BATCH_URL"),
-    path = c("jobs", job_name, "addtaskcollection"),
-    body = all_tasks,
-    query = list(
-      "api-version" = "2022-01-01.15.0"
-    ),
-    encode = "json",
-    httr::add_headers(
-      "Authorization" = paste("Bearer", AzureAuth::extract_jwt(ba_t)),
-      "Content-Type" = "application/json;odata=minimalmetadata"
-    )
-  )
+  batch_add_tasks_to_job(job_name, all_tasks)
 
   return(job_name)
 }
