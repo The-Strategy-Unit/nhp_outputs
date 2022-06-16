@@ -70,8 +70,8 @@ process_param_file <- function(path,
       start_year = base_year,
       end_year = model_year,
       variant_probabilities = data$pc_pg |>
-        filter(probability > 0) |>
-        deframe() |>
+        dplyr::filter(.data$probability > 0) |>
+        tibble::deframe() |>
         as.list()
     ),
     health_status_adjustment = unlist(data$pc_hsa),
@@ -82,60 +82,60 @@ process_param_file <- function(path,
 
   params$strategy_params <- list(
     "admission_avoidance" = data$am_a_ip |>
-      filter(include != 0) |>
-      rowwise() |>
-      transmute(strategy, interval = list(c(lo, hi))) |>
-      deframe() |>
-      map(~ list(interval = .x))
+      dplyr::filter(.data$include != 0) |>
+      dplyr::rowwise() |>
+      dplyr::transmute(.data$strategy, interval = list(c(.data$lo, .data$hi))) |>
+      tibble::deframe() |>
+      purrr::map(~ list(interval = .x))
   )
 
   params$strategy_params$los_reduction <- c(
     data$am_e_ip |>
-      dplyr::filter(include != 0) |>
-      dplyr::mutate(type = case_when(
-        strategy |> stringr::str_starts("ambulatory_emergency_care") ~ "aec",
-        strategy |> stringr::str_starts("pre-op") ~ "pre-op",
+      dplyr::filter(.data$include != 0) |>
+      dplyr::mutate(type = dplyr::case_when(
+        .data$strategy |> stringr::str_starts("ambulatory_emergency_care") ~ "aec",
+        .data$strategy |> stringr::str_starts("pre-op") ~ "pre-op",
         TRUE ~ "all"
       )) |>
       dplyr::rowwise() |>
-      dplyr::transmute(strategy, value = list(list(type = type, interval = list(lo, hi)))) |>
+      dplyr::transmute(.data$strategy, value = list(list(type = .data$type, interval = list(.data$lo, .data$hi)))) |>
       tibble::deframe(),
     data$am_tc_ip |>
-      dplyr::filter(include != 0) |>
+      dplyr::filter(.data$include != 0) |>
       dplyr::mutate(target_type = ifelse(
-        strategy |> stringr::str_detect("outpatients"),
+        .data$strategy |> stringr::str_detect("outpatients"),
         "outpatients",
         "daycase"
       )) |>
       dplyr::rowwise() |>
-      dplyr::transmute(strategy, value = list(
+      dplyr::transmute(.data$strategy, value = list(
         list(
           type = "bads",
-          target_type = target_type,
-          interval = list(lo, hi),
-          baseline_target_rate = baseline_target_rate,
-          op_dc_split = op_dc_split
+          target_type = .data$target_type,
+          interval = list(.data$lo, .data$hi),
+          baseline_target_rate = .data$baseline_target_rate,
+          op_dc_split = .data$op_dc_split
         )
       )) |>
       tibble::deframe()
   )
 
   params$outpatient_factors <- dplyr::bind_rows(data[c("am_a_op", "am_tc_op")]) |>
-    dplyr::filter(include != 0) |>
+    dplyr::filter(.data$include != 0) |>
     dplyr::rowwise() |>
-    dplyr::transmute(strategy, value = list(list(interval = list(lo, hi)))) |>
-    tidyr::separate(strategy, c("strategy", "sub_group"), "\\|") |>
-    dplyr::group_nest(strategy) |>
-    dplyr::mutate(dplyr::across(data, map, deframe)) |>
+    dplyr::transmute(.data$strategy, value = list(list(interval = list(.data$lo, .data$hi)))) |>
+    tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
+    dplyr::group_nest(.data$strategy) |>
+    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
     tibble::deframe()
 
   params$aae_factors <- data$am_a_aae |>
-    dplyr::filter(include != 0) |>
+    dplyr::filter(.data$include != 0) |>
     dplyr::rowwise() |>
-    dplyr::transmute(strategy, value = list(list(interval = list(lo, hi)))) |>
-    tidyr::separate(strategy, c("strategy", "sub_group"), "\\|") |>
-    dplyr::group_nest(strategy) |>
-    dplyr::mutate(dplyr::across(data, purrr::map, tibble::deframe)) |>
+    dplyr::transmute(.data$strategy, value = list(list(interval = list(.data$lo, .data$hi)))) |>
+    tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
+    dplyr::group_nest(.data$strategy) |>
+    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
     tibble::deframe()
 
   params

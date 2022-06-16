@@ -5,16 +5,13 @@ Authors@R: person('Tom', 'Jemmett', email = 'thomas.jemmett@nhs.net', role = c('
 Description: A shiny app for showing outputs of the NHP model.
 License: MIT + file LICENSE
 Imports: 
-    attempt,
     AzureAuth,
     AzureCosmosR,
     AzureStor,
     bs4Dash,
     cachem,
     config (>= 0.3.1),
-    DBI,
     dplyr,
-    DT,
     forcats,
     ggbeeswarm,
     ggplot2,
@@ -25,8 +22,6 @@ Imports:
     httr,
     jsonlite,
     lubridate,
-    odbc,
-    pkgload,
     plotly,
     purrr,
     readr,
@@ -51,7 +46,9 @@ Suggests:
     rsconnect,
     testthat (>= 3.0.0),
     usethis,
-    utils
+    utils,
+    attempt,
+    pkgload,
 Encoding: UTF-8
 RoxygenNote: 7.2.0
 URL: https://github.com/The-Strategy-Unit/834_nhp_model

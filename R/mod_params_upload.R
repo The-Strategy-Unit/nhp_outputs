@@ -113,7 +113,7 @@ mod_params_upload_ui <- function(id) {
     )
   }
 
-  tab_op <- tagList(
+  tab_op <- shiny::tagList(
     bs4Dash::box(
       title = "Activity Avoidance",
       width = 12,
@@ -140,7 +140,7 @@ mod_params_upload_ui <- function(id) {
     )
   )
 
-  tagList(
+  shiny::tagList(
     bs4Dash::box(
       width = 12,
       title = "Upload File",
@@ -167,7 +167,7 @@ mod_params_upload_ui <- function(id) {
 #'
 #' @noRd
 mod_params_upload_server <- function(id, user_allowed_datasets) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     shiny::observe({
       shiny::updateSelectInput(session, "dataset", choices = user_allowed_datasets())
     })
@@ -338,7 +338,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       shiny::updateTextInput(session, "aae_am_a_hi_a2", value = p[["adult_walk-in"]]$interval[[2]])
     })
 
-    updated_params <- reactive({
+    updated_params <- shiny::reactive({
       params <- shiny::req(params())
 
       params$input_data <- shiny::req(input$dataset)
@@ -362,7 +362,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
     })
 
     job_check_timer <- shiny::reactiveTimer(5000)
-    observeEvent(job_check_timer(), {
+    shiny::observeEvent(job_check_timer(), {
       for (job_id in ls(running_jobs)) {
         status <- batch_job_status(job_id)
 

@@ -13,7 +13,7 @@ mod_principal_detailed_ui <- function(id) {
     shiny::h1("Detailed activity estimates (principal projection)"),
     shiny::fluidRow(
       mod_measure_selection_ui(ns("measure_selection"), width = 3),
-      col_3(selectInput(ns("aggregation"), "Aggregation", NULL))
+      col_3(shiny::selectInput(ns("aggregation"), "Aggregation", NULL))
     ),
     shinycssloaders::withSpinner(
       gt::gt_output(ns("results"))
@@ -37,8 +37,8 @@ mod_principal_detailed_table <- function(data, aggregation) {
       change = "Change",
       change_pcnt = "Percent Change",
     ) |>
-    gt::fmt_integer(c(baseline)) |>
-    gt::cols_width(final ~ px(150), change ~ px(150), change_pcnt ~ px(150)) |>
+    gt::fmt_integer(c(.data$baseline)) |>
+    gt::cols_width(.data$final ~ px(150), .data$change ~ px(150), .data$change_pcnt ~ px(150)) |>
     gt::cols_align(
       align = "left",
       columns = c("agg", "final", "change", "change_pcnt")
@@ -50,10 +50,10 @@ mod_principal_detailed_table <- function(data, aggregation) {
 #'
 #' @noRd
 mod_principal_detailed_server <- function(id, selected_model_run_id) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
-    available_aggregations <- reactive({
+    available_aggregations <- shiny::reactive({
       id <- selected_model_run_id()
 
       cosmos_get_available_aggregations(id)
@@ -74,11 +74,12 @@ mod_principal_detailed_server <- function(id, selected_model_run_id) {
       shiny::updateSelectInput(session, "aggregation", choices = unname(an[a]))
     })
 
-    selected_data <- reactive({
+    selected_data <- shiny::reactive({
       id <- selected_model_run_id()
+      activity_type <- pod <- measure <- NULL
       c(activity_type, pod, measure) %<-% selected_measure()
 
-      agg_col <- switch(req(input$aggregation),
+      agg_col <- switch(shiny::req(input$aggregation),
         "Age Group" = "age_group",
         "Treatment Specialty" = "tretspef"
       )
@@ -100,9 +101,9 @@ mod_principal_detailed_server <- function(id, selected_model_run_id) {
 
       # handle some edge cases where a dropdown is changed and the next dropdowns aren't yet changed: we get 0 rows of
       # data which causes a bunch of warning messages
-      req(nrow(d) > 0)
+      shiny::req(nrow(d) > 0)
 
-      mod_principal_detailed_table(d, req(input$aggregation))
+      mod_principal_detailed_table(d, shiny::req(input$aggregation))
     })
   })
 }

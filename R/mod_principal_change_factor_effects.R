@@ -25,7 +25,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
         shiny::h2("Individual Change Factors"),
         shiny::selectInput(ns("sort_type"), "Sort By", c("alphabetical", "descending value")),
         shinycssloaders::withSpinner(
-          fluidRow(
+          shiny::fluidRow(
             col_6(plotly::plotlyOutput(ns("admission_avoidance"), height = "600px")),
             col_6(plotly::plotlyOutput(ns("los_reduction"), height = "600px"))
           )
@@ -55,8 +55,8 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     dplyr::summarise(dplyr::across(.data$value, sum, na.rm = TRUE)) |>
     dplyr::mutate(cuvalue = cumsum(.data$value)) |>
     dplyr::mutate(
-      hidden = tidyr::replace_na(lag(.data$cuvalue) + pmin(.data$value, 0), 0),
-      colour = case_when(
+      hidden = tidyr::replace_na(dplyr::lag(.data$cuvalue) + pmin(.data$value, 0), 0),
+      colour = dplyr::case_when(
         .data$change_factor == "Baseline" ~ "#686f73",
         .data$value >= 0 ~ "#f9bf07",
         TRUE ~ "#2c2825"
@@ -88,8 +88,8 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
 }
 
 mod_principal_change_factor_effects_cf_plot <- function(data) {
-  ggplot2::ggplot(data, aes(.data$value, .data$change_factor)) +
-    ggplot2::geom_col(aes(fill = .data$colour), show.legend = FALSE, position = "stack") +
+  ggplot2::ggplot(data, ggplot2::aes(.data$value, .data$change_factor)) +
+    ggplot2::geom_col(ggplot2::aes(fill = .data$colour), show.legend = FALSE, position = "stack") +
     ggplot2::scale_fill_identity() +
     ggplot2::scale_x_continuous(labels = scales::comma)
 }
@@ -97,18 +97,18 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
 mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour) {
   data |>
     dplyr::filter(.data$change_factor == .env$change_factor) |>
-    ggplot2::ggplot(aes(.data$value, .data$strategy)) +
+    ggplot2::ggplot(ggplot2::aes(.data$value, .data$strategy)) +
     ggplot2::geom_col(fill = "#f9bf07") +
     ggplot2::scale_x_continuous(labels = scales::comma) +
-    labs(x = "", y = "")
+    ggplot2::labs(x = "", y = "")
 }
 
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
 mod_principal_change_factor_effects_server <- function(id, selected_model_run_id) {
-  moduleServer(id, function(input, output, session) {
-    observe({
+  shiny::moduleServer(id, function(input, output, session) {
+    shiny::observe({
       activity_types <- get_activity_type_pod_measure_options() |>
         dplyr::distinct(
           dplyr::across(
@@ -120,8 +120,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       shiny::updateSelectInput(session, "activity_type", choices = activity_types)
     })
 
-    principal_change_factors <- reactive({
-      at <- req(input$activity_type)
+    principal_change_factors <- shiny::reactive({
+      at <- shiny::req(input$activity_type)
 
       id <- selected_model_run_id()
 
@@ -139,19 +139,19 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
     }) |>
       shiny::bindCache(selected_model_run_id(), input$activity_type, cache = get_data_cache())
 
-    observeEvent(principal_change_factors(), {
-      at <- req(input$activity_type)
-      pcf <- req(principal_change_factors())
+    shiny::observeEvent(principal_change_factors(), {
+      at <- shiny::req(input$activity_type)
+      pcf <- shiny::req(principal_change_factors())
 
       measures <- unique(pcf$measure)
 
-      req(length(measures) > 0)
+      shiny::req(length(measures) > 0)
 
       shiny::updateSelectInput(session, "measure", choices = measures)
     })
 
-    individual_change_factors <- reactive({
-      m <- req(input$measure)
+    individual_change_factors <- shiny::reactive({
+      m <- shiny::req(input$measure)
 
       d <- principal_change_factors() |>
         dplyr::filter(
@@ -167,14 +167,14 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       }
     })
 
-    observeEvent(individual_change_factors(), {
+    shiny::observeEvent(individual_change_factors(), {
       d <- individual_change_factors()
 
       shinyjs::toggle("individual_change_factors", condition = nrow(d) > 0)
     })
 
     output$change_factors <- plotly::renderPlotly({
-      measure <- req(input$measure)
+      measure <- shiny::req(input$measure)
 
       p <- principal_change_factors() |>
         mod_principal_change_factor_effects_summarised(measure, input$include_baseline) |>

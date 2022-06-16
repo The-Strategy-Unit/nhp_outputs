@@ -1,5 +1,7 @@
 #' @importFrom zeallot %<-%
 #' @importFrom rlang .data .env
+#' @importFrom uuid UUIDgenerate
+#' @import tidyverse
 NULL
 
 # converts a two column tibble into a named list suitable for shiny selectInput choices

@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_result_selection_ui <- function(id) {
   ns <- shiny::NS(id)
-  tagList(
+  shiny::tagList(
     shiny::selectInput(ns("dataset"), "Dataset", NULL),
     shiny::selectInput(ns("scenario"), "Scenario", NULL),
     shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL)
@@ -20,33 +20,33 @@ mod_result_selection_ui <- function(id) {
 #'
 #' @noRd
 mod_result_selection_server <- function(id, user_allowed_datasets) {
-  moduleServer(id, function(input, output, session) {
-    results_sets <- reactive({
+  shiny::moduleServer(id, function(input, output, session) {
+    results_sets <- shiny::reactive({
       cosmos_get_result_sets() |>
         dplyr::filter(.data$dataset %in% user_allowed_datasets()) |>
         dplyr::group_nest(.data$dataset, .data$scenario, .key = "create_datetime") |>
         dplyr::mutate(
           dplyr::across(.data$create_datetime, purrr::map, tibble::deframe)
         ) |>
-        dplyr::group_nest(dataset, .key = "scenario") |>
+        dplyr::group_nest(.data$dataset, .key = "scenario") |>
         dplyr::mutate(
           dplyr::across(.data$scenario, purrr::map, tibble::deframe)
         ) |>
         tibble::deframe()
     })
 
-    observe({
+    shiny::observe({
       datasets <- names(results_sets())
       shiny::updateSelectInput(session, "dataset", choices = datasets)
     })
 
-    observe({
+    shiny::observe({
       ds <- shiny::req(input$dataset)
       scenarios <- names(results_sets()[[ds]])
       shiny::updateSelectInput(session, "scenario", choices = scenarios)
     })
 
-    observe({
+    shiny::observe({
       ds <- shiny::req(input$dataset)
       sc <- shiny::req(input$scenario)
 
@@ -61,7 +61,7 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       shiny::updateSelectInput(session, "create_datetime", choices = create_datetimes)
     })
 
-    selected_model_run <- reactive({
+    selected_model_run <- shiny::reactive({
       ds <- shiny::req(input$dataset)
       sc <- shiny::req(input$scenario)
       cd <- shiny::req(input$create_datetime)

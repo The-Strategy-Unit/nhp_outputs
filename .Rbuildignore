@@ -16,3 +16,4 @@ $run_dev.*
 ^\.covrignore$
 ^\.lintr$
 ^\.vscode$
+^R/_disable_autoload.R$

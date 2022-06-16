@@ -10,8 +10,8 @@
 mod_model_results_distribution_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    h1("Simulation Results"),
-    fluidRow(
+    shiny::h1("Simulation Results"),
+    shiny::fluidRow(
       mod_measure_selection_ui(ns("measure_selection"), 4),
     ),
     shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?"),
@@ -22,6 +22,7 @@ mod_model_results_distribution_ui <- function(id) {
 }
 
 mod_model_results_distribution_get_data <- function(id, selected_measure) {
+  activity_type <- pod <- measure <- NULL
   c(activity_type, pod, measure) %<-% selected_measure
   cosmos_get_model_run_distribution(id, pod, measure)
 }
@@ -30,21 +31,21 @@ mod_model_results_distibution_density_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
 
   data |>
-    ggplot2::ggplot(aes(.data$value)) +
+    ggplot2::ggplot(ggplot2::aes(.data$value)) +
     ggplot2::geom_density(fill = "#f9bf07", colour = "#2c2825", alpha = 0.5) +
     ggplot2::geom_vline(xintercept = b) +
     ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::theme(
-      axis.text = element_blank(),
-      axis.title = element_blank(),
-      axis.ticks = element_blank()
+      axis.text = ggplot2::element_blank(),
+      axis.title = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank()
     )
 }
 
 mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   data |>
-    ggplot2::ggplot(aes("1", .data$value, colour = .data$variant)) +
+    ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(groupOnX = TRUE, alpha = 0.5) +
     ggplot2::geom_hline(yintercept = b) +
     ggplot2::expand_limits(y = ifelse(show_origin, 0, b)) +
@@ -56,17 +57,13 @@ mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::theme(
-      axis.text.y = element_blank(),
-      axis.title.y = element_blank(),
-      axis.ticks.y = element_blank()
+      axis.text = ggplot2::element_blank(),
+      axis.title = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank()
     )
 }
 
 mod_model_results_distibution_plot <- function(data, show_origin) {
-  req(data)
-  req(nrow(data) > 0)
-  req(is.logical(show_origin))
-
   p1 <- plotly::ggplotly(mod_model_results_distibution_density_plot(data, show_origin))
   p2 <- plotly::ggplotly(mod_model_results_distibution_beeswarm_plot(data, show_origin))
 
@@ -79,16 +76,20 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
 #'
 #' @noRd
 mod_model_results_distribution_server <- function(id, selected_model_run_id) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
-    selected_data <- reactive({
+    selected_data <- shiny::reactive({
       mod_model_results_distribution_get_data(selected_model_run_id(), selected_measure())
     }) |>
       shiny::bindCache(selected_model_run_id(), selected_measure(), cache = get_data_cache())
 
     output$distribution <- plotly::renderPlotly({
-      mod_model_results_distibution_plot(selected_data(), input$show_origin)
+      data <- shiny::req(selected_data())
+      shiny::req(nrow(data) > 0)
+      shiny::req(is.logical(input$show_origin))
+
+      mod_model_results_distibution_plot(data, input$show_origin)
     })
   })
 }
