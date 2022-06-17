@@ -8,10 +8,10 @@
 #'
 #' @importFrom shiny NS tagList
 mod_running_models_ui <- function(id) {
-  ns <- NS(id)
-  tagList(
-    h2("Running Models"),
-    tableOutput(ns("running_models"))
+  ns <- shiny::NS(id)
+  shiny::tagList(
+    shiny::h2("Running Models"),
+    shiny::tableOutput(ns("running_models"))
   )
 }
 
@@ -19,10 +19,10 @@ mod_running_models_ui <- function(id) {
 #'
 #' @noRd
 mod_running_models_server <- function(id) {
-  moduleServer(id, function(input, output, session) {
-    refresh_timer <- reactiveTimer(2500)
+  shiny::moduleServer(id, function(input, output, session) {
+    refresh_timer <- shiny::reactiveTimer(2500)
 
-    output$running_models <- renderTable({
+    output$running_models <- shiny::renderTable({
       job_status <- function(job_id) {
         batch_get_tasks(job_id) |>
           dplyr::summarise(
@@ -35,8 +35,8 @@ mod_running_models_server <- function(id) {
       shiny::req(batch_get_jobs()) |>
         dplyr::filter(.data$state != "completed") |>
         dplyr::mutate(status = purrr::map_dfr(.data$id, job_status)) |>
-        tidyr::unnest(status)
+        tidyr::unnest(.data$status)
     }) |>
-      bindEvent(refresh_timer())
+      shiny::bindEvent(refresh_timer())
   })
 }

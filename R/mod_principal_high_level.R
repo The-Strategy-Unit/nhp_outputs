@@ -49,12 +49,13 @@ mod_principal_high_level_ui <- function(id) {
 mod_principal_high_level_pods <- function() {
   get_activity_type_pod_measure_options() |>
     dplyr::filter(.data$activity_type != "aae") |>
-    distinct(.data$activity_type, .data$pod, .data$pod_name) |>
+    dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
     dplyr::bind_rows(data.frame(activity_type = "aae", pod = "aae", pod_name = "A&E Attendance")) |>
     dplyr::mutate(dplyr::across(.data$pod_name, forcats::fct_inorder))
 }
 
 mod_principal_high_level_summary_data <- function(id, pods) {
+  start_year <- end_year <- NULL
   c(start_year, end_year) %<-% cosmos_get_model_run_years(id)
 
   cosmos_get_principal_high_level(id) |>
@@ -92,11 +93,12 @@ mod_principal_high_level_table <- function(data) {
 }
 
 mod_principal_high_level_plot <- function(data, activity_type) {
+  start_year <- end_year <- NULL
   c(start_year, end_year) %<-% range(data$year)
 
   data |>
     dplyr::filter(.data$activity_type == .env$activity_type) |>
-    ggplot2::ggplot(aes(.data$year, .data$value, colour = .data$pod_name)) +
+    ggplot2::ggplot(ggplot2::aes(.data$year, .data$value, colour = .data$pod_name)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
     ggplot2::scale_x_continuous(
@@ -117,11 +119,11 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
   shiny::moduleServer(id, function(input, output, session) {
     pods <- mod_principal_high_level_pods()
 
-    summary_data <- reactive({
+    summary_data <- shiny::reactive({
       id <- selected_model_run_id()
       mod_principal_high_level_summary_data(id, pods)
     }) |>
-      shiny::bindCache(selected_model_run_id(), cache = get_data_cache())
+      shiny::bindCache(selected_model_run_id())
 
     output$activity <- gt::render_gt({
       summary_data() |>

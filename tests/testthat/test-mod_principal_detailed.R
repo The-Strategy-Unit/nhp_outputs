@@ -50,7 +50,9 @@ test_that("table returns a gt", {
     )
 
   table <- mod_principal_detailed_table(data, "Age Group")
-  expect_snapshot(table)
+
+  expect_s3_class(table, "gt_tbl")
+  expect_snapshot(gt::as_raw_html(table))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

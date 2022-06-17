@@ -33,7 +33,8 @@ test_that("mod_model_core_activity_server_table returns a gt", {
     inner_join(atpmo_expected, by = c("pod", "measure" = "measures")) |>
     mod_model_core_activity_server_table()
 
-  expect_snapshot(table)
+  expect_s3_class(table, "gt_tbl")
+  expect_snapshot(gt::as_raw_html(table))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

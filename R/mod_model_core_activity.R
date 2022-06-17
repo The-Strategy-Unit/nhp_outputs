@@ -52,9 +52,9 @@ mod_model_core_activity_server <- function(id, selected_model_run_id) {
     summarised_data <- shiny::reactive({
       id <- selected_model_run_id()
       cosmos_get_model_core_activity(id) |>
-        inner_join(atpmo, by = c("pod", "measure" = "measures"))
+        dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures"))
     }) |>
-      shiny::bindCache(selected_model_run_id(), cache = get_data_cache())
+      shiny::bindCache(selected_model_run_id())
 
     output$core_activity <- gt::render_gt({
       summarised_data() |>

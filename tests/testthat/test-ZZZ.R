@@ -11,8 +11,8 @@ test_that("set_names converts a two column tibble to a named vector", {
 })
 
 test_that("global variables are set correctly", {
-  expect_equal(BATCH_EP, "https://batch.core.windows.net/")
-  expect_equal(STORAGE_EP, "https://storage.azure.com/")
+  expect_equal(`__BATCH_EP__`, "https://batch.core.windows.net/")
+  expect_equal(`__STORAGE_EP__`, "https://storage.azure.com/")
 })
 
 test_that("fyear_str formats years correctly", {

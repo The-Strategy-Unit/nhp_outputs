@@ -11,5 +11,6 @@ test_that("it themes tables correctly", {
     gt::gt(groupname_col = "g") |>
     gt_theme()
 
-  expect_snapshot(table)
+  expect_s3_class(table, "gt_tbl")
+  expect_snapshot(gt::as_raw_html(table))
 })

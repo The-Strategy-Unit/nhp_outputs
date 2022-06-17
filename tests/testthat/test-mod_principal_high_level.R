@@ -115,7 +115,8 @@ test_that("mod_principal_high_level_table returns a gt", {
 
   table <- mod_principal_high_level_table(summary_data_expected)
 
-  expect_snapshot(table)
+  expect_s3_class(table, "gt_tbl")
+  expect_snapshot(gt::as_raw_html(table))
 })
 
 test_that("mod_principal_high_level_plot returns a plot", {

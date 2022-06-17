@@ -33,7 +33,7 @@ mod_capacity_beds_load_specialties <- function() {
 }
 
 mod_capacity_beds_get_beds_data <- function(ds, id) {
-  kh03 <- readr::read_csv(app_sys("data", "kh03", paste0(ds, ".csv")), lazy = FALSE, col_types = "ccdd")
+  kh03 <- readr::read_csv(app_sys("app_data", "kh03", paste0(ds, ".csv")), lazy = FALSE, col_types = "ccdd")
 
   cosmos_get_mainspef_agg(id) |>
     dplyr::group_by(.data$mainspef) |>
@@ -60,7 +60,7 @@ mod_capacity_beds_get_available_table <- function(data) {
       new_beds = .data$new_available
     ) |>
     dplyr::arrange(dplyr::desc(.data$new_beds), dplyr::desc(.data$old_beds)) |>
-    dplyr::filter(new_beds > 0.5) |>
+    dplyr::filter(.data$new_beds > 0.5) |>
     gt::gt(rowname_col = "specialty", groupname_col = "specialty_group") |>
     gt::fmt_integer(c("old_beds", "new_beds")) |>
     gt::summary_rows(
@@ -98,10 +98,10 @@ mod_capacity_beds_server <- function(id, selected_model_run) {
 
   shiny::moduleServer(id, function(input, output, session) {
     beds_data <- shiny::reactive({
-      c(ds, sc, mr, id) %<-% selected_model_run() # nolint
+      c(ds, sc, cd, id) %<-% selected_model_run() # nolint
       mod_capacity_beds_get_beds_data(ds, id) # nolint
     }) |>
-      shiny::bindCache(selected_model_run(), cache = get_data_cache())
+      shiny::bindCache(selected_model_run())
 
     new_beds <- shiny::reactive({
       occupancy_rate <- shiny::req(input$occupancy_rate) / 100
