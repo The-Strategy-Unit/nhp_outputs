@@ -101,7 +101,7 @@ mod_capacity_beds_server <- function(id, selected_model_run) {
       c(ds, sc, cd, id) %<-% selected_model_run() # nolint
       mod_capacity_beds_get_beds_data(ds, id) # nolint
     }) |>
-      shiny::bindCache(selected_model_run(), cache = get_data_cache())
+      shiny::bindCache(selected_model_run())
 
     new_beds <- shiny::reactive({
       occupancy_rate <- shiny::req(input$occupancy_rate) / 100

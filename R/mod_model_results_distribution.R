@@ -82,7 +82,7 @@ mod_model_results_distribution_server <- function(id, selected_model_run_id) {
     selected_data <- shiny::reactive({
       mod_model_results_distribution_get_data(selected_model_run_id(), selected_measure())
     }) |>
-      shiny::bindCache(selected_model_run_id(), selected_measure(), cache = get_data_cache())
+      shiny::bindCache(selected_model_run_id(), selected_measure())
 
     output$distribution <- plotly::renderPlotly({
       data <- shiny::req(selected_data())

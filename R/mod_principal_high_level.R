@@ -123,7 +123,7 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
       id <- selected_model_run_id()
       mod_principal_high_level_summary_data(id, pods)
     }) |>
-      shiny::bindCache(selected_model_run_id(), cache = get_data_cache())
+      shiny::bindCache(selected_model_run_id())
 
     output$activity <- gt::render_gt({
       summary_data() |>

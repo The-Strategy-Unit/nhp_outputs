@@ -14,6 +14,10 @@ run_app <- function(onStart = NULL, # nolint
                     ...) {
   options(shiny.maxRequestSize = 30 * 1024^2)
 
+  if (getOption("golem.app.prod", FALSE)) {
+    create_data_cache()
+  }
+
   with_golem_options(
     app = shinyApp(
       ui = app_ui,

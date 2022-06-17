@@ -137,7 +137,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
           )
         )
     }) |>
-      shiny::bindCache(selected_model_run_id(), input$activity_type, cache = get_data_cache())
+      shiny::bindCache(selected_model_run_id(), input$activity_type)
 
     shiny::observeEvent(principal_change_factors(), {
       at <- shiny::req(input$activity_type)
