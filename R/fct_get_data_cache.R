@@ -6,12 +6,10 @@
 #'
 #' @noRd
 
-get_data_cache <- function() {
-  env <- as.environment("package:outputs")
-
-  dci <- "__data_cache_instance__"
+get_data_cache <- function(env = asNamespace("outputs")) {
   # if the data cache instance doesn't exist, create it
-  if (!exists(dci, envir = env)) {
+  dc <- get("__DATA_CACHE__", envir = env)
+  if (is.null(dc)) {
     if (Sys.getenv("GOLEM_CONFIG_ACTIVE") == "dev") {
       dc <- cachem::cache_mem()
     } else {
@@ -36,9 +34,8 @@ get_data_cache <- function() {
       }
     }
 
-    assign(dci, dc, envir = env)
+    assign("__DATA_CACHE__", dc, envir = env)
   }
 
-  # retrieve the data cache
-  get(dci, envir = env)
+  dc
 }

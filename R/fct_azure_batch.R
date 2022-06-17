@@ -14,7 +14,7 @@ batch_token_fn <- function(resource) {
 }
 
 batch_get_pools <- function() {
-  t <- batch_token_fn(BATCH_EP)
+  t <- batch_token_fn(`__BATCH_EP__`)
   pool_req <- httr::GET(
     Sys.getenv("BATCH_URL"),
     path = c("pools"),
@@ -42,7 +42,7 @@ batch_get_pools <- function() {
 }
 
 batch_get_jobs <- function() {
-  t <- batch_token_fn(BATCH_EP)
+  t <- batch_token_fn(`__BATCH_EP__`)
   jobs_req <- httr::GET(
     Sys.getenv("BATCH_URL"),
     path = c("jobs"),
@@ -82,7 +82,7 @@ batch_get_jobs <- function() {
 }
 
 batch_get_tasks <- function(job_id) {
-  t <- batch_token_fn(BATCH_EP)
+  t <- batch_token_fn(`__BATCH_EP__`)
   tasks_req <- httr::GET(
     Sys.getenv("BATCH_URL"),
     path = c("jobs", job_id, "tasks"),
@@ -125,7 +125,7 @@ batch_get_tasks <- function(job_id) {
 }
 
 batch_delete_job <- function(job_id) {
-  t <- batch_token_fn(BATCH_EP)
+  t <- batch_token_fn(`__BATCH_EP__`)
   job_req <- httr::DELETE(
     Sys.getenv("BATCH_URL"),
     path = c("jobs", job_id),
@@ -151,7 +151,7 @@ batch_job_status <- function(job_id) {
 }
 
 batch_create_job <- function(job_name) {
-  t <- batch_token_fn(BATCH_EP)
+  t <- batch_token_fn(`__BATCH_EP__`)
   req <- httr::POST(
     Sys.getenv("BATCH_URL"),
     path = c("jobs"),
@@ -173,7 +173,7 @@ batch_create_job <- function(job_name) {
 }
 
 batch_add_tasks_to_job <- function(job_name, tasks) {
-  t <- batch_token_fn(BATCH_EP)
+  t <- batch_token_fn(`__BATCH_EP__`)
   httr::POST(
     Sys.getenv("BATCH_URL"),
     path = c("jobs", job_name, "addtaskcollection"),
@@ -190,7 +190,7 @@ batch_add_tasks_to_job <- function(job_name, tasks) {
 }
 
 batch_upload_params_to_queue <- function(filename, params) {
-  t <- batch_token_fn(STORAGE_EP)
+  t <- batch_token_fn(`__STORAGE_EP__`)
   cont <- AzureStor::storage_container(
     glue::glue("{Sys.getenv('STORAGE_URL')}/queue"),
     token = AzureAuth::extract_jwt(t)
