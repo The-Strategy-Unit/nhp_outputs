@@ -100,7 +100,10 @@ test_that("get_new_available_beds processes the data correctly", {
 
 test_that("get_available_table returns a gt", {
   set.seed(1) # ensure gt id always regenerated identically
-  expect_snapshot(mod_capacity_beds_get_available_table(new_available_beds_expected))
+  table <- mod_capacity_beds_get_available_table(new_available_beds_expected)
+
+  expect_s3_class(table, "gt_tbl")
+  expect_snapshot(gt::as_raw_html(table))
 })
 
 test_that("get_available_plot returns a ggplot object", {
