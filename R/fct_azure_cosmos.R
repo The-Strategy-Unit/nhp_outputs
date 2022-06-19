@@ -139,7 +139,7 @@ cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
 
   container <- cosmos_get_container("results")
 
-  agg_type <- glue::glue("sex+{agg_col}")
+  agg_type <- glue::glue("sex+{agg_col}") # nolint
   qry <- glue::glue("
     SELECT
       r.sex,

@@ -10,7 +10,7 @@ create_data_cache <- function() {
   if (!dir.exists(".cache")) {
     dir.create(".cache")
   }
-  
+
   dc <- cachem::cache_disk(".cache/data_cache", 200 * 1024^2) # 200MB
 
   # in case we need to invalidate the cache on rsconnect quickly, we can increment the "CACHE_VERSION" env var
@@ -26,7 +26,7 @@ create_data_cache <- function() {
     cache_version <- Sys.getenv("CACHE_VERSION", 0)
     writeLines(as.character(cache_version), ".cache/cache_version.txt")
   }
-  
+
   shiny::shinyOptions(cache = dc)
 
   invisible(NULL)

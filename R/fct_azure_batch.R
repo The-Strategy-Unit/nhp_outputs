@@ -126,7 +126,7 @@ batch_get_tasks <- function(job_id) {
 
 batch_delete_job <- function(job_id) {
   t <- batch_token_fn(`__BATCH_EP__`)
-  job_req <- httr::DELETE(
+  httr::DELETE(
     Sys.getenv("BATCH_URL"),
     path = c("jobs", job_id),
     query = list("api-version" = "2022-01-01.15.0"),
@@ -152,7 +152,7 @@ batch_job_status <- function(job_id) {
 
 batch_create_job <- function(job_name) {
   t <- batch_token_fn(`__BATCH_EP__`)
-  req <- httr::POST(
+  httr::POST(
     Sys.getenv("BATCH_URL"),
     path = c("jobs"),
     body = list(
@@ -226,9 +226,9 @@ batch_submit_model_run <- function(params) {
     )
   )
 
-  md <- "/mnt/batch/tasks/fsmounts"
-  results_path <- glue::glue("{md}/results")
-  temp_results_path <- glue::glue("{md}/batch/{uuid::UUIDgenerate()}")
+  md <- "/mnt/batch/tasks/fsmounts" # nolint
+  results_path <- glue::glue("{md}/results") # nolint
+  temp_results_path <- glue::glue("{md}/batch/{uuid::UUIDgenerate()}") # nolint
   task_command <- function(run_start, runs_per_task) {
     glue::glue(
       .sep = " ",
@@ -247,7 +247,7 @@ batch_submit_model_run <- function(params) {
   model_runs <- params[["model_runs"]]
   runs_per_task <- as.numeric(Sys.getenv("MODEL_RUNS_PER_TASK", 64))
 
-  pad <- purrr::partial(
+  pad <- purrr::partial( # nolint
     stringr::str_pad,
     width = floor(log10(model_runs)) + 1,
     side = "left",
@@ -261,7 +261,7 @@ batch_submit_model_run <- function(params) {
   )
 
   task_fn <- function(run_start) {
-    run_end <- run_start + runs_per_task - 1
+    run_end <- run_start + runs_per_task - 1 # nolin
 
     list(
       id = glue::glue("run_{pad(run_start)}-{pad(run_end)}"),

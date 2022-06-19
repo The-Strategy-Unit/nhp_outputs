@@ -14,9 +14,8 @@ utils::globalVariables(c(
   "ds", "sc", "cd" # because of the use of %<-%
 ))
 
-`__BATCH_EP__` <- "https://batch.core.windows.net/"
-`__STORAGE_EP__` <- "https://storage.azure.com/"
-`__DATA_CACHE__` <- NULL
+`__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint
+`__STORAGE_EP__` <- "https://storage.azure.com/" # nolint
 
 fyear_str <- function(y) {
   glue::glue("{y}/{stringr::str_pad((y + 1) %% 100, 2, pad = '0')}")
