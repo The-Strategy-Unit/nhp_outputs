@@ -11,9 +11,9 @@ mod_measure_selection_ui <- function(id, width = 4) {
   ns <- shiny::NS(id)
 
   shiny::tagList(
-    shiny::column(width, shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-    shiny::column(width, shiny::selectInput(ns("pod"), "POD", NULL)),
-    shiny::column(width, shiny::selectInput(ns("measure"), "Measure", NULL))
+    bs4Dash::column(width, shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
+    bs4Dash::column(width, shiny::selectInput(ns("pod"), "POD", NULL)),
+    bs4Dash::column(width, shiny::selectInput(ns("measure"), "Measure", NULL))
   )
 }
 

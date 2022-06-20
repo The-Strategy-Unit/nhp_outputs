@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 test_that("it loads the module correctly: mod_capacity_beds_server", {

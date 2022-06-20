@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -41,7 +42,7 @@ pods_expected <- tibble::tribble(
   "op", "op_procedure", "Outpatient Procedure",
   "aae", "aae", "A&E Attendance"
 ) |>
-  mutate(across(pod_name, forcats::fct_inorder))
+  dplyr::mutate(dplyr::across(pod_name, forcats::fct_inorder))
 
 principal_high_level_expected <- tibble::tribble(
   ~pod,                          ~baseline, ~principal,
@@ -82,7 +83,7 @@ summary_data_expected <- tibble::tribble(
   2020, 390000, "op", "Follow-up Outpatient Attendance", "2020/21",
   2020, 47000, "op", "Outpatient Procedure", "2020/21"
 ) |>
-  mutate(across(pod_name, factor, levels(pods_expected$pod_name)))
+  dplyr::mutate(dplyr::across(pod_name, factor, levels(pods_expected$pod_name)))
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui

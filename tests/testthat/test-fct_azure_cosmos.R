@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 test_that("cosmos_get_container creates a reference to a container", {
@@ -240,7 +241,10 @@ test_that("cosmos_get_principal_change_factors gets the results", {
   stub(cosmos_get_principal_change_factors, "cosmos_get_container", m_cont)
   stub(cosmos_get_principal_change_factors, "AzureCosmosR::query_documents", m)
 
-  expect_equal(cosmos_get_principal_change_factors("id", "aae"), tibble(strategy = c("a", "b", "-")))
+  expect_equal(
+    cosmos_get_principal_change_factors("id", "aae"),
+    tibble::tibble(strategy = c("a", "b", "-"))
+  )
   qry <- glue::glue("
     SELECT
       r.measure,

@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -65,13 +66,13 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
   "Estimate", "#ec6555", "value", 113350,
   "Estimate", NA, "hidden", 0
 ) |>
-  mutate(
-    across(
+  dplyr::mutate(
+    dplyr::across(
       change_factor,
       forcats::fct_relevel,
       "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors", "baseline"
     ),
-    across(
+    dplyr::across(
       name, forcats::fct_relevel, c("hidden", "value")
     )
   )
@@ -87,13 +88,13 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
   "Estimate", "#ec6555", "value", 13350,
   "Estimate", NA, "hidden", 0
 ) |>
-  mutate(
-    across(
+  dplyr::mutate(
+    dplyr::across(
       change_factor,
       forcats::fct_relevel,
       "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors"
     ),
-    across(
+    dplyr::across(
       name, forcats::fct_relevel, c("hidden", "value")
     )
   )
@@ -219,16 +220,16 @@ test_that("it sets up the individual change factors", {
     )
 
     expected <- change_factors_expected$ip |>
-      filter(measure == "admissions", strategy != "-", value < 0)
+      dplyr::filter(measure == "admissions", strategy != "-", value < 0)
 
     expected_1 <- expected |>
-      mutate(across(strategy, forcats::fct_reorder, -value))
+      dplyr::mutate(dplyr::across(strategy, forcats::fct_reorder, -value))
 
     expect_equal(individual_change_factors(), expected_1)
 
     session$setInputs(sort_type = "ascending value")
     expected_2 <- expected |>
-      mutate(across(strategy, forcats::fct_reorder, strategy))
+      dplyr::mutate(dplyr::across(strategy, forcats::fct_reorder, strategy))
 
     expect_equal(individual_change_factors(), expected_2)
   })

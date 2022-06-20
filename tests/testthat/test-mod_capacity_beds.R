@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -85,7 +86,7 @@ test_that("get_new_available_beds processes the data correctly", {
   bd1 <- beds_data_expected
   bd1[2, "baseline"] <- 0
 
-  expected <- slice(new_available_beds_expected, 1)
+  expected <- dplyr::slice(new_available_beds_expected, 1)
   actual <- mod_capacity_beds_get_new_available_beds(bd1, 0.85, specialties_expected)
   expect_equal(actual, expected, tolerance = 0.1)
 
@@ -93,7 +94,7 @@ test_that("get_new_available_beds processes the data correctly", {
   bd2 <- beds_data_expected
   bd2[1, "principal"] <- 0
 
-  expected <- slice(new_available_beds_expected, 2)
+  expected <- dplyr::slice(new_available_beds_expected, 2)
   actual <- mod_capacity_beds_get_new_available_beds(bd2, 0.85, specialties_expected)
   expect_equal(actual, expected, tolerance = 0.1)
 })

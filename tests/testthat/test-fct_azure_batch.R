@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -402,7 +403,7 @@ test_that("batch_delete_job calls the correct API", {
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("batch_job_status calls batch_get_tasks", {
-  m <- mock(tibble())
+  m <- mock(tibble::tibble())
 
   stub(batch_job_status, "batch_get_tasks", m)
 
@@ -413,7 +414,7 @@ test_that("batch_job_status calls batch_get_tasks", {
 })
 
 test_that("batch_job_status returns running when the job is still running", {
-  m <- mock(tibble(), tibble(result = c("running", "success")))
+  m <- mock(tibble::tibble(), tibble::tibble(result = c("running", "success")))
 
   stub(batch_job_status, "batch_get_tasks", m)
 
@@ -422,7 +423,7 @@ test_that("batch_job_status returns running when the job is still running", {
 })
 
 test_that("batch_job_status returns failure when a task has failed", {
-  m <- mock(tibble(result = c("running", "success", "failure")))
+  m <- mock(tibble::tibble(result = c("running", "success", "failure")))
 
   stub(batch_job_status, "batch_get_tasks", m)
 
@@ -430,7 +431,7 @@ test_that("batch_job_status returns failure when a task has failed", {
 })
 
 test_that("batch_job_status returns success when all tasks have successfully completed", {
-  m <- mock(tibble(result = c("success", "success")))
+  m <- mock(tibble::tibble(result = c("success", "success")))
 
   stub(batch_job_status, "batch_get_tasks", m)
 

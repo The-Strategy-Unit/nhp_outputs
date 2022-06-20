@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -30,7 +31,7 @@ test_that("mod_model_core_activity_server_table returns a gt", {
   set.seed(1) # ensure gt id always regenerated identically
 
   table <- model_core_activity_expected |>
-    inner_join(atpmo_expected, by = c("pod", "measure" = "measures")) |>
+    dplyr::inner_join(atpmo_expected, by = c("pod", "measure" = "measures")) |>
     mod_model_core_activity_server_table()
 
   expect_s3_class(table, "gt_tbl")
@@ -66,7 +67,7 @@ test_that("it calls cosmos_get_model_core_activity", {
     selected_model_run_id("id")
 
     expected <- model_core_activity_expected |>
-      inner_join(atpmo_expected, by = c("pod", "measure" = "measures"))
+      dplyr::inner_join(atpmo_expected, by = c("pod", "measure" = "measures"))
     expect_equal(summarised_data(), expected)
 
     expect_called(m, 1)

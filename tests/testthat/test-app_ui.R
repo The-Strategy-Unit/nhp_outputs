@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 test_that("ui is created correctly", {

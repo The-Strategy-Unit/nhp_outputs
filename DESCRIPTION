@@ -28,6 +28,7 @@ Imports:
     readxl,
     rlang,
     scales,
+    shiny (>= 1.7.1),
     shinycssloaders,
     shinyjs,
     snakecase,
@@ -54,7 +55,5 @@ RoxygenNote: 7.2.0
 URL: https://github.com/The-Strategy-Unit/834_nhp_model
 BugReports: https://github.com/The-Strategy-Unit/834_nhp_model/issues
 Depends:
-    R (>= 3.5.0),
-    shiny (>= 1.7.1),
-    tidyverse
+    R (>= 3.5.0)
 Config/testthat/edition: 3

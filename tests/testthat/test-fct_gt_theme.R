@@ -1,3 +1,6 @@
+library(shiny)
+library(mockery)
+
 test_that("it themes tables correctly", {
   set.seed(1)
 

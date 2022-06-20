@@ -1,3 +1,6 @@
+library(shiny)
+library(mockery)
+
 test_that("set_names converts a two column tibble to a named vector", {
   df <- tibble::tibble(
     one = c("a", "b"),

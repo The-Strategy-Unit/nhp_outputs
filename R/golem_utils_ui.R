@@ -253,51 +253,37 @@ enurl <- function(url, text) {
 #'
 #' @noRd
 #'
-#' @importFrom bs4Dash column
 col_12 <- function(...) {
-  column(12, ...)
+  bs4Dash::column(12, ...)
 }
 
-#' @importFrom bs4Dash column
 col_10 <- function(...) {
-  column(10, ...)
+  bs4Dash::column(10, ...)
 }
 
-#' @importFrom bs4Dash column
 col_8 <- function(...) {
-  column(8, ...)
+  bs4Dash::column(8, ...)
 }
 
-#' @importFrom bs4Dash column
 col_6 <- function(...) {
-  column(6, ...)
+  bs4Dash::column(6, ...)
 }
 
-
-#' @importFrom bs4Dash column
 col_4 <- function(...) {
-  column(4, ...)
+  bs4Dash::column(4, ...)
 }
 
-
-#' @importFrom bs4Dash column
 col_3 <- function(...) {
-  column(3, ...)
+  bs4Dash::column(3, ...)
 }
 
-
-#' @importFrom bs4Dash column
 col_2 <- function(...) {
-  column(2, ...)
+  bs4Dash::column(2, ...)
 }
 
-
-#' @importFrom bs4Dash column
 col_1 <- function(...) {
-  column(1, ...)
+  bs4Dash::column(1, ...)
 }
-
-
 
 #' Make the current tag behave like an action button
 #'

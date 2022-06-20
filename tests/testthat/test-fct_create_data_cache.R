@@ -1,3 +1,4 @@
+library(shiny)
 library(mockery)
 
 test_that("it creates a directory for the data cache", {
