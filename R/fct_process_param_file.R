@@ -11,7 +11,8 @@ process_param_file <- function(path,
                                scenario_name = "test") {
   data <- c(
     "run_settings",
-    "dsi_wl",
+    "dsi_wl_ip",
+    "dsi_wl_op",
     "pc_pg",
     "pc_hsa",
     "nd_t1h",
@@ -41,11 +42,13 @@ process_param_file <- function(path,
   life_expectancy$min_age <- 55
   life_expectancy$max_age <- 90
 
-  wla <- data$dsi_wl |>
+  wla_ip <- data$dsi_wl_ip |>
     tibble::deframe() |>
     as.list()
 
-  wla["X01"] <- wla["Other"]
+  wla_op <- data$dsi_wl_op |>
+    tibble::deframe() |>
+    as.list()
 
   nda <- data$nd_t1h |>
     dplyr::mutate(
@@ -76,7 +79,10 @@ process_param_file <- function(path,
     ),
     health_status_adjustment = unlist(data$pc_hsa),
     life_expectancy = life_expectancy,
-    waiting_list_adjustment = wla,
+    waiting_list_adjustment = list(
+      "ip" = wla_ip,
+      "op" = wla_op
+    ),
     "non-demographic_adjustment" = nda
   )
 
