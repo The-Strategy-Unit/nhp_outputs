@@ -36,29 +36,39 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
     })
 
     shiny::observe({
-      datasets <- names(results_sets())
-      shiny::updateSelectInput(session, "dataset", choices = datasets)
+      x <- shiny::req(results_sets())
+      shiny::updateSelectInput(session, "dataset", choices = names(x))
+    })
+
+    scenarios <- shiny::reactive({
+      x <- shiny::req(results_sets())
+      v <- shiny::req(input$dataset)
+      shiny::req(v %in% names(x))
+      x[[v]]
     })
 
     shiny::observe({
-      ds <- shiny::req(input$dataset)
-      scenarios <- names(results_sets()[[ds]])
-      shiny::updateSelectInput(session, "scenario", choices = scenarios)
+      x <- shiny::req(scenarios())
+      shiny::updateSelectInput(session, "scenario", choices = names(x))
+    })
+
+    create_datetimes <- shiny::reactive({
+      x <- shiny::req(scenarios())
+      v <- shiny::req(input$scenario)
+      shiny::req(v %in% names(x))
+      x[[v]]
     })
 
     shiny::observe({
-      ds <- shiny::req(input$dataset)
-      sc <- shiny::req(input$scenario)
+      x <- shiny::req(create_datetimes())
 
       labels <- \(.x) .x |>
         lubridate::as_datetime("%Y%m%d_%H%M%S", tz = "UTC") |>
         lubridate::with_tz() |>
         format("%d/%m/%Y %H:%M:%S")
 
-      create_datetimes <- names(results_sets()[[ds]][[sc]]) |>
-        purrr::set_names(labels)
-
-      shiny::updateSelectInput(session, "create_datetime", choices = create_datetimes)
+      choices <- purrr::set_names(names(x), labels)
+      shiny::updateSelectInput(session, "create_datetime", choices = choices)
     })
 
     selected_model_run <- shiny::reactive({
@@ -66,12 +76,14 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       sc <- shiny::req(input$scenario)
       cd <- shiny::req(input$create_datetime)
 
-      list(
-        ds = ds,
-        sc = sc,
-        cd = cd,
-        id = results_sets()[[ds]][[sc]][[cd]]
-      )
+      rs <- shiny::req(results_sets())
+
+      id <- purrr::reduce(c(ds, sc, cd), .init = rs, \(.x, .y) {
+        shiny::req(.y %in% names(.x))
+        .x[[.y]]
+      })
+
+      list(ds = ds, sc = sc, cd = cd, id = id)
     })
 
     return(selected_model_run)

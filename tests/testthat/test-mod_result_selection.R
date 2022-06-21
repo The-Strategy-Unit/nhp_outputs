@@ -86,6 +86,29 @@ test_that("it sets up the dropdowns", {
   })
 })
 
+test_that("chosing an invalid dataset causes an error", {
+  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "shiny::updateSelectInput", NULL)
+
+  testServer(mod_result_selection_server, args = list(reactiveVal("a", "b")), {
+    session$setInputs(dataset = "Z")
+
+    expect_error(scenarios())
+  })
+})
+
+test_that("chosing an invalid combination of dataset and scenario causes an error", {
+  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "shiny::updateSelectInput", NULL)
+
+  testServer(mod_result_selection_server, args = list(reactiveVal("a", "b")), {
+    session$setInputs(dataset = "a")
+    session$setInputs(scenario = "Z")
+
+    expect_error(create_datetimes())
+  })
+})
+
 test_that("it returns a reactive", {
   stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
 
