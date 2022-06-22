@@ -143,7 +143,7 @@ process_param_file <- function(path,
     dplyr::mutate(
       dplyr::across(
         .data$type,
-        ~ case_when(
+        ~ dplyr::case_when(
           .x == "dn" ~ "day+night",
           .x == "do" ~ "day only"
         )
