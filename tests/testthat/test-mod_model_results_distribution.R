@@ -88,7 +88,6 @@ test_that("plot returns a plotly subplot", {
 
 test_that("it creates a mod_measure_selection_server", {
   m <- mock(selected_measure_expected)
-  stub(mod_model_results_distribution_server, "get_data_cache", "session")
   stub(mod_model_results_distribution_server, "mod_measure_selection_server", m)
 
   selected_model_run_id <- reactiveVal()
@@ -101,7 +100,6 @@ test_that("it creates a mod_measure_selection_server", {
 
 test_that("it calls mod_model_results_distribution_get_data", {
   m <- mock(model_run_distribution_expected)
-  stub(mod_model_results_distribution_server, "get_data_cache", "session")
   stub(mod_model_results_distribution_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_model_results_distribution_server, "mod_model_results_distribution_get_data", m)
 
@@ -121,7 +119,6 @@ test_that("it calls mod_model_results_distribution_get_data", {
 test_that("it renders the plot", {
   m <- mock()
 
-  stub(mod_model_results_distribution_server, "get_data_cache", "session")
   stub(
     mod_model_results_distribution_server, "mod_measure_selection_server", reactiveVal
   )

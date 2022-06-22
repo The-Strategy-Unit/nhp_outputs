@@ -44,7 +44,6 @@ test_that("get_available_plot returns a ggplot object", {
 test_that("it calls cosmos_get_bed_occupancy correctly", {
   m <- mock("beds_data")
 
-  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "cosmos_get_bed_occupancy", m)
 
   shiny::testServer(mod_capacity_beds_server, args = list(reactiveVal()), {
@@ -61,7 +60,6 @@ test_that("it renders the table", {
   m <- mock(
     mod_capacity_beds_get_available_table(beds_data_expected)
   )
-  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "cosmos_get_bed_occupancy", beds_data_expected)
   stub(mod_capacity_beds_server, "mod_capacity_beds_get_available_table", m)
 
@@ -77,7 +75,6 @@ test_that("it renders the table", {
 
 test_that("it renders the plot", {
   m <- mock()
-  stub(mod_capacity_beds_server, "get_data_cache", "session")
   stub(mod_capacity_beds_server, "cosmos_get_bed_occupancy", beds_data_expected)
   stub(mod_capacity_beds_server, "plotly::ggplotly", "plotly")
   stub(mod_capacity_beds_server, "plotly::layout", "plotly_layout")

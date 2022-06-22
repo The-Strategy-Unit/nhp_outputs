@@ -63,7 +63,6 @@ test_that("table returns a gt", {
 test_that("it sets up mod_measure_selection_server", {
   m <- mock("mod_measure_selection_server")
 
-  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", m)
 
   selected_model_id <- reactiveVal()
@@ -78,7 +77,6 @@ test_that("it sets up mod_measure_selection_server", {
 test_that("it calls cosmos_get_available_aggregations", {
   m <- mock("cosmos_get_available_aggregations")
 
-  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", m)
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
 
@@ -95,7 +93,6 @@ test_that("it calls cosmos_get_available_aggregations", {
 test_that("it updates the aggregation drop down", {
   m <- mock()
 
-  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
@@ -116,7 +113,6 @@ test_that("it updates the aggregation drop down", {
 test_that("it calls cosmos_get_aggregation", {
   m <- mock(aggregations_age_group_expected, aggregations_tretspef_expected)
 
-  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
   stub(mod_principal_detailed_server, "cosmos_get_aggregation", m)
@@ -161,7 +157,6 @@ test_that("it calls cosmos_get_aggregation", {
 test_that("it renders the table", {
   m <- mock()
 
-  stub(mod_principal_detailed_server, "get_data_cache", "session")
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
   stub(mod_principal_detailed_server, "cosmos_get_aggregation", aggregations_age_group_expected)

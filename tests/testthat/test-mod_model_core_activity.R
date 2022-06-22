@@ -44,7 +44,6 @@ test_that("mod_model_core_activity_server_table returns a gt", {
 
 test_that("it gets the activity type/pod/measure reference data", {
   m <- mock(atpmo_expected)
-  stub(mod_model_core_activity_server, "get_data_cache", "session")
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", m)
 
   selected_model_run_id <- reactiveVal()
@@ -57,7 +56,6 @@ test_that("it gets the activity type/pod/measure reference data", {
 
 test_that("it calls cosmos_get_model_core_activity", {
   m <- mock(model_core_activity_expected)
-  stub(mod_model_core_activity_server, "get_data_cache", "session")
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_model_core_activity_server, "cosmos_get_model_core_activity", m)
 
@@ -78,7 +76,6 @@ test_that("it calls cosmos_get_model_core_activity", {
 test_that("it renders the table", {
   m <- mock()
 
-  stub(mod_model_core_activity_server, "get_data_cache", "session")
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_model_core_activity_server, "cosmos_get_model_core_activity", model_core_activity_expected)
   stub(mod_model_core_activity_server, "mod_model_core_activity_server_table", "table")

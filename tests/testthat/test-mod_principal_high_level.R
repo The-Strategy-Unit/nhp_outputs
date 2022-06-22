@@ -130,7 +130,6 @@ test_that("mod_principal_high_level_plot returns a plot", {
 
 test_that("it gets the list of pods", {
   m <- mock("pods")
-  stub(mod_principal_high_level_server, "get_data_cache", "session")
   stub(mod_principal_high_level_server, "mod_principal_high_level_pods", m)
 
   shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(1)), {
@@ -141,7 +140,6 @@ test_that("it gets the list of pods", {
 
 test_that("it gets the summary data", {
   m <- mock("summary data")
-  stub(mod_principal_high_level_server, "get_data_cache", "session")
   stub(mod_principal_high_level_server, "mod_principal_high_level_pods", "pods")
   stub(mod_principal_high_level_server, "mod_principal_high_level_summary_data", m)
 
@@ -154,7 +152,6 @@ test_that("it gets the summary data", {
 
 test_that("it creates the table", {
   m <- mock()
-  stub(mod_principal_high_level_server, "get_data_cache", "session")
   stub(mod_principal_high_level_server, "gt::render_gt", m)
   stub(mod_principal_high_level_server, "mod_principal_high_level_summary_data", NULL)
   stub(mod_principal_high_level_server, "mod_principal_high_level_table", NULL)
@@ -166,7 +163,6 @@ test_that("it creates the table", {
 
 test_that("it creates 3 plots", {
   m <- mock()
-  stub(mod_principal_high_level_server, "get_data_cache", "session")
   stub(mod_principal_high_level_server, "plotly::renderPlotly", m)
   stub(mod_principal_high_level_server, "mod_principal_high_level_summary_data", NULL)
   stub(mod_principal_high_level_server, "mod_principal_high_level_plot", ggplot2::ggplot())
