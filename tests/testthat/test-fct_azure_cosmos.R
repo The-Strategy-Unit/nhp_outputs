@@ -275,24 +275,24 @@ test_that("cosmos_get_principal_change_factors validates the arguments", {
   expect_called(m, 3)
 })
 
-test_that("cosmos_get_mainspef_agg", {
+test_that("cosmos_get_bed_occupancy gets the results", {
   m_cont <- mock("container")
   m <- mock("data")
-  stub(cosmos_get_mainspef_agg, "cosmos_get_container", m_cont)
-  stub(cosmos_get_mainspef_agg, "AzureCosmosR::query_documents", m)
+  stub(cosmos_get_bed_occupancy, "cosmos_get_container", m_cont)
+  stub(cosmos_get_bed_occupancy, "AzureCosmosR::query_documents", m)
 
-  expect_equal(cosmos_get_mainspef_agg("id"), "data")
+  expect_equal(cosmos_get_bed_occupancy("id"), "data")
   qry <- "
     SELECT
-        r.mainspef,
+        r.measure,
+        r.ward_group,
         r.baseline,
         r.principal,
         r.median,
         r.lwr_ci,
-        r.upr_ci,
-        r.model_runs
+        r.upr_ci
     FROM c
-    JOIN r IN c.results[\"mainspef\"]
+    JOIN r IN c.results[\"bed_occupancy\"]
   "
   expect_called(m, 1)
   expect_args(m, 1, "container", qry, partition_key = "id")

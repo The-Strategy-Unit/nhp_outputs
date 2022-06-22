@@ -16,7 +16,7 @@ test_that("it loads the module correctly: mod_capacity_beds_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "capacity_beds", selected_model_run)
+    expect_args(m, 1, "capacity_beds", selected_model_run_id)
   })
 })
 

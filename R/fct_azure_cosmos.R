@@ -182,20 +182,20 @@ cosmos_get_principal_change_factors <- function(id, activity_type) {
     dplyr::mutate(dplyr::across(.data$strategy, tidyr::replace_na, "-"))
 }
 
-cosmos_get_mainspef_agg <- function(id) {
+cosmos_get_bed_occupancy <- function(id) {
   container <- cosmos_get_container("results")
 
   qry <- "
     SELECT
-        r.mainspef,
+        r.measure,
+        r.ward_group,
         r.baseline,
         r.principal,
         r.median,
         r.lwr_ci,
-        r.upr_ci,
-        r.model_runs
+        r.upr_ci
     FROM c
-    JOIN r IN c.results[\"mainspef\"]
+    JOIN r IN c.results[\"bed_occupancy\"]
   "
 
   AzureCosmosR::query_documents(container, qry, partition_key = id)

@@ -10,7 +10,6 @@
 mod_capacity_beds_ui <- function(id) {
   ns <- shiny::NS(id)
   tagList(
-    shiny::numericInput(ns("occupancy_rate"), "Occupancy Rate (%)", 85, 0, 100, 1),
     shiny::fluidRow(
       bs4Dash::column(
         width = 9,
@@ -28,43 +27,18 @@ mod_capacity_beds_ui <- function(id) {
   )
 }
 
-mod_capacity_beds_load_specialties <- function() {
-  readr::read_csv(app_sys("specialties.csv"), col_types = "cc__c")
-}
-
-mod_capacity_beds_get_beds_data <- function(ds, id) {
-  kh03 <- readr::read_csv(app_sys("app_data", "kh03", paste0(ds, ".csv")), lazy = FALSE, col_types = "ccdd")
-
-  cosmos_get_mainspef_agg(id) |>
-    dplyr::group_by(.data$mainspef) |>
-    dplyr::summarise(dplyr::across(where(is.numeric), sum)) |>
-    dplyr::inner_join(kh03, by = c("mainspef" = "specialty_code"))
-}
-
-mod_capacity_beds_get_new_available_beds <- function(data, occupancy_rate, specialties) {
-  data |>
-    dplyr::filter(.data$baseline > 0, .data$principal > 0) |>
-    dplyr::mutate(
-      new_available = (.data$principal / .data$baseline) * .data$occupied * (1 / .env$occupancy_rate)
-    ) |>
-    dplyr::inner_join(specialties, by = c("mainspef" = "code")) |>
-    dplyr::mutate(dplyr::across(.data$specialty_group, snakecase::to_title_case))
-}
-
 mod_capacity_beds_get_available_table <- function(data) {
   data |>
     dplyr::select(
-      .data$specialty_group,
-      specialty = .data$description,
-      old_beds = .data$available,
-      new_beds = .data$new_available
+      .data$ward_group,
+      old_beds = .data$baseline,
+      new_beds = .data$principal
     ) |>
     dplyr::arrange(dplyr::desc(.data$new_beds), dplyr::desc(.data$old_beds)) |>
     dplyr::filter(.data$new_beds > 0.5) |>
-    gt::gt(rowname_col = "specialty", groupname_col = "specialty_group") |>
+    gt::gt(rowname_col = "ward_group") |>
     gt::fmt_integer(c("old_beds", "new_beds")) |>
     gt::summary_rows(
-      groups = TRUE,
       columns = c("old_beds", "new_beds"),
       fns = list(total = "sum"),
       formatter = gt::fmt_integer
@@ -82,40 +56,30 @@ mod_capacity_beds_get_available_table <- function(data) {
 
 mod_capacity_beds_get_available_plot <- function(data) {
   data |>
-    dplyr::mutate(dplyr::across(.data$description, forcats::fct_reorder, .data$new_available)) |>
-    dplyr::filter(.data$new_available > 5) |>
-    ggplot2::ggplot(ggplot2::aes(.data$new_available, .data$description, fill = .data$type)) +
-    ggplot2::geom_col() +
-    ggplot2::geom_errorbar(ggplot2::aes(xmin = .data$available, xmax = .data$available)) +
-    ggplot2::facet_wrap(ggplot2::vars(.data$specialty_group), scales = "free")
+    dplyr::mutate(dplyr::across(.data$ward_group, forcats::fct_reorder, .data$principal)) |>
+    dplyr::filter(.data$principal > 5) |>
+    ggplot2::ggplot(ggplot2::aes(.data$principal, .data$ward_group)) +
+    ggplot2::geom_col(fill = "#f9bf07") +
+    ggplot2::geom_errorbar(ggplot2::aes(xmin = .data$baseline, xmax = .data$baseline), colour = "#2c2825")
 }
 
 #' capacity_beds Server Functions
 #'
 #' @noRd
-mod_capacity_beds_server <- function(id, selected_model_run) {
-  specialties <- mod_capacity_beds_load_specialties()
-
+mod_capacity_beds_server <- function(id, selected_model_run_id) {
   shiny::moduleServer(id, function(input, output, session) {
     beds_data <- shiny::reactive({
-      c(ds, sc, cd, id) %<-% selected_model_run() # nolint
-      mod_capacity_beds_get_beds_data(ds, id) # nolint
+      id <- selected_model_run_id() # nolint
+      cosmos_get_bed_occupancy(id)
     }) |>
-      shiny::bindCache(selected_model_run())
-
-    new_beds <- shiny::reactive({
-      occupancy_rate <- shiny::req(input$occupancy_rate) / 100
-
-      mod_capacity_beds_get_new_available_beds(beds_data(), occupancy_rate, specialties)
-    })
+      shiny::bindCache(selected_model_run_id())
 
     output$available_table <- gt::render_gt({
-      mod_capacity_beds_get_available_table(new_beds())
+      mod_capacity_beds_get_available_table(beds_data())
     })
 
     output$available_plot <- plotly::renderPlotly({
-      new_beds() |>
-        dplyr::filter(.data$specialty_group == "General and Acute") |>
+      beds_data() |>
         mod_capacity_beds_get_available_plot() |>
         plotly::ggplotly() |>
         plotly::layout(legend = list(
