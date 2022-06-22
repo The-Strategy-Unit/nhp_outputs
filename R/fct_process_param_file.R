@@ -9,20 +9,9 @@ process_param_file <- function(path,
                                input_data = "synthetic",
                                demographics_file = "demographic_factors.csv",
                                scenario_name = "test") {
-  data <- c(
-    "run_settings",
-    "dsi_wl_ip",
-    "dsi_wl_op",
-    "pc_pg",
-    "pc_hsa",
-    "nd_t1h",
-    "am_a_ip",
-    "am_a_op",
-    "am_a_aae",
-    "am_tc_ip",
-    "am_tc_op",
-    "am_e_ip"
-  ) |>
+  all_sheets <- readxl::excel_sheets(path)
+
+  data <- all_sheets[-(1:which(all_sheets == "Control Sheets>>"))] |>
     purrr::set_names() |>
     purrr::map(readxl::read_excel, path = path)
 
@@ -146,6 +135,30 @@ process_param_file <- function(path,
     tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
     dplyr::group_nest(.data$strategy) |>
     dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
+    tibble::deframe()
+
+  params$bed_occupancy <- data$ru_bo |>
+    tidyr::pivot_longer(-.data$ward_group) |>
+    tidyr::separate(.data$name, c("type", "interval")) |>
+    dplyr::mutate(
+      dplyr::across(
+        .data$type,
+        ~ case_when(
+          .x == "dn" ~ "day+night",
+          .x == "do" ~ "day only"
+        )
+      )
+    ) |>
+    dplyr::group_by(.data$ward_group, .data$type) |>
+    dplyr::summarise(interval = list(.data$value), .groups = "drop") |>
+    dplyr::group_nest(.data$type) |>
+    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
+    tibble::deframe()
+
+  params$bed_occupancy$specialty_mapping <- data$ru_bo_sm |>
+    dplyr::select(.data$specialty_group, .data$specialty_code, .data$ward_group) |>
+    dplyr::group_nest(.data$specialty_group) |>
+    dplyr::mutate(dplyr::across(.data$data, purrr::map, purrr::compose(as.list, tibble::deframe))) |>
     tibble::deframe()
 
   params
