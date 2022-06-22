@@ -33,7 +33,6 @@ mod_running_models_server <- function(id) {
       }
 
       shiny::req(batch_get_jobs()) |>
-        dplyr::filter(.data$state != "completed") |>
         dplyr::mutate(status = purrr::map_dfr(.data$id, job_status)) |>
         tidyr::unnest(.data$status)
     }) |>
