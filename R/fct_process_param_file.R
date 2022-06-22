@@ -18,7 +18,7 @@ process_param_file <- function(path,
   base_year <- lubridate::year(data$run_settings$baseline_year)
   model_year <- lubridate::year(data$run_settings$model_year)
   seed <- data$run_settings$seed
-  if (seed == 0) {
+  if (is.null(seed) || seed == 0) {
     seed <- sample(1:1e5, 1)
   }
 
