@@ -28,6 +28,10 @@ process_param_file <- function(path,
 
   base_year <- lubridate::year(data$run_settings$baseline_year)
   model_year <- lubridate::year(data$run_settings$model_year)
+  seed <- data$run_settings$seed
+  if (seed == 0) {
+    seed <- sample(1:1e5, 1)
+  }
 
   life_expectancy <- readRDS(app_sys("life_expectancy.rds")) |>
     dplyr::filter(.data$base == "2018b", .data$year %in% c(base_year, model_year), .data$age >= 55) |>
@@ -64,7 +68,7 @@ process_param_file <- function(path,
   params <- list(
     name = scenario_name,
     input_data = input_data,
-    seed = sample(1:1e5, 1),
+    seed = seed,
     model_runs = data$run_settings$n_iterations,
     start_year = base_year,
     end_year = model_year,
