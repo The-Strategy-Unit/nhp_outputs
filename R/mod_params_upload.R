@@ -368,12 +368,12 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
         if (status == "success") {
           bs4Dash::toast("Job Success", paste(job_id, "completed successfully"))
+          batch_delete_job(job_id)
         } else if (status == "failure") {
           bs4Dash::toast("Job Failure", paste(job_id, "failed"))
         }
 
         if (status != "running") {
-          batch_delete_job(job_id)
           rm(list = job_id, envir = running_jobs)
         }
       }
