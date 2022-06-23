@@ -226,9 +226,15 @@ batch_submit_model_run <- function(params) {
     )
   )
 
-  md <- "/mnt/batch/tasks/fsmounts" # nolint
-  results_path <- glue::glue("{md}/results") # nolint
-  temp_results_path <- glue::glue("{md}/batch/{uuid::UUIDgenerate()}") # nolint
+  # Begin Exclude Linting
+  md <- "/mnt/batch/tasks/fsmounts"
+  temp_results_path <- glue::glue("{md}/batch/{uuid::UUIDgenerate()}")
+  results_path <- if (Sys.getenv("GOLEM_CONFIG_ACTIVE", "prod") == "prod") {
+    glue::glue("{md}/results")
+  } else {
+    temp_results_path
+  }
+  # End Exclude Linting
   task_command <- function(run_start, runs_per_task) {
     glue::glue(
       .sep = " ",
