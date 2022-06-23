@@ -65,6 +65,43 @@ test_that("it populates the list of available result sets", {
   })
 })
 
+test_that("it shows the download button when golem.app.prod = FALSE", {
+  withr::local_options(c("golem.app.prod" = FALSE))
+
+  m <- mock()
+  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "shinyjs::toggle", m)
+
+  testServer(mod_result_selection_server, args = list(reactiveVal()), {
+    session$private$flush()
+
+    expect_called(m, 1)
+    expect_args(m, 1, "download_results", selector = TRUE)
+  })
+})
+
+test_that("it shows the download button when the user is in the correct group", {
+  withr::local_options(c("golem.app.prod" = TRUE))
+
+  m <- mock()
+  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "shinyjs::toggle", m)
+
+  testServer(mod_result_selection_server, args = list(reactiveVal()), {
+    session$private$flush()
+  })
+
+  session <- shiny::MockShinySession$new()
+  session$groups <- "nhp_power_users"
+  testServer(mod_result_selection_server, args = list(reactiveVal()), session = session, {
+    session$private$flush()
+  })
+
+  expect_called(m, 2)
+  expect_args(m, 1, "download_results", selector = FALSE)
+  expect_args(m, 2, "download_results", selector = TRUE)
+})
+
 test_that("it sets up the dropdowns", {
   m <- mock()
 

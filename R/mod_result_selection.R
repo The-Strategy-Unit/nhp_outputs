@@ -12,7 +12,10 @@ mod_result_selection_ui <- function(id) {
   shiny::tagList(
     shiny::selectInput(ns("dataset"), "Dataset", NULL),
     shiny::selectInput(ns("scenario"), "Scenario", NULL),
-    shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL)
+    shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
+    shinyjs::hidden(
+      shiny::downloadButton(ns("download_results"), "Download results (.json)")
+    )
   )
 }
 
@@ -34,6 +37,23 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
         ) |>
         tibble::deframe()
     })
+
+    shiny::observe({
+      show_button <- !getOption("golem.app.prod", TRUE) || "nhp_power_users" %in% session$groups
+      shinyjs::toggle("download_results", selector = show_button)
+    })
+
+    output$download_results <- shiny::downloadHandler(
+      filename = function() {
+        id <- shiny::req(selected_model_run())$id
+        glue::glue("{id}.json")
+      },
+      content = function(file) {
+        id <- shiny::req(selected_model_run())$id
+        results <- cosmos_get_full_model_run_data(id)
+        jsonlite::write_json(results, file, pretty = TRUE, auto_unbox = TRUE)
+      }
+    )
 
     shiny::observe({
       x <- shiny::req(results_sets())

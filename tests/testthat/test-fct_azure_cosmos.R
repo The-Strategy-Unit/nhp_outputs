@@ -300,3 +300,16 @@ test_that("cosmos_get_bed_occupancy gets the results", {
   expect_called(m_cont, 1)
   expect_args(m_cont, 1, "results")
 })
+
+test_that("cosmos_get_full_model_run_data returns the correct data", {
+  m <- mock("results", "change_factors", list(data = "a"), list(data = "b"))
+  stub(cosmos_get_full_model_run_data, "cosmos_get_container", m)
+  stub(cosmos_get_full_model_run_data, "AzureCosmosR::get_document", m)
+
+  expect_equal(cosmos_get_full_model_run_data("id"), list(results = "a", change_factors = "b"))
+  expect_called(m, 4)
+  expect_args(m, 1, "results")
+  expect_args(m, 2, "change_factors")
+  expect_args(m, 3, "results", partition_key = "id", id = "id", metadata = FALSE)
+  expect_args(m, 4, "change_factors", partition_key = "id", id = "id", metadata = FALSE)
+})

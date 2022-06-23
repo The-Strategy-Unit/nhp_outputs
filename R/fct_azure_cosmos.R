@@ -200,3 +200,10 @@ cosmos_get_bed_occupancy <- function(id) {
 
   AzureCosmosR::query_documents(container, qry, partition_key = id)
 }
+
+cosmos_get_full_model_run_data <- function(id) {
+  purrr::set_names(c("results", "change_factors")) |>
+    purrr::map(cosmos_get_container) |>
+    purrr::map(AzureCosmosR::get_document, partition_key = id, id = id, metadata = FALSE) |>
+    purrr::map("data")
+}
