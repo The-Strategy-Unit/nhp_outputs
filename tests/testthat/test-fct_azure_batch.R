@@ -682,7 +682,7 @@ test_that("batch_submit_model_run calls the other functions", {
               path = "synthetic__test__20220101_012345/run_17-32"
             )
           ),
-          filePattern = "../*std*.txt",
+          filePattern = "../std*.txt",
           uploadOptions = list(
             uploadCondition = "taskfailure"
           )
