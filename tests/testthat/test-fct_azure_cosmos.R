@@ -275,6 +275,16 @@ test_that("cosmos_get_principal_change_factors validates the arguments", {
   expect_called(m, 3)
 })
 
+test_that("cosmos_get_principal_change_factors adds the strategy column if it doesn't exist", {
+  m <- mock(tibble::tibble(x = 1), cycle = TRUE)
+  stub(cosmos_get_principal_change_factors, "cosmos_get_container", NULL)
+  stub(cosmos_get_principal_change_factors, "AzureCosmosR::query_documents", m)
+
+  actual <- cosmos_get_principal_change_factors("id", "aae")
+
+  expect_equal(actual$strategy, "-")
+})
+
 test_that("cosmos_get_bed_occupancy gets the results", {
   m_cont <- mock("container")
   m <- mock("data")

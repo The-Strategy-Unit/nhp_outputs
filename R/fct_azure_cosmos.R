@@ -177,9 +177,14 @@ cosmos_get_principal_change_factors <- function(id, activity_type) {
     JOIN s IN r.change_factors
   ")
 
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::as_tibble() |>
-    dplyr::mutate(dplyr::across(.data$strategy, tidyr::replace_na, "-"))
+  d <- AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+    dplyr::as_tibble()
+
+  if (!"strategy" %in% colnames(d)) {
+    d$strategy <- "-"
+  }
+
+  dplyr::mutate(d, dplyr::across(.data$strategy, tidyr::replace_na, "-"))
 }
 
 cosmos_get_bed_occupancy <- function(id) {
