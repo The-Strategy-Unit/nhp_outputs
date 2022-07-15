@@ -266,16 +266,38 @@ batch_submit_model_run <- function(params) {
     list(name = "COSMOS_DB", value = Sys.getenv("COSMOS_DB"))
   )
 
-  task_fn <- function(run_start) {
-    run_end <- run_start + runs_per_task - 1 # nolin
-
+  task_output_fn <- function(task_id) {
+    path <- glue::glue("{job_name}/{task_id}")
     list(
-      id = glue::glue("run_{pad(run_start)}-{pad(run_end)}"),
+      list(
+        destination = list(
+          container = list(
+            containerUrl = glue::glue(
+              "{Sys.getenv('STORAGE_URL')}/batch-logs?{Sys.getenv('BATCH_LOGS_CONTAINER_SAS')}"
+            ),
+            path = path
+          )
+        ),
+        filePattern = "../std*.txt",
+        uploadOptions = list(
+          uploadCondition = "taskfailure"
+        )
+      )
+    )
+  }
+
+  task_fn <- function(run_start) {
+    run_end <- run_start + runs_per_task - 1 # nolint
+
+    task_id <- glue::glue("run_{pad(run_start)}-{pad(run_end)}")
+    list(
+      id = task_id,
       displayName = glue::glue(
         "Model Run [{run_start} to {run_end}]"
       ),
       commandLine = task_command(run_start, runs_per_task),
-      userIdentity = user_id
+      userIdentity = user_id,
+      outputFiles = task_output_fn(task_id)
     )
   }
 
@@ -286,6 +308,7 @@ batch_submit_model_run <- function(params) {
     displayName = "Run Principal + Upload to Cosmos",
     commandLine = paste(task_command(-1, 2), "--run-postruns"),
     userIdentity = user_id,
+    outputFiles = task_output_fn("upload_to_cosmos"),
     environmentSettings = env_vars,
     dependsOn = list(taskIds = purrr::map_chr(tasks, "id"))
   )
@@ -295,6 +318,7 @@ batch_submit_model_run <- function(params) {
     displayName = "Clean up queue",
     commandLine = glue::glue("rm -rf {md}/queue/{filename}"),
     userIdentity = user_id,
+    outputFiles = task_output_fn("clean_queue"),
     dependsOn = list(taskIds = c(purrr::map_chr(tasks, "id"), upload_to_cosmos$id))
   )
 

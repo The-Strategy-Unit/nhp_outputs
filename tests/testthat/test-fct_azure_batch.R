@@ -622,7 +622,9 @@ test_that("batch_submit_model_run calls the other functions", {
     "MODEL_RUNS_PER_TASK" = 16,
     "COSMOS_ENDPOINT" = "cosmos endpoint",
     "COSMOS_KEY" = "cosmos key",
-    "COSMOS_DB" = "cosmos db"
+    "COSMOS_DB" = "cosmos db",
+    "STORAGE_URL" = "storage",
+    "BATCH_LOGS_CONTAINER_SAS" = "sas_token"
   ))
 
   params <- list(
@@ -646,41 +648,111 @@ test_that("batch_submit_model_run calls the other functions", {
     list(
       id = "run_01-16",
       displayName = "Model Run [1 to 16]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=1 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=1 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      outputFiles = list(
+        list(
+          destination = list(
+            container = list(
+              containerUrl = "storage/batch-logs?sas_token",
+              path = "synthetic__test__20220101_012345/run_01-16"
+            )
+          ),
+          filePattern = "../std*.txt",
+          uploadOptions = list(
+            uploadCondition = "taskfailure"
+          )
+        )
       )
     ),
     list(
       id = "run_17-32",
       displayName = "Model Run [17 to 32]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=17 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=17 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      outputFiles = list(
+        list(
+          destination = list(
+            container = list(
+              containerUrl = "storage/batch-logs?sas_token",
+              path = "synthetic__test__20220101_012345/run_17-32"
+            )
+          ),
+          filePattern = "../*std*.txt",
+          uploadOptions = list(
+            uploadCondition = "taskfailure"
+          )
+        )
       )
     ),
     list(
       id = "run_33-48",
       displayName = "Model Run [33 to 48]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=33 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=33 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      outputFiles = list(
+        list(
+          destination = list(
+            container = list(
+              containerUrl = "storage/batch-logs?sas_token",
+              path = "synthetic__test__20220101_012345/run_33-48"
+            )
+          ),
+          filePattern = "../std*.txt",
+          uploadOptions = list(
+            uploadCondition = "taskfailure"
+          )
+        )
       )
     ),
     list(
       id = "run_49-64",
       displayName = "Model Run [49 to 64]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=49 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=49 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      outputFiles = list(
+        list(
+          destination = list(
+            container = list(
+              containerUrl = "storage/batch-logs?sas_token",
+              path = "synthetic__test__20220101_012345/run_49-64"
+            )
+          ),
+          filePattern = "../std*.txt",
+          uploadOptions = list(
+            uploadCondition = "taskfailure"
+          )
+        )
       )
     ),
     list(
       id = "upload_to_cosmos",
       displayName = "Run Principal + Upload to Cosmos",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=-1 --model-runs=2 --run-postruns",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=-1 --model-runs=2 --run-postruns",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      outputFiles = list(
+        list(
+          destination = list(
+            container = list(
+              containerUrl = "storage/batch-logs?sas_token",
+              path = "synthetic__test__20220101_012345/upload_to_cosmos"
+            )
+          ),
+          filePattern = "../std*.txt",
+          uploadOptions = list(
+            uploadCondition = "taskfailure"
+          )
+        )
       ),
       environmentSettings = list(
         list(name = "COSMOS_ENDPOINT", value = "cosmos endpoint"),
@@ -697,6 +769,20 @@ test_that("batch_submit_model_run calls the other functions", {
       commandLine = "rm -rf /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
+      ),
+      outputFiles = list(
+        list(
+          destination = list(
+            container = list(
+              containerUrl = "storage/batch-logs?sas_token",
+              path = "synthetic__test__20220101_012345/clean_queue"
+            )
+          ),
+          filePattern = "../std*.txt",
+          uploadOptions = list(
+            uploadCondition = "taskfailure"
+          )
+        )
       ),
       dependsOn = list(
         taskIds = c("run_01-16", "run_17-32", "run_33-48", "run_49-64", "upload_to_cosmos")
