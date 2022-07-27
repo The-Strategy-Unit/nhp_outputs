@@ -212,3 +212,24 @@ cosmos_get_full_model_run_data <- function(id) {
     purrr::map(AzureCosmosR::get_document, partition_key = id, id = id, metadata = FALSE) |>
     purrr::map("data")
 }
+
+cosmos_get_theatres_available <- function(id) {
+  container <- cosmos_get_container("results")
+
+  qry <- "
+    SELECT
+        r.measure,
+        r.tretspef,
+        r.baseline,
+        r.principal,
+        r.median,
+        r.lwr_ci,
+        r.upr_ci
+    FROM c
+    JOIN r in c.results.theatres_available
+  "
+
+  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+    dplyr::group_nest(.data$measure) |>
+    tibble::deframe()
+}

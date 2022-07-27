@@ -323,3 +323,42 @@ test_that("cosmos_get_full_model_run_data returns the correct data", {
   expect_args(m, 3, "results", partition_key = "id", id = "id", metadata = FALSE)
   expect_args(m, 4, "change_factors", partition_key = "id", id = "id", metadata = FALSE)
 })
+
+test_that("cosmos_get_theatres_available gets the results", {
+  m_cont <- mock("container")
+  m <- mock(
+    tibble::tribble(
+      ~measure, ~value,
+      "a", 1,
+      "b", 2
+    )
+  )
+  stub(cosmos_get_theatres_available, "cosmos_get_container", m_cont)
+  stub(cosmos_get_theatres_available, "AzureCosmosR::query_documents", m)
+
+  expected <- list(
+    "a" = tibble(value = 1),
+    "b" = tibble(value = 2)
+  )
+  actual <- cosmos_get_theatres_available("id")
+
+  expect_equal(actual, expected)
+
+  qry <- "
+    SELECT
+        r.measure,
+        r.tretspef,
+        r.baseline,
+        r.principal,
+        r.median,
+        r.lwr_ci,
+        r.upr_ci
+    FROM c
+    JOIN r in c.results.theatres_available
+  "
+  expect_called(m, 1)
+  expect_args(m, 1, "container", qry, partition_key = "id")
+
+  expect_called(m_cont, 1)
+  expect_args(m_cont, 1, "results")
+})
