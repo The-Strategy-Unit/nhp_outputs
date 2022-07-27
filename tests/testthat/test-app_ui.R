@@ -11,7 +11,8 @@ test_that("ui is created correctly", {
     "principal_change_factor_effects",
     "model_core_activity",
     "model_results_distribution",
-    "capacity_beds"
+    "capacity_beds",
+    "capacity_theatres"
   )
 
   stub(app_ui, "mod_result_selection_ui", m)
@@ -23,10 +24,11 @@ test_that("ui is created correctly", {
   stub(app_ui, "mod_model_core_activity_ui", m)
   stub(app_ui, "mod_model_results_distribution_ui", m)
   stub(app_ui, "mod_capacity_beds_ui", m)
+  stub(app_ui, "mod_capacity_theatres_ui", m)
 
   expect_snapshot(app_ui())
 
-  expect_called(m, 9)
+  expect_called(m, 10)
   expect_args(m, 1, "result_selection")
   expect_args(m, 2, "params_upload")
   expect_args(m, 3, "running_models")
@@ -36,4 +38,5 @@ test_that("ui is created correctly", {
   expect_args(m, 7, "model_core_activity")
   expect_args(m, 8, "model_results_distribution")
   expect_args(m, 9, "capacity_beds")
+  expect_args(m, 10, "capacity_theatres")
 })

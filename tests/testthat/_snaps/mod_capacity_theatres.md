@@ -33,21 +33,23 @@
               <h3 class="card-title">Four Hour Sesssions</h3>
             </div>
             <div class="card-body">
-              <div class="col-sm-9">
-                <div class="shiny-spinner-output-container shiny-spinner-hideui ">
-                  <div class="load-container shiny-spinner-hidden load1">
-                    <div id="spinner-b0227856ff1b6e8ad4fe8b3e5344e62d" class="loader">Loading...</div>
+              <div class="row">
+                <div class="col-sm-9">
+                  <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                    <div class="load-container shiny-spinner-hidden load1">
+                      <div id="spinner-b0227856ff1b6e8ad4fe8b3e5344e62d" class="loader">Loading...</div>
+                    </div>
+                    <div id="id-utilisation_plot" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
                   </div>
-                  <div id="id-utilisation_plot" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
                 </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="shiny-spinner-output-container shiny-spinner-hideui ">
-                  <div class="load-container shiny-spinner-hidden load1">
-                    <div id="spinner-cfeec0169dc09bd431027273e4dceaa7" class="loader">Loading...</div>
+                <div class="col-sm-3">
+                  <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                    <div class="load-container shiny-spinner-hidden load1">
+                      <div id="spinner-cfeec0169dc09bd431027273e4dceaa7" class="loader">Loading...</div>
+                    </div>
+                    <div style="height:400px" class="shiny-spinner-placeholder"></div>
+                    <div id="id-utilisation_table" class="shiny-html-output"></div>
                   </div>
-                  <div style="height:400px" class="shiny-spinner-placeholder"></div>
-                  <div id="id-utilisation_table" class="shiny-html-output"></div>
                 </div>
               </div>
             </div>

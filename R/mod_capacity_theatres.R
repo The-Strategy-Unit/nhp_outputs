@@ -27,16 +27,18 @@ mod_capacity_theatres_ui <- function(id) {
         title = "Four Hour Sesssions",
         width = 12,
         collapsible = FALSE,
-        bs4Dash::column(
-          width = 9,
-          shinycssloaders::withSpinner(
-            plotly::plotlyOutput(ns("utilisation_plot"), height = "800px"),
-          )
-        ),
-        bs4Dash::column(
-          width = 3,
-          shinycssloaders::withSpinner(
-            gt::gt_output(ns("utilisation_table"))
+        shiny::fluidRow(
+          bs4Dash::column(
+            width = 9,
+            shinycssloaders::withSpinner(
+              plotly::plotlyOutput(ns("utilisation_plot"), height = "800px"),
+            )
+          ),
+          bs4Dash::column(
+            width = 3,
+            shinycssloaders::withSpinner(
+              gt::gt_output(ns("utilisation_table"))
+            )
           )
         )
       )
