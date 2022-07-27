@@ -161,5 +161,13 @@ process_param_file <- function(path,
     dplyr::mutate(dplyr::across(.data$data, purrr::map, purrr::compose(as.list, tibble::deframe))) |>
     tibble::deframe()
 
+  params$theatres <- list(
+    change_availability = unname(unlist(data$ru_th_a)),
+    change_utilisation = data$ru_th_u |>
+      dplyr::rowwise() |>
+      dplyr::transmute(.data$tretspef, interval = list(c(.data$lo, .data$hi))) |>
+      tibble::deframe()
+  )
+
   params
 }
