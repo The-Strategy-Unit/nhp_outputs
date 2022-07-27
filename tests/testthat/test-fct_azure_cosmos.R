@@ -336,13 +336,10 @@ test_that("cosmos_get_theatres_available gets the results", {
   stub(cosmos_get_theatres_available, "cosmos_get_container", m_cont)
   stub(cosmos_get_theatres_available, "AzureCosmosR::query_documents", m)
 
-  expected <- list(
-    "a" = tibble(value = 1),
-    "b" = tibble(value = 2)
-  )
   actual <- cosmos_get_theatres_available("id")
 
-  expect_equal(actual, expected)
+  expect_equal(actual$a, tibble::tibble(value = 1))
+  expect_equal(actual$b, tibble::tibble(value = 2))
 
   qry <- "
     SELECT
