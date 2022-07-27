@@ -51,6 +51,10 @@ app_ui <- function(request) {
         bs4Dash::menuSubItem(
           text = "Beds",
           tabName = "tab_cb"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Theatres",
+          tabName = "tab_ct"
         )
       ),
       htmltools::tags$hr(),
@@ -117,6 +121,10 @@ app_ui <- function(request) {
       bs4Dash::tabItem(
         tabName = "tab_cb",
         mod_capacity_beds_ui("capacity_beds")
+      ),
+      bs4Dash::tabItem(
+        tabName = "tab_ct",
+        mod_capacity_theatres_ui("capacity_theatres")
       )
     )
   )

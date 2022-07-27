@@ -96,6 +96,12 @@
                           <p>Beds</p>
                         </a>
                       </li>
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_ct" href="#" data-target="#shiny-tab-tab_ct" data-toggle="tab" data-value="tab_ct">
+                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
+                          <p>Theatres</p>
+                        </a>
+                      </li>
                     </ul>
                   </li>
                   <hr/>
@@ -158,6 +164,60 @@
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">model_core_activity</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">model_results_distribution</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_cb">capacity_beds</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ct">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="card bs4Dash">
+                        <div class="card-header">
+                          <h3 class="card-title">Theatres Available</h3>
+                          <div class="card-tools float-right">
+                            <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                              <i class="fa fa-minus" role="presentation" aria-label="minus icon"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <span>
+                            Available (baseline): 
+                            <div id="capacity_theatres-available_baseline" class="shiny-text-output"></div>
+                          </span>
+                          <span>
+                            Available (principal): 
+                            <div id="capacity_theatres-available_principal" class="shiny-text-output"></div>
+                          </span>
+                        </div>
+                      </div>
+                      <script type="application/json">{"title":"Theatres Available","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="card bs4Dash">
+                        <div class="card-header">
+                          <h3 class="card-title">Four Hour Sesssions</h3>
+                        </div>
+                        <div class="card-body">
+                          <div class="col-sm-9">
+                            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                              <div class="load-container shiny-spinner-hidden load1">
+                                <div id="spinner-7ec8f6e80609c587d921f14a4331a9fe" class="loader">Loading...</div>
+                              </div>
+                              <div id="capacity_theatres-utilisation_plot" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                              <div class="load-container shiny-spinner-hidden load1">
+                                <div id="spinner-da5faedd6df2eb3e7f464b72f75850b7" class="loader">Loading...</div>
+                              </div>
+                              <div style="height:400px" class="shiny-spinner-placeholder"></div>
+                              <div id="capacity_theatres-utilisation_table" class="shiny-html-output"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <script type="application/json">{"title":"Four Hour Sesssions","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                    </div>
+                  </div>
+                </div>
               </div>
             </section>
           </div>

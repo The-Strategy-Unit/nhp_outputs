@@ -25,4 +25,5 @@ app_server <- function(input, output, session) {
   mod_model_results_distribution_server("model_results_distribution", selected_model_run_id)
 
   mod_capacity_beds_server("capacity_beds", selected_model_run_id)
+  mod_capacity_theatres_server("capacity_theatres", selected_model_run_id)
 }
