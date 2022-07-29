@@ -97,7 +97,7 @@ process_param_file <- function(path,
         TRUE ~ "all"
       )) |>
       dplyr::rowwise() |>
-      dplyr::transmute(.data$strategy, value = list(list(type = .data$type, interval = list(.data$lo, .data$hi)))) |>
+      dplyr::transmute(.data$strategy, value = list(list(type = .data$type, interval = c(.data$lo, .data$hi)))) |>
       tibble::deframe(),
     data$am_tc_ip |>
       dplyr::filter(.data$include != 0) |>
@@ -111,7 +111,7 @@ process_param_file <- function(path,
         list(
           type = "bads",
           target_type = .data$target_type,
-          interval = list(.data$lo, .data$hi),
+          interval = c(.data$lo, .data$hi),
           baseline_target_rate = .data$baseline_target_rate,
           op_dc_split = .data$op_dc_split
         )
@@ -122,7 +122,7 @@ process_param_file <- function(path,
   params$outpatient_factors <- dplyr::bind_rows(data[c("am_a_op", "am_tc_op")]) |>
     dplyr::filter(.data$include != 0) |>
     dplyr::rowwise() |>
-    dplyr::transmute(.data$strategy, value = list(list(interval = list(.data$lo, .data$hi)))) |>
+    dplyr::transmute(.data$strategy, value = list(list(interval = c(.data$lo, .data$hi)))) |>
     tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
     dplyr::group_nest(.data$strategy) |>
     dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
@@ -131,7 +131,7 @@ process_param_file <- function(path,
   params$aae_factors <- data$am_a_aae |>
     dplyr::filter(.data$include != 0) |>
     dplyr::rowwise() |>
-    dplyr::transmute(.data$strategy, value = list(list(interval = list(.data$lo, .data$hi)))) |>
+    dplyr::transmute(.data$strategy, value = list(list(interval = c(.data$lo, .data$hi)))) |>
     tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
     dplyr::group_nest(.data$strategy) |>
     dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
@@ -169,5 +169,131 @@ process_param_file <- function(path,
       tibble::deframe()
   )
 
+  validate_params(params)
+
   params
 }
+
+validate_params <- function(params) {
+  c(
+    "model_runs must be a power of 2" = params$model_runs %in% 2^(0:10),
+    "start_year must be 2018" = params$start_year == 2018,
+    "end_year must be after start_year" = params$start_year < params$end_year,
+    purrr::map(validation_functions, ~ .x(params)) |>
+      purrr::flatten_lgl()
+  )
+}
+
+validate_interval <- function(i, lo, hi) {
+  length(i) == 2 && min(i) >= lo && max(i) <= hi && diff(i) >= 0
+}
+
+validation_functions <- list(
+  demographic_factors = function(params) {
+    vp <- params$demographic_factors$variant_probabilities
+    c(
+      "demographic variant probabilities must sum to 1" = sum(unlist(vp)) == 1,
+      "demographic variant probabilites names must be valid" = all(
+        names(vp) %in% c(
+          "principal_proj",
+          "var_proj_10_year_migration",
+          "var_proj_alt_internal_migration",
+          "var_proj_high_intl_migration",
+          "var_proj_low_intl_migration"
+        )
+      )
+    )
+  },
+  health_status_adjustment = function(params) {
+    hsa <- params$health_status_adjustment
+
+    c(
+      "health status adjustment must have a valid interval" = validate_interval(hsa, 0, 5)
+    )
+  },
+  life_expectancy = function(params) {
+    le <- params$life_expectancy
+    age_range <- le$max_age - le$min_age + 1
+    c(
+      "life expectancy max age must be greater than or equal to low value" = le$min_age <= le$max_age,
+      "life expectancy female must have correct number of values" = length(le$f) == age_range,
+      "life expectancy male must have correct number of values" = length(le$m) == age_range,
+      "life expectancy female values must be between 0 and 5" = all(le$f >= 0 & le$f <= 5),
+      "life expectancy male values must be between 0 and 5" = all(le$m >= 0 & le$m <= 5)
+    )
+  },
+  waiting_list_adjustment = function(params) {
+    wle <- params$waiting_list_adjustment
+    c(
+      "waiting list adjustment ip must be greater than 0" = all(unlist(wle$ip) >= 0),
+      "waiting list adjustment op must be greater than 0" = all(unlist(wle$op) >= 0)
+    )
+  },
+  "non-demographic_adjustment" = function(params) {
+    nda <- params[["non-demographic_adjustment"]]
+
+    purrr::imap(nda, \(.x1, .i1) {
+      purrr::imap(.x1, \(.x2, .i2) {
+        purrr::set_names(
+          validate_interval(.x2, 0, 5),
+          glue::glue("non-demographic_adjustment {.i1} {.i2} must be a valid interval")
+        )
+      })
+    }) |>
+      purrr::flatten() |>
+      purrr::flatten_lgl()
+  },
+  strategy_params = function(params) {
+    params$strategy_params |>
+      purrr::imap(\(.x1, .i1) {
+        purrr::imap(.x1, \(.x2, .i2) {
+          purrr::set_names(
+            validate_interval(.x2$interval, 0, 1),
+            glue::glue("strategy_params {.i1} {.i2} must be a valid interval")
+          )
+        })
+      }) |>
+      purrr::flatten() |>
+      purrr::flatten_lgl()
+  },
+  outpatient_factors = function(params) {
+    params$outpatient_factors |>
+      purrr::imap(\(.x1, .i1) {
+        purrr::imap(.x1, \(.x2, .i2) {
+          purrr::set_names(
+            validate_interval(.x2$interval, 0, 1),
+            glue::glue("outpatient_factors {.i1} {.i2} must be a valid interval")
+          )
+        })
+      }) |>
+      purrr::flatten() |>
+      purrr::flatten_lgl()
+  },
+  aae_factors = function(params) {
+    params$aae_factors |>
+      purrr::imap(\(.x1, .i1) {
+        purrr::imap(.x1, \(.x2, .i2) {
+          purrr::set_names(
+            validate_interval(.x2$interval, 0, 1),
+            glue::glue("aae_factors {.i1} {.i2} must be a valid interval")
+          )
+        })
+      }) |>
+      purrr::flatten() |>
+      purrr::flatten_lgl()
+  },
+  bed_occupancy = function(params) {
+    params$bed_occupancy[["day+night"]] |>
+      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::set_names(~ glue::glue("bed_occupancy day+night {.x} must be a valid interval"))
+  },
+  theatres = function(params) {
+    c(
+      params$theatres$change_utilisation |>
+        purrr::map_lgl(validate_interval, 0, 5) |>
+        purrr::set_names(~ glue::glue("theatres change_utilisation {.x} must be a valid interval")),
+      "theatres change_availability must be a valid interval" =
+        validate_interval(params$theatres$change_availability, 0, 5)
+    )
+  }
+)

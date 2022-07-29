@@ -12,7 +12,7 @@ mod_params_upload_ui <- function(id) {
 
   card_file_selection <- shiny::tagList(
     shiny::fileInput(ns("params_upload"), "Upload Params Excel File", accept = ".xlsx"),
-    shiny::textOutput(ns("status"))
+    shiny::uiOutput(ns("status"))
   )
 
   tab_run_settings <- shiny::tagList(
@@ -191,9 +191,34 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
       status("processing file...")
       on.exit({
-        status("file loaded, displaying loaded params")
       })
-      process_param_file(file$datapath)
+
+      params <- process_param_file(file$datapath)
+
+      # validate our uploaded parameters are valid
+      vp <- params |>
+        validate_params() |>
+        purrr::discard(identity) |>
+        names()
+
+      if (length(vp) > 0) {
+        status(
+          shiny::tagList(
+            "invalid parameters",
+            htmltools::tags$ul(
+              purrr::map(
+                vp,
+                htmltools::tags$li
+              )
+            )
+          )
+        )
+        shiny::validate("invalid params")
+      }
+
+      status("file loaded, displaying loaded params")
+
+      params
     }) |>
       shiny::bindEvent(input$params_upload) |>
       shiny::debounce(1000)
@@ -393,7 +418,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       }
     )
 
-    output$status <- shiny::renderText({
+    output$status <- shiny::renderUI({
       status()
     })
   })
