@@ -7,8 +7,8 @@ library(mockery)
 
 available_result_sets <- tibble::tribble(
   ~dataset, ~scenario, ~create_datetime, ~id,
-  "a", "1", "20220101_012345", "a__1__20200101_012345",
-  "a", "2", "20220102_103254", "a__2__20200102_103254",
+  "a", "1", "20220101_012345", "a__1__20220101_012345",
+  "a", "2", "20220102_103254", "a__2__20220102_103254",
   "a", "1", "20220203_112233", "a__1__20220203_112233",
   "b", "1", "20220201_112233", "b__1__20220201_112233"
 )
@@ -39,11 +39,11 @@ test_that("it populates the list of available result sets", {
     expected <- list(
       a = list(
         "1" = c(
-          "20220101_012345" = "a__1__20200101_012345",
+          "20220101_012345" = "a__1__20220101_012345",
           "20220203_112233" = "a__1__20220203_112233"
         ),
         "2" = c(
-          "20220102_103254" = "a__2__20200102_103254"
+          "20220102_103254" = "a__2__20220102_103254"
         )
       ),
       b = list(
@@ -153,7 +153,7 @@ test_that("it returns a reactive", {
     session$setInputs(dataset = "a", scenario = "1", create_datetime = "20220101_012345")
 
     expect_equal(selected_model_run(), list(
-      ds = "a", sc = "1", cd = "20220101_012345", id = "a__1__20200101_012345"
+      ds = "a", sc = "1", cd = "20220101_012345", id = "a__1__20220101_012345"
     ))
   })
 
@@ -162,5 +162,24 @@ test_that("it returns a reactive", {
   }
   testServer(server, {
     expect_true(shiny::is.reactive(results))
+  })
+})
+
+test_that("it downloads the results", {
+  m <- mock(list(data = 1))
+  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "cosmos_get_full_model_run_data", m)
+
+  testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
+    session$setInputs(dataset = "a", scenario = "1", create_datetime = "20220101_012345")
+
+    results_file <- output$download_results
+    withr::local_file(results_file)
+
+    expect_called(m, 1)
+    expect_args(m, 1, "a__1__20220101_012345")
+
+    results <- readr::read_lines(results_file)
+    expect_equal(results, c("{", "  \"data\": 1", "}"))
   })
 })
