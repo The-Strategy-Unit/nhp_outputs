@@ -10,10 +10,10 @@
 mod_principal_high_level_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::h1("High level activity estimates (principal projection)"),
+    shiny::h1("Principal projection: activity summary by year"),
     shiny::fluidRow(
       bs4Dash::box(
-        title = "Activity Estimates",
+        title = "Activity by type and year",
         shinycssloaders::withSpinner(
           gt::gt_output(ns("activity"))
         ),
@@ -78,6 +78,12 @@ mod_principal_high_level_summary_data <- function(id, pods) {
 
 mod_principal_high_level_table <- function(data) {
   data |>
+    dplyr::mutate(
+      across(
+        .data$fyear,
+        ~ ifelse(.data$year == min(.data$year), "Baseline", .x)
+      )
+    ) |>
     dplyr::select(-.data$activity_type, -.data$year) |>
     tidyr::pivot_wider(names_from = .data$fyear, values_from = .data$value) |>
     gt::gt() |>

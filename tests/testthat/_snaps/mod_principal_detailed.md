@@ -3,7 +3,7 @@
     Code
       mod_principal_detailed_ui("id")
     Output
-      <h1>Detailed activity estimates (principal projection)</h1>
+      <h1>Principal projection: activity in detail</h1>
       <div class="row">
         <div class="col-sm-3">
           <div class="form-group shiny-input-container">
@@ -16,7 +16,7 @@
         </div>
         <div class="col-sm-3">
           <div class="form-group shiny-input-container">
-            <label class="control-label" id="id-measure_selection-pod-label" for="id-measure_selection-pod">POD</label>
+            <label class="control-label" id="id-measure_selection-pod-label" for="id-measure_selection-pod">Point of Delivery</label>
             <div>
               <select id="id-measure_selection-pod"></select>
               <script type="application/json" data-for="id-measure_selection-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -34,7 +34,7 @@
         </div>
         <div class="col-sm-3">
           <div class="form-group shiny-input-container">
-            <label class="control-label" id="id-aggregation-label" for="id-aggregation">Aggregation</label>
+            <label class="control-label" id="id-aggregation-label" for="id-aggregation">Show results by</label>
             <div>
               <select id="id-aggregation"></select>
               <script type="application/json" data-for="id-aggregation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
