@@ -3,7 +3,7 @@
     Code
       mod_model_results_distribution_ui("id")
     Output
-      <h1>Simulation Results</h1>
+      <h1>Distribution of projections: activity distribution</h1>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group shiny-input-container">
