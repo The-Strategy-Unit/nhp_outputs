@@ -15,14 +15,7 @@
               </div>
             </div>
             <div class="card-body">
-              <span>
-                Available (baseline): 
-                <div id="id-available_baseline" class="shiny-text-output"></div>
-              </span>
-              <span>
-                Available (principal): 
-                <div id="id-available_principal" class="shiny-text-output"></div>
-              </span>
+              <div id="id-available_plot" style="width:100%; height:400px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
             </div>
           </div>
           <script type="application/json">{"title":"Theatres Available","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -30,7 +23,7 @@
         <div class="col-sm-12">
           <div class="card bs4Dash">
             <div class="card-header">
-              <h3 class="card-title">Four Hour Sesssions</h3>
+              <h3 class="card-title">Elective Four Hour Sesssions</h3>
             </div>
             <div class="card-body">
               <div class="row">
@@ -54,7 +47,7 @@
               </div>
             </div>
           </div>
-          <script type="application/json">{"title":"Four Hour Sesssions","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"title":"Elective Four Hour Sesssions","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
       </div>
 

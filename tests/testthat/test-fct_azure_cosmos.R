@@ -129,10 +129,36 @@ test_that("cosmos_get_model_core_activity gets the results", {
   expect_args(m_cont, 1, "results")
 })
 
+test_that("cosmos_get_variants gets the results", {
+  m_cont <- mock("container")
+  m <- mock(
+    list(list(data = list(selected_variants = c("x", "a", "a", "b"))))
+  )
+
+  stub(cosmos_get_variants, "cosmos_get_container", m_cont)
+  stub(cosmos_get_variants, "AzureCosmosR::query_documents", m)
+
+  expect_equal(
+    cosmos_get_variants("id"),
+    tibble::tibble(model_run = 1:3, variant = c("a", "a", "b"))
+  )
+
+  expect_called(m_cont, 1)
+  expect_called(m, 1)
+  expect_args(
+    m,
+    1,
+    "container",
+    "SELECT c.selected_variants FROM c",
+    partition_key = "id",
+    as_data_frame = FALSE,
+    metadata = FALSE
+  )
+})
+
 test_that("cosmos_get_model_run_distribution gets the results", {
   m_cont <- mock("container")
   m <- mock(
-    list(list(data = list(selected_variants = 4:7))),
     tibble::tribble(
       ~baseline, ~model_runs,
       100, c(100, 200, 300)
@@ -140,12 +166,17 @@ test_that("cosmos_get_model_run_distribution gets the results", {
   )
   stub(cosmos_get_model_run_distribution, "cosmos_get_container", m_cont)
   stub(cosmos_get_model_run_distribution, "AzureCosmosR::query_documents", m)
+  stub(
+    cosmos_get_model_run_distribution,
+    "cosmos_get_variants",
+    tibble::tibble(model_run = 1:3, variant = c("a", "a", "b"))
+  )
 
   expect_equal(cosmos_get_model_run_distribution("id", "pod", "measure"), tibble::tribble(
     ~baseline, ~model_run, ~value, ~variant,
-    100, 1, 100, 5,
-    100, 2, 200, 6,
-    100, 3, 300, 7
+    100, 1, 100, "a",
+    100, 2, 200, "a",
+    100, 3, 300, "b"
   ))
 
   qry <- glue::glue("
@@ -159,12 +190,8 @@ test_that("cosmos_get_model_run_distribution gets the results", {
     AND
         r.measure = 'measure'
   ")
-  expect_called(m, 2)
-  expect_args(m, 1, "container",
-    "SELECT c.selected_variants FROM c",
-    partition_key = "id", as_data_frame = FALSE, metadata = FALSE
-  )
-  expect_args(m, 2, "container", qry, partition_key = "id")
+  expect_called(m, 1)
+  expect_args(m, 1, "container", qry, partition_key = "id")
 
   expect_called(m_cont, 1)
   expect_args(m_cont, 1, "results")
@@ -287,11 +314,29 @@ test_that("cosmos_get_principal_change_factors adds the strategy column if it do
 
 test_that("cosmos_get_bed_occupancy gets the results", {
   m_cont <- mock("container")
-  m <- mock("data")
+  m <- mock(
+    tibble::tribble(
+      ~baseline, ~principal, ~model_runs,
+      10, 20, c(30, 40, 50)
+    )
+  )
   stub(cosmos_get_bed_occupancy, "cosmos_get_container", m_cont)
   stub(cosmos_get_bed_occupancy, "AzureCosmosR::query_documents", m)
+  stub(
+    cosmos_get_bed_occupancy,
+    "cosmos_get_variants",
+    tibble::tibble(model_run = 1:3, variant = c("a", "a", "b"))
+  )
 
-  expect_equal(cosmos_get_bed_occupancy("id"), "data")
+  expect_equal(
+    cosmos_get_bed_occupancy("id"),
+    tibble::tribble(
+      ~baseline, ~principal, ~model_run, ~value, ~variant,
+      10, 20, 1, 30, "a",
+      10, 20, 2, 40, "a",
+      10, 20, 3, 50, "b"
+    )
+  )
   qry <- "
     SELECT
         r.measure,
@@ -300,7 +345,8 @@ test_that("cosmos_get_bed_occupancy gets the results", {
         r.principal,
         r.median,
         r.lwr_ci,
-        r.upr_ci
+        r.upr_ci,
+        r.model_runs
     FROM c
     JOIN r IN c.results[\"bed_occupancy\"]
   "
@@ -349,7 +395,8 @@ test_that("cosmos_get_theatres_available gets the results", {
         r.principal,
         r.median,
         r.lwr_ci,
-        r.upr_ci
+        r.upr_ci,
+        r.model_runs
     FROM c
     JOIN r in c.results.theatres_available
   "

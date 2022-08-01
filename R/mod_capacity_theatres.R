@@ -14,17 +14,10 @@ mod_capacity_theatres_ui <- function(id) {
       bs4Dash::box(
         title = "Theatres Available",
         width = 12,
-        htmltools::tags$span(
-          "Available (baseline): ",
-          shiny::textOutput(ns("available_baseline"))
-        ),
-        htmltools::tags$span(
-          "Available (principal): ",
-          shiny::textOutput(ns("available_principal"))
-        )
+        plotly::plotlyOutput(ns("available_plot"))
       ),
       bs4Dash::box(
-        title = "Four Hour Sesssions",
+        title = "Elective Four Hour Sesssions",
         width = 12,
         collapsible = FALSE,
         shiny::fluidRow(
@@ -80,6 +73,21 @@ mod_capacity_theatres_get_utilisation_plot <- function(data) {
     ggplot2::geom_errorbar(ggplot2::aes(xmin = .data$baseline, xmax = .data$baseline), colour = "#2c2825")
 }
 
+mod_capacity_theatres_get_available_plot <- function(data) {
+  b <- data |>
+    dplyr::filter(.data$model_run == 1) |>
+    dplyr::pull(.data$baseline)
+
+  data |>
+    ggplot2::ggplot(ggplot2::aes(.data$value)) +
+    ggplot2::geom_bar(fill = "#f9bf07", colour = "#2c2825", alpha = 0.5) +
+    ggplot2::geom_vline(xintercept = b) +
+    ggplot2::theme(
+      axis.title = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank()
+    )
+}
+
 #' capacity_theatres Server Functions
 #'
 #' @noRd
@@ -96,11 +104,15 @@ mod_capacity_theatres_server <- function(id, selected_model_run_id) {
     })
 
     theatres_available <- shiny::reactive({
-      theatres_data()$theatres
-    })
+      id <- selected_model_run_id() # nolint
+      variants <- cosmos_get_variants(id)
 
-    output$available_baseline <- shiny::renderText(theatres_available()$baseline)
-    output$available_principal <- shiny::renderText(theatres_available()$principal)
+      theatres_data()$theatres |>
+        dplyr::select(-.data$tretspef) |>
+        dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
+        tidyr::unnest(.data$model_runs) |>
+        dplyr::inner_join(variants, by = "model_run")
+    })
 
     output$utilisation_table <- gt::render_gt({
       mod_capacity_theatres_get_utilisation_table(four_hour_sessions())
@@ -110,9 +122,14 @@ mod_capacity_theatres_server <- function(id, selected_model_run_id) {
       four_hour_sessions() |>
         mod_capacity_theatres_get_utilisation_plot() |>
         plotly::ggplotly() |>
-        plotly::layout(legend = list(
-          orientation = "h"
-        ))
+        plotly::layout(legend = list(orientation = "h"))
+    })
+
+    output$available_plot <- plotly::renderPlotly({
+      theatres_available() |>
+        mod_capacity_theatres_get_available_plot() |>
+        plotly::ggplotly() |>
+        plotly::layout(legend = list(orientation = "h"))
     })
   })
 }

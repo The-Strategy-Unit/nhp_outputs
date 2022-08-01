@@ -85,15 +85,10 @@ cosmos_get_model_core_activity <- function(id) {
   AzureCosmosR::query_documents(container, qry, partition_key = id)
 }
 
-cosmos_get_model_run_distribution <- function(id, pod, measure) {
-  stopifnot(
-    "invalid characters in pod" = stringr::str_remove_all(pod, "[\\w-]") == "",
-    "invalid characters in measure" = stringr::str_remove_all(measure, "[\\w-]") == ""
-  )
-
+cosmos_get_variants <- function(id) {
   container <- cosmos_get_container("results")
 
-  variants <- AzureCosmosR::query_documents(
+  AzureCosmosR::query_documents(
     container,
     "SELECT c.selected_variants FROM c",
     partition_key = id,
@@ -103,6 +98,17 @@ cosmos_get_model_run_distribution <- function(id, pod, measure) {
     purrr::pluck(1, "data", "selected_variants") |>
     utils::tail(-1) |>
     tibble::enframe("model_run", "variant")
+}
+
+cosmos_get_model_run_distribution <- function(id, pod, measure) {
+  stopifnot(
+    "invalid characters in pod" = stringr::str_remove_all(pod, "[\\w-]") == "",
+    "invalid characters in measure" = stringr::str_remove_all(measure, "[\\w-]") == ""
+  )
+
+  container <- cosmos_get_container("results")
+
+  variants <- cosmos_get_variants(id)
 
   qry <- glue::glue("
     SELECT
@@ -190,6 +196,8 @@ cosmos_get_principal_change_factors <- function(id, activity_type) {
 cosmos_get_bed_occupancy <- function(id) {
   container <- cosmos_get_container("results")
 
+  variants <- cosmos_get_variants(id)
+
   qry <- "
     SELECT
         r.measure,
@@ -198,12 +206,24 @@ cosmos_get_bed_occupancy <- function(id) {
         r.principal,
         r.median,
         r.lwr_ci,
-        r.upr_ci
+        r.upr_ci,
+        r.model_runs
     FROM c
     JOIN r IN c.results[\"bed_occupancy\"]
   "
 
-  AzureCosmosR::query_documents(container, qry, partition_key = id)
+  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+    dplyr::as_tibble() |>
+    dplyr::mutate(
+      dplyr::across(
+        .data$model_runs,
+        purrr::map,
+        tibble::enframe,
+        name = "model_run"
+      )
+    ) |>
+    tidyr::unnest(.data$model_runs) |>
+    dplyr::inner_join(variants, by = "model_run")
 }
 
 cosmos_get_full_model_run_data <- function(id) {
@@ -224,7 +244,8 @@ cosmos_get_theatres_available <- function(id) {
         r.principal,
         r.median,
         r.lwr_ci,
-        r.upr_ci
+        r.upr_ci,
+        r.model_runs
     FROM c
     JOIN r in c.results.theatres_available
   "
