@@ -17,6 +17,7 @@ app_server <- function(input, output, session) {
   mod_params_upload_server("params_upload", user_allowed_datasets)
   mod_running_models_server("running_models")
 
+  mod_principal_summary_server("principal_summary", selected_model_run_id)
   mod_principal_high_level_server("principal_high_level", selected_model_run_id)
   mod_principal_detailed_server("principal_detailed", selected_model_run_id)
   mod_principal_change_factor_effects_server("principal_change_factor_effects", selected_model_run_id)

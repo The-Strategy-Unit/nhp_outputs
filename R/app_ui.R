@@ -21,27 +21,31 @@ app_ui <- function(request) {
         "Principal Projection",
         startExpanded = FALSE,
         bs4Dash::menuSubItem(
-          text = "High Level",
+          text = "Summary",
+          tabName = "tab_ps"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Activity summary by year",
           tabName = "tab_phl"
         ),
         bs4Dash::menuSubItem(
-          text = "Detailed",
+          text = "Activity in detail",
           tabName = "tab_pd"
         ),
         bs4Dash::menuSubItem(
-          text = "Change Factors",
+          text = "Impact of changes",
           tabName = "tab_pcf"
         )
       ),
       bs4Dash::menuItem(
-        "Model Results",
+        "Distribution of projections",
         startExpanded = FALSE,
         bs4Dash::menuSubItem(
-          text = "Core Activity",
+          text = "Activity distribution summary",
           tabName = "tab_mc"
         ),
         bs4Dash::menuSubItem(
-          text = "Results Distribution",
+          text = "Activity distribution",
           tabName = "tab_md"
         )
       ),
@@ -97,6 +101,10 @@ app_ui <- function(request) {
       bs4Dash::tabItem(
         tabName = "tab_rm",
         mod_running_models_ui("running_models")
+      ),
+      bs4Dash::tabItem(
+        tabName = "tab_ps",
+        mod_principal_summary_ui("principal_summary")
       ),
       bs4Dash::tabItem(
         tabName = "tab_phl",
