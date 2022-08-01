@@ -97,13 +97,16 @@ mod_principal_high_level_plot <- function(data, activity_type) {
   c(start_year, end_year) %<-% range(data$year)
 
   data |>
-    dplyr::filter(.data$activity_type == .env$activity_type) |>
+    dplyr::filter(
+      .data$activity_type == .env$activity_type,
+      .data$year %in% c(start_year, end_year)
+    ) |>
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$value, colour = .data$pod_name)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
     ggplot2::scale_x_continuous(
       labels = fyear_str,
-      breaks = seq(start_year, end_year, 2)
+      breaks = c(start_year, end_year)
     ) +
     ggplot2::scale_y_continuous(
       labels = scales::comma
