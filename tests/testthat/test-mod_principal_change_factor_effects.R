@@ -206,6 +206,8 @@ test_that("it sets up the individual change factors", {
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", NULL)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_cf_plot", NULL)
 
   selected_model_id <- reactiveVal()
 
@@ -237,6 +239,8 @@ test_that("it shows or hides the individual plots", {
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", NULL)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_cf_plot", NULL)
   stub(mod_principal_change_factor_effects_server, "shinyjs::toggle", m)
 
   selected_model_id <- reactiveVal()

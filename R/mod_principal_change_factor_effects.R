@@ -10,7 +10,7 @@
 mod_principal_change_factor_effects_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::h1("Core change factor effects (principal projection)"),
+    shiny::h1("Principal projection: impact of changes"),
     shiny::fluidRow(
       col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
       col_4(shiny::selectInput(ns("measure"), "Measure", NULL)),
@@ -91,7 +91,9 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
   ggplot2::ggplot(data, ggplot2::aes(.data$value, .data$change_factor)) +
     ggplot2::geom_col(ggplot2::aes(fill = .data$colour), show.legend = FALSE, position = "stack") +
     ggplot2::scale_fill_identity() +
-    ggplot2::scale_x_continuous(labels = scales::comma)
+    ggplot2::scale_x_continuous(labels = scales::comma) +
+    ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
+    ggplot2::labs(x = "", y = "")
 }
 
 mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour) {
@@ -100,6 +102,7 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
     ggplot2::ggplot(ggplot2::aes(.data$value, .data$strategy)) +
     ggplot2::geom_col(fill = "#f9bf07") +
     ggplot2::scale_x_continuous(labels = scales::comma) +
+    ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
     ggplot2::labs(x = "", y = "")
 }
 
