@@ -34,7 +34,7 @@
         </div>
         <div class="col-sm-3">
           <div class="form-group shiny-input-container">
-            <label class="control-label" id="id-aggregation-label" for="id-aggregation">Show results by</label>
+            <label class="control-label" id="id-aggregation-label" for="id-aggregation">Show Results By</label>
             <div>
               <select id="id-aggregation"></select>
               <script type="application/json" data-for="id-aggregation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
