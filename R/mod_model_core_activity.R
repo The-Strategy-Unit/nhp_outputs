@@ -10,6 +10,7 @@
 mod_model_core_activity_ui <- function(id) {
   ns <- NS(id)
   tagList(
+    shiny::h1("Distribution of projections: activity distribution summary"),
     shinycssloaders::withSpinner(
       gt::gt_output(ns("core_activity"))
     )
@@ -31,7 +32,7 @@ mod_model_core_activity_server_table <- function(data) {
     gt::cols_label(
       "measure" = "Measure",
       "baseline" = "Baseline",
-      "median" = "Central Estimate",
+      "median" = "Central Projection",
       "lwr_ci" = "Lower",
       "upr_ci" = "Upper"
     ) |>
