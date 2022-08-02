@@ -18,7 +18,7 @@ app_ui <- function(request) {
         icon = shiny::icon("home")
       ),
       bs4Dash::menuItem(
-        "Principal Projection",
+        "Principal projection",
         startExpanded = FALSE,
         bs4Dash::menuSubItem(
           text = "Summary",

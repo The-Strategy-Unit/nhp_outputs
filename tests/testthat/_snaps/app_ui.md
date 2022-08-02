@@ -35,11 +35,11 @@
                   <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                       <p>
-                        Principal Projection
+                        Principal projection
                         <i class="right fas fa-angle-left"></i>
                       </p>
                     </a>
-                    <ul class="nav nav-treeview" data-expanded="PrincipalProjection">
+                    <ul class="nav nav-treeview" data-expanded="Principalprojection">
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_ps" href="#" data-target="#shiny-tab-tab_ps" data-toggle="tab" data-value="tab_ps">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
