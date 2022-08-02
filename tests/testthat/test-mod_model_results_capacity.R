@@ -18,43 +18,57 @@ beds_data_expected <- tibble::tribble(
   "c", 80, 90, 3, 9, "b"
 )
 
+fhs_expected <- tibble::tribble(
+  ~tretspef, ~baseline, ~principal, ~model_runs,
+  "a", 50, 45, list(10, 20, 30),
+  "b", 60, 75, list(40, 50, 60),
+  "c", 80, 90, list(70, 80, 90)
+)
+
+theatres_expected <- tibble::tribble(
+  ~baseline, ~principal, ~model_run, ~value, ~variant,
+  10, 20, 1, 4, "a",
+  10, 20, 2, 5, "a",
+  10, 20, 3, 6, "b"
+)
+
+theatres_data_expected <- list(
+  "four_hour_sessions" = fhs_expected,
+  "theatres" = tibble::tribble(
+    ~tretspef, ~baseline, ~principal, ~model_runs,
+    NA, 10, 20, 4:6
+  )
+)
+
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
-  expect_snapshot(mod_capacity_beds_ui("id"))
+  expect_snapshot(mod_model_results_capacity_ui("id"))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # helper functions
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-test_that("get_available_table returns a gt", {
-  set.seed(1) # ensure gt id always regenerated identically
-  table <- mod_capacity_beds_get_available_table(beds_data_expected)
-
-  expect_s3_class(table, "gt_tbl")
-  expect_snapshot(gt::as_raw_html(table))
-})
-
-test_that("get_available_density_plot returns a ggplot object", {
+test_that("beds_density_plot returns a ggplot object", {
   expected_data <- dplyr::count(beds_data_expected, model_run, variant, wt = value)
   expected_baseline <- 190
 
-  p <- mod_capacity_beds_get_available_density_plot(expected_data, expected_baseline)
+  p <- mod_model_results_capacity_beds_density_plot(expected_data, expected_baseline)
   expect_s3_class(p, "ggplot")
 })
 
-test_that("get_available_beeswarm returns a ggplot object", {
+test_that("beds_beeswarm returns a ggplot object", {
   expected_data <- dplyr::count(beds_data_expected, model_run, variant, wt = value)
   expected_baseline <- 190
 
-  p <- mod_capacity_beds_get_available_beeswarm_plot(expected_data, expected_baseline)
+  p <- mod_model_results_capacity_beds_beeswarm_plot(expected_data, expected_baseline)
   expect_s3_class(p, "ggplot")
 })
 
-test_that("get_available_plot combines the plots into a plotly object", {
+test_that("beds_available_plot combines the plots into a plotly object", {
   m <- mock(
     "density_plot",
     "beeswarm_plot",
@@ -64,16 +78,16 @@ test_that("get_available_plot combines the plots into a plotly object", {
     "layout"
   )
 
-  stub(mod_capacity_beds_get_available_plot, "mod_capacity_beds_get_available_density_plot", m)
-  stub(mod_capacity_beds_get_available_plot, "mod_capacity_beds_get_available_beeswarm_plot", m)
-  stub(mod_capacity_beds_get_available_plot, "plotly::ggplotly", m)
-  stub(mod_capacity_beds_get_available_plot, "plotly::subplot", m)
-  stub(mod_capacity_beds_get_available_plot, "plotly::layout", m)
+  stub(mod_model_results_capacity_beds_available_plot, "mod_model_results_capacity_beds_density_plot", m)
+  stub(mod_model_results_capacity_beds_available_plot, "mod_model_results_capacity_beds_beeswarm_plot", m)
+  stub(mod_model_results_capacity_beds_available_plot, "plotly::ggplotly", m)
+  stub(mod_model_results_capacity_beds_available_plot, "plotly::subplot", m)
+  stub(mod_model_results_capacity_beds_available_plot, "plotly::layout", m)
 
   expected_data <- dplyr::count(beds_data_expected, model_run, variant, wt = value)
   expected_baseline <- 190
 
-  p <- mod_capacity_beds_get_available_plot(beds_data_expected)
+  p <- mod_model_results_capacity_beds_available_plot(beds_data_expected)
   expect_equal(p, "layout")
 
   expect_called(m, 6)
@@ -85,6 +99,16 @@ test_that("get_available_plot combines the plots into a plotly object", {
   expect_args(m, 6, "subplot", legend = list(orientation = "h"))
 })
 
+test_that("theatres_available_plot returns a ggplot object", {
+  p <- mod_model_results_capacity_theatres_available_plot(theatres_expected)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("fhs_available_plot returns a ggplot object", {
+  p <- mod_model_results_capacity_fhs_available_plot(fhs_expected)
+  expect_s3_class(p, "ggplot")
+})
+
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # server
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -92,9 +116,9 @@ test_that("get_available_plot combines the plots into a plotly object", {
 test_that("it calls cosmos_get_bed_occupancy correctly", {
   m <- mock("beds_data")
 
-  stub(mod_capacity_beds_server, "cosmos_get_bed_occupancy", m)
+  stub(mod_model_results_capacity_server, "cosmos_get_bed_occupancy", m)
 
-  shiny::testServer(mod_capacity_beds_server, args = list(reactiveVal()), {
+  shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
     selected_model_run_id("id")
 
     expect_equal(beds_data(), "beds_data")
@@ -104,35 +128,54 @@ test_that("it calls cosmos_get_bed_occupancy correctly", {
   })
 })
 
-test_that("it renders the table", {
-  d <- dplyr::filter(beds_data_expected, model_run == 1)
+test_that("it calls cosmos_get_theatres_available correctly", {
+  m <- mock("theatres_data")
 
-  m <- mock(mock_table)
-  stub(mod_capacity_beds_server, "cosmos_get_bed_occupancy", beds_data_expected)
-  stub(mod_capacity_beds_server, "mod_capacity_beds_get_available_table", m)
-  stub(mod_capacity_beds_server, "mod_capacity_beds_get_available_plot", NULL)
+  stub(mod_model_results_capacity_server, "cosmos_get_theatres_available", m)
 
-  shiny::testServer(mod_capacity_beds_server, args = list(reactiveVal()), {
+  shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
     selected_model_run_id("id")
 
-    session$private$flush()
+    expect_equal(theatres_data(), "theatres_data")
 
     expect_called(m, 1)
-    expect_args(m, 1, d)
+    expect_args(m, 1, "id")
   })
 })
 
-test_that("it renders the plot", {
+test_that("it sets the reactives up correctly", {
+  expected_variants <- tibble::tibble(
+    model_run = 1:3,
+    variant = c("a", "a", "b")
+  )
+  stub(mod_model_results_capacity_server, "cosmos_get_theatres_available", theatres_data_expected)
+  stub(mod_model_results_capacity_server, "cosmos_get_variants", expected_variants)
+
+  shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
+    selected_model_run_id("id")
+
+    expect_equal(four_hour_sessions(), fhs_expected)
+    expect_equal(theatres_available(), theatres_expected)
+  })
+})
+
+test_that("it renders the plots", {
   m <- mock()
-  stub(mod_capacity_beds_server, "mod_capacity_beds_get_available_plot", "plot")
-  stub(mod_capacity_beds_server, "plotly::renderPlotly", m)
+  stub(mod_model_results_capacity_server, "mod_model_results_capacity_beds_available_plot", "beds")
+  stub(mod_model_results_capacity_server, "mod_model_results_capacity_theatres_available_plot", "theatres")
+  stub(mod_model_results_capacity_server, "mod_model_results_capacity_fhs_available_plot", "fhs")
+  stub(mod_model_results_capacity_server, "plotly::ggplotly", \(x, ...) x)
+  stub(mod_model_results_capacity_server, "plotly::layout", \(x, ...) x)
+  stub(mod_model_results_capacity_server, "plotly::renderPlotly", m)
 
   selected_model_run <- reactiveVal()
 
-  shiny::testServer(mod_capacity_beds_server, args = list(reactiveVal()), {
+  shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
     selected_model_run_id("id")
 
-    expect_called(m, 1)
-    expect_args(m, 1, "plot")
+    expect_called(m, 3)
+    expect_args(m, 1, "beds")
+    expect_args(m, 2, "theatres")
+    expect_args(m, 3, "fhs")
   })
 })

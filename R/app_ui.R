@@ -35,6 +35,10 @@ app_ui <- function(request) {
         bs4Dash::menuSubItem(
           text = "Impact of changes",
           tabName = "tab_pcf"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Capacity requirements",
+          tabName = "tab_pcr"
         )
       ),
       bs4Dash::menuItem(
@@ -47,18 +51,6 @@ app_ui <- function(request) {
         bs4Dash::menuSubItem(
           text = "Activity distribution",
           tabName = "tab_md"
-        )
-      ),
-      bs4Dash::menuItem(
-        "Capacity Conversion",
-        startExpanded = FALSE,
-        bs4Dash::menuSubItem(
-          text = "Beds",
-          tabName = "tab_cb"
-        ),
-        bs4Dash::menuSubItem(
-          text = "Theatres",
-          tabName = "tab_ct"
         )
       ),
       htmltools::tags$hr(),
@@ -119,6 +111,10 @@ app_ui <- function(request) {
         mod_principal_change_factor_effects_ui("principal_change_factor_effects")
       ),
       bs4Dash::tabItem(
+        tabName = "tab_pcr",
+        mod_principal_capacity_requirements_ui("principal_capacity_requirements")
+      ),
+      bs4Dash::tabItem(
         tabName = "tab_mc",
         mod_model_core_activity_ui("model_core_activity")
       ),
@@ -127,12 +123,8 @@ app_ui <- function(request) {
         mod_model_results_distribution_ui("model_results_distribution")
       ),
       bs4Dash::tabItem(
-        tabName = "tab_cb",
-        mod_capacity_beds_ui("capacity_beds")
-      ),
-      bs4Dash::tabItem(
-        tabName = "tab_ct",
-        mod_capacity_theatres_ui("capacity_theatres")
+        tabName = "tab_mcap",
+        mod_model_results_capacity_ui("model_results_capacity")
       )
     )
   )

@@ -64,6 +64,12 @@
                           <p>Impact of changes</p>
                         </a>
                       </li>
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_pcr" href="#" data-target="#shiny-tab-tab_pcr" data-toggle="tab" data-value="tab_pcr">
+                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
+                          <p>Capacity requirements</p>
+                        </a>
+                      </li>
                     </ul>
                   </li>
                   <li class="nav-item has-treeview">
@@ -84,28 +90,6 @@
                         <a class="nav-link treeview-link" id="tab-tab_md" href="#" data-target="#shiny-tab-tab_md" data-toggle="tab" data-value="tab_md">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
                           <p>Activity distribution</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                      <p>
-                        Capacity Conversion
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview" data-expanded="CapacityConversion">
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_cb" href="#" data-target="#shiny-tab-tab_cb" data-toggle="tab" data-value="tab_cb">
-                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Beds</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_ct" href="#" data-target="#shiny-tab-tab_ct" data-toggle="tab" data-value="tab_ct">
-                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Theatres</p>
                         </a>
                       </li>
                     </ul>
@@ -164,16 +148,14 @@
                 </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_up">params_upload</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_rm">running_models</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">
-                  <div id="principal_summary-summary_table" class="shiny-html-output"></div>
-                </div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">principal_summary</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_high_level</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_detailed</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_change_factor_effects</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_capacity_requirements</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">model_core_activity</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">model_results_distribution</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_cb">capacity_beds</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ct">capacity_theatres</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_results_capacity</div>
               </div>
             </section>
           </div>
