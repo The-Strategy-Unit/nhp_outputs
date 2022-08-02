@@ -67,11 +67,6 @@ default:
           name: "Outpatient Procedure"
           measures:
             - attendances
-            - procedures
-  aggregations:
-    - default
-    - sex+age_group
-    - sex+tret_spef
 
 production:
   app_prod: yes
