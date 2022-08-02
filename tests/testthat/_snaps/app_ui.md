@@ -92,6 +92,12 @@
                           <p>Activity distribution</p>
                         </a>
                       </li>
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_mcap" href="#" data-target="#shiny-tab-tab_mcap" data-toggle="tab" data-value="tab_mcap">
+                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
+                          <p>Capacity requirements</p>
+                        </a>
+                      </li>
                     </ul>
                   </li>
                   <hr/>

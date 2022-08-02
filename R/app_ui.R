@@ -51,6 +51,10 @@ app_ui <- function(request) {
         bs4Dash::menuSubItem(
           text = "Activity distribution",
           tabName = "tab_md"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Capacity requirements",
+          tabName = "tab_mcap"
         )
       ),
       htmltools::tags$hr(),
