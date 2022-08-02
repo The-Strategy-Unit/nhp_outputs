@@ -2,6 +2,22 @@ library(shiny)
 library(mockery)
 
 test_that("ui is created correctly", {
+  # there is an issue running on CI with the font awesome icons...
+  stub_icon_fn <- purrr::partial(shiny::icon, verify_fa = FALSE)
+  shiny_icon_fn <- shiny::icon
+
+  assign_shiny_icon <- function(fn) {
+    rlang::env_unlock(env = asNamespace("shiny"))
+    rlang::env_binding_unlock(env = asNamespace("shiny"))
+    assign("icon", fn, envir = asNamespace("shiny"))
+    rlang::env_binding_lock(env = asNamespace("shiny"))
+    rlang::env_lock(asNamespace("shiny"))
+  }
+  withr::defer({
+    assign_shiny_icon(shiny_icon_fn)
+  })
+  assign_shiny_icon(stub_icon_fn)
+
   m <- mock(
     "result_selection",
     "params_upload",

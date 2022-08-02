@@ -79,7 +79,7 @@ mod_principal_high_level_summary_data <- function(id, pods) {
 mod_principal_high_level_table <- function(data) {
   data |>
     dplyr::mutate(
-      across(
+      dplyr::across(
         .data$fyear,
         ~ ifelse(.data$year == min(.data$year), "Baseline", .x)
       )

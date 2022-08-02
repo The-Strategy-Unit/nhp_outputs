@@ -4,9 +4,9 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList
 mod_principal_summary_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
@@ -54,12 +54,12 @@ mod_principal_summary_table <- function(data) {
     gt::fmt_integer(c(.data$baseline, .data$principal)) |>
     gt_theme()
 }
-    
+
 #' principal_summary Server Functions
 #'
-#' @noRd 
+#' @noRd
 mod_principal_summary_server <- function(id, selected_model_run_id) {
-  moduleServer(id, function(input, output, session) {
+  shiny::moduleServer(id, function(input, output, session) {
     summary_data <- shiny::reactive({
       id <- selected_model_run_id()
       mod_principal_summary_data(id)
@@ -72,9 +72,9 @@ mod_principal_summary_server <- function(id, selected_model_run_id) {
     })
   })
 }
-    
+
 ## To be copied in the UI
-# 
-    
+#
+
 ## To be copied in the server
 # mod_principal_summary_server("principal_summary_1")
