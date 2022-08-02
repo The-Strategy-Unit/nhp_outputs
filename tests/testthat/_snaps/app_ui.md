@@ -49,7 +49,7 @@
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_phl" href="#" data-target="#shiny-tab-tab_phl" data-toggle="tab" data-value="tab_phl">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Activity summary by year</p>
+                          <p>Summary by year</p>
                         </a>
                       </li>
                       <li class="nav-item">
@@ -83,7 +83,7 @@
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_mc" href="#" data-target="#shiny-tab-tab_mc" data-toggle="tab" data-value="tab_mc">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Activity distribution summary</p>
+                          <p>Activity summary</p>
                         </a>
                       </li>
                       <li class="nav-item">

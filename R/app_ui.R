@@ -25,7 +25,7 @@ app_ui <- function(request) {
           tabName = "tab_ps"
         ),
         bs4Dash::menuSubItem(
-          text = "Activity summary by year",
+          text = "Summary by year",
           tabName = "tab_phl"
         ),
         bs4Dash::menuSubItem(
@@ -45,7 +45,7 @@ app_ui <- function(request) {
         "Distribution of projections",
         startExpanded = FALSE,
         bs4Dash::menuSubItem(
-          text = "Activity distribution summary",
+          text = "Activity summary",
           tabName = "tab_mc"
         ),
         bs4Dash::menuSubItem(
