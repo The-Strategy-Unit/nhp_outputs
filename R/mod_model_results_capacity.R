@@ -11,22 +11,26 @@ mod_model_results_capacity_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Distribution of projections: capacity requirements distribution"),
-    bs4Dash::box(
-      title = "Beds",
-      shinycssloaders::withSpinner(
-        plotly::plotlyOutput(ns("beds"), height = "800px"),
-      )
-    ),
-    bs4Dash::box(
-      title = "Theatres",
-      shinycssloaders::withSpinner(
-        plotly::plotlyOutput(ns("theatres"), height = "800px"),
-      )
-    ),
-    bs4Dash::box(
-      title = "Elective 4 hour sessions",
-      shinycssloaders::withSpinner(
-        plotly::plotlyOutput(ns("fhs"), height = "800px"),
+    shiny::fluidRow(
+      bs4Dash::box(
+        title = "Beds",
+        width = 12,
+        shinycssloaders::withSpinner(
+          plotly::plotlyOutput(ns("beds"), height = "800px"),
+        )
+      ),
+      bs4Dash::box(
+        title = "Theatres",
+        width = 6,
+        shinycssloaders::withSpinner(
+          plotly::plotlyOutput(ns("theatres"), height = "800px"),
+        )
+      ),
+      bs4Dash::box(
+        title = "Elective 4 hour sessions",
+        shinycssloaders::withSpinner(
+          plotly::plotlyOutput(ns("fhs"), height = "800px"),
+        )
       )
     )
   )
@@ -52,10 +56,11 @@ mod_model_results_capacity_beds_beeswarm_plot <- function(data, baseline) {
     # have to use coord flip with boxplots/violin plots and plotly...
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::labs(x = "", y = "Number of beds available") +
     ggplot2::theme(
-      axis.text = ggplot2::element_blank(),
-      axis.title = ggplot2::element_blank(),
-      axis.ticks = ggplot2::element_blank()
+      axis.text.y = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank()
     )
 }
 
@@ -88,18 +93,24 @@ mod_model_results_capacity_theatres_available_plot <- function(data) {
     ggplot2::ggplot(ggplot2::aes(.data$value)) +
     ggplot2::geom_bar(fill = "#f9bf07", colour = "#2c2825") +
     ggplot2::geom_vline(xintercept = b) +
-    ggplot2::theme(
-      axis.title = ggplot2::element_blank(),
-      axis.ticks = ggplot2::element_blank()
-    )
+    ggplot2::labs(x = "Number of theatres available", y = "Frequency")
 }
 
 mod_model_results_capacity_fhs_available_plot <- function(data) {
   data |>
-    dplyr::mutate(dplyr::across(.data$tretspef, forcats::fct_reorder, .data$principal)) |>
-    ggplot2::ggplot(ggplot2::aes(.data$principal, .data$tretspef)) +
-    ggplot2::geom_col(fill = "#f9bf07") +
-    ggplot2::geom_errorbar(ggplot2::aes(xmin = .data$baseline, xmax = .data$baseline), colour = "#2c2825")
+    dplyr::group_by(.data$model_run, .data$variant) |>
+    dplyr::summarise(dplyr::across(c(.data$baseline, .data$value), sum), .groups = "drop") |>
+    ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
+    ggbeeswarm::geom_quasirandom(groupOnX = TRUE, alpha = 0.5) +
+    ggplot2::geom_hline(ggplot2::aes(yintercept = .data$baseline), colour = "#2c2825") +
+    ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank()
+    ) +
+    ggplot2::labs(x = "", y = "Elective 4 hour sessions") +
+    ggplot2::coord_flip()
 }
 
 
@@ -114,6 +125,12 @@ mod_model_results_capacity_server <- function(id, selected_model_run_id) {
     }) |>
       shiny::bindCache(selected_model_run_id())
 
+    variants <- shiny::reactive({
+      id <- selected_model_run_id()
+      cosmos_get_variants(id)
+    }) |>
+      shiny::bindCache(selected_model_run_id())
+
     theatres_data <- shiny::reactive({
       id <- selected_model_run_id() # nolint
       cosmos_get_theatres_available(id)
@@ -121,18 +138,20 @@ mod_model_results_capacity_server <- function(id, selected_model_run_id) {
       shiny::bindCache(selected_model_run_id())
 
     four_hour_sessions <- shiny::reactive({
-      theatres_data()$four_hour_sessions
+      theatres_data()$four_hour_sessions |>
+        dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
+        tidyr::unnest(.data$model_runs) |>
+        dplyr::inner_join(variants(), by = "model_run")
     })
 
     theatres_available <- shiny::reactive({
       id <- selected_model_run_id() # nolint
-      variants <- cosmos_get_variants(id)
 
       theatres_data()$theatres |>
         dplyr::select(-.data$tretspef) |>
         dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
         tidyr::unnest(.data$model_runs) |>
-        dplyr::inner_join(variants, by = "model_run")
+        dplyr::inner_join(variants(), by = "model_run")
     })
 
     output$beds <- plotly::renderPlotly({

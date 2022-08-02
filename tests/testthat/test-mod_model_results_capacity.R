@@ -20,9 +20,9 @@ beds_data_expected <- tibble::tribble(
 
 fhs_expected <- tibble::tribble(
   ~tretspef, ~baseline, ~principal, ~model_runs,
-  "a", 50, 45, list(10, 20, 30),
-  "b", 60, 75, list(40, 50, 60),
-  "c", 80, 90, list(70, 80, 90)
+  "a", 50, 45, c(10, 20, 30),
+  "b", 60, 75, c(40, 50, 60),
+  "c", 80, 90, c(70, 80, 90)
 )
 
 theatres_expected <- tibble::tribble(
@@ -105,7 +105,12 @@ test_that("theatres_available_plot returns a ggplot object", {
 })
 
 test_that("fhs_available_plot returns a ggplot object", {
-  p <- mod_model_results_capacity_fhs_available_plot(fhs_expected)
+  data <- fhs_expected |>
+    dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
+    tidyr::unnest(.data$model_runs) |>
+    dplyr::mutate(variant = "a")
+
+  p <- mod_model_results_capacity_fhs_available_plot(data)
   expect_s3_class(p, "ggplot")
 })
 
@@ -151,10 +156,15 @@ test_that("it sets the reactives up correctly", {
   stub(mod_model_results_capacity_server, "cosmos_get_theatres_available", theatres_data_expected)
   stub(mod_model_results_capacity_server, "cosmos_get_variants", expected_variants)
 
+  fhs_data <- fhs_expected |>
+    dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
+    tidyr::unnest(.data$model_runs) |>
+    dplyr::inner_join(expected_variants, by = "model_run")
+
   shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
     selected_model_run_id("id")
 
-    expect_equal(four_hour_sessions(), fhs_expected)
+    expect_equal(four_hour_sessions(), fhs_data)
     expect_equal(theatres_available(), theatres_expected)
   })
 })
