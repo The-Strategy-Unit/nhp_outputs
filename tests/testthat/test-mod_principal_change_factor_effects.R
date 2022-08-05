@@ -129,7 +129,13 @@ test_that("mod_principal_change_factor_effects_cf_plot returns a ggplot", {
 })
 
 test_that("mod_principal_change_factor_effects_ind_plot returns a ggplot", {
-  p <- mod_principal_change_factor_effects_ind_plot(change_factors_expected$ip, "admission_avoidance", "#f9bf07")
+  p <- mod_principal_change_factor_effects_ind_plot(
+    change_factors_expected$ip,
+    "admission_avoidance",
+    "#f9bf07",
+    "Admission Avoidance",
+    "Admissions"
+  )
   expect_s3_class(p, "ggplot")
 })
 
@@ -282,7 +288,7 @@ test_that("it renders the plots", {
 
     expect_called(m, 3)
     expect_args(m, 1, "cfd")
-    expect_equal(mock_args(m)[[2]][-1], list("admission_avoidance", "#f9bf07"))
-    expect_equal(mock_args(m)[[3]][-1], list("los_reduction", "#ec6555"))
+    expect_equal(mock_args(m)[[2]][-1], list("admission_avoidance", "#f9bf07", "Admission Avoidance", "Admissions"))
+    expect_equal(mock_args(m)[[3]][-1], list("los_reduction", "#ec6555", "Length of Stay Reduction", "Bed Days"))
   })
 })

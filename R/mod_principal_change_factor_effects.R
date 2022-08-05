@@ -103,14 +103,14 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
     ggplot2::labs(x = "", y = "")
 }
 
-mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour) {
+mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour, title, x_axis_label) {
   data |>
     dplyr::filter(.data$change_factor == .env$change_factor) |>
     ggplot2::ggplot(ggplot2::aes(.data$value, .data$strategy)) +
     ggplot2::geom_col(fill = "#f9bf07") +
     ggplot2::scale_x_continuous(labels = scales::comma) +
     ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
-    ggplot2::labs(x = "", y = "")
+    ggplot2::labs(title = title, x = x_axis_label, y = "")
 }
 
 #' principal_change_factor_effects Server Functions
@@ -198,7 +198,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       mod_principal_change_factor_effects_ind_plot(
         individual_change_factors(),
         "admission_avoidance",
-        "#f9bf07"
+        "#f9bf07",
+        "Admission Avoidance",
+        "Admissions"
       ) |>
         plotly::ggplotly() |>
         plotly::layout(showlegend = FALSE)
@@ -208,7 +210,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       mod_principal_change_factor_effects_ind_plot(
         individual_change_factors(),
         "los_reduction",
-        "#ec6555"
+        "#ec6555",
+        "Length of Stay Reduction",
+        "Bed Days"
       ) |>
         plotly::ggplotly() |>
         plotly::layout(showlegend = FALSE)
