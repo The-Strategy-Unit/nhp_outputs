@@ -80,35 +80,35 @@
           <tr style=""><td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"> 0- 4</td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: right; font-variant-numeric: tabular-nums;">900</td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"><div>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: -110%">&nbsp;</span>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: #686f73; width: 160%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #686f73; width: 50%">&nbsp;</span>
         <span style="width: 50%" align="right">800</span>
       </div></td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"><div>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: NaN%">&nbsp;</span>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: NaN%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 50%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: -50%">&nbsp;</span>
         <span style="width: 50%" align="right">-100</span>
       </div></td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"><div>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 50%">&nbsp;</span>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: 130%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 36.1111111111111%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: -36.1111111111111%">&nbsp;</span>
         <span style="width: 50%" align="right">-11%</span>
       </div></td></tr>
           <tr><td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"> 5-14</td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: right; font-variant-numeric: tabular-nums;">650</td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"><div>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: -110%">&nbsp;</span>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: #686f73; width: 110%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #686f73; width: 34.375%">&nbsp;</span>
         <span style="width: 50%" align="right">550</span>
       </div></td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"><div>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: NaN%">&nbsp;</span>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: NaN%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 50%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: -50%">&nbsp;</span>
         <span style="width: 50%" align="right">-100</span>
       </div></td>
       <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; text-align: left;"><div>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
-        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: 180%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 50%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #ec6555; width: -50%">&nbsp;</span>
         <span style="width: 50%" align="right">-15%</span>
       </div></td></tr>
         </tbody>
