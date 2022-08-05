@@ -8,10 +8,21 @@
 gt_bar <- function(value, display_value_format = NULL, negative_colour = "#ec6555", positive_colour = "#f9bf07") {
   # find the range of value
   r <- range(value)
-  # then rescale value
-  rvalue <- (value - r[[1]]) / diff(r)
-  # work out zero in the rescaled domain
-  zero <- -r[[1]] / diff(r)
+  # rescale the values:
+  if (r[[1]] >= 0) {
+    # if all of the values are positive, then rescale to be constrained to [0, max(value)]
+    rvalue <- value / r[[2]]
+    zero <- 0
+  } else if (r[[2]] <= 0) {
+    # if all of the values are negative, then rescale to be constrained to [min(value), 0]
+    rvalue <- value / r[[1]]
+    zero <- 0
+  } else {
+    # if we have both negative and positive values, rescale to be contrained to [min(value), max(value)]
+    rvalue <- (value - r[[1]]) / diff(r)
+    # work out zero in the rescaled domain
+    zero <- -r[[1]] / diff(r)
+  }
   # our bar consists of 2 parts: an empty bar, and the value bar
   # the empty bar will go from the far left to either then "end" of the negative bar, or the "start" of the positive bar
   bar_data <- tibble::tibble(

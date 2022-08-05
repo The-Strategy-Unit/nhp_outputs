@@ -14,7 +14,7 @@
       </div>
       <div class="col-sm-4">
         <div class="form-group shiny-input-container">
-          <label class="control-label" id="id-pod-label" for="id-pod">POD</label>
+          <label class="control-label" id="id-pod-label" for="id-pod">Point of Delivery</label>
           <div>
             <select id="id-pod"></select>
             <script type="application/json" data-for="id-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
@@ -47,7 +47,7 @@
       </div>
       <div class="col-sm-4">
         <div class="form-group shiny-input-container">
-          <label class="control-label" id="id-pod-label" for="id-pod">POD</label>
+          <label class="control-label" id="id-pod-label" for="id-pod">Point of Delivery</label>
           <div>
             <select id="id-pod"></select>
             <script type="application/json" data-for="id-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>

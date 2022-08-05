@@ -35,27 +35,39 @@
                   <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                       <p>
-                        Principal Projection
+                        Principal projection
                         <i class="right fas fa-angle-left"></i>
                       </p>
                     </a>
-                    <ul class="nav nav-treeview" data-expanded="PrincipalProjection">
+                    <ul class="nav nav-treeview" data-expanded="Principalprojection">
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_ps" href="#" data-target="#shiny-tab-tab_ps" data-toggle="tab" data-value="tab_ps">
+                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
+                          <p>Summary</p>
+                        </a>
+                      </li>
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_phl" href="#" data-target="#shiny-tab-tab_phl" data-toggle="tab" data-value="tab_phl">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>High Level</p>
+                          <p>Summary by year</p>
                         </a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_pd" href="#" data-target="#shiny-tab-tab_pd" data-toggle="tab" data-value="tab_pd">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Detailed</p>
+                          <p>Activity in detail</p>
                         </a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_pcf" href="#" data-target="#shiny-tab-tab_pcf" data-toggle="tab" data-value="tab_pcf">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Change Factors</p>
+                          <p>Impact of changes</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_pcr" href="#" data-target="#shiny-tab-tab_pcr" data-toggle="tab" data-value="tab_pcr">
+                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
+                          <p>Capacity requirements</p>
                         </a>
                       </li>
                     </ul>
@@ -63,43 +75,27 @@
                   <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                       <p>
-                        Model Results
+                        Distribution of projections
                         <i class="right fas fa-angle-left"></i>
                       </p>
                     </a>
-                    <ul class="nav nav-treeview" data-expanded="ModelResults">
+                    <ul class="nav nav-treeview" data-expanded="Distributionofprojections">
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_mc" href="#" data-target="#shiny-tab-tab_mc" data-toggle="tab" data-value="tab_mc">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Core Activity</p>
+                          <p>Activity summary</p>
                         </a>
                       </li>
                       <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_md" href="#" data-target="#shiny-tab-tab_md" data-toggle="tab" data-value="tab_md">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Results Distribution</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                      <p>
-                        Capacity Conversion
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview" data-expanded="CapacityConversion">
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_cb" href="#" data-target="#shiny-tab-tab_cb" data-toggle="tab" data-value="tab_cb">
-                          <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Beds</p>
+                          <p>Activity distribution</p>
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_ct" href="#" data-target="#shiny-tab-tab_ct" data-toggle="tab" data-value="tab_ct">
+                        <a class="nav-link treeview-link" id="tab-tab_mcap" href="#" data-target="#shiny-tab-tab_mcap" data-toggle="tab" data-value="tab_mcap">
                           <i class="fa fa-angle-double-right" role="presentation" aria-label="angle-double-right icon" cl="fa fa-angle-double-right nav-icon"></i>
-                          <p>Theatres</p>
+                          <p>Capacity requirements</p>
                         </a>
                       </li>
                     </ul>
@@ -158,13 +154,14 @@
                 </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_up">params_upload</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_rm">running_models</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">principal_summary</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_high_level</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_detailed</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_change_factor_effects</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_capacity_requirements</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">model_core_activity</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">model_results_distribution</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_cb">capacity_beds</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ct">capacity_theatres</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_results_capacity</div>
               </div>
             </section>
           </div>

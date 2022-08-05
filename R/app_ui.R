@@ -18,43 +18,43 @@ app_ui <- function(request) {
         icon = shiny::icon("home")
       ),
       bs4Dash::menuItem(
-        "Principal Projection",
+        "Principal projection",
         startExpanded = FALSE,
         bs4Dash::menuSubItem(
-          text = "High Level",
+          text = "Summary",
+          tabName = "tab_ps"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Summary by year",
           tabName = "tab_phl"
         ),
         bs4Dash::menuSubItem(
-          text = "Detailed",
+          text = "Activity in detail",
           tabName = "tab_pd"
         ),
         bs4Dash::menuSubItem(
-          text = "Change Factors",
+          text = "Impact of changes",
           tabName = "tab_pcf"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Capacity requirements",
+          tabName = "tab_pcr"
         )
       ),
       bs4Dash::menuItem(
-        "Model Results",
+        "Distribution of projections",
         startExpanded = FALSE,
         bs4Dash::menuSubItem(
-          text = "Core Activity",
+          text = "Activity summary",
           tabName = "tab_mc"
         ),
         bs4Dash::menuSubItem(
-          text = "Results Distribution",
+          text = "Activity distribution",
           tabName = "tab_md"
-        )
-      ),
-      bs4Dash::menuItem(
-        "Capacity Conversion",
-        startExpanded = FALSE,
-        bs4Dash::menuSubItem(
-          text = "Beds",
-          tabName = "tab_cb"
         ),
         bs4Dash::menuSubItem(
-          text = "Theatres",
-          tabName = "tab_ct"
+          text = "Capacity requirements",
+          tabName = "tab_mcap"
         )
       ),
       htmltools::tags$hr(),
@@ -99,6 +99,10 @@ app_ui <- function(request) {
         mod_running_models_ui("running_models")
       ),
       bs4Dash::tabItem(
+        tabName = "tab_ps",
+        mod_principal_summary_ui("principal_summary")
+      ),
+      bs4Dash::tabItem(
         tabName = "tab_phl",
         mod_principal_high_level_ui("principal_high_level")
       ),
@@ -111,6 +115,10 @@ app_ui <- function(request) {
         mod_principal_change_factor_effects_ui("principal_change_factor_effects")
       ),
       bs4Dash::tabItem(
+        tabName = "tab_pcr",
+        mod_principal_capacity_requirements_ui("principal_capacity_requirements")
+      ),
+      bs4Dash::tabItem(
         tabName = "tab_mc",
         mod_model_core_activity_ui("model_core_activity")
       ),
@@ -119,12 +127,8 @@ app_ui <- function(request) {
         mod_model_results_distribution_ui("model_results_distribution")
       ),
       bs4Dash::tabItem(
-        tabName = "tab_cb",
-        mod_capacity_beds_ui("capacity_beds")
-      ),
-      bs4Dash::tabItem(
-        tabName = "tab_ct",
-        mod_capacity_theatres_ui("capacity_theatres")
+        tabName = "tab_mcap",
+        mod_model_results_capacity_ui("model_results_capacity")
       )
     )
   )

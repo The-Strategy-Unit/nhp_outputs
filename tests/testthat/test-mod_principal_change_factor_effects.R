@@ -129,7 +129,13 @@ test_that("mod_principal_change_factor_effects_cf_plot returns a ggplot", {
 })
 
 test_that("mod_principal_change_factor_effects_ind_plot returns a ggplot", {
-  p <- mod_principal_change_factor_effects_ind_plot(change_factors_expected$ip, "admission_avoidance", "#f9bf07")
+  p <- mod_principal_change_factor_effects_ind_plot(
+    change_factors_expected$ip,
+    "admission_avoidance",
+    "#f9bf07",
+    "Admission Avoidance",
+    "Admissions"
+  )
   expect_s3_class(p, "ggplot")
 })
 
@@ -206,6 +212,8 @@ test_that("it sets up the individual change factors", {
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", NULL)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_cf_plot", NULL)
 
   selected_model_id <- reactiveVal()
 
@@ -237,6 +245,8 @@ test_that("it shows or hides the individual plots", {
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", NULL)
+  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_cf_plot", NULL)
   stub(mod_principal_change_factor_effects_server, "shinyjs::toggle", m)
 
   selected_model_id <- reactiveVal()
@@ -278,7 +288,7 @@ test_that("it renders the plots", {
 
     expect_called(m, 3)
     expect_args(m, 1, "cfd")
-    expect_equal(mock_args(m)[[2]][-1], list("admission_avoidance", "#f9bf07"))
-    expect_equal(mock_args(m)[[3]][-1], list("los_reduction", "#ec6555"))
+    expect_equal(mock_args(m)[[2]][-1], list("admission_avoidance", "#f9bf07", "Admission Avoidance", "Admissions"))
+    expect_equal(mock_args(m)[[3]][-1], list("los_reduction", "#ec6555", "Length of Stay Reduction", "Bed Days"))
   })
 })

@@ -10,10 +10,10 @@
 mod_principal_detailed_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    shiny::h1("Detailed activity estimates (principal projection)"),
+    shiny::h1("Principal projection: activity in detail"),
     shiny::fluidRow(
       mod_measure_selection_ui(ns("measure_selection"), width = 3),
-      col_3(shiny::selectInput(ns("aggregation"), "Aggregation", NULL))
+      col_3(shiny::selectInput(ns("aggregation"), "Show Results By", NULL))
     ),
     shinycssloaders::withSpinner(
       gt::gt_output(ns("results"))

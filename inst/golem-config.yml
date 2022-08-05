@@ -4,32 +4,14 @@ default:
   app_prod: no
 
   pod_measures:
-    aae:
-      name: "A&E"
-      pods:
-        aae_type-01:
-          name: "Type 1 Department"
-          measures:
-            - ambulance
-            - walk-in
-        aae_type-02:
-          name: "Type 2 Department"
-          measures:
-            - ambulance
-            - walk-in
-        aae_type-03:
-          name: "Type 3 Department"
-          measures:
-            - ambulance
-            - walk-in
-        aae_type-04:
-          name: "Type 4 Department"
-          measures:
-            - ambulance
-            - walk-in
     ip:
       name: "Inpatients"
       pods:
+        ip_non-elective_admission:
+          name: "Non-Elective Admission"
+          measures:
+            - admissions
+            - beddays
         ip_elective_admission:
           name: "Elective Admission"
           measures:
@@ -37,11 +19,6 @@ default:
             - beddays
         ip_elective_daycase:
           name: "Daycase Admission"
-          measures:
-            - admissions
-            - beddays
-        ip_non-elective_admission:
-          name: "Non-Elective Admission"
           measures:
             - admissions
             - beddays
@@ -67,6 +44,29 @@ default:
           name: "Outpatient Procedure"
           measures:
             - attendances
+    aae:
+      name: "A&E"
+      pods:
+        aae_type-01:
+          name: "Type 1 Department"
+          measures:
+            - walk-in
+            - ambulance
+        aae_type-02:
+          name: "Type 2 Department"
+          measures:
+            - walk-in
+            - ambulance
+        aae_type-03:
+          name: "Type 3 Department"
+          measures:
+            - walk-in
+            - ambulance
+        aae_type-04:
+          name: "Type 4 Department"
+          measures:
+            - walk-in
+            - ambulance
 
 production:
   app_prod: yes

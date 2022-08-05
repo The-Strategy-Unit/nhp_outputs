@@ -3,7 +3,7 @@
     Code
       mod_principal_change_factor_effects_ui("id")
     Output
-      <h1>Core change factor effects (principal projection)</h1>
+      <h1>Principal projection: impact of changes</h1>
       <div class="row">
         <div class="col-sm-4">
           <div class="form-group shiny-input-container">

@@ -10,7 +10,7 @@
 mod_model_results_distribution_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    shiny::h1("Simulation Results"),
+    shiny::h1("Distribution of projections: activity distribution"),
     shiny::fluidRow(
       mod_measure_selection_ui(ns("measure_selection"), 4),
     ),
@@ -57,9 +57,9 @@ mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::theme(
-      axis.text = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
       axis.title = ggplot2::element_blank(),
-      axis.ticks = ggplot2::element_blank()
+      axis.ticks.y = ggplot2::element_blank()
     )
 }
 
