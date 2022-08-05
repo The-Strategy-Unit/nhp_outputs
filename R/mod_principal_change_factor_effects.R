@@ -39,7 +39,8 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
   data <- data |>
     dplyr::filter(
       .data$measure == .env$measure,
-      include_baseline | .data$change_factor != "baseline"
+      include_baseline | .data$change_factor != "baseline",
+      .data$value != 0
     ) |>
     tidyr::drop_na(.data$value) |>
     dplyr::mutate(
@@ -47,6 +48,12 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
         .data$change_factor,
         forcats::fct_reorder,
         -.data$value
+      ),
+      # baseline may now not be the first item, move it back to start
+      dplyr::across(
+        .data$change_factor,
+        forcats::fct_relevel,
+        "baseline"
       )
     )
 
