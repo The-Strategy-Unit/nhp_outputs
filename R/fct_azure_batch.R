@@ -209,7 +209,7 @@ batch_submit_model_run <- function(params) {
   params[["create_datetime"]] <- cdt
 
   # create the name of the job and the filename
-  job_name <- glue::glue("{params[['input_data']]}__{params[['name']]}__{cdt}")
+  job_name <- glue::glue("{params[['dataset']]}__{params[['scenario']]}__{cdt}")
   filename <- glue::glue("{job_name}.json")
 
   # upload the params to blob storage

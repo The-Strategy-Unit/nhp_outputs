@@ -629,8 +629,8 @@ test_that("batch_submit_model_run calls the other functions (prod)", {
   ))
 
   params <- list(
-    input_data = "synthetic",
-    name = "test",
+    dataset = "synthetic",
+    scenario = "test",
     model_runs = 64
   )
 
@@ -819,8 +819,8 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
   ))
 
   params <- list(
-    input_data = "synthetic",
-    name = "test",
+    dataset = "synthetic",
+    scenario = "test",
     model_runs = 64
   )
 

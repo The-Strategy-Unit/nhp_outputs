@@ -6,9 +6,9 @@
 #'
 #' @noRd
 process_param_file <- function(path,
-                               input_data = "synthetic",
+                               dataset = "synthetic",
                                demographics_file = "demographic_factors.csv",
-                               scenario_name = "test") {
+                               scenario = "test") {
   all_sheets <- readxl::excel_sheets(path)
 
   data <- all_sheets[-(1:which(all_sheets == "Control Sheets>>"))] |>
@@ -55,8 +55,8 @@ process_param_file <- function(path,
     tibble::deframe()
 
   params <- list(
-    name = scenario_name,
-    input_data = input_data,
+    scenario = scenario,
+    dataset = dataset,
     seed = seed,
     model_runs = data$run_settings$n_iterations,
     start_year = base_year,
@@ -79,7 +79,7 @@ process_param_file <- function(path,
     "non-demographic_adjustment" = nda
   )
 
-  params$strategy_params <- list(
+  params$inpatient_factors <- list(
     "admission_avoidance" = data$am_a_ip |>
       dplyr::filter(.data$include != 0) |>
       dplyr::rowwise() |>
@@ -88,7 +88,7 @@ process_param_file <- function(path,
       purrr::map(~ list(interval = .x))
   )
 
-  params$strategy_params$los_reduction <- c(
+  params$inpatient_factors$los_reduction <- c(
     data$am_e_ip |>
       dplyr::filter(.data$include != 0) |>
       dplyr::mutate(type = dplyr::case_when(
@@ -243,13 +243,13 @@ validation_functions <- list(
       purrr::flatten() |>
       purrr::flatten_lgl()
   },
-  strategy_params = function(params) {
-    params$strategy_params |>
+  inpatient_factors = function(params) {
+    params$inpatient_factors |>
       purrr::imap(\(.x1, .i1) {
         purrr::imap(.x1, \(.x2, .i2) {
           purrr::set_names(
             validate_interval(.x2$interval, 0, 1),
-            glue::glue("strategy_params {.i1} {.i2} must be a valid interval")
+            glue::glue("inpatient_factors {.i1} {.i2} must be a valid interval")
           )
         })
       }) |>
