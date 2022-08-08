@@ -251,7 +251,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
       # admission avoidance
       ## ip
-      shiny::updateSelectInput(session, "ip_am_a", choices = names(p$strategy_params$admission_avoidance))
+      shiny::updateSelectInput(session, "ip_am_a", choices = names(p$inpatient_factors$admission_avoidance))
       shiny::updateSelectInput(
         session,
         "op_am_a",
@@ -264,7 +264,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       # type conversion
       ## ip
       ### bads
-      tc_bads <- p$strategy_params$los_reduction |>
+      tc_bads <- p$inpatient_factors$los_reduction |>
         purrr::keep(~ .x$type == "bads") |>
         names()
       shiny::updateSelectInput(session, "ip_am_tc_bads", choices = tc_bads)
@@ -280,7 +280,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
       # efficiencies
       ## ip
-      tc_e <- p$strategy_params$los_reduction |>
+      tc_e <- p$inpatient_factors$los_reduction |>
         purrr::discard(~ .x$type == "bads") |>
         names()
       shiny::updateSelectInput(session, "ip_am_e", choices = tc_e)
@@ -288,7 +288,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
     shiny::observeEvent(input$ip_am_a, {
       cf <- shiny::req(input$ip_am_a)
-      p <- params()$strategy_params$admission_avoidance[[cf]]$interval
+      p <- params()$inpatient_factors$admission_avoidance[[cf]]$interval
 
       shiny::updateTextInput(session, "ip_am_a_lo", value = p[[1]])
       shiny::updateTextInput(session, "ip_am_a_hi", value = p[[2]])
@@ -296,7 +296,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
     shiny::observeEvent(input$ip_am_tc_bads, {
       cf <- shiny::req(input$ip_am_tc_bads)
-      p <- params()$strategy_params$los_reduction[[cf]]
+      p <- params()$inpatient_factors$los_reduction[[cf]]
 
       shiny::updateTextInput(session, "ip_am_tc_bads_br", value = p$baseline_target_rate)
       shiny::updateTextInput(session, "ip_am_tc_bads_split", value = p$op_dc_split)
@@ -306,7 +306,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
     shiny::observeEvent(input$ip_am_e, {
       cf <- shiny::req(input$ip_am_e)
-      p <- params()$strategy_params$los_reduction[[cf]]$interval
+      p <- params()$inpatient_factors$los_reduction[[cf]]$interval
 
       shiny::updateTextInput(session, "ip_am_e_lo", value = p[[1]])
       shiny::updateTextInput(session, "ip_am_e_hi", value = p[[2]])
@@ -366,9 +366,9 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
     updated_params <- shiny::reactive({
       params <- shiny::req(params())
 
-      params$input_data <- shiny::req(input$dataset)
+      params$dataset <- shiny::req(input$dataset)
       params$demographic_factors$file <- shiny::req(input$demographics_file)
-      params$name <- shiny::req(input$scenario_name)
+      params$scenario <- shiny::req(input$scenario_name)
 
       params
     })

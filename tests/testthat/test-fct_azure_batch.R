@@ -625,12 +625,13 @@ test_that("batch_submit_model_run calls the other functions (prod)", {
     "COSMOS_KEY" = "cosmos key",
     "COSMOS_DB" = "cosmos db",
     "STORAGE_URL" = "storage",
-    "BATCH_LOGS_CONTAINER_SAS" = "sas_token"
+    "BATCH_LOGS_CONTAINER_SAS" = "sas_token",
+    "NHP_APP_VERSION" = "1.0"
   ))
 
   params <- list(
-    input_data = "synthetic",
-    name = "test",
+    dataset = "synthetic",
+    scenario = "test",
     model_runs = 64
   )
 
@@ -649,7 +650,7 @@ test_that("batch_submit_model_run calls the other functions (prod)", {
     list(
       id = "run_01-16",
       displayName = "Model Run [1 to 16]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=1 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/1.0/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=1 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -671,7 +672,7 @@ test_that("batch_submit_model_run calls the other functions (prod)", {
     list(
       id = "run_17-32",
       displayName = "Model Run [17 to 32]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=17 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/1.0/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=17 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -693,7 +694,7 @@ test_that("batch_submit_model_run calls the other functions (prod)", {
     list(
       id = "run_33-48",
       displayName = "Model Run [33 to 48]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=33 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/1.0/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=33 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -715,7 +716,7 @@ test_that("batch_submit_model_run calls the other functions (prod)", {
     list(
       id = "run_49-64",
       displayName = "Model Run [49 to 64]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=49 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/1.0/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=49 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -737,7 +738,7 @@ test_that("batch_submit_model_run calls the other functions (prod)", {
     list(
       id = "upload_to_cosmos",
       displayName = "Run Principal + Upload to Cosmos",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=-1 --model-runs=2 --run-postruns",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/1.0/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/results --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=-1 --model-runs=2 --run-postruns",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -819,8 +820,8 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
   ))
 
   params <- list(
-    input_data = "synthetic",
-    name = "test",
+    dataset = "synthetic",
+    scenario = "test",
     model_runs = 64
   )
 
@@ -839,7 +840,7 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
     list(
       id = "run_01-16",
       displayName = "Model Run [1 to 16]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=1 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/dev/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=1 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -861,7 +862,7 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
     list(
       id = "run_17-32",
       displayName = "Model Run [17 to 32]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=17 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/dev/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=17 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -883,7 +884,7 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
     list(
       id = "run_33-48",
       displayName = "Model Run [33 to 48]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=33 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/dev/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=33 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -905,7 +906,7 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
     list(
       id = "run_49-64",
       displayName = "Model Run [49 to 64]",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=49 --model-runs=16",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/dev/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=49 --model-runs=16",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),
@@ -927,7 +928,7 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
     list(
       id = "upload_to_cosmos",
       displayName = "Run Principal + Upload to Cosmos",
-      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=-1 --model-runs=2 --run-postruns",
+      commandLine = "/opt/nhp/bin/python /mnt/batch/tasks/fsmounts/app/dev/run_model.py /mnt/batch/tasks/fsmounts/queue/synthetic__test__20220101_012345.json --data-path=/mnt/batch/tasks/fsmounts/data --results-path=/mnt/batch/tasks/fsmounts/batch/uuid --temp-results-path=/mnt/batch/tasks/fsmounts/batch/uuid --save-type=cosmos --run-start=-1 --model-runs=2 --run-postruns",
       userIdentity = list(
         autoUser = list(scope = "pool", elevationLevel = "admin")
       ),

@@ -209,7 +209,7 @@ batch_submit_model_run <- function(params) {
   params[["create_datetime"]] <- cdt
 
   # create the name of the job and the filename
-  job_name <- glue::glue("{params[['input_data']]}__{params[['name']]}__{cdt}")
+  job_name <- glue::glue("{params[['dataset']]}__{params[['scenario']]}__{cdt}")
   filename <- glue::glue("{job_name}.json")
 
   # upload the params to blob storage
@@ -239,7 +239,7 @@ batch_submit_model_run <- function(params) {
     glue::glue(
       .sep = " ",
       "/opt/nhp/bin/python",
-      "{md}/app/run_model.py",
+      "{md}/app/{Sys.getenv('NHP_APP_VERSION', 'dev')}/run_model.py",
       "{md}/queue/{filename}",
       "--data-path={md}/data",
       "--results-path={results_path}",
