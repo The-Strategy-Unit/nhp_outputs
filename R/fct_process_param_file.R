@@ -138,19 +138,13 @@ process_param_file <- function(path,
     tibble::deframe()
 
   params$bed_occupancy <- data$ru_bo |>
-    tidyr::pivot_longer(-.data$ward_group) |>
-    tidyr::separate(.data$name, c("type", "interval")) |>
+    dplyr::rowwise() |>
     dplyr::mutate(
-      dplyr::across(
-        .data$type,
-        ~ dplyr::case_when(
-          .x == "dn" ~ "day+night",
-          .x == "do" ~ "day only"
-        )
-      )
+      dplyr::across(tidyselect::starts_with("dn"), `*`, .data$ha_f / .data$ha_b),
+      type = "day+night",
+      interval = list(c(.data$dn_lo, .data$dn_hi))
     ) |>
-    dplyr::group_by(.data$ward_group, .data$type) |>
-    dplyr::summarise(interval = list(.data$value), .groups = "drop") |>
+    dplyr::select(.data$ward_group, .data$type, .data$interval) |>
     dplyr::group_nest(.data$type) |>
     dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
     tibble::deframe()
