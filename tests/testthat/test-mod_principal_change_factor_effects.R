@@ -43,9 +43,9 @@ change_factors_expected <- list(
 ) |>
   purrr::map(~ dplyr::mutate(
     .x,
-    dplyr::across(.data$change_factor, forcats::fct_inorder),
+    dplyr::across("change_factor", forcats::fct_inorder),
     dplyr::across(
-      .data$change_factor,
+      "change_factor",
       forcats::fct_relevel,
       "baseline",
       "population_factors",
@@ -68,12 +68,12 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
 ) |>
   dplyr::mutate(
     dplyr::across(
-      change_factor,
+      "change_factor",
       forcats::fct_relevel,
       "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors", "baseline"
     ),
     dplyr::across(
-      name, forcats::fct_relevel, c("hidden", "value")
+      "name", forcats::fct_relevel, c("hidden", "value")
     )
   )
 
@@ -90,12 +90,12 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
 ) |>
   dplyr::mutate(
     dplyr::across(
-      change_factor,
+      "change_factor",
       forcats::fct_relevel,
       "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors"
     ),
     dplyr::across(
-      name, forcats::fct_relevel, c("hidden", "value")
+      "name", forcats::fct_relevel, c("hidden", "value")
     )
   )
 

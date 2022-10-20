@@ -51,7 +51,7 @@ mod_principal_high_level_pods <- function() {
     dplyr::filter(.data$activity_type != "aae") |>
     dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
     dplyr::bind_rows(data.frame(activity_type = "aae", pod = "aae", pod_name = "A&E Attendance")) |>
-    dplyr::mutate(dplyr::across(.data$pod_name, forcats::fct_inorder))
+    dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
 mod_principal_high_level_summary_data <- function(id, pods) {
@@ -59,18 +59,18 @@ mod_principal_high_level_summary_data <- function(id, pods) {
   c(start_year, end_year) %<-% cosmos_get_model_run_years(id)
 
   cosmos_get_principal_high_level(id) |>
-    tidyr::pivot_longer(-.data$pod, names_to = "model_run") |>
+    tidyr::pivot_longer(-"pod", names_to = "model_run") |>
     dplyr::mutate(year = ifelse(.data$model_run == "baseline", start_year, end_year)) |>
-    dplyr::select(-.data$model_run) |>
+    dplyr::select(-"model_run") |>
     tidyr::complete(
       year = seq(start_year, end_year),
       .data$pod
     ) |>
     dplyr::inner_join(pods, by = "pod") |>
-    dplyr::select(-.data$pod) |>
+    dplyr::select(-"pod") |>
     dplyr::group_by(.data$activity_type, .data$pod_name) |>
     dplyr::mutate(
-      dplyr::across(.data$value, purrr::compose(as.integer, zoo::na.approx)),
+      dplyr::across("value", purrr::compose(as.integer, zoo::na.approx)),
       fyear = fyear_str(.data$year)
     ) |>
     dplyr::ungroup()
@@ -80,12 +80,12 @@ mod_principal_high_level_table <- function(data) {
   data |>
     dplyr::mutate(
       dplyr::across(
-        .data$fyear,
+        "fyear",
         ~ ifelse(.data$year == min(.data$year), "Baseline", .x)
       )
     ) |>
-    dplyr::select(-.data$activity_type, -.data$year) |>
-    tidyr::pivot_wider(names_from = .data$fyear, values_from = .data$value) |>
+    dplyr::select(-"activity_type", -"year") |>
+    tidyr::pivot_wider(names_from = "fyear", values_from = "value") |>
     gt::gt() |>
     gt::cols_align(
       align = "left",

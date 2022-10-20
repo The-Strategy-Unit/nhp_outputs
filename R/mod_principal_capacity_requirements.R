@@ -40,9 +40,9 @@ mod_principal_capacity_requirements_ui <- function(id) {
 mod_principal_capacity_requirements_beds_table <- function(data) {
   data |>
     dplyr::select(
-      .data$ward_group,
-      old_beds = .data$baseline,
-      new_beds = .data$principal
+      "ward_group",
+      old_beds = "baseline",
+      new_beds = "principal"
     ) |>
     dplyr::arrange(dplyr::desc(.data$new_beds), dplyr::desc(.data$old_beds)) |>
     dplyr::filter(.data$new_beds > 0.5) |>
@@ -98,7 +98,7 @@ mod_principal_capacity_requirements_server <- function(id, selected_model_run_id
       id <- selected_model_run_id()
       cosmos_get_bed_occupancy(id) |>
         dplyr::filter(.data$model_run == 1) |>
-        dplyr::select(.data$ward_group, .data$baseline, .data$principal)
+        dplyr::select("ward_group", "baseline", "principal")
     }) |>
       shiny::bindCache(selected_model_run_id())
 
@@ -110,12 +110,12 @@ mod_principal_capacity_requirements_server <- function(id, selected_model_run_id
 
     four_hour_sessions <- shiny::reactive({
       theatres_data()$four_hour_sessions |>
-        dplyr::select(.data$tretspef, .data$baseline, .data$principal)
+        dplyr::select("tretspef", "baseline", "principal")
     })
 
     theatres_available <- shiny::reactive({
       theatres_data()$theatres |>
-        dplyr::select(.data$baseline, .data$principal)
+        dplyr::select("baseline", "principal")
     })
 
     output$beds <- gt::render_gt({

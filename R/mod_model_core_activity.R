@@ -19,13 +19,13 @@ mod_model_core_activity_ui <- function(id) {
 mod_model_core_activity_server_table <- function(data) {
   data |>
     dplyr::select(
-      .data$activity_type_name,
-      .data$pod_name,
-      .data$measure,
-      .data$baseline,
-      .data$median,
-      .data$lwr_ci,
-      .data$upr_ci
+      "activity_type_name",
+      "pod_name",
+      "measure",
+      "baseline",
+      "median",
+      "lwr_ci",
+      "upr_ci"
     ) |>
     gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
     gt::fmt_integer(c("baseline", "median", "lwr_ci", "upr_ci")) |>

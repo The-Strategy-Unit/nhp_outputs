@@ -26,11 +26,11 @@ process_param_file <- function(path,
     dplyr::filter(.data$base == "2018b", .data$year %in% c(base_year, model_year), .data$age >= 55) |>
     dplyr::arrange(.data$age, .data$sex, .data$year) |>
     dplyr::group_by(.data$age, .data$sex) |>
-    dplyr::summarise(dplyr::across(.data$ex, diff), .groups = "drop") |>
-    dplyr::group_by(dplyr::across(.data$age, pmin, 90), .data$sex) |>
-    dplyr::summarise(dplyr::across(.data$ex, mean), .groups = "drop") |>
+    dplyr::summarise(dplyr::across("ex", diff), .groups = "drop") |>
+    dplyr::group_by(dplyr::across("age", pmin, 90), .data$sex) |>
+    dplyr::summarise(dplyr::across("ex", mean), .groups = "drop") |>
     dplyr::group_nest(.data$sex) |>
-    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
+    dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
     tibble::deframe()
   life_expectancy$min_age <- 55
   life_expectancy$max_age <- 90
@@ -45,13 +45,13 @@ process_param_file <- function(path,
 
   nda <- data$nd_t1h |>
     dplyr::mutate(
-      dplyr::across(.data$age_group, ~ ifelse(.x == "85+", .x, stringr::str_pad(.x, width = 5)))
+      dplyr::across("age_group", ~ ifelse(.x == "85+", .x, stringr::str_pad(.x, width = 5)))
     ) |>
     dplyr::rowwise() |>
     dplyr::mutate(interval = list(c(.data$lo, .data$hi))) |>
-    dplyr::select(-.data$lo, -.data$hi) |>
+    dplyr::select(-"lo", -"hi") |>
     dplyr::group_nest(.data$admigrp) |>
-    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
+    dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
     tibble::deframe()
 
   params <- list(
@@ -125,7 +125,7 @@ process_param_file <- function(path,
     dplyr::transmute(.data$strategy, value = list(list(interval = c(.data$lo, .data$hi)))) |>
     tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
     dplyr::group_nest(.data$strategy) |>
-    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
+    dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
     tibble::deframe()
 
   params$aae_factors <- data$am_a_aae |>
@@ -134,7 +134,7 @@ process_param_file <- function(path,
     dplyr::transmute(.data$strategy, value = list(list(interval = c(.data$lo, .data$hi)))) |>
     tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
     dplyr::group_nest(.data$strategy) |>
-    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
+    dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
     tibble::deframe()
 
   params$bed_occupancy <- data$ru_bo |>
@@ -144,15 +144,15 @@ process_param_file <- function(path,
       type = "day+night",
       interval = list(c(.data$dn_lo, .data$dn_hi))
     ) |>
-    dplyr::select(.data$ward_group, .data$type, .data$interval) |>
+    dplyr::select("ward_group", "type", "interval") |>
     dplyr::group_nest(.data$type) |>
-    dplyr::mutate(dplyr::across(.data$data, purrr::map, tibble::deframe)) |>
+    dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
     tibble::deframe()
 
   params$bed_occupancy$specialty_mapping <- data$ru_bo_sm |>
-    dplyr::select(.data$specialty_group, .data$specialty_code, .data$ward_group) |>
+    dplyr::select("specialty_group", "specialty_code", .data$ward_group) |>
     dplyr::group_nest(.data$specialty_group) |>
-    dplyr::mutate(dplyr::across(.data$data, purrr::map, purrr::compose(as.list, tibble::deframe))) |>
+    dplyr::mutate(dplyr::across("data", purrr::map, purrr::compose(as.list, tibble::deframe))) |>
     tibble::deframe()
 
   params$theatres <- list(
@@ -162,6 +162,39 @@ process_param_file <- function(path,
       dplyr::transmute(.data$tretspef, interval = list(c(.data$lo, .data$hi))) |>
       tibble::deframe()
   )
+
+  expat_repat <- purrr::map_dfr(
+    .id = "type",
+    list(
+      ip = data$er_ip |>
+        tidyr::pivot_longer(-c("admigroup", "tretspef")) |>
+        dplyr::mutate(dplyr::across("name", stringr::str_remove, "\\_(lo|hi)$")) |>
+        dplyr::group_by(.data$name, .data$admigroup, .data$tretspef) |>
+        dplyr::summarise(dplyr::across("value", list), .groups = "drop_last") |>
+        dplyr::group_nest() |>
+        dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
+        dplyr::group_nest(.data$name),
+      op = data$er_op |>
+        tidyr::pivot_longer(-c("tretspef")) |>
+        dplyr::mutate(dplyr::across("name", stringr::str_remove, "\\_(lo|hi)$")) |>
+        dplyr::group_by(.data$name, .data$tretspef) |>
+        dplyr::summarise(dplyr::across("value", list), .groups = "drop_last") |>
+        dplyr::group_nest(),
+      aae = data$er_aae |>
+        tidyr::pivot_longer(-c("attendtype")) |>
+        dplyr::mutate(dplyr::across("name", stringr::str_remove, "\\_(lo|hi)$")) |>
+        dplyr::group_by(.data$name, .data$attendtype) |>
+        dplyr::summarise(dplyr::across("value", list), .groups = "drop_last") |>
+        dplyr::group_nest()
+    ),
+    dplyr::mutate,
+    dplyr::across("data", purrr::map, tibble::deframe)
+  ) |>
+    dplyr::group_nest(.data$name) |>
+    dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
+    tibble::deframe()
+
+  params <- c(params, expat_repat)
 
   validate_params(params)
 
@@ -289,5 +322,74 @@ validation_functions <- list(
       "theatres change_availability must be a valid interval" =
         validate_interval(params$theatres$change_availability, 0, 5)
     )
+  },
+  expat = function(params) {
+    ip <- params$expat$ip |>
+      purrr::imap(\(.x1, .i1) {
+        purrr::imap(.x1, \(.x2, .i2) {
+          purrr::set_names(
+            validate_interval(.x2, 0, 1),
+            glue::glue("expat ip {.i1} {.i2} must be a valid interval")
+          )
+        })
+      }) |>
+      purrr::flatten() |>
+      purrr::flatten_lgl()
+
+    op <- params$expat$op |>
+      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::set_names(\(.i) glue::glue("expat op {.i} must be a valid interval"))
+
+    aae <- params$expat$aae |>
+      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::set_names(\(.i) glue::glue("expat aae {.i} must be a valid interval"))
+
+    c(ip, op, aae)
+  },
+  repat_local = function(params) {
+    ip <- params$repat_local$ip |>
+      purrr::imap(\(.x1, .i1) {
+        purrr::imap(.x1, \(.x2, .i2) {
+          purrr::set_names(
+            validate_interval(.x2, 1, 5),
+            glue::glue("repat local ip {.i1} {.i2} must be a valid interval")
+          )
+        })
+      }) |>
+      purrr::flatten() |>
+      purrr::flatten_lgl()
+
+    op <- params$repat_local$op |>
+      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::set_names(\(.i) glue::glue("repat local op {.i} must be a valid interval"))
+
+    aae <- params$repat_local$aae |>
+      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::set_names(\(.i) glue::glue("repat local aae {.i} must be a valid interval"))
+
+    c(ip, op, aae)
+  },
+  repat_nonlocal = function(params) {
+    ip <- params$repat_nonlocal$ip |>
+      purrr::imap(\(.x1, .i1) {
+        purrr::imap(.x1, \(.x2, .i2) {
+          purrr::set_names(
+            validate_interval(.x2, 1, 5),
+            glue::glue("repat non local ip {.i1} {.i2} must be a valid interval")
+          )
+        })
+      }) |>
+      purrr::flatten() |>
+      purrr::flatten_lgl()
+
+    op <- params$repat_nonlocal$op |>
+      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::set_names(\(.i) glue::glue("repat non local op {.i} must be a valid interval"))
+
+    aae <- params$repat_nonlocal$aae |>
+      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::set_names(\(.i) glue::glue("repat non local aae {.i} must be a valid interval"))
+
+    c(ip, op, aae)
   }
 )

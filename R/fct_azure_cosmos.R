@@ -61,7 +61,7 @@ cosmos_get_principal_high_level <- function(id) {
 
   AzureCosmosR::query_documents(container, qry, partition_key = id) |>
     dplyr::mutate(
-      dplyr::across(.data$pod, ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x))
+      dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x))
     ) |>
     dplyr::group_by(.data$pod) |>
     dplyr::summarise(dplyr::across(where(is.numeric), sum))
@@ -126,13 +126,13 @@ cosmos_get_model_run_distribution <- function(id, pod, measure) {
     dplyr::as_tibble() |>
     dplyr::mutate(
       dplyr::across(
-        .data$model_runs,
+        "model_runs",
         purrr::map,
         tibble::enframe,
         name = "model_run"
       )
     ) |>
-    tidyr::unnest(.data$model_runs) |>
+    tidyr::unnest("model_runs") |>
     dplyr::inner_join(variants, by = "model_run")
 }
 
@@ -190,7 +190,7 @@ cosmos_get_principal_change_factors <- function(id, activity_type) {
     d$strategy <- "-"
   }
 
-  dplyr::mutate(d, dplyr::across(.data$strategy, tidyr::replace_na, "-"))
+  dplyr::mutate(d, dplyr::across("strategy", tidyr::replace_na, "-"))
 }
 
 cosmos_get_bed_occupancy <- function(id) {
@@ -216,13 +216,13 @@ cosmos_get_bed_occupancy <- function(id) {
     dplyr::as_tibble() |>
     dplyr::mutate(
       dplyr::across(
-        .data$model_runs,
+        "model_runs",
         purrr::map,
         tibble::enframe,
         name = "model_run"
       )
     ) |>
-    tidyr::unnest(.data$model_runs) |>
+    tidyr::unnest("model_runs") |>
     dplyr::inner_join(variants, by = "model_run")
 }
 

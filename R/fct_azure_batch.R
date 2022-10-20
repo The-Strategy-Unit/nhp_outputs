@@ -35,9 +35,9 @@ batch_get_pools <- function() {
 
   df |>
     dplyr::select(
-      .data$id,
-      .data$state:.data$vmSize,
-      .data$currentDedicatedNodes:.data$targetLowPriorityNodes
+      "id",
+      "state":"vmSize",
+      "currentDedicatedNodes":"targetLowPriorityNodes"
     )
 }
 
@@ -63,9 +63,9 @@ batch_get_jobs <- function() {
 
   df |>
     dplyr::select(
-      .data$id,
-      .data$creationTime,
-      .data$state,
+      "id",
+      "creationTime",
+      "state",
       tidyselect::matches("executionInfo\\.(start|end)Time")
     ) |>
     dplyr::rename_with(
@@ -104,10 +104,10 @@ batch_get_tasks <- function(job_id) {
 
   df |>
     dplyr::select(
-      .data$id,
-      .data$displayName,
-      .data$state,
-      .data$creationTime,
+      "id",
+      "displayName",
+      "state",
+      "creationTime",
       tidyselect::matches("executionInfo\\.((start|end)Time|result|exitCode)")
     ) |>
     dplyr::rename_with(

@@ -24,10 +24,10 @@ mod_principal_detailed_ui <- function(id) {
 mod_principal_detailed_table <- function(data, aggregation) {
   data |>
     dplyr::mutate(
-      dplyr::across(.data$sex, ~ ifelse(.x == 1, "Male", "Female")),
-      dplyr::across(.data$final, gt_bar, scales::comma_format(1), "#686f73", "#686f73"),
-      dplyr::across(.data$change, gt_bar, scales::comma_format(1)),
-      dplyr::across(.data$change_pcnt, gt_bar, scales::percent_format(1))
+      dplyr::across("sex", ~ ifelse(.x == 1, "Male", "Female")),
+      dplyr::across("final", gt_bar, scales::comma_format(1), "#686f73", "#686f73"),
+      dplyr::across("change", gt_bar, scales::comma_format(1)),
+      dplyr::across("change_pcnt", gt_bar, scales::percent_format(1))
     ) |>
     gt::gt(groupname_col = "sex") |>
     gt::cols_label(
@@ -37,7 +37,7 @@ mod_principal_detailed_table <- function(data, aggregation) {
       change = "Change",
       change_pcnt = "Percent Change",
     ) |>
-    gt::fmt_integer(c(.data$baseline)) |>
+    gt::fmt_integer(c("baseline")) |>
     gt::cols_width(.data$final ~ px(150), .data$change ~ px(150), .data$change_pcnt ~ px(150)) |>
     gt::cols_align(
       align = "left",

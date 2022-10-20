@@ -29,11 +29,11 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
         dplyr::filter(.data$dataset %in% user_allowed_datasets()) |>
         dplyr::group_nest(.data$dataset, .data$scenario, .key = "create_datetime") |>
         dplyr::mutate(
-          dplyr::across(.data$create_datetime, purrr::map, tibble::deframe)
+          dplyr::across("create_datetime", purrr::map, tibble::deframe)
         ) |>
         dplyr::group_nest(.data$dataset, .key = "scenario") |>
         dplyr::mutate(
-          dplyr::across(.data$scenario, purrr::map, tibble::deframe)
+          dplyr::across("scenario", purrr::map, tibble::deframe)
         ) |>
         tibble::deframe()
     })

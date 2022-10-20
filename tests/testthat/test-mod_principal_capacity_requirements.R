@@ -20,7 +20,7 @@ beds_expected <- tibble::tribble(
 
 beds_data_filtered_expected <- beds_expected |>
   dplyr::filter(model_run == 1) |>
-  dplyr::select(ward_group, baseline, principal)
+  dplyr::select("ward_group", "baseline", "principal")
 
 fhs_expected <- tibble::tribble(
   ~tretspef, ~baseline, ~principal,
@@ -55,7 +55,7 @@ test_that("beds_table returns a gt", {
 
   table <- beds_expected |>
     dplyr::filter(model_run == 1) |>
-    dplyr::select(ward_group, baseline, principal) |>
+    dplyr::select("ward_group", "baseline", "principal") |>
     mod_principal_capacity_requirements_beds_table()
 
   expect_s3_class(table, "gt_tbl")
@@ -76,7 +76,7 @@ test_that("fhs_table returns a gt", {
   set.seed(1) # ensure gt id always regenerated identically
 
   table <- fhs_expected |>
-    dplyr::select(baseline, principal) |>
+    dplyr::select("baseline", "principal") |>
     mod_principal_capacity_requirements_theatres_table()
 
   expect_s3_class(table, "gt_tbl")

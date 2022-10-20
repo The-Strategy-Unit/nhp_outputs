@@ -99,7 +99,7 @@ mod_model_results_capacity_theatres_available_plot <- function(data) {
 mod_model_results_capacity_fhs_available_plot <- function(data) {
   data |>
     dplyr::group_by(.data$model_run, .data$variant) |>
-    dplyr::summarise(dplyr::across(c(.data$baseline, .data$value), sum), .groups = "drop") |>
+    dplyr::summarise(dplyr::across(c("baseline", "value"), sum), .groups = "drop") |>
     ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(groupOnX = TRUE, alpha = 0.5) +
     ggplot2::geom_hline(ggplot2::aes(yintercept = .data$baseline), colour = "#2c2825") +
@@ -139,8 +139,8 @@ mod_model_results_capacity_server <- function(id, selected_model_run_id) {
 
     four_hour_sessions <- shiny::reactive({
       theatres_data()$four_hour_sessions |>
-        dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
-        tidyr::unnest(.data$model_runs) |>
+        dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+        tidyr::unnest("model_runs") |>
         dplyr::inner_join(variants(), by = "model_run")
     })
 
@@ -148,9 +148,9 @@ mod_model_results_capacity_server <- function(id, selected_model_run_id) {
       id <- selected_model_run_id() # nolint
 
       theatres_data()$theatres |>
-        dplyr::select(-.data$tretspef) |>
-        dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
-        tidyr::unnest(.data$model_runs) |>
+        dplyr::select(-"tretspef") |>
+        dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+        tidyr::unnest("model_runs") |>
         dplyr::inner_join(variants(), by = "model_run")
     })
 

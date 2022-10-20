@@ -106,8 +106,8 @@ test_that("theatres_available_plot returns a ggplot object", {
 
 test_that("fhs_available_plot returns a ggplot object", {
   data <- fhs_expected |>
-    dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
-    tidyr::unnest(.data$model_runs) |>
+    dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+    tidyr::unnest("model_runs") |>
     dplyr::mutate(variant = "a")
 
   p <- mod_model_results_capacity_fhs_available_plot(data)
@@ -157,8 +157,8 @@ test_that("it sets the reactives up correctly", {
   stub(mod_model_results_capacity_server, "cosmos_get_variants", expected_variants)
 
   fhs_data <- fhs_expected |>
-    dplyr::mutate(dplyr::across(.data$model_runs, purrr::map, tibble::enframe, "model_run")) |>
-    tidyr::unnest(.data$model_runs) |>
+    dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+    tidyr::unnest("model_runs") |>
     dplyr::inner_join(expected_variants, by = "model_run")
 
   shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {

@@ -25,7 +25,7 @@ mod_principal_summary_data <- function(id) {
         dplyr::filter(.data$model_run == 1) |>
         dplyr::summarise(
           pod_name = "Beds Available",
-          dplyr::across(c(.data$baseline, .data$principal), sum)
+          dplyr::across(c("baseline", "principal"), sum)
         ),
       t$theatres |>
         dplyr::transmute(
@@ -36,10 +36,10 @@ mod_principal_summary_data <- function(id) {
       t$four_hour_sessions |>
         dplyr::summarise(
           pod_name = "4 Hour Elective Theatre Sessions",
-          dplyr::across(c(.data$baseline, .data$principal), sum)
+          dplyr::across(c("baseline", "principal"), sum)
         )
     ) |>
-    dplyr::select(.data$pod_name, .data$baseline, .data$principal)
+    dplyr::select("pod_name", "baseline", "principal")
 }
 
 mod_principal_summary_table <- function(data) {
@@ -51,7 +51,7 @@ mod_principal_summary_table <- function(data) {
     gt::cols_label(
       "pod_name" = ""
     ) |>
-    gt::fmt_integer(c(.data$baseline, .data$principal)) |>
+    gt::fmt_integer(c("baseline", "principal")) |>
     gt_theme()
 }
 

@@ -42,16 +42,16 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
       include_baseline | .data$change_factor != "baseline",
       .data$value != 0
     ) |>
-    tidyr::drop_na(.data$value) |>
+    tidyr::drop_na("value") |>
     dplyr::mutate(
       dplyr::across(
-        .data$change_factor,
+        "change_factor",
         forcats::fct_reorder,
         -.data$value
       ),
       # baseline may now not be the first item, move it back to start
       dplyr::across(
-        .data$change_factor,
+        "change_factor",
         forcats::fct_relevel,
         "baseline"
       )
@@ -59,7 +59,7 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
 
   cfs <- data |>
     dplyr::group_by(.data$change_factor) |>
-    dplyr::summarise(dplyr::across(.data$value, sum, na.rm = TRUE)) |>
+    dplyr::summarise(dplyr::across("value", sum, na.rm = TRUE)) |>
     dplyr::mutate(cuvalue = cumsum(.data$value)) |>
     dplyr::mutate(
       hidden = tidyr::replace_na(dplyr::lag(.data$cuvalue) + pmin(.data$value, 0), 0),
@@ -68,9 +68,9 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
         .data$value >= 0 ~ "#f9bf07",
         TRUE ~ "#2c2825"
       ),
-      dplyr::across(.data$value, abs)
+      dplyr::across("value", abs)
     ) |>
-    dplyr::select(-.data$cuvalue)
+    dplyr::select(-"cuvalue")
 
   levels <- unique(c("baseline", levels(forcats::fct_drop(cfs$change_factor)), "Estimate"))
   if (!include_baseline) {
@@ -86,11 +86,11 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
         colour = "#ec6555"
       )
     ) |>
-    tidyr::pivot_longer(c(.data$value, .data$hidden)) |>
+    tidyr::pivot_longer(c("value", "hidden")) |>
     dplyr::mutate(
-      dplyr::across(.data$colour, ~ ifelse(.data$name == "hidden", NA, .x)),
-      dplyr::across(.data$name, forcats::fct_relevel, "hidden", "value"),
-      dplyr::across(.data$change_factor, factor, rev(levels))
+      dplyr::across("colour", ~ ifelse(.data$name == "hidden", NA, .x)),
+      dplyr::across("name", forcats::fct_relevel, "hidden", "value"),
+      dplyr::across("change_factor", factor, rev(levels))
     )
 }
 
@@ -137,9 +137,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
 
       cosmos_get_principal_change_factors(id, at) |>
         dplyr::mutate(
-          dplyr::across(.data$change_factor, forcats::fct_inorder),
+          dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
-            .data$change_factor,
+            "change_factor",
             forcats::fct_relevel,
             "baseline",
             "population_factors",
@@ -171,9 +171,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
         )
 
       if (input$sort_type == "descending value") {
-        dplyr::mutate(d, dplyr::across(.data$strategy, forcats::fct_reorder, -.data$value))
+        dplyr::mutate(d, dplyr::across("strategy", forcats::fct_reorder, -.data$value))
       } else {
-        dplyr::mutate(d, dplyr::across(.data$strategy, forcats::fct_reorder, .data$strategy))
+        dplyr::mutate(d, dplyr::across("strategy", forcats::fct_reorder, .data$strategy))
       }
     })
 
