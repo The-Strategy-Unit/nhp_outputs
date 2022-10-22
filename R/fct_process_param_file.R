@@ -150,7 +150,7 @@ process_param_file <- function(path,
     tibble::deframe()
 
   params$bed_occupancy$specialty_mapping <- data$ru_bo_sm |>
-    dplyr::select("specialty_group", "specialty_code", .data$ward_group) |>
+    dplyr::select("specialty_group", "specialty_code", "ward_group") |>
     dplyr::group_nest(.data$specialty_group) |>
     dplyr::mutate(dplyr::across("data", purrr::map, purrr::compose(as.list, tibble::deframe))) |>
     tibble::deframe()
@@ -196,6 +196,10 @@ process_param_file <- function(path,
 
   params <- c(params, expat_repat)
 
+  # add in additional data to strategies
+  params$inpatient_factors$los_reduction[["pre-op_los_1-day"]][["pre-op_days"]] <- 1
+  params$inpatient_factors$los_reduction[["pre-op_los_2-day"]][["pre-op_days"]] <- 2
+
   validate_params(params)
 
   params
@@ -226,7 +230,22 @@ validation_functions <- list(
           "var_proj_10_year_migration",
           "var_proj_alt_internal_migration",
           "var_proj_high_intl_migration",
-          "var_proj_low_intl_migration"
+          "var_proj_low_intl_migration",
+          "Constant fertility, no mortality improvement",
+          "Constant fertility",
+          "High population",
+          "Young age structure",
+          "High fertility",
+          "Old age structure",
+          "Low population",
+          "Low fertility",
+          "High life expectancy",
+          "Low life expectancy",
+          "No mortality improvement",
+          "0% Future EU migration (Not National Statistics)",
+          "50% Future EU migration (Not National Statistics)",
+          "Zero net migration (natural change only)",
+          "Replacement fertility"
         )
       )
     )
@@ -360,11 +379,11 @@ validation_functions <- list(
       purrr::flatten_lgl()
 
     op <- params$repat_local$op |>
-      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::map_lgl(validate_interval, 1, 5) |>
       purrr::set_names(\(.i) glue::glue("repat local op {.i} must be a valid interval"))
 
     aae <- params$repat_local$aae |>
-      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::map_lgl(validate_interval, 1, 5) |>
       purrr::set_names(\(.i) glue::glue("repat local aae {.i} must be a valid interval"))
 
     c(ip, op, aae)
@@ -383,11 +402,11 @@ validation_functions <- list(
       purrr::flatten_lgl()
 
     op <- params$repat_nonlocal$op |>
-      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::map_lgl(validate_interval, 1, 5) |>
       purrr::set_names(\(.i) glue::glue("repat non local op {.i} must be a valid interval"))
 
     aae <- params$repat_nonlocal$aae |>
-      purrr::map_lgl(validate_interval, 0, 1) |>
+      purrr::map_lgl(validate_interval, 1, 5) |>
       purrr::set_names(\(.i) glue::glue("repat non local aae {.i} must be a valid interval"))
 
     c(ip, op, aae)
