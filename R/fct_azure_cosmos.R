@@ -17,7 +17,7 @@ cosmos_get_user_allowed_datasets <- function(user) {
   } else {
     c(
       "synthetic",
-      "RL4", "RXC", "RN5", "RYJ", "RGP", "RNQ", "RD8", "RBZ", "RX1", "RHW", "RA9", "RGR", "RXN_RTX", "RH5_RBA"
+      "RA9", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RYJ"
     )
   }
 }
