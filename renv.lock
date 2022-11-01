@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.2.1",
+    "Version": "4.2.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -28,7 +28,7 @@
       "Package": "AzureCosmosR",
       "Version": "1.0.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "77033d7d1748d41768578e25ca1d2bf5",
       "Requirements": [
         "AzureRMR",
@@ -160,7 +160,7 @@
       "Package": "beeswarm",
       "Version": "0.4.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "0f4e9d8caa6feaa7e409ae6c30f2ca66",
       "Requirements": []
     },
@@ -475,7 +475,7 @@
       "Package": "dplyr",
       "Version": "1.0.10",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "539412282059f7f0c07295723d23f987",
       "Requirements": [
         "R6",
@@ -564,7 +564,7 @@
       "Package": "fresh",
       "Version": "0.2.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "fa54367040deb4537da49b7ac0ee5770",
       "Requirements": [
         "htmltools",
@@ -593,7 +593,7 @@
       "Package": "gert",
       "Version": "1.8.0",
       "Source": "Repository",
-      "Repository": "RSPM",
+      "Repository": "CRAN",
       "Hash": "4bdd6588a3cbde071c7de6d07b66f1d3",
       "Requirements": [
         "askpass",
@@ -608,7 +608,7 @@
       "Package": "ggbeeswarm",
       "Version": "0.6.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "dd68b9b215b2d3119603549a794003c3",
       "Requirements": [
         "beeswarm",
@@ -620,7 +620,7 @@
       "Package": "ggplot2",
       "Version": "3.3.6",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "0fb26d0674c82705c6b701d1a61e02ea",
       "Requirements": [
         "MASS",
@@ -856,7 +856,7 @@
       "Package": "knitr",
       "Version": "1.40",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "caea8b0f899a0b1738444b9bc47067e7",
       "Requirements": [
         "evaluate",
@@ -976,7 +976,7 @@
       "Package": "mockery",
       "Version": "0.4.3",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "c28ce5f7c2293d76b91657f3fe30c50b",
       "Requirements": [
         "testthat"
@@ -1065,7 +1065,7 @@
       "Package": "pkgdown",
       "Version": "2.0.6",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "f958d0b2a5dabc5ffd414f062b1ffbe7",
       "Requirements": [
         "bslib",
@@ -1168,7 +1168,7 @@
       "Package": "profvis",
       "Version": "0.3.7",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "e9d21e79848e02e524bea6f5bd53e7e4",
       "Requirements": [
         "htmlwidgets",
@@ -1332,7 +1332,7 @@
       "Package": "rex",
       "Version": "1.2.1",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "ae34cd56890607370665bee5bd17812f",
       "Requirements": [
         "lazyeval"
@@ -1425,7 +1425,7 @@
       "Package": "rversions",
       "Version": "2.1.2",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "a9881dfed103e83f9de151dc17002cd1",
       "Requirements": [
         "curl",
@@ -1518,7 +1518,7 @@
       "Package": "shinyjs",
       "Version": "2.1.0",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "802e4786b353a4bb27116957558548d5",
       "Requirements": [
         "digest",
@@ -1577,7 +1577,7 @@
       "Package": "systemfonts",
       "Version": "1.0.4",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "90b28393209827327de889f49935140a",
       "Requirements": [
         "cpp11"
@@ -1615,7 +1615,7 @@
       "Package": "textshaping",
       "Version": "0.3.6",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "1ab6223d3670fac7143202cb6a2d43d5",
       "Requirements": [
         "cpp11",
@@ -1696,7 +1696,7 @@
       "Package": "urlchecker",
       "Version": "1.0.1",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "409328b8e1253c8d729a7836fe7f7a16",
       "Requirements": [
         "cli",
@@ -1764,7 +1764,7 @@
       "Package": "vipor",
       "Version": "0.4.5",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "ea85683da7f2bfa63a98dc6416892591",
       "Requirements": []
     },
@@ -1803,7 +1803,7 @@
       "Package": "waiter",
       "Version": "0.2.5",
       "Source": "Repository",
-      "Repository": "CRAN",
+      "Repository": "RSPM",
       "Hash": "93e6b6c8ae3f81d4be77a0dc74e5cf5e",
       "Requirements": [
         "R6",
