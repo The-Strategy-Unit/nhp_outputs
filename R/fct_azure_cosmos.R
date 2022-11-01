@@ -56,7 +56,7 @@ cosmos_get_principal_high_level <- function(id) {
   qry <- paste(
     "SELECT r.pod, r.baseline, r.principal",
     "FROM c JOIN r in c.results['default']",
-    "WHERE r.measure NOT IN ('beddays', 'tele_attendances')"
+    "WHERE r.measure NOT IN ('beddays', 'procedures', 'tele_attendances')"
   )
 
   AzureCosmosR::query_documents(container, qry, partition_key = id) |>

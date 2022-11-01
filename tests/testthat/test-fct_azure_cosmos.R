@@ -94,7 +94,7 @@ test_that("cosmos_get_principal_high_level gets the results", {
   qry <- paste(
     "SELECT r.pod, r.baseline, r.principal",
     "FROM c JOIN r in c.results['default']",
-    "WHERE r.measure NOT IN ('beddays', 'tele_attendances')"
+    "WHERE r.measure NOT IN ('beddays', 'procedures', 'tele_attendances')"
   )
   expect_called(m, 1)
   expect_args(m, 1, "container", qry, partition_key = "id")
