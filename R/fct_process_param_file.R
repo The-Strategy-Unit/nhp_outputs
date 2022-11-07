@@ -254,7 +254,7 @@ validation_functions <- list(
     hsa <- params$health_status_adjustment
 
     c(
-      "health status adjustment must have a valid interval" = validate_interval(hsa, 0, 5)
+      "health status adjustment must have a valid interval" = validate_interval(hsa, -5, 5)
     )
   },
   life_expectancy = function(params) {
