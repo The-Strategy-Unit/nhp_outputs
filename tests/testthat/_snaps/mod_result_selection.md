@@ -25,7 +25,7 @@
         </div>
       </div>
       <a class="btn btn-default shiny-download-link  shinyjs-hide" download href="" id="id-download_results" target="_blank">
-        <i class="fa fa-download" role="presentation" aria-label="download icon"></i>
+        <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
         Download results (.json)
       </a>
 

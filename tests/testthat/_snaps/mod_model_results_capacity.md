@@ -11,16 +11,16 @@
               <h3 class="card-title">Beds</h3>
               <div class="card-tools float-right">
                 <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
-                  <i class="fa fa-minus" role="presentation" aria-label="minus icon"></i>
+                  <i class="fas fa-minus" role="presentation" aria-label="minus icon"></i>
                 </button>
               </div>
             </div>
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-d524c6ecd8e21155c626b625d5855261" class="loader">Loading...</div>
+                  <div id="spinner-20413e15413994e90f1d1b2e2a06c063" class="loader">Loading...</div>
                 </div>
-                <div id="id-beds" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-beds" style="width:100%;height:800px;"></div>
               </div>
             </div>
           </div>
@@ -32,16 +32,16 @@
               <h3 class="card-title">Theatres</h3>
               <div class="card-tools float-right">
                 <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
-                  <i class="fa fa-minus" role="presentation" aria-label="minus icon"></i>
+                  <i class="fas fa-minus" role="presentation" aria-label="minus icon"></i>
                 </button>
               </div>
             </div>
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-729ed38e91e796038348f338803a820e" class="loader">Loading...</div>
+                  <div id="spinner-183f39a00704d4f1ff4c4040874b21c5" class="loader">Loading...</div>
                 </div>
-                <div id="id-theatres" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-theatres" style="width:100%;height:800px;"></div>
               </div>
             </div>
           </div>
@@ -53,16 +53,16 @@
               <h3 class="card-title">Elective 4 hour sessions</h3>
               <div class="card-tools float-right">
                 <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
-                  <i class="fa fa-minus" role="presentation" aria-label="minus icon"></i>
+                  <i class="fas fa-minus" role="presentation" aria-label="minus icon"></i>
                 </button>
               </div>
             </div>
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-1fdda5c4803c7d59d03ed87110df27db" class="loader">Loading...</div>
+                  <div id="spinner-9b49b3f464160711aaa7aab548081729" class="loader">Loading...</div>
                 </div>
-                <div id="id-fhs" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-fhs" style="width:100%;height:800px;"></div>
               </div>
             </div>
           </div>

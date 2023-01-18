@@ -34,9 +34,9 @@
       </div>
       <div class="shiny-spinner-output-container shiny-spinner-hideui ">
         <div class="load-container shiny-spinner-hidden load1">
-          <div id="spinner-7720fd3b0fa15ce6b49af84533eba5a3" class="loader">Loading...</div>
+          <div id="spinner-f41453cad54686886ab641b6c7248b65" class="loader">Loading...</div>
         </div>
-        <div id="id-change_factors" style="width:100%; height:600px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+        <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
       </div>
       <div id="id-individual_change_factors" class="shinyjs-hide">
         <h2>Individual Change Factors</h2>
@@ -50,14 +50,14 @@
         </div>
         <div class="shiny-spinner-output-container shiny-spinner-hideui ">
           <div class="load-container shiny-spinner-hidden load1">
-            <div id="spinner-b2df2f2b0e187cc80aeaaae2a06bb162" class="loader">Loading...</div>
+            <div id="spinner-53d8ac16818d391f4c50de11cab26acc" class="loader">Loading...</div>
           </div>
           <div class="row">
             <div class="col-sm-6">
-              <div id="id-admission_avoidance" style="width:100%; height:600px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-admission_avoidance" style="width:100%;height:600px;"></div>
             </div>
             <div class="col-sm-6">
-              <div id="id-los_reduction" style="width:100%; height:600px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-los_reduction" style="width:100%;height:600px;"></div>
             </div>
           </div>
         </div>

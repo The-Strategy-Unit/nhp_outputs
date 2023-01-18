@@ -228,9 +228,12 @@ batch_submit_model_run <- function(params) {
 
   # Begin Exclude Linting
   md <- "/mnt/batch/tasks/fsmounts"
+  app_version <- Sys.getenv("NHP_APP_VERSION", "dev")
+  data_version <- Sys.getenv("NHP_DATA_VERSION")
+  stopifnot("NHP_DATA_VERSION environment variable not set" = data_version != "")
   temp_results_path <- glue::glue("{md}/batch/{uuid::UUIDgenerate()}")
   results_path <- if (Sys.getenv("GOLEM_CONFIG_ACTIVE", "prod") == "prod") {
-    glue::glue("{md}/results")
+    glue::glue("{md}/results/{app_version}")
   } else {
     temp_results_path
   }
@@ -239,9 +242,9 @@ batch_submit_model_run <- function(params) {
     glue::glue(
       .sep = " ",
       "/opt/nhp/bin/python",
-      "{md}/app/{Sys.getenv('NHP_APP_VERSION', 'dev')}/run_model.py",
+      "{md}/app/{app_version}/run_model.py",
       "{md}/queue/{filename}",
-      "--data-path={md}/data",
+      "--data-path={md}/data/{data_version}",
       "--results-path={results_path}",
       "--temp-results-path={temp_results_path}",
       "--save-type=cosmos",
