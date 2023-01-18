@@ -43,8 +43,8 @@
       </div>
       <div class="shiny-spinner-output-container shiny-spinner-hideui ">
         <div class="load-container shiny-spinner-hidden load1">
-          <div id="spinner-a71b5978ac666a965ce98a74cc882b7a" class="loader">Loading...</div>
+          <div id="spinner-ddcadaa58efc801e837cdf7282fed4c9" class="loader">Loading...</div>
         </div>
-        <div id="id-distribution" style="width:100%; height:800px; " class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme"></div>
+        <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-distribution" style="width:100%;height:800px;"></div>
       </div>
 
