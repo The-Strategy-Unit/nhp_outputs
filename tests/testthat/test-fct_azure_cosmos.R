@@ -28,14 +28,14 @@ test_that("cosmos_get_result_sets gets the list of model runs", {
   stub(cosmos_get_result_sets, "cosmos_get_container", m_cont)
   stub(cosmos_get_result_sets, "AzureCosmosR::query_documents", m)
 
-  expect_equal(cosmos_get_result_sets(), tibble::tribble(
+  expect_equal(cosmos_get_result_sets("dev"), tibble::tribble(
     ~dataset, ~scenario, ~create_datetime, ~id,
     "a", "1", "2", "a__1__2",
     "a", "2", "1", "a__2__1",
     "b", "2", "2", "b__2__2"
   ))
 
-  qry <- "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c"
+  qry <- "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c WHERE c.app_version = 'dev'"
   expect_called(m, 1)
   expect_args(m, 1, "container", qry)
 
