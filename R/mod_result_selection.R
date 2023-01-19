@@ -25,7 +25,10 @@ mod_result_selection_ui <- function(id) {
 mod_result_selection_server <- function(id, user_allowed_datasets) {
   shiny::moduleServer(id, function(input, output, session) {
     results_sets <- shiny::reactive({
-      cosmos_get_result_sets() |>
+      app_version <- Sys.getenv("NHP_APP_VERSION", "dev") |>
+         stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
+         
+      cosmos_get_result_sets(app_version) |>
         dplyr::filter(.data$dataset %in% user_allowed_datasets()) |>
         dplyr::group_nest(.data$dataset, .data$scenario, .key = "create_datetime") |>
         dplyr::mutate(
