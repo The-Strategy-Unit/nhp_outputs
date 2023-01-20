@@ -22,10 +22,12 @@ cosmos_get_user_allowed_datasets <- function(user) {
   }
 }
 
-cosmos_get_result_sets <- function() {
+cosmos_get_result_sets <- function(app_version) {
   container <- cosmos_get_container("results")
 
-  qry <- "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c"
+  qry <- glue::glue(
+    "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c WHERE c.app_version = '{app_version}'"
+  )
   AzureCosmosR::query_documents(container, qry) |>
     dplyr::arrange(dplyr::across(tidyselect::everything()))
 }

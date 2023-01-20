@@ -51,7 +51,7 @@ mod_model_results_capacity_beds_density_plot <- function(data, baseline) {
 mod_model_results_capacity_beds_beeswarm_plot <- function(data, baseline) {
   data |>
     ggplot2::ggplot(ggplot2::aes("1", .data$n, colour = .data$variant)) +
-    ggbeeswarm::geom_quasirandom(groupOnX = TRUE, alpha = 0.5) +
+    ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(yintercept = baseline) +
     # have to use coord flip with boxplots/violin plots and plotly...
     ggplot2::coord_flip() +
@@ -101,7 +101,7 @@ mod_model_results_capacity_fhs_available_plot <- function(data) {
     dplyr::group_by(.data$model_run, .data$variant) |>
     dplyr::summarise(dplyr::across(c("baseline", "value"), sum), .groups = "drop") |>
     ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
-    ggbeeswarm::geom_quasirandom(groupOnX = TRUE, alpha = 0.5) +
+    ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(ggplot2::aes(yintercept = .data$baseline), colour = "#2c2825") +
     ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::theme(

@@ -46,7 +46,7 @@ mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   data |>
     ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
-    ggbeeswarm::geom_quasirandom(groupOnX = TRUE, alpha = 0.5) +
+    ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(yintercept = b) +
     ggplot2::expand_limits(y = ifelse(show_origin, 0, b)) +
     ggplot2::scale_fill_manual(values = c(
