@@ -22,8 +22,8 @@ default:
           measures:
             - admissions
             - beddays
-        ip_non-elective_birth-episode:
-          name: "Birth Episode"
+        ip_maternity_admission:
+          name: "Maternity Admission"
           measures:
             - admissions
             - beddays
