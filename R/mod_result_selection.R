@@ -26,9 +26,14 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
   shiny::moduleServer(id, function(input, output, session) {
     results_sets <- shiny::reactive({
       app_version <- Sys.getenv("NHP_APP_VERSION", "dev") |>
-         stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
-         
-      cosmos_get_result_sets(app_version) |>
+        stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
+
+      rs <- cosmos_get_result_sets(app_version)
+
+      # handle case where no result sets are available
+      shiny::req(nrow(rs) > 0)
+
+      rs |>
         dplyr::filter(.data$dataset %in% user_allowed_datasets()) |>
         dplyr::group_nest(.data$dataset, .data$scenario, .key = "create_datetime") |>
         dplyr::mutate(
