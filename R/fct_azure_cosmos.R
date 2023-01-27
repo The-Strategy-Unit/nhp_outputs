@@ -28,7 +28,11 @@ cosmos_get_result_sets <- function(app_version) {
     "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c WHERE c.app_version = '{app_version}'"
   )
   AzureCosmosR::query_documents(container, qry) |>
-    dplyr::arrange(dplyr::across(tidyselect::everything()))
+    dplyr::arrange(
+      .data$dataset,
+      .data$scenario,
+      dplyr::desc(.data$create_datetime)
+    )
 }
 
 cosmos_get_available_aggregations <- function(id) {
