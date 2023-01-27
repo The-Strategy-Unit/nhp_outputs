@@ -57,6 +57,7 @@ test_that("beds_density_plot returns a ggplot object", {
   expected_baseline <- 190
 
   p <- mod_model_results_capacity_beds_density_plot(expected_data, expected_baseline)
+
   expect_s3_class(p, "ggplot")
 })
 
@@ -65,6 +66,7 @@ test_that("beds_beeswarm returns a ggplot object", {
   expected_baseline <- 190
 
   p <- mod_model_results_capacity_beds_beeswarm_plot(expected_data, expected_baseline)
+
   expect_s3_class(p, "ggplot")
 })
 
@@ -87,7 +89,9 @@ test_that("beds_available_plot combines the plots into a plotly object", {
   expected_data <- dplyr::count(beds_data_expected, model_run, variant, wt = value)
   expected_baseline <- 190
 
-  p <- mod_model_results_capacity_beds_available_plot(beds_data_expected)
+  p <- beds_data_expected |>
+    mod_model_results_capacity_beds_available_plot()
+
   expect_equal(p, "layout")
 
   expect_called(m, 6)

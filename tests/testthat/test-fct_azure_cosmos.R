@@ -340,6 +340,7 @@ test_that("cosmos_get_bed_occupancy gets the results", {
   qry <- "
     SELECT
         r.measure,
+        r.quarter,
         r.ward_group,
         r.baseline,
         r.principal,

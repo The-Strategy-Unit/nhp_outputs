@@ -1,4 +1,3 @@
-
 cosmos_get_container <- function(container) {
   endp <- AzureCosmosR::cosmos_endpoint(
     Sys.getenv("COSMOS_ENDPOINT"),
@@ -203,6 +202,7 @@ cosmos_get_bed_occupancy <- function(id) {
   qry <- "
     SELECT
         r.measure,
+        r.quarter,
         r.ward_group,
         r.baseline,
         r.principal,
