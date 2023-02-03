@@ -13,6 +13,7 @@ mod_result_selection_ui <- function(id) {
     shiny::selectInput(ns("dataset"), "Dataset", NULL),
     shiny::selectInput(ns("scenario"), "Scenario", NULL),
     shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
+    shiny::selectInput(ns("site_selection"), "Site", NULL),
     shinyjs::hidden(
       shiny::downloadButton(ns("download_results"), "Download results (.json)")
     )
@@ -99,19 +100,36 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       shiny::updateSelectInput(session, "create_datetime", choices = choices)
     })
 
-    selected_model_run <- shiny::reactive({
+    run_id <- shiny::reactive({
       ds <- shiny::req(input$dataset)
       sc <- shiny::req(input$scenario)
       cd <- shiny::req(input$create_datetime)
 
       rs <- shiny::req(results_sets())
 
-      id <- purrr::reduce(c(ds, sc, cd), .init = rs, \(.x, .y) {
+      purrr::reduce(c(ds, sc, cd), .init = rs, \(.x, .y) {
         shiny::req(.y %in% names(.x))
         .x[[.y]]
       })
+    })
 
-      list(ds = ds, sc = sc, cd = cd, id = id)
+    shiny::observe({
+      id <- shiny::req(run_id())
+
+      trust_sites <- cosmos_get_trust_sites(id)
+
+      shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
+    }) |>
+      shiny::bindEvent(run_id())
+
+    selected_model_run <- shiny::reactive({
+      ds <- shiny::req(input$dataset)
+      sc <- shiny::req(input$scenario)
+      cd <- shiny::req(input$create_datetime)
+      id <- shiny::req(run_id())
+      site <- shiny::req(input$site_selection)
+
+      list(ds = ds, sc = sc, cd = cd, id = id, site = site)
     })
 
     return(selected_model_run)

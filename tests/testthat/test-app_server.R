@@ -18,7 +18,7 @@ test_that("it loads the module correctly: mod_model_core_activity_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "model_core_activity", selected_model_run_id)
+    expect_args(m, 1, "model_core_activity", selected_model_run_id, selected_site)
   })
 })
 
@@ -60,7 +60,7 @@ test_that("it loads the module correctly: mod_model_results_distribution_server"
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "model_results_distribution", selected_model_run_id)
+    expect_args(m, 1, "model_results_distribution", selected_model_run_id, selected_site)
   })
 })
 
@@ -144,7 +144,7 @@ test_that("it loads the module correctly: mod_principal_detailed_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_detailed", selected_model_run_id)
+    expect_args(m, 1, "principal_detailed", selected_model_run_id, selected_site)
   })
 })
 
@@ -165,7 +165,7 @@ test_that("it loads the module correctly: mod_principal_high_level_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_high_level", selected_model_run_id)
+    expect_args(m, 1, "principal_high_level", selected_model_run_id, selected_site)
   })
 })
 
@@ -186,7 +186,7 @@ test_that("it loads the module correctly: mod_principal_summary_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_summary", selected_model_run_id)
+    expect_args(m, 1, "principal_summary", selected_model_run_id, selected_site)
   })
 })
 

@@ -59,16 +59,16 @@ mod_principal_high_level_summary_data <- function(id, pods) {
   c(start_year, end_year) %<-% cosmos_get_model_run_years(id)
 
   cosmos_get_principal_high_level(id) |>
-    tidyr::pivot_longer(-"pod", names_to = "model_run") |>
+    tidyr::pivot_longer(-c("pod", "sitetret"), names_to = "model_run") |>
     dplyr::mutate(year = ifelse(.data$model_run == "baseline", start_year, end_year)) |>
     dplyr::select(-"model_run") |>
     tidyr::complete(
       year = seq(start_year, end_year),
-      .data$pod
+      tidyr::nesting(sitetret, pod)
     ) |>
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::select(-"pod") |>
-    dplyr::group_by(.data$activity_type, .data$pod_name) |>
+    dplyr::group_by(.data$activity_type, .data$sitetret, .data$pod_name) |>
     dplyr::mutate(
       dplyr::across("value", purrr::compose(as.integer, zoo::na.approx)),
       fyear = fyear_str(.data$year)
@@ -124,7 +124,7 @@ mod_principal_high_level_plot <- function(data, activity_type) {
 #' principal_high_level Server Functions
 #'
 #' @noRd
-mod_principal_high_level_server <- function(id, selected_model_run_id) {
+mod_principal_high_level_server <- function(id, selected_model_run_id, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     pods <- mod_principal_high_level_pods()
 
@@ -134,13 +134,21 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
     }) |>
       shiny::bindCache(selected_model_run_id())
 
-    output$activity <- gt::render_gt({
+    site_data <- shiny::reactive({
       summary_data() |>
+        dplyr::filter(.data$sitetret == selected_site()) |>
+        dplyr::select(-"sitetret")
+    })
+
+    output$activity <- gt::render_gt({
+      site_data() |>
         mod_principal_high_level_table()
     })
 
     output$aae <- plotly::renderPlotly({
-      summary_data() |>
+      shiny::req(selected_site() == "trust")
+
+      site_data() |>
         mod_principal_high_level_plot("aae") |>
         plotly::ggplotly() |>
         plotly::layout(legend = list(
@@ -149,7 +157,7 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
     })
 
     output$ip <- plotly::renderPlotly({
-      summary_data() |>
+      site_data() |>
         mod_principal_high_level_plot("ip") |>
         plotly::ggplotly() |>
         plotly::layout(legend = list(
@@ -158,7 +166,7 @@ mod_principal_high_level_server <- function(id, selected_model_run_id) {
     })
 
     output$op <- plotly::renderPlotly({
-      summary_data() |>
+      site_data() |>
         mod_principal_high_level_plot("op") |>
         plotly::ggplotly() |>
         plotly::layout(legend = list(

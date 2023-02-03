@@ -46,7 +46,7 @@ mod_model_core_activity_server_table <- function(data) {
 #' model_core_activity Server Functions
 #'
 #' @noRd
-mod_model_core_activity_server <- function(id, selected_model_run_id) {
+mod_model_core_activity_server <- function(id, selected_model_run_id, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     atpmo <- get_activity_type_pod_measure_options()
 
@@ -57,8 +57,14 @@ mod_model_core_activity_server <- function(id, selected_model_run_id) {
     }) |>
       shiny::bindCache(selected_model_run_id())
 
-    output$core_activity <- gt::render_gt({
+    site_data <- shiny::reactive({
       summarised_data() |>
+        dplyr::filter(.data$sitetret == selected_site()) |>
+        dplyr::select(-"sitetret")
+    })
+
+    output$core_activity <- gt::render_gt({
+      site_data() |>
         mod_model_core_activity_server_table()
     })
   })
