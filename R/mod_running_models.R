@@ -10,6 +10,8 @@
 mod_running_models_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
+    shiny::h2("Pool State"),
+    shiny::tableOutput(ns("pool_state")),
     shiny::h2("Running Models"),
     shiny::tableOutput(ns("running_models"))
   )
@@ -21,6 +23,12 @@ mod_running_models_ui <- function(id) {
 mod_running_models_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
     refresh_timer <- shiny::reactiveTimer(5000)
+
+    output$pool_state <- shiny::renderTable({
+      batch_get_pools() |>
+        dplyr::select("id", tidyselect::ends_with("Nodes"))
+    }) |>
+      shiny::bindEvent(refresh_timer())
 
     output$running_models <- shiny::renderTable({
       job_status <- function(job) {
