@@ -42,6 +42,10 @@ mod_running_models_server <- function(id) {
           return(NULL)
         }
 
+        if (!"exitCode" %in% t) {
+          t$exitCode <- 0
+        }
+
         s <- dplyr::summarise(
           t,
           complete = sum(.data$state == "completed"),
