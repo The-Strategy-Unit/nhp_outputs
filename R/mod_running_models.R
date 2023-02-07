@@ -23,18 +23,39 @@ mod_running_models_server <- function(id) {
     refresh_timer <- shiny::reactiveTimer(2500)
 
     output$running_models <- shiny::renderTable({
-      job_status <- function(job_id) {
-        batch_get_tasks(job_id) |>
-          dplyr::summarise(
-            complete = sum(.data$state == "completed"),
-            running = sum(.data$state == "running"),
-            n = dplyr::n()
-          )
+      job_status <- function(job) {
+        job_id <- job$id
+
+        t <- batch_get_tasks(job_id)
+
+        if (is.null(t)) {
+          # not sure we should delete the job just yet... just hide it
+          # batch_delete_job(job_id)
+          return(NULL)
+        }
+
+        s <- dplyr::summarise(
+          t,
+          complete = sum(.data$state == "completed"),
+          running = sum(.data$state == "running"),
+          errors = sum(.data$exitCode != 0),
+          n = dplyr::n()
+        )
+
+        if (s$complete == s$n) {
+          batch_delete_job(job_id)
+          return(NULL)
+        }
+
+        dplyr::bind_cols(job, s)
       }
 
-      shiny::req(batch_get_jobs()) |>
-        dplyr::mutate(status = purrr::map_dfr(.data$id, job_status)) |>
-        tidyr::unnest(.data$status)
+      jobs <- batch_get_jobs()
+      shiny::req(jobs)
+
+      jobs |>
+        purrr::array_tree() |>
+        purrr::map_dfr(job_status)
     }) |>
       shiny::bindEvent(refresh_timer())
   })
