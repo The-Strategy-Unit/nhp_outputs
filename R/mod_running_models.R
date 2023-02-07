@@ -20,7 +20,7 @@ mod_running_models_ui <- function(id) {
 #' @noRd
 mod_running_models_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
-    refresh_timer <- shiny::reactiveTimer(2500)
+    refresh_timer <- shiny::reactiveTimer(5000)
 
     output$running_models <- shiny::renderTable({
       job_status <- function(job) {
