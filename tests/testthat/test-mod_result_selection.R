@@ -150,10 +150,15 @@ test_that("it returns a reactive", {
   stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
 
   testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
-    session$setInputs(dataset = "a", scenario = "1", create_datetime = "20220101_012345")
+    session$setInputs(
+      dataset = "a",
+      scenario = "1",
+      create_datetime = "20220101_012345",
+      site_selection = "trust"
+    )
 
     expect_equal(selected_model_run(), list(
-      ds = "a", sc = "1", cd = "20220101_012345", id = "a__1__20220101_012345"
+      ds = "a", sc = "1", cd = "20220101_012345", id = "a__1__20220101_012345", site = "trust"
     ))
   })
 
@@ -171,7 +176,12 @@ test_that("it downloads the results", {
   stub(mod_result_selection_server, "cosmos_get_full_model_run_data", m)
 
   testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
-    session$setInputs(dataset = "a", scenario = "1", create_datetime = "20220101_012345")
+    session$setInputs(
+      dataset = "a",
+      scenario = "1",
+      create_datetime = "20220101_012345",
+      site_selection = "trust"
+    )
 
     results_file <- output$download_results
     withr::local_file(results_file)

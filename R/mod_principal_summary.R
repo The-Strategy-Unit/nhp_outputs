@@ -39,7 +39,7 @@ mod_principal_summary_data <- function(id) {
           dplyr::across(c("baseline", "principal"), sum)
         )
     ) |>
-    dplyr::select("pod_name", "baseline", "principal")
+    dplyr::select("sitetret", "pod_name", "baseline", "principal")
 }
 
 mod_principal_summary_table <- function(data) {
@@ -58,7 +58,7 @@ mod_principal_summary_table <- function(data) {
 #' principal_summary Server Functions
 #'
 #' @noRd
-mod_principal_summary_server <- function(id, selected_model_run_id) {
+mod_principal_summary_server <- function(id, selected_model_run_id, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     summary_data <- shiny::reactive({
       id <- selected_model_run_id()
@@ -66,15 +66,15 @@ mod_principal_summary_server <- function(id, selected_model_run_id) {
     }) |>
       shiny::bindCache(selected_model_run_id())
 
-    output$summary_table <- gt::render_gt({
+    site_data <- shiny::reactive({
       summary_data() |>
+        dplyr::filter(.data$sitetret == selected_site()) |>
+        dplyr::select(-"sitetret")
+    })
+
+    output$summary_table <- gt::render_gt({
+      site_data() |>
         mod_principal_summary_table()
     })
   })
 }
-
-## To be copied in the UI
-#
-
-## To be copied in the server
-# mod_principal_summary_server("principal_summary_1")

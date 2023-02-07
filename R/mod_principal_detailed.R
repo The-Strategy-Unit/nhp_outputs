@@ -49,7 +49,7 @@ mod_principal_detailed_table <- function(data, aggregation) {
 #' principal_detailed Server Functions
 #'
 #' @noRd
-mod_principal_detailed_server <- function(id, selected_model_run_id) {
+mod_principal_detailed_server <- function(id, selected_model_run_id, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
@@ -86,6 +86,7 @@ mod_principal_detailed_server <- function(id, selected_model_run_id) {
 
       cosmos_get_aggregation(id, pod, measure, agg_col) |>
         dplyr::transmute(
+          .data$sitetret,
           .data$sex,
           agg = .data[[agg_col]],
           .data$baseline,
@@ -96,8 +97,14 @@ mod_principal_detailed_server <- function(id, selected_model_run_id) {
     }) |>
       shiny::bindCache(selected_model_run_id(), selected_measure(), input$aggregation)
 
+    site_data <- shiny::reactive({
+      selected_data() |>
+        dplyr::filter(.data$sitetret == selected_site()) |>
+        dplyr::select(-"sitetret")
+    })
+
     output$results <- gt::render_gt({
-      d <- selected_data()
+      d <- site_data()
 
       # handle some edge cases where a dropdown is changed and the next dropdowns aren't yet changed: we get 0 rows of
       # data which causes a bunch of warning messages

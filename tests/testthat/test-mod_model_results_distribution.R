@@ -7,10 +7,10 @@ library(mockery)
 
 selected_measure_expected <- c(activity_type = "aae", pod = "aae_type-01", measure = "ambulance")
 model_run_distribution_expected <- tibble::tribble(
-  ~baseline, ~model_run, ~value, ~variant,
-  30000, 1, 34000, "principal",
-  30000, 2, 35000, "high migration",
-  30000, 3, 36000, "high migration"
+  ~sitetret, ~baseline, ~model_run, ~value, ~variant,
+  "trust", 30000, 1, 34000, "principal",
+  "trust", 30000, 2, 35000, "high migration",
+  "trust", 30000, 3, 36000, "high migration"
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -129,14 +129,16 @@ test_that("it renders the plot", {
     mod_model_results_distribution_server, "mod_model_results_distibution_plot", m
   )
 
-  selected_model_run_id <- reactiveVal("id")
+  selected_model_run_id <- reactiveVal()
+  selected_site <- reactiveVal()
 
-  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id), {
+  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id, selected_site), {
     selected_model_run_id("id")
+    selected_site("trust")
     selected_measure(selected_measure_expected)
     session$setInputs(show_origin = FALSE)
 
     expect_called(m, 1)
-    expect_args(m, 1, model_run_distribution_expected, FALSE)
+    expect_args(m, 1, model_run_distribution_expected |> dplyr::select(-"sitetret"), FALSE)
   })
 })

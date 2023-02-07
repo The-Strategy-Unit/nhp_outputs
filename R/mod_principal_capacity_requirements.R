@@ -40,15 +40,22 @@ mod_principal_capacity_requirements_ui <- function(id) {
 mod_principal_capacity_requirements_beds_table <- function(data) {
   data |>
     dplyr::select(
+      "quarter",
       "ward_group",
       old_beds = "baseline",
       new_beds = "principal"
     ) |>
-    dplyr::arrange(dplyr::desc(.data$new_beds), dplyr::desc(.data$old_beds)) |>
+    dplyr::arrange(
+      .data$quarter,
+      dplyr::desc(.data$new_beds),
+      dplyr::desc(.data$old_beds)
+    ) |>
     dplyr::filter(.data$new_beds > 0.5) |>
+    dplyr::group_by(.data$quarter) |>
     gt::gt(rowname_col = "ward_group") |>
     gt::fmt_integer(c("old_beds", "new_beds")) |>
     gt::summary_rows(
+      groups = TRUE,
       columns = c("old_beds", "new_beds"),
       fns = list(total = "sum"),
       formatter = gt::fmt_integer
@@ -98,7 +105,7 @@ mod_principal_capacity_requirements_server <- function(id, selected_model_run_id
       id <- selected_model_run_id()
       cosmos_get_bed_occupancy(id) |>
         dplyr::filter(.data$model_run == 1) |>
-        dplyr::select("ward_group", "baseline", "principal")
+        dplyr::select("quarter", "ward_group", "baseline", "principal")
     }) |>
       shiny::bindCache(selected_model_run_id())
 

@@ -14,15 +14,15 @@ available_aggregations_expected <- list(
 )
 
 aggregations_age_group_expected <- tibble::tribble(
-  ~sex, ~age_group, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
-  1, " 0- 4", 900, 800, 850, 825, 875,
-  1, " 5-14", 650, 550, 600, 625, 650
+  ~sitetret, ~sex, ~age_group, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
+  "trust", 1, " 0- 4", 900, 800, 850, 825, 875,
+  "trust", 1, " 5-14", 650, 550, 600, 625, 650
 )
 
 aggregations_tretspef_expected <- tibble::tribble(
-  ~sex, ~tretspef, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
-  1, "100", 900, 800, 850, 825, 875,
-  1, "300", 650, 550, 600, 625, 650
+  ~sitetret, ~sex, ~tretspef, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
+  "trust", 1, "100", 900, 800, 850, 825, 875,
+  "trust", 1, "300", 650, 550, 600, 625, 650
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -66,8 +66,9 @@ test_that("it sets up mod_measure_selection_server", {
   stub(mod_principal_detailed_server, "mod_measure_selection_server", m)
 
   selected_model_id <- reactiveVal()
+  selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
     expect_called(m, 1)
     expect_args(m, 1, "measure_selection")
     expect_equal(selected_measure, "mod_measure_selection_server")
@@ -81,8 +82,9 @@ test_that("it calls cosmos_get_available_aggregations", {
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
 
   selected_model_id <- reactiveVal()
+  selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
     selected_model_id(1)
     expect_equal(available_aggregations(), "cosmos_get_available_aggregations")
     expect_called(m, 1)
@@ -98,9 +100,9 @@ test_that("it updates the aggregation drop down", {
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
+  selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
     selected_model_id(1)
     selected_measure(selected_measure_expected)
     session$private$flush() # manually trigger an invalidation
@@ -118,14 +120,15 @@ test_that("it calls cosmos_get_aggregation", {
   stub(mod_principal_detailed_server, "cosmos_get_aggregation", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
+  selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
     selected_model_id(1)
     selected_measure(selected_measure_expected)
 
     expected <- aggregations_age_group_expected |>
       dplyr::transmute(
+        sitetret,
         sex,
         agg = age_group,
         baseline,
@@ -138,6 +141,7 @@ test_that("it calls cosmos_get_aggregation", {
 
     expected <- aggregations_tretspef_expected |>
       dplyr::transmute(
+        sitetret,
         sex,
         agg = tretspef,
         baseline,
@@ -164,14 +168,15 @@ test_that("it renders the table", {
   stub(mod_principal_detailed_server, "mod_principal_detailed_table", m)
 
   selected_model_id <- reactiveVal()
-  data_cache <- cachem::cache_mem()
+  selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id), {
+  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
     selected_model_id(1)
+    selected_site("trust")
     selected_measure(selected_measure_expected)
     session$setInputs(aggregation = "Age Group")
 
     expect_called(m, 1)
-    expect_args(m, 1, aggregations_age_group_expected, "Age Group")
+    expect_args(m, 1, aggregations_age_group_expected |> dplyr::select(-"sitetret"), "Age Group")
   })
 })

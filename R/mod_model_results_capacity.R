@@ -15,6 +15,11 @@ mod_model_results_capacity_ui <- function(id) {
       bs4Dash::box(
         title = "Beds",
         width = 12,
+        shiny::selectInput(
+          ns("beds_quarter"),
+          "Quarter",
+          purrr::set_names(c("q1", "q2", "q3", "q4"), stringr::str_to_upper)
+        ),
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("beds"), height = "800px"),
         )
@@ -156,6 +161,7 @@ mod_model_results_capacity_server <- function(id, selected_model_run_id) {
 
     output$beds <- plotly::renderPlotly({
       beds_data() |>
+        dplyr::filter(.data$quarter == input$beds_quarter) |>
         mod_model_results_capacity_beds_available_plot()
     })
 

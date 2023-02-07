@@ -21,8 +21,8 @@ atpmo_expected <- tibble::tribble(
   "ip", "Inpatients", "ip_elective_daycase", "Daycase Admission", "beddays",
   "ip", "Inpatients", "ip_non-elective_admission", "Non-Elective Admission", "admissions",
   "ip", "Inpatients", "ip_non-elective_admission", "Non-Elective Admission", "beddays",
-  "ip", "Inpatients", "ip_non-elective_birth-episode", "Birth Episode", "admissions",
-  "ip", "Inpatients", "ip_non-elective_birth-episode", "Birth Episode", "beddays",
+  "ip", "Inpatients", "ip_maternity_admission", "Maternity Admission", "admissions",
+  "ip", "Inpatients", "ip_maternity_admission", "Maternity Admission", "beddays",
   "op", "Outpatients", "op_first", "First Outpatient Attendance", "attendances",
   "op", "Outpatients", "op_first", "First Outpatient Attendance", "tele_attendances",
   "op", "Outpatients", "op_follow-up", "Follow-up Outpatient Attendance", "attendances",
@@ -36,7 +36,7 @@ pods_expected <- tibble::tribble(
   "ip", "ip_elective_admission", "Elective Admission",
   "ip", "ip_elective_daycase", "Daycase Admission",
   "ip", "ip_non-elective_admission", "Non-Elective Admission",
-  "ip", "ip_non-elective_birth-episode", "Birth Episode",
+  "ip", "ip_maternity_admission", "Maternity Admission",
   "op", "op_first", "First Outpatient Attendance",
   "op", "op_follow-up", "Follow-up Outpatient Attendance",
   "op", "op_procedure", "Outpatient Procedure",
@@ -45,43 +45,43 @@ pods_expected <- tibble::tribble(
   dplyr::mutate(dplyr::across(pod_name, forcats::fct_inorder))
 
 principal_high_level_expected <- tibble::tribble(
-  ~pod,                          ~baseline, ~principal,
-  "aae",                            135000,     137000,
-  "ip_elective_admission",            8800,      10700,
-  "ip_elective_daycase",             58000,      74000,
-  "ip_non-elective_admission",       60000,      70000,
-  "ip_non-elective_birth-episode",    1100,       1200,
-  "op_first",                       140000,     150000,
-  "op_follow-up",                   370000,     390000,
-  "op_procedure",                    42000,      47000
+  ~sitetret, ~pod,                          ~baseline, ~principal,
+  "trust",   "aae",                            135000,     137000,
+  "RXX",     "ip_elective_admission",            8800,      10700,
+  "RXX",     "ip_elective_daycase",             58000,      74000,
+  "RXX",     "ip_maternity_admission",           1100,       1200,
+  "RXX",     "ip_non-elective_admission",       60000,      70000,
+  "RXX",     "op_first",                       140000,     150000,
+  "RXX",     "op_follow-up",                   370000,     390000,
+  "RXX",     "op_procedure",                    42000,      47000
 )
 
 summary_data_expected <- tibble::tribble(
-  ~year, ~value, ~activity_type, ~pod_name, ~fyear,
-  2018, 135000, "aae", "A&E Attendance", "2018/19",
-  2018, 8800, "ip", "Elective Admission", "2018/19",
-  2018, 58000, "ip", "Daycase Admission", "2018/19",
-  2018, 60000, "ip", "Non-Elective Admission", "2018/19",
-  2018, 1100, "ip", "Birth Episode", "2018/19",
-  2018, 140000, "op", "First Outpatient Attendance", "2018/19",
-  2018, 370000, "op", "Follow-up Outpatient Attendance", "2018/19",
-  2018, 42000, "op", "Outpatient Procedure", "2018/19",
-  2019, 136000, "aae", "A&E Attendance", "2019/20",
-  2019, 9750, "ip", "Elective Admission", "2019/20",
-  2019, 66000, "ip", "Daycase Admission", "2019/20",
-  2019, 65000, "ip", "Non-Elective Admission", "2019/20",
-  2019, 1150, "ip", "Birth Episode", "2019/20",
-  2019, 145000, "op", "First Outpatient Attendance", "2019/20",
-  2019, 380000, "op", "Follow-up Outpatient Attendance", "2019/20",
-  2019, 44500, "op", "Outpatient Procedure", "2019/20",
-  2020, 137000, "aae", "A&E Attendance", "2020/21",
-  2020, 10700, "ip", "Elective Admission", "2020/21",
-  2020, 74000, "ip", "Daycase Admission", "2020/21",
-  2020, 70000, "ip", "Non-Elective Admission", "2020/21",
-  2020, 1200, "ip", "Birth Episode", "2020/21",
-  2020, 150000, "op", "First Outpatient Attendance", "2020/21",
-  2020, 390000, "op", "Follow-up Outpatient Attendance", "2020/21",
-  2020, 47000, "op", "Outpatient Procedure", "2020/21"
+  ~year, ~sitetret, ~value, ~activity_type, ~pod_name, ~fyear,
+  2018, "RXX", 8800, "ip", "Elective Admission", "2018/19",
+  2018, "RXX", 58000, "ip", "Daycase Admission", "2018/19",
+  2018, "RXX", 1100, "ip", "Maternity Admission", "2018/19",
+  2018, "RXX", 60000, "ip", "Non-Elective Admission", "2018/19",
+  2018, "RXX", 140000, "op", "First Outpatient Attendance", "2018/19",
+  2018, "RXX", 370000, "op", "Follow-up Outpatient Attendance", "2018/19",
+  2018, "RXX", 42000, "op", "Outpatient Procedure", "2018/19",
+  2018, "trust", 135000, "aae", "A&E Attendance", "2018/19",
+  2019, "RXX", 9750, "ip", "Elective Admission", "2019/20",
+  2019, "RXX", 66000, "ip", "Daycase Admission", "2019/20",
+  2019, "RXX", 1150, "ip", "Maternity Admission", "2019/20",
+  2019, "RXX", 65000, "ip", "Non-Elective Admission", "2019/20",
+  2019, "RXX", 145000, "op", "First Outpatient Attendance", "2019/20",
+  2019, "RXX", 380000, "op", "Follow-up Outpatient Attendance", "2019/20",
+  2019, "RXX", 44500, "op", "Outpatient Procedure", "2019/20",
+  2019, "trust", 136000, "aae", "A&E Attendance", "2019/20",
+  2020, "RXX", 10700, "ip", "Elective Admission", "2020/21",
+  2020, "RXX", 74000, "ip", "Daycase Admission", "2020/21",
+  2020, "RXX", 1200, "ip", "Maternity Admission", "2020/21",
+  2020, "RXX", 70000, "ip", "Non-Elective Admission", "2020/21",
+  2020, "RXX", 150000, "op", "First Outpatient Attendance", "2020/21",
+  2020, "RXX", 390000, "op", "Follow-up Outpatient Attendance", "2020/21",
+  2020, "RXX", 47000, "op", "Outpatient Procedure", "2020/21",
+  2020, "trust", 137000, "aae", "A&E Attendance", "2020/21"
 ) |>
   dplyr::mutate(dplyr::across(pod_name, factor, levels(pods_expected$pod_name)))
 
@@ -167,7 +167,7 @@ test_that("it creates 3 plots", {
   stub(mod_principal_high_level_server, "mod_principal_high_level_summary_data", NULL)
   stub(mod_principal_high_level_server, "mod_principal_high_level_plot", ggplot2::ggplot())
 
-  shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal()), {
+  shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(), reactiveVal("trust")), {
     expect_called(m, 3)
   })
 })

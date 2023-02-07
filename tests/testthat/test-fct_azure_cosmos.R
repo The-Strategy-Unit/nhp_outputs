@@ -75,43 +75,55 @@ test_that("cosmos_get_model_run_years gets the model run years", {
 
 test_that("cosmos_get_principal_high_level gets the results", {
   m_cont <- mock("container")
-  m <- mock(tibble::tribble(
-    ~pod, ~baseline, ~principal,
-    "aae_1", 1, 2,
-    "aae_2", 2, 4,
-    "ip_1", 5, 6,
-    "ip_2", 7, 8
+  m_qd <- mock(tibble::tribble(
+    ~pod, ~sitetret, ~baseline, ~principal,
+    "aae_1", "a", 1, 2,
+    "aae_2", "a", 2, 4,
+    "ip_1", "a", 5, 6,
+    "ip_2", "a", 7, 8
   ))
-  stub(cosmos_get_principal_high_level, "cosmos_get_container", m_cont)
-  stub(cosmos_get_principal_high_level, "AzureCosmosR::query_documents", m)
+  m_tsa <- mock("data")
 
-  expect_equal(cosmos_get_principal_high_level("id"), tibble::tribble(
-    ~pod, ~baseline, ~principal,
-    "aae", 3, 6,
-    "ip_1", 5, 6,
-    "ip_2", 7, 8
-  ))
+  stub(cosmos_get_principal_high_level, "cosmos_get_container", m_cont)
+  stub(cosmos_get_principal_high_level, "AzureCosmosR::query_documents", m_qd)
+  stub(cosmos_get_principal_high_level, "trust_site_aggregation", m_tsa)
+
+  expect_equal(cosmos_get_principal_high_level("id"), "data")
+
   qry <- paste(
-    "SELECT r.pod, r.baseline, r.principal",
+    "SELECT r.pod, r.sitetret, r.baseline, r.principal",
     "FROM c JOIN r in c.results['default']",
     "WHERE r.measure NOT IN ('beddays', 'procedures', 'tele_attendances')"
   )
-  expect_called(m, 1)
-  expect_args(m, 1, "container", qry, partition_key = "id")
 
   expect_called(m_cont, 1)
   expect_args(m_cont, 1, "results")
+
+  expect_called(m_qd, 1)
+  expect_args(m_qd, 1, "container", qry, partition_key = "id")
+
+  expect_called(m_tsa, 1)
+  expect_args(m_tsa, 1, tibble::tribble(
+    ~pod, ~sitetret, ~baseline, ~principal,
+    "aae", "a", 3, 6,
+    "ip_1", "a", 5, 6,
+    "ip_2", "a", 7, 8
+  ))
 })
 
 test_that("cosmos_get_model_core_activity gets the results", {
   m_cont <- mock("container")
-  m <- mock("data")
+  m_qd <- mock("qd")
+  m_tsa <- mock("data")
+
   stub(cosmos_get_model_core_activity, "cosmos_get_container", m_cont)
-  stub(cosmos_get_model_core_activity, "AzureCosmosR::query_documents", m)
+  stub(cosmos_get_model_core_activity, "AzureCosmosR::query_documents", m_qd)
+  stub(cosmos_get_model_core_activity, "trust_site_aggregation", m_tsa)
 
   qry <- "
     SELECT
       r.pod,
+      r.sitetret,
       r.measure,
       r.baseline,
       r.median,
@@ -122,11 +134,15 @@ test_that("cosmos_get_model_core_activity gets the results", {
   "
 
   expect_equal(cosmos_get_model_core_activity("id"), "data")
-  expect_called(m, 1)
-  expect_args(m, 1, "container", qry, partition_key = "id")
 
   expect_called(m_cont, 1)
   expect_args(m_cont, 1, "results")
+
+  expect_called(m_qd, 1)
+  expect_args(m_qd, 1, "container", qry, partition_key = "id")
+
+  expect_called(m_tsa, 1)
+  expect_args(m_tsa, 1, "qd")
 })
 
 test_that("cosmos_get_variants gets the results", {
@@ -158,29 +174,29 @@ test_that("cosmos_get_variants gets the results", {
 
 test_that("cosmos_get_model_run_distribution gets the results", {
   m_cont <- mock("container")
-  m <- mock(
+  m_qd <- mock(
     tibble::tribble(
       ~baseline, ~model_runs,
       100, c(100, 200, 300)
     )
   )
+  m_tsa <- mock("data")
+
   stub(cosmos_get_model_run_distribution, "cosmos_get_container", m_cont)
-  stub(cosmos_get_model_run_distribution, "AzureCosmosR::query_documents", m)
+  stub(cosmos_get_model_run_distribution, "AzureCosmosR::query_documents", m_qd)
   stub(
     cosmos_get_model_run_distribution,
     "cosmos_get_variants",
     tibble::tibble(model_run = 1:3, variant = c("a", "a", "b"))
   )
 
-  expect_equal(cosmos_get_model_run_distribution("id", "pod", "measure"), tibble::tribble(
-    ~baseline, ~model_run, ~value, ~variant,
-    100, 1, 100, "a",
-    100, 2, 200, "a",
-    100, 3, 300, "b"
-  ))
+  stub(cosmos_get_model_run_distribution, "trust_site_aggregation", m_tsa)
+
+  expect_equal(cosmos_get_model_run_distribution("id", "pod", "measure"), "data")
 
   qry <- glue::glue("
     SELECT
+        r.sitetret,
         r.baseline,
         r.model_runs
     FROM c
@@ -190,11 +206,20 @@ test_that("cosmos_get_model_run_distribution gets the results", {
     AND
         r.measure = 'measure'
   ")
-  expect_called(m, 1)
-  expect_args(m, 1, "container", qry, partition_key = "id")
 
   expect_called(m_cont, 1)
   expect_args(m_cont, 1, "results")
+
+  expect_called(m_qd, 1)
+  expect_args(m_qd, 1, "container", qry, partition_key = "id")
+
+  expect_called(m_tsa, 1)
+  expect_args(m_tsa, 1, tibble::tribble(
+    ~baseline, ~model_run, ~value, ~variant,
+    100, 1, 100, "a",
+    100, 2, 200, "a",
+    100, 3, 300, "b"
+  ))
 })
 
 test_that("cosmos_get_model_run_distribution validates the pod argument", {
@@ -213,13 +238,17 @@ test_that("cosmos_get_model_run_distribution validates the measure argument", {
 
 test_that("cosmos_get_aggregation gets the results", {
   m_cont <- mock("container")
-  m <- mock("data")
+  m_qd <- mock(tibble::tibble(sex = 1))
+  m_tsa <- mock("data")
+
   stub(cosmos_get_aggregation, "cosmos_get_container", m_cont)
-  stub(cosmos_get_aggregation, "AzureCosmosR::query_documents", m)
+  stub(cosmos_get_aggregation, "AzureCosmosR::query_documents", m_qd)
+  stub(cosmos_get_aggregation, "trust_site_aggregation", m_tsa)
 
   expect_equal(cosmos_get_aggregation("id", "pod", "measure", "agg_col"), "data")
   qry <- glue::glue("
     SELECT
+      r.sitetret,
       r.sex,
       r.agg_col,
       r.baseline,
@@ -234,11 +263,15 @@ test_that("cosmos_get_aggregation gets the results", {
     AND
       r.measure = 'measure'
   ")
-  expect_called(m, 1)
-  expect_args(m, 1, "container", qry, partition_key = "id")
 
   expect_called(m_cont, 1)
   expect_args(m_cont, 1, "results")
+
+  expect_called(m_qd, 1)
+  expect_args(m_qd, 1, "container", qry, partition_key = "id")
+
+  expect_called(m_tsa, 1)
+  expect_args(m_tsa, 1, tibble::tibble(sex = "1"))
 })
 
 test_that("cosmos_get_aggregation validates the pod argument", {
@@ -340,6 +373,7 @@ test_that("cosmos_get_bed_occupancy gets the results", {
   qry <- "
     SELECT
         r.measure,
+        r.quarter,
         r.ward_group,
         r.baseline,
         r.principal,
@@ -405,4 +439,29 @@ test_that("cosmos_get_theatres_available gets the results", {
 
   expect_called(m_cont, 1)
   expect_args(m_cont, 1, "results")
+})
+
+test_that("trust_site_aggregation adds in a trust level aggregatrion", {
+  df <- tibble::tribble(
+    ~sitetret, ~x, ~v,
+    "trust", "a", 1,
+    "x", "b", 2,
+    "y", "b", 3,
+    "x", "c", 4,
+    "y", "c", 5
+  )
+
+  expected <- dplyr::bind_rows(
+    tibble::tribble(
+      ~sitetret, ~x, ~v,
+      "trust", "b", 5,
+      "trust", "c", 9
+    ),
+    df
+  ) |>
+    dplyr::relocate(x, .before = sitetret)
+
+  actual <- trust_site_aggregation(df)
+
+  expect_equal(actual, expected)
 })

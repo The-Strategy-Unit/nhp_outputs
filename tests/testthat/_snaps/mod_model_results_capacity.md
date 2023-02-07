@@ -16,6 +16,16 @@
               </div>
             </div>
             <div class="card-body">
+              <div class="form-group shiny-input-container">
+                <label class="control-label" id="id-beds_quarter-label" for="id-beds_quarter">Quarter</label>
+                <div>
+                  <select id="id-beds_quarter"><option value="q1" selected>Q1</option>
+      <option value="q2">Q2</option>
+      <option value="q3">Q3</option>
+      <option value="q4">Q4</option></select>
+                  <script type="application/json" data-for="id-beds_quarter" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                </div>
+              </div>
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
                   <div id="spinner-20413e15413994e90f1d1b2e2a06c063" class="loader">Loading...</div>

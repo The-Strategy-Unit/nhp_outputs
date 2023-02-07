@@ -1,4 +1,3 @@
-
 cosmos_get_container <- function(container) {
   endp <- AzureCosmosR::cosmos_endpoint(
     Sys.getenv("COSMOS_ENDPOINT"),
@@ -29,7 +28,21 @@ cosmos_get_result_sets <- function(app_version) {
     "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c WHERE c.app_version = '{app_version}'"
   )
   AzureCosmosR::query_documents(container, qry) |>
-    dplyr::arrange(dplyr::across(tidyselect::everything()))
+    dplyr::arrange(
+      .data$dataset,
+      .data$scenario,
+      dplyr::desc(.data$create_datetime)
+    )
+}
+
+cosmos_get_trust_sites <- function(id) {
+  container <- cosmos_get_container("results")
+
+  qry <- "SELECT DISTINCT r.sitetret FROM c JOIN r in c.results['default']"
+  sites <- AzureCosmosR::query_documents(container, qry, partition_key = id, as_data_frame = FALSE) |>
+    purrr::map_chr(purrr::pluck, "data", "sitetret")
+
+  unique(c("trust", sort(sites)))
 }
 
 cosmos_get_available_aggregations <- function(id) {
@@ -56,7 +69,7 @@ cosmos_get_principal_high_level <- function(id) {
   container <- cosmos_get_container("results")
 
   qry <- paste(
-    "SELECT r.pod, r.baseline, r.principal",
+    "SELECT r.pod, r.sitetret, r.baseline, r.principal",
     "FROM c JOIN r in c.results['default']",
     "WHERE r.measure NOT IN ('beddays', 'procedures', 'tele_attendances')"
   )
@@ -65,8 +78,9 @@ cosmos_get_principal_high_level <- function(id) {
     dplyr::mutate(
       dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x))
     ) |>
-    dplyr::group_by(.data$pod) |>
-    dplyr::summarise(dplyr::across(where(is.numeric), sum))
+    dplyr::group_by(.data$pod, .data$sitetret) |>
+    dplyr::summarise(dplyr::across(where(is.numeric), sum), .groups = "drop") |>
+    trust_site_aggregation()
 }
 
 cosmos_get_model_core_activity <- function(id) {
@@ -75,6 +89,7 @@ cosmos_get_model_core_activity <- function(id) {
   qry <- "
     SELECT
       r.pod,
+      r.sitetret,
       r.measure,
       r.baseline,
       r.median,
@@ -84,7 +99,8 @@ cosmos_get_model_core_activity <- function(id) {
     JOIN r IN c.results[\"default\"]
   "
 
-  AzureCosmosR::query_documents(container, qry, partition_key = id)
+  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+    trust_site_aggregation()
 }
 
 cosmos_get_variants <- function(id) {
@@ -114,6 +130,7 @@ cosmos_get_model_run_distribution <- function(id, pod, measure) {
 
   qry <- glue::glue("
     SELECT
+        r.sitetret,
         r.baseline,
         r.model_runs
     FROM c
@@ -135,7 +152,8 @@ cosmos_get_model_run_distribution <- function(id, pod, measure) {
       )
     ) |>
     tidyr::unnest("model_runs") |>
-    dplyr::inner_join(variants, by = "model_run")
+    dplyr::inner_join(variants, by = "model_run") |>
+    trust_site_aggregation()
 }
 
 cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
@@ -150,6 +168,7 @@ cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
   agg_type <- glue::glue("sex+{agg_col}") # nolint
   qry <- glue::glue("
     SELECT
+      r.sitetret,
       r.sex,
       r.{agg_col},
       r.baseline,
@@ -164,7 +183,11 @@ cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
     AND
       r.measure = '{measure}'
   ")
-  AzureCosmosR::query_documents(container, qry, partition_key = id)
+  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+    dplyr::mutate(
+      dplyr::across(dplyr::matches("sex"), as.character)
+    ) |>
+    trust_site_aggregation()
 }
 
 cosmos_get_principal_change_factors <- function(id, activity_type) {
@@ -203,6 +226,7 @@ cosmos_get_bed_occupancy <- function(id) {
   qry <- "
     SELECT
         r.measure,
+        r.quarter,
         r.ward_group,
         r.baseline,
         r.principal,
@@ -255,4 +279,20 @@ cosmos_get_theatres_available <- function(id) {
   AzureCosmosR::query_documents(container, qry, partition_key = id) |>
     dplyr::group_nest(.data$measure) |>
     tibble::deframe()
+}
+
+trust_site_aggregation <- function(data) {
+  data |>
+    dplyr::filter(.data$sitetret != "trust") |>
+    dplyr::group_by(
+      dplyr::across(
+        c(where(is.character), dplyr::matches("model_run"), -"sitetret")
+      )
+    ) |>
+    dplyr::summarise(
+      sitetret = "trust",
+      dplyr::across(where(is.numeric), sum, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::bind_rows(data)
 }

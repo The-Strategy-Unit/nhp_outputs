@@ -70,6 +70,7 @@ process_param_file <- function(path,
         tibble::deframe() |>
         as.list()
     ),
+    app_version = Sys.getenv("NHP_APP_VERSION", "0.1"),
     health_status_adjustment = unlist(data$pc_hsa),
     life_expectancy = life_expectancy,
     waiting_list_adjustment = list(
@@ -159,7 +160,41 @@ process_param_file <- function(path,
     change_availability = unname(unlist(data$ru_th_a)),
     change_utilisation = data$ru_th_u |>
       dplyr::rowwise() |>
-      dplyr::transmute(.data$tretspef, interval = list(c(.data$lo, .data$hi))) |>
+      dplyr::transmute(
+        .data$tretspef,
+        data = list(
+          list(
+            baseline = .data$baseline,
+            interval = c(.data$lo, .data$hi)
+          )
+        )
+      ) |>
+      tibble::deframe()
+  )
+
+  params$baseline_adjustment <- list(
+    ip = data$ba_ip |>
+      dplyr::group_by(.data$admigroup, .data$tretspef) |>
+      dplyr::summarise(interval = list(c(.data$ba_lo, .data$ba_hi)), .groups = "drop_last") |>
+      dplyr::group_nest() |>
+      dplyr::mutate(
+        dplyr::across("data", purrr::map, purrr::compose(as.list, tibble::deframe))
+      ) |>
+      tibble::deframe(),
+    op = data$ba_op |>
+      dplyr::group_by(.data$attendtype, .data$tretspef) |>
+      dplyr::summarise(interval = list(c(.data$ba_lo, .data$ba_hi)), .groups = "drop_last") |>
+      dplyr::group_nest() |>
+      dplyr::mutate(
+        dplyr::across("data", purrr::map, purrr::compose(as.list, tibble::deframe))
+      ) |>
+      tibble::deframe(),
+    aae = data$ba_aae |>
+      dplyr::rowwise() |>
+      dplyr::transmute(
+        arrivalmode,
+        interval = list(c(.data$ba_lo, .data$ba_hi))
+      ) |>
       tibble::deframe()
   )
 
@@ -215,6 +250,10 @@ validate_params <- function(params) {
   )
 }
 
+validate_scalar <- function(i, lo, hi) {
+  length(i) == 1 && i >= lo && i <= hi
+}
+
 validate_interval <- function(i, lo, hi) {
   length(i) == 2 && min(i) >= lo && max(i) <= hi && diff(i) >= 0
 }
@@ -267,6 +306,31 @@ validation_functions <- list(
       "life expectancy female values must be between 0 and 5" = all(le$f >= 0 & le$f <= 5),
       "life expectancy male values must be between 0 and 5" = all(le$m >= 0 & le$m <= 5)
     )
+  },
+  baseline_adjustment = function(params) {
+    ba <- params$baseline_adjustment
+    c(
+      ba$ip |>
+        purrr::imap(
+          \(b, t) {
+            b |>
+              purrr::map_lgl(validate_interval, 0, 5) |>
+              purrr::set_names(~ glue::glue("baseline adjustment inpatients {t} {.x} must be a valid interval"))
+          }
+        ),
+      ba$op |>
+        purrr::imap(
+          \(b, t) {
+            b |>
+              purrr::map_lgl(validate_interval, 0, 5) |>
+              purrr::set_names(~ glue::glue("baseline adjustment outpatients {t} {.x} mst be a valid interval"))
+          }
+        ),
+      ba$aae |>
+        purrr::map_lgl(validate_interval, 0, 5) |>
+        purrr::set_names(~ glue::glue("baseline adjustment aae {.x} must be a valid interval"))
+    ) |>
+      purrr::flatten_lgl()
   },
   waiting_list_adjustment = function(params) {
     wle <- params$waiting_list_adjustment
@@ -336,8 +400,13 @@ validation_functions <- list(
   theatres = function(params) {
     c(
       params$theatres$change_utilisation |>
+        purrr::map("interval") |>
         purrr::map_lgl(validate_interval, 0, 5) |>
-        purrr::set_names(~ glue::glue("theatres change_utilisation {.x} must be a valid interval")),
+        purrr::set_names(~ glue::glue("theatres change_utilisation (interval) {.x} must be a valid interval")),
+      params$theatres$change_utilisation |>
+        purrr::map("baseline") |>
+        purrr::map_lgl(validate_scalar, 0, 5) |>
+        purrr::set_names(~ glue::glue("theatres change_utilisation (baseline) {.x} must be a valid value")),
       "theatres change_availability must be a valid interval" =
         validate_interval(params$theatres$change_availability, 0, 5)
     )
