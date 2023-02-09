@@ -27,12 +27,18 @@ cosmos_get_result_sets <- function(app_version) {
   qry <- glue::glue(
     "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c WHERE c.app_version = '{app_version}'"
   )
-  AzureCosmosR::query_documents(container, qry) |>
-    dplyr::arrange(
-      .data$dataset,
-      .data$scenario,
-      dplyr::desc(.data$create_datetime)
-    )
+  res <- AzureCosmosR::query_documents(container, qry)
+
+  if (nrow(res) < 1) {
+    return(NULL)
+  }
+
+  dplyr::arrange(
+    res,
+    .data$dataset,
+    .data$scenario,
+    dplyr::desc(.data$create_datetime)
+  )
 }
 
 cosmos_get_trust_sites <- function(id) {

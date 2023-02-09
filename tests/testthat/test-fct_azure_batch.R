@@ -818,6 +818,7 @@ test_that("batch_submit_model_run calls the other functions (dev)", {
     "COSMOS_DB" = "cosmos db",
     "STORAGE_URL" = "storage",
     "BATCH_LOGS_CONTAINER_SAS" = "sas_token",
+    "NHP_APP_VERSION" = "dev",
     "NHP_DATA_VERSION" = "0.1"
   ))
 
