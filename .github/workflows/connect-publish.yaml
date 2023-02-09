@@ -1,7 +1,7 @@
 name: connect-publish
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
 
 jobs:
   connect-publish:
