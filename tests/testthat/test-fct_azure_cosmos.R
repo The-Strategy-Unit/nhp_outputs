@@ -17,6 +17,18 @@ test_that("cosmos_get_container creates a reference to a container", {
   expect_args(m, 3, "database", "my_container")
 })
 
+test_that("cosmos_get_result_sets handles no data", {
+  m_cont <- mock("container")
+  m <- mock(tibble::tribble())
+  stub(cosmos_get_result_sets, "cosmos_get_container", m_cont)
+  stub(cosmos_get_result_sets, "AzureCosmosR::query_documents", m)
+
+  expect_null(cosmos_get_result_sets("dev"))
+
+  expect_called(m_cont, 1)
+  expect_args(m_cont, 1, "results")
+})
+
 test_that("cosmos_get_result_sets gets the list of model runs", {
   m_cont <- mock("container")
   m <- mock(tibble::tribble(
