@@ -48,9 +48,9 @@ mod_running_models_server <- function(id) {
 
         s <- dplyr::summarise(
           t,
-          complete = sum(.data$state == "completed"),
+          complete = sum(.data$state == "completed" & .data$exitCode == 0),
           running = sum(.data$state == "running"),
-          errors = sum(.data$exitCode != 0),
+          errors = sum(.data$exitCode != 0, na.rm = TRUE),
           n = dplyr::n()
         )
 
