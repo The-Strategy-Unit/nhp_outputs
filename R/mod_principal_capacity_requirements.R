@@ -14,21 +14,14 @@ mod_principal_capacity_requirements_ui <- function(id) {
     shiny::fluidRow(
       bs4Dash::box(
         title = "Beds",
-        width = 4,
+        width = 6,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("beds"))
         )
       ),
       bs4Dash::box(
-        title = "Theatres",
-        width = 4,
-        shinycssloaders::withSpinner(
-          gt::gt_output(ns("theatres"))
-        )
-      ),
-      bs4Dash::box(
         title = "Elective 4 Hour Sessions",
-        width = 4,
+        width = 6,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("fhs"))
         )
@@ -71,16 +64,6 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
     )
 }
 
-mod_principal_capacity_requirements_theatres_table <- function(data) {
-  data |>
-    gt::gt() |>
-    gt::cols_label(
-      baseline = "Baseline",
-      principal = "Principal"
-    ) |>
-    gt_theme()
-}
-
 mod_principal_capacity_requirements_fhs_table <- function(data) {
   data |>
     gt::gt(rowname_col = "tretspef") |>
@@ -120,19 +103,9 @@ mod_principal_capacity_requirements_server <- function(id, selected_model_run_id
         dplyr::select("tretspef", "baseline", "principal")
     })
 
-    theatres_available <- shiny::reactive({
-      theatres_data()$theatres |>
-        dplyr::select("baseline", "principal")
-    })
-
     output$beds <- gt::render_gt({
       beds_data() |>
         mod_principal_capacity_requirements_beds_table()
-    })
-
-    output$theatres <- gt::render_gt({
-      theatres_available() |>
-        mod_principal_capacity_requirements_theatres_table()
     })
 
     output$fhs <- gt::render_gt({

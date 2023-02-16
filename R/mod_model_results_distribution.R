@@ -31,6 +31,7 @@ mod_model_results_distibution_density_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
 
   data |>
+    require_rows() |>
     ggplot2::ggplot(ggplot2::aes(.data$value)) +
     ggplot2::geom_density(fill = "#f9bf07", colour = "#2c2825", alpha = 0.5) +
     ggplot2::geom_vline(xintercept = b) +
@@ -45,6 +46,7 @@ mod_model_results_distibution_density_plot <- function(data, show_origin) {
 mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   data |>
+    require_rows() |>
     ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(yintercept = b) +
@@ -86,6 +88,7 @@ mod_model_results_distribution_server <- function(id, selected_model_run_id, sel
 
     site_data <- shiny::reactive({
       selected_data() |>
+        require_rows() |>
         dplyr::filter(.data$sitetret == selected_site()) |>
         dplyr::select(-"sitetret")
     })

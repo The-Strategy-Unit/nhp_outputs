@@ -85,6 +85,7 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, selected_si
       )
 
       cosmos_get_aggregation(id, pod, measure, agg_col) |>
+        shiny::req() |>
         dplyr::transmute(
           .data$sitetret,
           .data$sex,
@@ -99,7 +100,8 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, selected_si
 
     site_data <- shiny::reactive({
       selected_data() |>
-        dplyr::filter(.data$sitetret == selected_site()) |>
+        shiny::req() |>
+        dplyr::filter(.data$sitetret == selected_site(), .data$baseline > 0) |>
         dplyr::select(-"sitetret")
     })
 

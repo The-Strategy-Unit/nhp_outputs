@@ -147,7 +147,13 @@ cosmos_get_model_run_distribution <- function(id, pod, measure) {
         r.measure = '{measure}'
   ")
 
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+  r <- AzureCosmosR::query_documents(container, qry, partition_key = id)
+
+  if (nrow(r) == 0) {
+    return(NULL)
+  }
+
+  r |>
     dplyr::as_tibble() |>
     dplyr::mutate(
       dplyr::across(
@@ -189,7 +195,13 @@ cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
     AND
       r.measure = '{measure}'
   ")
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+  r <- AzureCosmosR::query_documents(container, qry, partition_key = id)
+
+  if (nrow(r) == 0) {
+    return(NULL)
+  }
+
+  r |>
     dplyr::mutate(
       dplyr::across(dplyr::matches("sex"), as.character)
     ) |>

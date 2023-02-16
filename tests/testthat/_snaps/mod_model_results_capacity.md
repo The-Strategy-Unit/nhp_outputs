@@ -39,27 +39,6 @@
         <div class="col-sm-6">
           <div class="card bs4Dash">
             <div class="card-header">
-              <h3 class="card-title">Theatres</h3>
-              <div class="card-tools float-right">
-                <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
-                  <i class="fas fa-minus" role="presentation" aria-label="minus icon"></i>
-                </button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="shiny-spinner-output-container shiny-spinner-hideui ">
-                <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-183f39a00704d4f1ff4c4040874b21c5" class="loader">Loading...</div>
-                </div>
-                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-theatres" style="width:100%;height:800px;"></div>
-              </div>
-            </div>
-          </div>
-          <script type="application/json">{"title":"Theatres","solidHeader":true,"width":6,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
-        </div>
-        <div class="col-sm-6">
-          <div class="card bs4Dash">
-            <div class="card-header">
               <h3 class="card-title">Elective 4 hour sessions</h3>
               <div class="card-tools float-right">
                 <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">

@@ -106,6 +106,7 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
 mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour, title, x_axis_label) {
   data |>
     dplyr::filter(.data$change_factor == .env$change_factor) |>
+    require_rows() |>
     ggplot2::ggplot(ggplot2::aes(.data$value, .data$strategy)) +
     ggplot2::geom_col(fill = "#f9bf07") +
     ggplot2::scale_x_continuous(labels = scales::comma) +
@@ -142,7 +143,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
             "change_factor",
             forcats::fct_relevel,
             "baseline",
-            "population_factors",
+            "demographic_adjustment",
             "health_status_adjustment"
           )
         )
