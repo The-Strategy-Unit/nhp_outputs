@@ -23,18 +23,18 @@ mod_principal_summary_data <- function(id) {
     dplyr::bind_rows(
       cosmos_get_bed_occupancy(id) |>
         dplyr::filter(.data$model_run == 1) |>
+        dplyr::group_by(.data$quarter) |>
         dplyr::summarise(
-          pod_name = "Beds Available",
           dplyr::across(c("baseline", "principal"), sum)
-        ),
-      t$theatres |>
-        dplyr::transmute(
-          pod_name = "Theatres Available",
-          .data$baseline,
-          .data$principal
+        ) |>
+        dplyr::summarise(
+          dplyr::across(c("baseline", "principal"), mean),
+          sitetret = "trust",
+          pod_name = "Beds Available"
         ),
       t$four_hour_sessions |>
         dplyr::summarise(
+          sitetret = "trust",
           pod_name = "4 Hour Elective Theatre Sessions",
           dplyr::across(c("baseline", "principal"), sum)
         )
