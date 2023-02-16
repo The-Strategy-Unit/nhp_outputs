@@ -23,18 +23,18 @@ change_factors_expected <- list(
     "arrivals", "health_status_adjustment", -1000, "-",
     "arrivals", "left_before_seen", -500, "-",
     "arrivals", "low_cost_discharged", -6000, "-",
-    "arrivals", "population_factors", 14000, "-"
+    "arrivals", "demographic_adjustment", 14000, "-"
   ),
   ip = tibble::tribble(
     ~measure, ~change_factor, ~value, ~strategy,
     "admissions", "baseline", 100000, "-",
-    "admissions", "population_factors", 15000, "-",
+    "admissions", "demographic_adjustment", 15000, "-",
     "admissions", "health_status_adjustment", -1000, "-",
     "admissions", "admission_avoidance", -100, "alcohol_wholly_attributable",
     "admissions", "admission_avoidance", -250, "ambulatory_care_conditions_acute",
     "admissions", "admission_avoidance", -300, "ambulatory_care_conditions_chronic",
     "beddays", "baseline", 200000, "-",
-    "beddays", "population_factors", 30000, "-",
+    "beddays", "demographic_adjustment", 30000, "-",
     "beddays", "health_status_adjustment", -2000, "-",
     "beddays", "admission_avoidance", -200, "alcohol_wholly_attributable",
     "beddays", "admission_avoidance", -500, "ambulatory_care_conditions_acute",
@@ -48,7 +48,7 @@ change_factors_expected <- list(
       "change_factor",
       forcats::fct_relevel,
       "baseline",
-      "population_factors",
+      "demographic_adjustment",
       "health_status_adjustment"
     )
   ))
@@ -57,8 +57,8 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
   ~change_factor, ~colour, ~name, ~value,
   "baseline", "#f9bf07", "value", 100000,
   "baseline", NA, "hidden", 0,
-  "population_factors", "#f9bf07", "value", 15000,
-  "population_factors", NA, "hidden", 100000,
+  "demographic_adjustment", "#f9bf07", "value", 15000,
+  "demographic_adjustment", NA, "hidden", 100000,
   "admission_avoidance", "#2c2825", "value", 650,
   "admission_avoidance", NA, "hidden", 114350,
   "health_status_adjustment", "#2c2825", "value", 1000,
@@ -70,7 +70,7 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
     dplyr::across(
       "change_factor",
       forcats::fct_relevel,
-      "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors", "baseline"
+      "Estimate", "health_status_adjustment", "admission_avoidance", "demographic_adjustment", "baseline"
     ),
     dplyr::across(
       "name", forcats::fct_relevel, c("hidden", "value")
@@ -79,8 +79,8 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
 
 change_factors_summarised_expected_exc_baseline <- tibble::tribble(
   ~change_factor, ~colour, ~name, ~value,
-  "population_factors", "#f9bf07", "value", 15000,
-  "population_factors", NA, "hidden", 0,
+  "demographic_adjustment", "#f9bf07", "value", 15000,
+  "demographic_adjustment", NA, "hidden", 0,
   "admission_avoidance", "#2c2825", "value", 650,
   "admission_avoidance", NA, "hidden", 14350,
   "health_status_adjustment", "#2c2825", "value", 1000,
@@ -92,7 +92,7 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
     dplyr::across(
       "change_factor",
       forcats::fct_relevel,
-      "Estimate", "health_status_adjustment", "admission_avoidance", "population_factors"
+      "Estimate", "health_status_adjustment", "admission_avoidance", "demographic_adjustment"
     ),
     dplyr::across(
       "name", forcats::fct_relevel, c("hidden", "value")
