@@ -103,11 +103,6 @@ test_that("beds_available_plot combines the plots into a plotly object", {
   expect_args(m, 6, "subplot", legend = list(orientation = "h"))
 })
 
-test_that("theatres_available_plot returns a ggplot object", {
-  p <- mod_model_results_capacity_theatres_available_plot(theatres_expected)
-  expect_s3_class(p, "ggplot")
-})
-
 test_that("fhs_available_plot returns a ggplot object", {
   data <- fhs_expected |>
     dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
@@ -169,14 +164,12 @@ test_that("it sets the reactives up correctly", {
     selected_model_run_id("id")
 
     expect_equal(four_hour_sessions(), fhs_data)
-    expect_equal(theatres_available(), theatres_expected)
   })
 })
 
 test_that("it renders the plots", {
   m <- mock()
   stub(mod_model_results_capacity_server, "mod_model_results_capacity_beds_available_plot", "beds")
-  stub(mod_model_results_capacity_server, "mod_model_results_capacity_theatres_available_plot", "theatres")
   stub(mod_model_results_capacity_server, "mod_model_results_capacity_fhs_available_plot", "fhs")
   stub(mod_model_results_capacity_server, "plotly::ggplotly", \(x, ...) x)
   stub(mod_model_results_capacity_server, "plotly::layout", \(x, ...) x)
@@ -187,9 +180,8 @@ test_that("it renders the plots", {
   shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
     selected_model_run_id("id")
 
-    expect_called(m, 3)
+    expect_called(m, 2)
     expect_args(m, 1, "beds")
-    expect_args(m, 2, "theatres")
-    expect_args(m, 3, "fhs")
+    expect_args(m, 2, "fhs")
   })
 })

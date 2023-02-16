@@ -25,13 +25,6 @@ mod_model_results_capacity_ui <- function(id) {
         )
       ),
       bs4Dash::box(
-        title = "Theatres",
-        width = 6,
-        shinycssloaders::withSpinner(
-          plotly::plotlyOutput(ns("theatres"), height = "800px"),
-        )
-      ),
-      bs4Dash::box(
         title = "Elective 4 hour sessions",
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("fhs"), height = "800px"),
@@ -89,18 +82,6 @@ mod_model_results_capacity_beds_available_plot <- function(data) {
   plotly::layout(sp, legend = list(orientation = "h"))
 }
 
-mod_model_results_capacity_theatres_available_plot <- function(data) {
-  b <- data |>
-    dplyr::filter(.data$model_run == 1) |>
-    dplyr::pull(.data$baseline)
-
-  data |>
-    ggplot2::ggplot(ggplot2::aes(.data$value)) +
-    ggplot2::geom_bar(fill = "#f9bf07", colour = "#2c2825") +
-    ggplot2::geom_vline(xintercept = b) +
-    ggplot2::labs(x = "Number of theatres available", y = "Frequency")
-}
-
 mod_model_results_capacity_fhs_available_plot <- function(data) {
   data |>
     dplyr::group_by(.data$model_run, .data$variant) |>
@@ -149,27 +130,10 @@ mod_model_results_capacity_server <- function(id, selected_model_run_id) {
         dplyr::inner_join(variants(), by = "model_run")
     })
 
-    theatres_available <- shiny::reactive({
-      id <- selected_model_run_id() # nolint
-
-      theatres_data()$theatres |>
-        dplyr::select(-"tretspef") |>
-        dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
-        tidyr::unnest("model_runs") |>
-        dplyr::inner_join(variants(), by = "model_run")
-    })
-
     output$beds <- plotly::renderPlotly({
       beds_data() |>
         dplyr::filter(.data$quarter == input$beds_quarter) |>
         mod_model_results_capacity_beds_available_plot()
-    })
-
-    output$theatres <- plotly::renderPlotly({
-      theatres_available() |>
-        mod_model_results_capacity_theatres_available_plot() |>
-        plotly::ggplotly() |>
-        plotly::layout(legend = list(orientation = "h"))
     })
 
     output$fhs <- plotly::renderPlotly({
