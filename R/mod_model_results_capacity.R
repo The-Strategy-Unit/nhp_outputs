@@ -26,6 +26,7 @@ mod_model_results_capacity_ui <- function(id) {
       ),
       bs4Dash::box(
         title = "Elective 4 hour sessions",
+        width = 12,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("fhs"), height = "800px"),
         )

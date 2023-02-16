@@ -36,7 +36,7 @@
           </div>
           <script type="application/json">{"title":"Beds","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-12">
           <div class="card bs4Dash">
             <div class="card-header">
               <h3 class="card-title">Elective 4 hour sessions</h3>
@@ -55,7 +55,7 @@
               </div>
             </div>
           </div>
-          <script type="application/json">{"title":"Elective 4 hour sessions","solidHeader":true,"width":6,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"title":"Elective 4 hour sessions","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
       </div>
 
