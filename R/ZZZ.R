@@ -19,3 +19,9 @@ utils::globalVariables(c(
 fyear_str <- function(y) {
   glue::glue("{y}/{stringr::str_pad((y + 1) %% 100, 2, pad = '0')}")
 }
+
+require_rows <- function(x) {
+  shiny::req(x)
+  shiny::req(nrow(x) > 0)
+  x
+}
