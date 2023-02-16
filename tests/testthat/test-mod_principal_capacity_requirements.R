@@ -62,22 +62,12 @@ test_that("beds_table returns a gt", {
   expect_snapshot(gt::as_raw_html(table))
 })
 
-test_that("theatres_table returns a gt", {
-  set.seed(1) # ensure gt id always regenerated identically
-
-  table <- theatres_expected |>
-    mod_principal_capacity_requirements_theatres_table()
-
-  expect_s3_class(table, "gt_tbl")
-  expect_snapshot(gt::as_raw_html(table))
-})
-
 test_that("fhs_table returns a gt", {
   set.seed(1) # ensure gt id always regenerated identically
 
   table <- fhs_expected |>
     dplyr::select("baseline", "principal") |>
-    mod_principal_capacity_requirements_theatres_table()
+    mod_principal_capacity_requirements_fhs_table()
 
   expect_s3_class(table, "gt_tbl")
   expect_snapshot(gt::as_raw_html(table))
@@ -124,7 +114,6 @@ test_that("it sets the reactives up correctly", {
     selected_model_run_id("id")
 
     expect_equal(four_hour_sessions(), fhs_expected)
-    expect_equal(theatres_available(), theatres_expected)
   })
 })
 
@@ -135,7 +124,6 @@ test_that("it renders the tables", {
   stub(mod_principal_capacity_requirements_server, "cosmos_get_bed_occupancy", beds_expected)
   stub(mod_principal_capacity_requirements_server, "cosmos_get_theatres_available", theatres_data_expected)
   stub(mod_principal_capacity_requirements_server, "mod_principal_capacity_requirements_beds_table", m)
-  stub(mod_principal_capacity_requirements_server, "mod_principal_capacity_requirements_theatres_table", m)
   stub(mod_principal_capacity_requirements_server, "mod_principal_capacity_requirements_fhs_table", m)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
@@ -143,9 +131,8 @@ test_that("it renders the tables", {
 
     session$private$flush()
 
-    expect_called(m, 3)
+    expect_called(m, 2)
     expect_args(m, 1, beds_data_filtered_expected)
-    expect_args(m, 2, theatres_expected)
-    expect_args(m, 3, fhs_expected)
+    expect_args(m, 2, fhs_expected)
   })
 })
