@@ -94,7 +94,7 @@ mod_principal_high_level_table <- function(data) {
     gt::cols_label(
       "pod_name" = ""
     ) |>
-    gt::fmt_integer(tidyselect::matches("\\d{4}/\\d{2}")) |>
+    gt::fmt_integer(c("Baseline", tidyselect::matches("\\d{4}/\\d{2}"))) |>
     gt_theme()
 }
 
