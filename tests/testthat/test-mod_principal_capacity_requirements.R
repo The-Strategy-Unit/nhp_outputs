@@ -53,9 +53,12 @@ test_that("ui is created correctly", {
 test_that("beds_table returns a gt", {
   set.seed(1) # ensure gt id always regenerated identically
 
-  table <- beds_expected |>
+  data <- beds_expected |>
     dplyr::filter(model_run == 1) |>
-    dplyr::select("quarter", "ward_group", "baseline", "principal") |>
+    dplyr::select("quarter", "ward_group", "baseline", "principal")
+
+  table <- c("q1", "q2", "q3", "q4") |>
+    purrr::map_dfr(\(.x) dplyr::mutate(data, quarter = .x)) |>
     mod_principal_capacity_requirements_beds_table()
 
   expect_s3_class(table, "gt_tbl")
