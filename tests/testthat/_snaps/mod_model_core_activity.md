@@ -4,12 +4,26 @@
       mod_model_core_activity_ui("id")
     Output
       <h1>Distribution of projections: activity distribution summary</h1>
-      <div class="shiny-spinner-output-container shiny-spinner-hideui ">
-        <div class="load-container shiny-spinner-hidden load1">
-          <div id="spinner-d0e07fcfb58e3ea62a6f26ce36ddad34" class="loader">Loading...</div>
+      <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+          <div class="card bs4Dash">
+            <div class="card-header">
+              <h3 class="card-title">Summary</h3>
+            </div>
+            <div class="card-body">
+              <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                <div class="load-container shiny-spinner-hidden load1">
+                  <div id="spinner-d0e07fcfb58e3ea62a6f26ce36ddad34" class="loader">Loading...</div>
+                </div>
+                <div style="height:400px" class="shiny-spinner-placeholder"></div>
+                <div id="id-core_activity" class="shiny-html-output"></div>
+              </div>
+            </div>
+          </div>
+          <script type="application/json">{"title":"Summary","solidHeader":true,"width":6,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
-        <div style="height:400px" class="shiny-spinner-placeholder"></div>
-        <div id="id-core_activity" class="shiny-html-output"></div>
+        <div class="col-sm-3"></div>
       </div>
 
 # mod_model_core_activity_server_table returns a gt

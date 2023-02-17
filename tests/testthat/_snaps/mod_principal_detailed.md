@@ -4,50 +4,70 @@
       mod_principal_detailed_ui("id")
     Output
       <h1>Principal projection: activity in detail</h1>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="form-group shiny-input-container">
-            <label class="control-label" id="id-measure_selection-activity_type-label" for="id-measure_selection-activity_type">Activity Type</label>
-            <div>
-              <select id="id-measure_selection-activity_type"></select>
-              <script type="application/json" data-for="id-measure_selection-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+      <div class="col-sm-12">
+        <div class="card bs4Dash">
+          <div class="card-header border-0">
+            <h3 class="card-title"></h3>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group shiny-input-container">
+                  <label class="control-label" id="id-measure_selection-activity_type-label" for="id-measure_selection-activity_type">Activity Type</label>
+                  <div>
+                    <select id="id-measure_selection-activity_type"></select>
+                    <script type="application/json" data-for="id-measure_selection-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group shiny-input-container">
+                  <label class="control-label" id="id-measure_selection-pod-label" for="id-measure_selection-pod">Point of Delivery</label>
+                  <div>
+                    <select id="id-measure_selection-pod"></select>
+                    <script type="application/json" data-for="id-measure_selection-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group shiny-input-container">
+                  <label class="control-label" id="id-measure_selection-measure-label" for="id-measure_selection-measure">Measure</label>
+                  <div>
+                    <select id="id-measure_selection-measure"></select>
+                    <script type="application/json" data-for="id-measure_selection-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group shiny-input-container">
+                  <label class="control-label" id="id-aggregation-label" for="id-aggregation">Show Results By</label>
+                  <div>
+                    <select id="id-aggregation"></select>
+                    <script type="application/json" data-for="id-aggregation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-sm-3">
-          <div class="form-group shiny-input-container">
-            <label class="control-label" id="id-measure_selection-pod-label" for="id-measure_selection-pod">Point of Delivery</label>
-            <div>
-              <select id="id-measure_selection-pod"></select>
-              <script type="application/json" data-for="id-measure_selection-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group shiny-input-container">
-            <label class="control-label" id="id-measure_selection-measure-label" for="id-measure_selection-measure">Measure</label>
-            <div>
-              <select id="id-measure_selection-measure"></select>
-              <script type="application/json" data-for="id-measure_selection-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-3">
-          <div class="form-group shiny-input-container">
-            <label class="control-label" id="id-aggregation-label" for="id-aggregation">Show Results By</label>
-            <div>
-              <select id="id-aggregation"></select>
-              <script type="application/json" data-for="id-aggregation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-            </div>
-          </div>
-        </div>
+        <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
-      <div class="shiny-spinner-output-container shiny-spinner-hideui ">
-        <div class="load-container shiny-spinner-hidden load1">
-          <div id="spinner-a633f9f77c95364214bbb43adb765056" class="loader">Loading...</div>
+      <div class="col-sm-12">
+        <div class="card bs4Dash">
+          <div class="card-header border-0">
+            <h3 class="card-title"></h3>
+          </div>
+          <div class="card-body">
+            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+              <div class="load-container shiny-spinner-hidden load1">
+                <div id="spinner-a633f9f77c95364214bbb43adb765056" class="loader">Loading...</div>
+              </div>
+              <div style="height:400px" class="shiny-spinner-placeholder"></div>
+              <div id="id-results" class="shiny-html-output"></div>
+            </div>
+          </div>
         </div>
-        <div style="height:400px" class="shiny-spinner-placeholder"></div>
-        <div id="id-results" class="shiny-html-output"></div>
+        <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 
 # table returns a gt

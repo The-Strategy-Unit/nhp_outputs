@@ -8,14 +8,24 @@
 #'
 #' @importFrom shiny NS tagList
 mod_model_core_activity_ui <- function(id) {
-  ns <- NS(id)
-  tagList(
+  ns <- shiny::NS(id)
+  shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution summary"),
-    shinycssloaders::withSpinner(
-      gt::gt_output(ns("core_activity"))
+    shiny::fluidRow(
+      col_3(),
+      bs4Dash::box(
+        title = "Summary",
+        collapsible = FALSE,
+        width = 6,
+        shinycssloaders::withSpinner(
+          gt::gt_output(ns("core_activity"))
+        )
+      ),
+      col_3()
     )
   )
 }
+
 mod_model_core_activity_server_table <- function(data) {
   data |>
     dplyr::select(

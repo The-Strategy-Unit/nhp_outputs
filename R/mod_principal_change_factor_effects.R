@@ -11,24 +11,33 @@ mod_principal_change_factor_effects_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Principal projection: impact of changes"),
-    shiny::fluidRow(
-      col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-      col_4(shiny::selectInput(ns("measure"), "Measure", NULL)),
-      shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE)
+    bs4Dash::box(
+      headerBorder = FALSE,
+      collapsible = FALSE,
+      width = 12,
+      shiny::fluidRow(
+        col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
+        col_4(shiny::selectInput(ns("measure"), "Measure", NULL)),
+        shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE)
+      )
     ),
-    shinycssloaders::withSpinner(
-      plotly::plotlyOutput(ns("change_factors"), height = "600px")
+    bs4Dash::box(
+      title = "Impact of Changes",
+      collapsible = FALSE,
+      width = 12,
+      shinycssloaders::withSpinner(
+        plotly::plotlyOutput(ns("change_factors"), height = "600px")
+      )
     ),
-    shinyjs::hidden(
-      shiny::tags$div(
-        id = ns("individual_change_factors"),
-        shiny::h2("Individual Change Factors"),
-        shiny::selectInput(ns("sort_type"), "Sort By", c("alphabetical", "descending value")),
-        shinycssloaders::withSpinner(
-          shiny::fluidRow(
-            col_6(plotly::plotlyOutput(ns("admission_avoidance"), height = "600px")),
-            col_6(plotly::plotlyOutput(ns("los_reduction"), height = "600px"))
-          )
+    bs4Dash::box(
+      title = "Individual Change Factors",
+      collapsible = FALSE,
+      width = 12,
+      shiny::selectInput(ns("sort_type"), "Sort By", c("alphabetical", "descending value")),
+      shinycssloaders::withSpinner(
+        shiny::fluidRow(
+          col_6(plotly::plotlyOutput(ns("activity_avoidance"), height = "600px")),
+          col_6(plotly::plotlyOutput(ns("efficiencies"), height = "600px"))
         )
       )
     )
@@ -178,12 +187,6 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       }
     })
 
-    shiny::observeEvent(individual_change_factors(), {
-      d <- individual_change_factors()
-
-      shinyjs::toggle("individual_change_factors", condition = nrow(d) > 0)
-    })
-
     output$change_factors <- plotly::renderPlotly({
       measure <- shiny::req(input$measure)
 
@@ -195,25 +198,25 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
         plotly::layout(showlegend = FALSE)
     })
 
-    output$admission_avoidance <- plotly::renderPlotly({
+    output$activity_avoidance <- plotly::renderPlotly({
       mod_principal_change_factor_effects_ind_plot(
         individual_change_factors(),
-        "admission_avoidance",
+        "activity_avoidance",
         "#f9bf07",
-        "Admission Avoidance",
-        "Admissions"
+        "Activity Avoidance",
+        snakecase::to_title_case(input$measure)
       ) |>
         plotly::ggplotly() |>
         plotly::layout(showlegend = FALSE)
     })
 
-    output$los_reduction <- plotly::renderPlotly({
+    output$efficiencies <- plotly::renderPlotly({
       mod_principal_change_factor_effects_ind_plot(
         individual_change_factors(),
-        "los_reduction",
+        "efficiencies",
         "#ec6555",
-        "Length of Stay Reduction",
-        "Bed Days"
+        "Efficiencies",
+        snakecase::to_title_case(input$measure)
       ) |>
         plotly::ggplotly() |>
         plotly::layout(showlegend = FALSE)
