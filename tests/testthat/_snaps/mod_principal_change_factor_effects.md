@@ -50,14 +50,14 @@
         </div>
         <div class="shiny-spinner-output-container shiny-spinner-hideui ">
           <div class="load-container shiny-spinner-hidden load1">
-            <div id="spinner-53d8ac16818d391f4c50de11cab26acc" class="loader">Loading...</div>
+            <div id="spinner-7d93696a913f3a2b952133a57ee10076" class="loader">Loading...</div>
           </div>
           <div class="row">
             <div class="col-sm-6">
-              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-admission_avoidance" style="width:100%;height:600px;"></div>
+              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>
             </div>
             <div class="col-sm-6">
-              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-los_reduction" style="width:100%;height:600px;"></div>
+              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-efficiencies" style="width:100%;height:600px;"></div>
             </div>
           </div>
         </div>

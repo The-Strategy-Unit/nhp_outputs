@@ -26,8 +26,8 @@ mod_principal_change_factor_effects_ui <- function(id) {
         shiny::selectInput(ns("sort_type"), "Sort By", c("alphabetical", "descending value")),
         shinycssloaders::withSpinner(
           shiny::fluidRow(
-            col_6(plotly::plotlyOutput(ns("admission_avoidance"), height = "600px")),
-            col_6(plotly::plotlyOutput(ns("los_reduction"), height = "600px"))
+            col_6(plotly::plotlyOutput(ns("activity_avoidance"), height = "600px")),
+            col_6(plotly::plotlyOutput(ns("efficiencies"), height = "600px"))
           )
         )
       )
@@ -195,25 +195,25 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
         plotly::layout(showlegend = FALSE)
     })
 
-    output$admission_avoidance <- plotly::renderPlotly({
+    output$activity_avoidance <- plotly::renderPlotly({
       mod_principal_change_factor_effects_ind_plot(
         individual_change_factors(),
-        "admission_avoidance",
+        "activity_avoidance",
         "#f9bf07",
-        "Admission Avoidance",
-        "Admissions"
+        "Activity Avoidance",
+        snakecase::to_title_case(input$measure)
       ) |>
         plotly::ggplotly() |>
         plotly::layout(showlegend = FALSE)
     })
 
-    output$los_reduction <- plotly::renderPlotly({
+    output$efficiencies <- plotly::renderPlotly({
       mod_principal_change_factor_effects_ind_plot(
         individual_change_factors(),
-        "los_reduction",
+        "efficiencies",
         "#ec6555",
-        "Length of Stay Reduction",
-        "Bed Days"
+        "Efficiencies",
+        snakecase::to_title_case(input$measure)
       ) |>
         plotly::ggplotly() |>
         plotly::layout(showlegend = FALSE)

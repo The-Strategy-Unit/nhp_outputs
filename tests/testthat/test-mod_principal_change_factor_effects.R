@@ -30,15 +30,15 @@ change_factors_expected <- list(
     "admissions", "baseline", 100000, "-",
     "admissions", "demographic_adjustment", 15000, "-",
     "admissions", "health_status_adjustment", -1000, "-",
-    "admissions", "admission_avoidance", -100, "alcohol_wholly_attributable",
-    "admissions", "admission_avoidance", -250, "ambulatory_care_conditions_acute",
-    "admissions", "admission_avoidance", -300, "ambulatory_care_conditions_chronic",
+    "admissions", "activity_avoidance", -100, "alcohol_wholly_attributable",
+    "admissions", "activity_avoidance", -250, "ambulatory_care_conditions_acute",
+    "admissions", "activity_avoidance", -300, "ambulatory_care_conditions_chronic",
     "beddays", "baseline", 200000, "-",
     "beddays", "demographic_adjustment", 30000, "-",
     "beddays", "health_status_adjustment", -2000, "-",
-    "beddays", "admission_avoidance", -200, "alcohol_wholly_attributable",
-    "beddays", "admission_avoidance", -500, "ambulatory_care_conditions_acute",
-    "beddays", "admission_avoidance", -600, "ambulatory_care_conditions_chronic"
+    "beddays", "activity_avoidance", -200, "alcohol_wholly_attributable",
+    "beddays", "activity_avoidance", -500, "ambulatory_care_conditions_acute",
+    "beddays", "activity_avoidance", -600, "ambulatory_care_conditions_chronic"
   )
 ) |>
   purrr::map(~ dplyr::mutate(
@@ -59,8 +59,8 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
   "baseline", NA, "hidden", 0,
   "demographic_adjustment", "#f9bf07", "value", 15000,
   "demographic_adjustment", NA, "hidden", 100000,
-  "admission_avoidance", "#2c2825", "value", 650,
-  "admission_avoidance", NA, "hidden", 114350,
+  "activity_avoidance", "#2c2825", "value", 650,
+  "activity_avoidance", NA, "hidden", 114350,
   "health_status_adjustment", "#2c2825", "value", 1000,
   "health_status_adjustment", NA, "hidden", 113350,
   "Estimate", "#ec6555", "value", 113350,
@@ -70,7 +70,7 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
     dplyr::across(
       "change_factor",
       forcats::fct_relevel,
-      "Estimate", "health_status_adjustment", "admission_avoidance", "demographic_adjustment", "baseline"
+      "Estimate", "health_status_adjustment", "activity_avoidance", "demographic_adjustment", "baseline"
     ),
     dplyr::across(
       "name", forcats::fct_relevel, c("hidden", "value")
@@ -81,8 +81,8 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
   ~change_factor, ~colour, ~name, ~value,
   "demographic_adjustment", "#f9bf07", "value", 15000,
   "demographic_adjustment", NA, "hidden", 0,
-  "admission_avoidance", "#2c2825", "value", 650,
-  "admission_avoidance", NA, "hidden", 14350,
+  "activity_avoidance", "#2c2825", "value", 650,
+  "activity_avoidance", NA, "hidden", 14350,
   "health_status_adjustment", "#2c2825", "value", 1000,
   "health_status_adjustment", NA, "hidden", 13350,
   "Estimate", "#ec6555", "value", 13350,
@@ -92,7 +92,7 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
     dplyr::across(
       "change_factor",
       forcats::fct_relevel,
-      "Estimate", "health_status_adjustment", "admission_avoidance", "demographic_adjustment"
+      "Estimate", "health_status_adjustment", "activity_avoidance", "demographic_adjustment"
     ),
     dplyr::across(
       "name", forcats::fct_relevel, c("hidden", "value")
@@ -131,9 +131,9 @@ test_that("mod_principal_change_factor_effects_cf_plot returns a ggplot", {
 test_that("mod_principal_change_factor_effects_ind_plot returns a ggplot", {
   p <- mod_principal_change_factor_effects_ind_plot(
     change_factors_expected$ip,
-    "admission_avoidance",
+    "activity_avoidance",
     "#f9bf07",
-    "Admission Avoidance",
+    "Activity Avoidance",
     "Admissions"
   )
   expect_s3_class(p, "ggplot")
@@ -288,7 +288,7 @@ test_that("it renders the plots", {
 
     expect_called(m, 3)
     expect_args(m, 1, "cfd")
-    expect_equal(mock_args(m)[[2]][-1], list("admission_avoidance", "#f9bf07", "Admission Avoidance", "Admissions"))
-    expect_equal(mock_args(m)[[3]][-1], list("los_reduction", "#ec6555", "Length of Stay Reduction", "Bed Days"))
+    expect_equal(mock_args(m)[[2]][-1], list("activity_avoidance", "#f9bf07", "Activity Avoidance", "Admissions"))
+    expect_equal(mock_args(m)[[3]][-1], list("efficiencies", "#ec6555", "Efficiencies", "Admissions"))
   })
 })
