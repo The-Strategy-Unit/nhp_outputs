@@ -8,15 +8,25 @@
 #'
 #' @importFrom shiny NS tagList
 mod_model_results_distribution_ui <- function(id) {
-  ns <- NS(id)
-  tagList(
+  ns <- shiny::NS(id)
+  shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution"),
-    shiny::fluidRow(
-      mod_measure_selection_ui(ns("measure_selection"), 4),
+    bs4Dash::box(
+      collapsible = FALSE,
+      headerBorder = FALSE,
+      width = 12,
+      shiny::fluidRow(
+        mod_measure_selection_ui(ns("measure_selection"), 4),
+      )
     ),
-    shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?"),
-    shinycssloaders::withSpinner(
-      plotly::plotlyOutput(ns("distribution"), height = "800px")
+    bs4Dash::box(
+      collapsible = FALSE,
+      headerBorder = FALSE,
+      width = 12,
+      shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?"),
+      shinycssloaders::withSpinner(
+        plotly::plotlyOutput(ns("distribution"), height = "800px")
+      )
     )
   )
 }

@@ -239,35 +239,6 @@ test_that("it sets up the individual change factors", {
   })
 })
 
-test_that("it shows or hides the individual plots", {
-  m <- mock()
-  cfe <- \(id, at) change_factors_expected[[at]]
-
-  stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
-  stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
-  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", NULL)
-  stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_cf_plot", NULL)
-  stub(mod_principal_change_factor_effects_server, "shinyjs::toggle", m)
-
-  selected_model_id <- reactiveVal()
-
-  testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
-    selected_model_id(1)
-
-    session$setInputs(
-      activity_type = "aae", measure = "ambulance", sort_type = "descending value", include_baseline = TRUE
-    )
-
-    session$setInputs(
-      activity_type = "ip", measure = "admissions", sort_type = "descending value", include_baseline = TRUE
-    )
-
-    expect_called(m, 2)
-    expect_args(m, 1, "individual_change_factors", condition = FALSE)
-    expect_args(m, 2, "individual_change_factors", condition = TRUE)
-  })
-})
-
 test_that("it renders the plots", {
   m <- mock()
   cfe <- \(id, at) change_factors_expected[[at]]

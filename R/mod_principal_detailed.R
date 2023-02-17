@@ -8,15 +8,25 @@
 #'
 #' @importFrom shiny NS tagList
 mod_principal_detailed_ui <- function(id) {
-  ns <- NS(id)
-  tagList(
+  ns <- shiny::NS(id)
+  shiny::tagList(
     shiny::h1("Principal projection: activity in detail"),
-    shiny::fluidRow(
-      mod_measure_selection_ui(ns("measure_selection"), width = 3),
-      col_3(shiny::selectInput(ns("aggregation"), "Show Results By", NULL))
+    bs4Dash::box(
+      collapsible = FALSE,
+      headerBorder = FALSE,
+      width = 12,
+      shiny::fluidRow(
+        mod_measure_selection_ui(ns("measure_selection"), width = 3),
+        col_3(shiny::selectInput(ns("aggregation"), "Show Results By", NULL))
+      )
     ),
-    shinycssloaders::withSpinner(
-      gt::gt_output(ns("results"))
+    bs4Dash::box(
+      collapsible = FALSE,
+      headerBorder = FALSE,
+      width = 12,
+      shinycssloaders::withSpinner(
+        gt::gt_output(ns("results"))
+      )
     )
   )
 }
