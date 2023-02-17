@@ -14,14 +14,14 @@ mod_principal_capacity_requirements_ui <- function(id) {
     shiny::fluidRow(
       bs4Dash::box(
         title = "Beds",
-        width = 6,
+        width = 8,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("beds"))
         )
       ),
       bs4Dash::box(
         title = "Elective 4 Hour Sessions",
-        width = 6,
+        width = 4,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("fhs"))
         )
@@ -32,35 +32,45 @@ mod_principal_capacity_requirements_ui <- function(id) {
 
 mod_principal_capacity_requirements_beds_table <- function(data) {
   data |>
-    dplyr::select(
-      "quarter",
-      "ward_group",
-      old_beds = "baseline",
-      new_beds = "principal"
-    ) |>
     dplyr::arrange(
       .data$quarter,
-      dplyr::desc(.data$new_beds),
-      dplyr::desc(.data$old_beds)
+      dplyr::desc(.data$principal),
+      dplyr::desc(.data$baseline)
     ) |>
-    dplyr::filter(.data$new_beds > 0.5) |>
-    dplyr::group_by(.data$quarter) |>
+    dplyr::filter(.data$principal > 0.5) |>
+    tidyr::pivot_wider(names_from = "quarter", values_from = c("baseline", "principal")) |>
     gt::gt(rowname_col = "ward_group") |>
-    gt::fmt_integer(c("old_beds", "new_beds")) |>
+    gt::fmt_integer(-"ward_group") |>
     gt::summary_rows(
-      groups = TRUE,
-      columns = c("old_beds", "new_beds"),
-      fns = list(total = "sum"),
+      groups = NULL,
+      fns = list(Total = "sum"),
       formatter = gt::fmt_integer
     ) |>
+    gt::tab_spanner("Q1 (Apr-Jun)", tidyselect::ends_with("Q1")) |>
+    gt::tab_spanner("Q2 (Jul-Sep)", tidyselect::ends_with("Q2")) |>
+    gt::tab_spanner("Q3 (Oct-Dec)", tidyselect::ends_with("Q3")) |>
+    gt::tab_spanner("Q4 (Jan-Mar)", tidyselect::ends_with("Q4")) |>
     gt::cols_label(
-      old_beds = "Baseline",
-      new_beds = "Principal"
+      baseline_q1 = "Baseline",
+      principal_q1 = "Principal",
+      baseline_q2 = "Baseline",
+      principal_q2 = "Principal",
+      baseline_q3 = "Baseline",
+      principal_q3 = "Principal",
+      baseline_q4 = "Baseline",
+      principal_q4 = "Principal"
     ) |>
-    gt::tab_spanner("Number of Beds", c("old_beds", "new_beds")) |>
+    gt::tab_style(
+      style = gt::cell_borders(
+        sides = "right",
+        color = "#d3d3d3"
+      ),
+      locations = gt::cells_body(
+        columns = tidyselect::matches("principal_q[1-3]")
+      )
+    ) |>
     gt::tab_options(
-      row_group.background.color = "#686f73",
-      summary_row.background.color = "#b2b7b9"
+      grand_summary_row.background.color = "#686f73"
     )
 }
 
