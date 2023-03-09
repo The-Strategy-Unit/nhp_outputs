@@ -370,6 +370,12 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       params$demographic_factors$file <- shiny::req(input$demographics_file)
       params$scenario <- shiny::req(input$scenario_name)
 
+      # create an identity to use when inserting into cosmosDB
+      #  (create this before adding in the user and create_datetime items)
+      params$id <- digest::digest(jsonlite::toJSON(params), "sha256", serialize = FALSE)
+
+      params$user <- session$user
+
       params
     })
 
