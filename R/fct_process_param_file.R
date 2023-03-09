@@ -79,17 +79,18 @@ process_param_file <- function(path,
     ),
     "non-demographic_adjustment" = nda
   )
+  
+  params$activity_avoidance <- list()
+  params$efficiencies <- list()
 
-  params$inpatient_factors <- list(
-    "admission_avoidance" = data$am_a_ip |>
-      dplyr::filter(.data$include != 0) |>
-      dplyr::rowwise() |>
-      dplyr::transmute(.data$strategy, interval = list(c(.data$lo, .data$hi))) |>
-      tibble::deframe() |>
-      purrr::map(~ list(interval = .x))
-  )
+  params$activity_avoidance$ip <- data$am_a_ip |>
+    dplyr::filter(.data$include != 0) |>
+    dplyr::rowwise() |>
+    dplyr::transmute(.data$strategy, interval = list(c(.data$lo, .data$hi))) |>
+    tibble::deframe() |>
+    purrr::map(~ list(interval = .x))
 
-  params$inpatient_factors$los_reduction <- c(
+  params$efficiencies$ip <- c(
     data$am_e_ip |>
       dplyr::filter(.data$include != 0) |>
       dplyr::mutate(type = dplyr::case_when(
@@ -120,16 +121,25 @@ process_param_file <- function(path,
       tibble::deframe()
   )
 
-  params$outpatient_factors <- dplyr::bind_rows(data[c("am_a_op", "am_tc_op")]) |>
+  params$activity_avoidance$op <- data$am_a_op |>
     dplyr::filter(.data$include != 0) |>
     dplyr::rowwise() |>
-    dplyr::transmute(.data$strategy, value = list(list(interval = c(.data$lo, .data$hi)))) |>
-    tidyr::separate(.data$strategy, c("strategy", "sub_group"), "\\|") |>
-    dplyr::group_nest(.data$strategy) |>
-    dplyr::mutate(dplyr::across("data", purrr::map, tibble::deframe)) |>
+    dplyr::transmute(
+      dplyr::across(.data$strategy, purrr::partial(stringr::str_replace, pattern = "\\|", replacement = "_")),
+      value = list(list(interval = c(.data$lo, .data$hi)))
+    ) |>
+    tibble::deframe()
+    
+  params$efficiencies$op <- data$am_tc_op |>
+    dplyr::filter(.data$include != 0) |>
+    dplyr::rowwise() |>
+    dplyr::transmute(
+      dplyr::across(.data$strategy, purrr::partial(stringr::str_replace, pattern = "\\|", replacement = "_")),
+      value = list(list(interval = c(.data$lo, .data$hi)))
+    ) |>
     tibble::deframe()
 
-  params$aae_factors <- data$am_a_aae |>
+  params$activity_avoidance$aae <- data$am_a_aae |>
     dplyr::filter(.data$include != 0) |>
     dplyr::rowwise() |>
     dplyr::transmute(.data$strategy, value = list(list(interval = c(.data$lo, .data$hi)))) |>
@@ -232,8 +242,8 @@ process_param_file <- function(path,
   params <- c(params, expat_repat)
 
   # add in additional data to strategies
-  params$inpatient_factors$los_reduction[["pre-op_los_1-day"]][["pre-op_days"]] <- 1
-  params$inpatient_factors$los_reduction[["pre-op_los_2-day"]][["pre-op_days"]] <- 2
+  params$efficiencies$ip[["pre-op_los_1-day"]][["pre-op_days"]] <- 1
+  params$efficiencies$ip[["pre-op_los_2-day"]][["pre-op_days"]] <- 2
 
   validate_params(params)
 
