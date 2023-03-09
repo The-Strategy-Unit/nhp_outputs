@@ -178,6 +178,8 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       valid <- c("dataset", "demographics_file", "scenario_name") |>
         purrr::every(~ shiny::isTruthy(input[[.x]]))
 
+      valid <- valid && stringr::str_detect(input$scenario_name, "[^a-zA-Z0-9\\_]", TRUE)
+
       shinyjs::toggleState("submit_model_run", valid)
       shinyjs::toggleState("download_params", valid)
     })
@@ -370,6 +372,19 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       params$demographic_factors$file <- shiny::req(input$demographics_file)
       params$scenario <- shiny::req(input$scenario_name)
 
+      shiny::validate(
+        shiny::need(
+          stringr::str_detect(input$scenario_name, "[^a-zA-Z0-9\\_]", TRUE),
+          "scenario can only contain letters, numbers, or _ characters"
+        )
+      )
+
+      # create an identity to use when inserting into cosmosDB
+      #  (create this before adding in the user and create_datetime items)
+      params$id <- digest::digest(jsonlite::toJSON(params), "sha256", serialize = FALSE)
+
+      params$user <- session$user
+
       params
     })
 
@@ -380,7 +395,7 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       shinyjs::disable("submit_model_run")
       shiny::updateActionButton(session, "submit_model_run", "Submitted...")
 
-      job_name <- batch_submit_model_run(params)
+      job_name <- "test" # batch_submit_model_run(params)
       running_jobs[[job_name]] <- job_name
 
       status(paste("Submitted to batch:", job_name, "(Goto running models tab to view progress)"))
