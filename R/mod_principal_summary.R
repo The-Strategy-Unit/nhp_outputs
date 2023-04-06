@@ -25,14 +25,13 @@ mod_principal_summary_ui <- function(id) {
   )
 }
 
-mod_principal_summary_data <- function(id) {
-  t <- cosmos_get_theatres_available(id)
-
+mod_principal_summary_data <- function(r) {
   pods <- mod_principal_high_level_pods()
-  cosmos_get_principal_high_level(id) |>
+
+  get_principal_high_level(r) |>
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::bind_rows(
-      cosmos_get_bed_occupancy(id) |>
+      get_bed_occupancy(r) |>
         dplyr::filter(.data$model_run == 1) |>
         dplyr::group_by(.data$quarter) |>
         dplyr::summarise(
@@ -43,7 +42,7 @@ mod_principal_summary_data <- function(id) {
           sitetret = "trust",
           pod_name = "Beds Available"
         ),
-      t$four_hour_sessions |>
+      get_theatres_available(r) |>
         dplyr::summarise(
           sitetret = "trust",
           pod_name = "4 Hour Elective Theatre Sessions",
@@ -69,13 +68,13 @@ mod_principal_summary_table <- function(data) {
 #' principal_summary Server Functions
 #'
 #' @noRd
-mod_principal_summary_server <- function(id, selected_model_run_id, selected_site) {
+mod_principal_summary_server <- function(id, selected_model_run, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     summary_data <- shiny::reactive({
-      id <- selected_model_run_id()
+      id <- selected_model_run()
       mod_principal_summary_data(id)
     }) |>
-      shiny::bindCache(selected_model_run_id())
+      shiny::bindCache(selected_model_run())
 
     site_data <- shiny::reactive({
       summary_data() |>

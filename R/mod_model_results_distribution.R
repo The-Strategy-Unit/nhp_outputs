@@ -31,10 +31,10 @@ mod_model_results_distribution_ui <- function(id) {
   )
 }
 
-mod_model_results_distribution_get_data <- function(id, selected_measure) {
+mod_model_results_distribution_get_data <- function(r, selected_measure) {
   activity_type <- pod <- measure <- NULL
   c(activity_type, pod, measure) %<-% selected_measure
-  cosmos_get_model_run_distribution(id, pod, measure)
+  get_model_run_distribution(r, pod, measure)
 }
 
 mod_model_results_distibution_density_plot <- function(data, show_origin) {
@@ -87,14 +87,14 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
 #' model_results_distribution Server Functions
 #'
 #' @noRd
-mod_model_results_distribution_server <- function(id, selected_model_run_id, selected_site) {
+mod_model_results_distribution_server <- function(id, selected_model_run, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     selected_data <- shiny::reactive({
-      mod_model_results_distribution_get_data(selected_model_run_id(), selected_measure())
+      mod_model_results_distribution_get_data(selected_model_run(), selected_measure())
     }) |>
-      shiny::bindCache(selected_model_run_id(), selected_measure())
+      shiny::bindCache(selected_model_run(), selected_measure())
 
     site_data <- shiny::reactive({
       selected_data() |>

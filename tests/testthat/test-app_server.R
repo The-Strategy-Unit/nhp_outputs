@@ -18,7 +18,7 @@ test_that("it loads the module correctly: mod_model_core_activity_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "model_core_activity", selected_model_run_id, selected_site)
+    expect_args(m, 1, "model_core_activity", selected_model_run, selected_site)
   })
 })
 
@@ -39,7 +39,7 @@ test_that("it loads the module correctly: mod_model_results_capacity_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "model_results_capacity", selected_model_run_id)
+    expect_args(m, 1, "model_results_capacity", selected_model_run)
   })
 })
 
@@ -60,7 +60,7 @@ test_that("it loads the module correctly: mod_model_results_distribution_server"
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "model_results_distribution", selected_model_run_id, selected_site)
+    expect_args(m, 1, "model_results_distribution", selected_model_run, selected_site)
   })
 })
 
@@ -102,7 +102,7 @@ test_that("it loads the module correctly: mod_principal_capacity_requirements_se
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_capacity_requirements", selected_model_run_id)
+    expect_args(m, 1, "principal_capacity_requirements", selected_model_run)
   })
 })
 
@@ -123,7 +123,7 @@ test_that("it loads the module correctly: mod_principal_change_factor_effects_se
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_change_factor_effects", selected_model_run_id)
+    expect_args(m, 1, "principal_change_factor_effects", selected_model_run)
   })
 })
 
@@ -144,7 +144,7 @@ test_that("it loads the module correctly: mod_principal_detailed_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_detailed", selected_model_run_id, selected_site)
+    expect_args(m, 1, "principal_detailed", selected_model_run, selected_site)
   })
 })
 
@@ -165,7 +165,7 @@ test_that("it loads the module correctly: mod_principal_high_level_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_high_level", selected_model_run_id, selected_site)
+    expect_args(m, 1, "principal_high_level", selected_model_run, selected_site)
   })
 })
 
@@ -186,7 +186,7 @@ test_that("it loads the module correctly: mod_principal_summary_server", {
 
   testServer(app_server, {
     expect_called(m, 1)
-    expect_args(m, 1, "principal_summary", selected_model_run_id, selected_site)
+    expect_args(m, 1, "principal_summary", selected_model_run, selected_site)
   })
 })
 
@@ -257,7 +257,7 @@ test_that("it gets the list of allowed datasets for the current user", {
   })
 })
 
-test_that("it sets up the selected_model_run_id reactive correctly", {
+test_that("it sets up the selected_model_run reactive correctly", {
   m <- mock(\() list(id = 1))
 
   stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
@@ -275,6 +275,6 @@ test_that("it sets up the selected_model_run_id reactive correctly", {
   stub(app_server, "mod_result_selection_server", m)
 
   testServer(app_server, {
-    expect_equal(selected_model_run_id(), 1)
+    expect_equal(selected_model_run(), 1)
   })
 })

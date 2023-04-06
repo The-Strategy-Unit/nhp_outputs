@@ -126,7 +126,7 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
-mod_principal_change_factor_effects_server <- function(id, selected_model_run_id) {
+mod_principal_change_factor_effects_server <- function(id, selected_model_run) {
   shiny::moduleServer(id, function(input, output, session) {
     shiny::observe({
       activity_types <- get_activity_type_pod_measure_options() |>
@@ -143,9 +143,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
     principal_change_factors <- shiny::reactive({
       at <- shiny::req(input$activity_type)
 
-      id <- selected_model_run_id()
-
-      cosmos_get_principal_change_factors(id, at) |>
+      selected_model_run() |>
+        get_principal_change_factors(at) |>
         dplyr::mutate(
           dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
@@ -157,9 +156,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
           )
         )
     }) |>
-      shiny::bindCache(selected_model_run_id(), input$activity_type)
+      shiny::bindCache(selected_model_run(), input$activity_type)
 
-    shiny::observeEvent(principal_change_factors(), {
+    shiny::observe({
       at <- shiny::req(input$activity_type)
       pcf <- shiny::req(principal_change_factors())
 
@@ -168,7 +167,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       shiny::req(length(measures) > 0)
 
       shiny::updateSelectInput(session, "measure", choices = measures)
-    })
+    }) |>
+      dplyr::bindEvent(principal_change_factors())
 
     individual_change_factors <- shiny::reactive({
       m <- shiny::req(input$measure)

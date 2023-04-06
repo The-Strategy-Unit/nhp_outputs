@@ -1,15 +1,73 @@
-cosmos_get_container <- function(container) {
-  endp <- AzureCosmosR::cosmos_endpoint(
-    Sys.getenv("COSMOS_ENDPOINT"),
-    Sys.getenv("COSMOS_KEY")
+get_results_container <- function() {
+  resource <- `__STORAGE_EP__`
+
+  t <- if (Sys.getenv("AAD_TENANT_ID") == "") {
+    AzureAuth::get_managed_token(resource)
+  } else {
+    AzureAuth::get_azure_token(
+      resource,
+      Sys.getenv("AAD_TENANT_ID"),
+      Sys.getenv("AAD_APP_ID"),
+      Sys.getenv("AAD_APP_SECRET")
+    )
+  }
+
+  AzureStor::storage_container(
+    glue::glue("{Sys.getenv('STORAGE_URL')}/results"),
+    token = AzureAuth::extract_jwt(t)
   )
-
-  db <- AzureCosmosR::get_cosmos_database(endp, Sys.getenv("COSMOS_DB"))
-
-  AzureCosmosR::get_cosmos_container(db, container)
 }
 
-cosmos_get_user_allowed_datasets <- function(user) {
+get_result_sets <- function(dataset, local = getOption("golem.app.prod")) {
+  if (local) {
+    path <- file.path(Sys.getenv("RESULTS_PATH"), dataset)
+
+    files <- fs::dir_ls(path, glob = "*.json")
+
+    return(
+      purrr::set_names(
+        files,
+        stringr::str_sub(files, stringr::str_length(path) + 2, -6)
+      )
+    )
+  }
+
+  app_version <- Sys.getenv("NHP_APP_VERSION", "dev") |>
+    stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
+
+  AzureStor::list_blobs(
+    get_results_container(),
+    paste(app_version, dataset, sep = "/"),
+    "name"
+  )
+}
+
+get_results <- function(filename, local = getOption("golem.app.prod")) {
+  if (local) {
+    r <- jsonlite::read_json(filename, simplifyVector = FALSE)
+  } else {
+    cont <- get_results_container()
+    tf <- withr::local_tempfile()
+    AzureStor::download_blob(cont, filename, tf)
+
+    r <- readBin(tf, raw(), n = file.size(tf)) |>
+      jsonlite::parse_gzjson_raw(simplifyVector = FALSE)
+  }
+
+  r$population_variants <- as.character(r$population_variants)
+
+  r$results <- purrr::map(
+    r$results,
+    purrr::map_dfr,
+    purrr::modify_at,
+    "model_runs",
+    purrr::compose(list, as.numeric)
+  )
+
+  r
+}
+
+get_user_allowed_datasets <- function(user) {
   # TODO: this should be grabbed from cosmos
   if (is.null(user)) {
     "synthetic"
@@ -21,66 +79,35 @@ cosmos_get_user_allowed_datasets <- function(user) {
   }
 }
 
-cosmos_get_result_sets <- function(app_version) {
-  container <- cosmos_get_container("results")
-
-  qry <- glue::glue(
-    "SELECT c.dataset, c.scenario, c.create_datetime, c.id FROM c WHERE c.app_version = '{app_version}'"
-  )
-  res <- AzureCosmosR::query_documents(container, qry)
-
-  if (nrow(res) < 1) {
-    return(NULL)
-  }
-
-  dplyr::arrange(
-    res,
-    .data$dataset,
-    .data$scenario,
-    dplyr::desc(.data$create_datetime)
-  )
-}
-
-cosmos_get_trust_sites <- function(id) {
-  container <- cosmos_get_container("results")
-
-  qry <- "SELECT DISTINCT r.sitetret FROM c JOIN r in c.results['default']"
-  sites <- AzureCosmosR::query_documents(container, qry, partition_key = id, as_data_frame = FALSE) |>
-    purrr::map_chr(purrr::pluck, "data", "sitetret")
-
+get_trust_sites <- function(r) {
+  sites <- r$results$default$sitetret
   unique(c("trust", sort(sites)))
 }
 
-cosmos_get_available_aggregations <- function(id) {
-  container <- cosmos_get_container("results")
-
-  qry <- "SELECT c.available_aggregations FROM c"
-  AzureCosmosR::query_documents(container, qry, partition_key = id, as_data_frame = FALSE) |>
-    purrr::pluck(1, "data", "available_aggregations")
+get_available_aggregations <- function(r) {
+  r$results |>
+    purrr::keep(\(.x) "pod" %in% colnames(.x)) |>
+    purrr::map(
+      \(.x) .x |>
+        dplyr::pull("pod") |>
+        stringr::str_extract("^[a-z]*") |>
+        unique()
+    ) |>
+    tibble::enframe() |>
+    tidyr::unnest("value") |>
+    dplyr::group_by(.data$value) |>
+    dplyr::summarise(dplyr::across("name", list)) |>
+    tibble::deframe()
 }
 
-cosmos_get_model_run_years <- function(id) {
-  container <- cosmos_get_container("results")
-
-  qry <- "SELECT c.start_year, c.end_year FROM c"
-  AzureCosmosR::query_documents(
-    container, qry,
-    partition_key = id,
-    as_data_frame = FALSE,
-    metadata = FALSE
-  )[[1]]$data
+get_model_run_years <- function(r) {
+  r$params[c("start_year", "end_year")]
 }
 
-cosmos_get_principal_high_level <- function(id) {
-  container <- cosmos_get_container("results")
-
-  qry <- paste(
-    "SELECT r.pod, r.sitetret, r.baseline, r.principal",
-    "FROM c JOIN r in c.results['default']",
-    "WHERE r.measure NOT IN ('beddays', 'procedures', 'tele_attendances')"
-  )
-
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+get_principal_high_level <- function(r) {
+  r$results$default |>
+    dplyr::filter(!.data$measure %in% c("beddays", "procedures", "tele_attendances")) |>
+    dplyr::select("pod", "sitetret", "baseline", "principal") |>
     dplyr::mutate(
       dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x))
     ) |>
@@ -89,72 +116,31 @@ cosmos_get_principal_high_level <- function(id) {
     trust_site_aggregation()
 }
 
-cosmos_get_model_core_activity <- function(id) {
-  container <- cosmos_get_container("results")
-
-  qry <- "
-    SELECT
-      r.pod,
-      r.sitetret,
-      r.measure,
-      r.baseline,
-      r.median,
-      r.lwr_ci,
-      r.upr_ci
-    FROM c
-    JOIN r IN c.results[\"default\"]
-  "
-
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
+get_model_core_activity <- function(r) {
+  r$results$default |>
+    dplyr::select(-"model_runs") |>
     trust_site_aggregation()
 }
 
-cosmos_get_variants <- function(id) {
-  container <- cosmos_get_container("results")
-
-  AzureCosmosR::query_documents(
-    container,
-    "SELECT c.selected_variants FROM c",
-    partition_key = id,
-    as_data_frame = FALSE,
-    metadata = FALSE
-  ) |>
-    purrr::pluck(1, "data", "selected_variants") |>
+get_variants <- function(r) {
+  r$population_variants |>
     utils::tail(-1) |>
     tibble::enframe("model_run", "variant")
 }
 
-cosmos_get_model_run_distribution <- function(id, pod, measure) {
-  stopifnot(
-    "invalid characters in pod" = stringr::str_remove_all(pod, "[\\w-]") == "",
-    "invalid characters in measure" = stringr::str_remove_all(measure, "[\\w-]") == ""
-  )
+get_model_run_distribution <- function(r, pod, measure) {
+  filtered_results <- r$results$default |>
+    dplyr::filter(
+      .data$pod == .env$pod,
+      .data$measure == .env$measure
+    ) |>
+    dplyr::select("sitetret", "baseline", "model_runs")
 
-  container <- cosmos_get_container("results")
-
-  variants <- cosmos_get_variants(id)
-
-  qry <- glue::glue("
-    SELECT
-        r.sitetret,
-        r.baseline,
-        r.model_runs
-    FROM c
-    JOIN r IN c.results[\"default\"]
-    WHERE
-        r.pod = '{pod}'
-    AND
-        r.measure = '{measure}'
-  ")
-
-  r <- AzureCosmosR::query_documents(container, qry, partition_key = id)
-
-  if (nrow(r) == 0) {
+  if (nrow(filtered_results) == 0) {
     return(NULL)
   }
 
-  r |>
-    dplyr::as_tibble() |>
+  filtered_results |>
     dplyr::mutate(
       dplyr::across(
         "model_runs",
@@ -164,100 +150,54 @@ cosmos_get_model_run_distribution <- function(id, pod, measure) {
       )
     ) |>
     tidyr::unnest("model_runs") |>
-    dplyr::inner_join(variants, by = "model_run") |>
+    dplyr::inner_join(get_variants(r), by = "model_run") |>
     trust_site_aggregation()
 }
 
-cosmos_get_aggregation <- function(id, pod, measure, agg_col) {
-  stopifnot(
-    "invalid characters in pod" = stringr::str_remove_all(pod, "[\\w-]") == "",
-    "invalid characters in measure" = stringr::str_remove_all(measure, "[\\w-]") == "",
-    "invalid characters in agg_col" = stringr::str_remove_all(agg_col, "[\\w-]") == ""
-  )
-
-  container <- cosmos_get_container("results")
-
+get_aggregation <- function(r, pod, measure, agg_col) {
   agg_type <- glue::glue("sex+{agg_col}") # nolint
-  qry <- glue::glue("
-    SELECT
-      r.sitetret,
-      r.sex,
-      r.{agg_col},
-      r.baseline,
-      r.principal,
-      r.median,
-      r.lwr_ci,
-      r.upr_ci
-    FROM c
-    JOIN r in c.results[\"{agg_type}\"]
-    WHERE
-      r.pod = '{pod}'
-    AND
-      r.measure = '{measure}'
-  ")
-  r <- AzureCosmosR::query_documents(container, qry, partition_key = id)
+  filtered_results <- r$results[[agg_type]] |>
+    dplyr::filter(
+      .data$pod == .env$pod,
+      .data$measure == .env$measure
+    ) |>
+    dplyr::select(-"pod", -"measure")
 
-  if (nrow(r) == 0) {
+  if (nrow(filtered_results) == 0) {
     return(NULL)
   }
 
-  r |>
+  filtered_results |>
     dplyr::mutate(
       dplyr::across(dplyr::matches("sex"), as.character)
     ) |>
     trust_site_aggregation()
 }
 
-cosmos_get_principal_change_factors <- function(id, activity_type) {
+get_principal_change_factors <- function(r, activity_type) {
   stopifnot(
     "Invalid activity_type" = activity_type %in% c("aae", "ip", "op")
   )
 
-  container <- cosmos_get_container("change_factors")
-
-  qry <- glue::glue("
-    SELECT
-      r.measure,
-      s.change_factor,
-      s.strategy,
-      s.baseline ?? s[\"value\"][0] \"value\"
-    FROM c
-    JOIN r IN c.{activity_type}
-    JOIN s IN r.change_factors
-  ")
-
-  d <- AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::as_tibble()
-
-  if (!"strategy" %in% colnames(d)) {
-    d$strategy <- "-"
-  }
-
-  dplyr::mutate(d, dplyr::across("strategy", tidyr::replace_na, "-"))
+  r$results$step_counts |>
+    dplyr::filter(.data$activity_type == .env$activity_type) |>
+    dplyr::select("measure", "change_factor", "strategy", "value") |>
+    dplyr::mutate(dplyr::across("strategy", \(.x) tidyr::replace_na(.x, "-")))
 }
 
-cosmos_get_bed_occupancy <- function(id) {
-  container <- cosmos_get_container("results")
-
-  variants <- cosmos_get_variants(id)
-
-  qry <- "
-    SELECT
-        r.measure,
-        r.quarter,
-        r.ward_group,
-        r.baseline,
-        r.principal,
-        r.median,
-        r.lwr_ci,
-        r.upr_ci,
-        r.model_runs
-    FROM c
-    JOIN r IN c.results[\"bed_occupancy\"]
-  "
-
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::as_tibble() |>
+get_bed_occupancy <- function(r) {
+  r$results$bed_occupancy |>
+    dplyr::select(
+      "measure",
+      "quarter",
+      "ward_group",
+      "baseline",
+      "principal",
+      "median",
+      "lwr_ci",
+      "upr_ci",
+      "model_runs"
+    ) |>
     dplyr::mutate(
       dplyr::across(
         "model_runs",
@@ -267,36 +207,20 @@ cosmos_get_bed_occupancy <- function(id) {
       )
     ) |>
     tidyr::unnest("model_runs") |>
-    dplyr::inner_join(variants, by = "model_run")
+    dplyr::inner_join(get_variants(r), by = "model_run")
 }
 
-cosmos_get_full_model_run_data <- function(id) {
-  purrr::set_names(c("results", "change_factors")) |>
-    purrr::map(cosmos_get_container) |>
-    purrr::map(AzureCosmosR::get_document, partition_key = id, id = id, metadata = FALSE) |>
-    purrr::map("data")
-}
-
-cosmos_get_theatres_available <- function(id) {
-  container <- cosmos_get_container("results")
-
-  qry <- "
-    SELECT
-        r.measure,
-        r.tretspef,
-        r.baseline,
-        r.principal,
-        r.median,
-        r.lwr_ci,
-        r.upr_ci,
-        r.model_runs
-    FROM c
-    JOIN r in c.results.theatres_available
-  "
-
-  AzureCosmosR::query_documents(container, qry, partition_key = id) |>
-    dplyr::group_nest(.data$measure) |>
-    tibble::deframe()
+get_theatres_available <- function(r) {
+  r$results$theatres_available |>
+    dplyr::select(
+      "tretspef",
+      "baseline",
+      "principal",
+      "median",
+      "lwr_ci",
+      "upr_ci",
+      "model_runs"
+    )
 }
 
 trust_site_aggregation <- function(data) {

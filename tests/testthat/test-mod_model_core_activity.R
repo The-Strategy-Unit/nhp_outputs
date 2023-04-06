@@ -46,9 +46,9 @@ test_that("it gets the activity type/pod/measure reference data", {
   m <- mock(atpmo_expected)
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", m)
 
-  selected_model_run_id <- reactiveVal()
+  selected_model_run <- reactiveVal()
 
-  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id), {
+  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run), {
     expect_called(m, 1)
     expect_equal(atpmo, atpmo_expected)
   })
@@ -59,10 +59,10 @@ test_that("it calls cosmos_get_model_core_activity", {
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(mod_model_core_activity_server, "cosmos_get_model_core_activity", m)
 
-  selected_model_run_id <- reactiveVal()
+  selected_model_run <- reactiveVal()
 
-  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id), {
-    selected_model_run_id("id")
+  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run), {
+    selected_model_run("id")
 
     expected <- model_core_activity_expected |>
       dplyr::inner_join(atpmo_expected, by = c("pod", "measure" = "measures"))
@@ -81,10 +81,10 @@ test_that("it renders the table", {
   stub(mod_model_core_activity_server, "mod_model_core_activity_server_table", "table")
   stub(mod_model_core_activity_server, "gt::render_gt", m)
 
-  selected_model_run_id <- reactiveVal()
+  selected_model_run <- reactiveVal()
 
-  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run_id), {
-    selected_model_run_id("id")
+  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run), {
+    selected_model_run("id")
 
     expect_called(m, 1)
     expect_args(m, 1, "table")

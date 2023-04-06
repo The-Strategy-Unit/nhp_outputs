@@ -90,9 +90,9 @@ test_that("it creates a mod_measure_selection_server", {
   m <- mock(selected_measure_expected)
   stub(mod_model_results_distribution_server, "mod_measure_selection_server", m)
 
-  selected_model_run_id <- reactiveVal()
+  selected_model_run <- reactiveVal()
 
-  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id), {
+  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run), {
     expect_called(m, 1)
     expect_equal(selected_measure, selected_measure_expected)
   })
@@ -103,10 +103,10 @@ test_that("it calls mod_model_results_distribution_get_data", {
   stub(mod_model_results_distribution_server, "mod_measure_selection_server", reactiveVal)
   stub(mod_model_results_distribution_server, "mod_model_results_distribution_get_data", m)
 
-  selected_model_run_id <- reactiveVal()
+  selected_model_run <- reactiveVal()
 
-  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id), {
-    selected_model_run_id("id")
+  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run), {
+    selected_model_run("id")
     selected_measure(selected_measure_expected)
 
     expect_equal(selected_data(), model_run_distribution_expected)
@@ -129,11 +129,11 @@ test_that("it renders the plot", {
     mod_model_results_distribution_server, "mod_model_results_distibution_plot", m
   )
 
-  selected_model_run_id <- reactiveVal()
+  selected_model_run <- reactiveVal()
   selected_site <- reactiveVal()
 
-  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run_id, selected_site), {
-    selected_model_run_id("id")
+  shiny::testServer(mod_model_results_distribution_server, args = list(selected_model_run, selected_site), {
+    selected_model_run("id")
     selected_site("trust")
     selected_measure(selected_measure_expected)
     session$setInputs(show_origin = FALSE)

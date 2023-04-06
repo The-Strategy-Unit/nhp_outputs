@@ -86,7 +86,7 @@ test_that("it calls cosmos_get_bed_occupancy correctly", {
   stub(mod_principal_capacity_requirements_server, "cosmos_get_bed_occupancy", m)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
+    selected_model_run("id")
 
     expect_equal(beds_data(), beds_data_filtered_expected)
 
@@ -101,7 +101,7 @@ test_that("it calls cosmos_get_theatres_available correctly", {
   stub(mod_principal_capacity_requirements_server, "cosmos_get_theatres_available", m)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
+    selected_model_run("id")
 
     expect_equal(theatres_data(), "theatres_data")
 
@@ -114,7 +114,7 @@ test_that("it sets the reactives up correctly", {
   stub(mod_principal_capacity_requirements_server, "cosmos_get_theatres_available", theatres_data_expected)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
+    selected_model_run("id")
 
     expect_equal(four_hour_sessions(), fhs_expected)
   })
@@ -130,7 +130,7 @@ test_that("it renders the tables", {
   stub(mod_principal_capacity_requirements_server, "mod_principal_capacity_requirements_fhs_table", m)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
+    selected_model_run("id")
 
     session$private$flush()
 

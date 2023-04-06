@@ -29,7 +29,7 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       app_version <- Sys.getenv("NHP_APP_VERSION", "dev") |>
         stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
 
-      rs <- cosmos_get_result_sets(app_version)
+      rs <- get_result_sets(input$dataset)
 
       # handle case where no result sets are available
       shiny::req(nrow(rs) > 0)
@@ -54,17 +54,19 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
 
     output$download_results <- shiny::downloadHandler(
       filename = function() {
-        id <- shiny::req(selected_model_run())$id
-        glue::glue("{id}.json")
+        params <- shiny::req(selected_model_run())$params
+
+        glue::glue("{params$dataset}-{params$scenario}-{params$create_datetime}.json")
       },
       content = function(file) {
-        id <- shiny::req(selected_model_run())$id
-        results <- cosmos_get_full_model_run_data(id)
-        jsonlite::write_json(results, file, pretty = TRUE, auto_unbox = TRUE)
+        shiny::req(selected_model_run()) |>
+          jsonlite::write_json(file, pretty = TRUE, auto_unbox = TRUE)
       }
     )
 
     shiny::observe({
+      # TODO: THERE IS A CIRCULAR REFERENCE NOW ON THIS
+      #       change to use the available datasets object instead
       x <- shiny::req(results_sets())
       shiny::updateSelectInput(session, "dataset", choices = names(x))
     })
@@ -116,7 +118,7 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
     shiny::observe({
       id <- shiny::req(run_id())
 
-      trust_sites <- cosmos_get_trust_sites(id)
+      trust_sites <- get_trust_sites(id)
 
       shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
     }) |>

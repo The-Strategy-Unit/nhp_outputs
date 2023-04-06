@@ -92,26 +92,22 @@ mod_principal_capacity_requirements_fhs_table <- function(data) {
 #' principal_capacity_requirements Server Functions
 #'
 #' @noRd
-mod_principal_capacity_requirements_server <- function(id, selected_model_run_id) {
+mod_principal_capacity_requirements_server <- function(id, selected_model_run) {
   shiny::moduleServer(id, function(input, output, session) {
     beds_data <- shiny::reactive({
-      id <- selected_model_run_id()
-      cosmos_get_bed_occupancy(id) |>
+      selected_model_run() |>
+        get_bed_occupancy() |>
         dplyr::filter(.data$model_run == 1) |>
         dplyr::select("quarter", "ward_group", "baseline", "principal")
     }) |>
-      shiny::bindCache(selected_model_run_id())
-
-    theatres_data <- shiny::reactive({
-      id <- selected_model_run_id()
-      cosmos_get_theatres_available(id)
-    }) |>
-      shiny::bindCache(selected_model_run_id())
+      shiny::bindCache(selected_model_run())
 
     four_hour_sessions <- shiny::reactive({
-      theatres_data()$four_hour_sessions |>
+      selected_model_run() |>
+        get_theatres_available() |>
         dplyr::select("tretspef", "baseline", "principal")
-    })
+    }) |>
+      shiny::bindCache(selected_model_run())
 
     output$beds <- gt::render_gt({
       beds_data() |>

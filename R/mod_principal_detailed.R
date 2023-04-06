@@ -59,16 +59,15 @@ mod_principal_detailed_table <- function(data, aggregation) {
 #' principal_detailed Server Functions
 #'
 #' @noRd
-mod_principal_detailed_server <- function(id, selected_model_run_id, selected_site) {
+mod_principal_detailed_server <- function(id, selected_model_run, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     available_aggregations <- shiny::reactive({
-      id <- selected_model_run_id()
-
-      cosmos_get_available_aggregations(id)
+      selected_model_run() |>
+        get_available_aggregations(id)
     }) |>
-      shiny::bindCache(selected_model_run_id())
+      shiny::bindCache(selected_model_run())
 
     shiny::observe({
       c(activity_type, pod, measure) %<-% selected_measure()
@@ -85,7 +84,6 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, selected_si
     })
 
     selected_data <- shiny::reactive({
-      id <- selected_model_run_id()
       activity_type <- pod <- measure <- NULL
       c(activity_type, pod, measure) %<-% selected_measure()
 
@@ -94,7 +92,8 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, selected_si
         "Treatment Specialty" = "tretspef"
       )
 
-      cosmos_get_aggregation(id, pod, measure, agg_col) |>
+      selected_model_run() |>
+        get_aggregation(pod, measure, agg_col) |>
         shiny::req() |>
         dplyr::transmute(
           .data$sitetret,
@@ -106,7 +105,7 @@ mod_principal_detailed_server <- function(id, selected_model_run_id, selected_si
           change_pcnt = .data$change / .data$baseline
         )
     }) |>
-      shiny::bindCache(selected_model_run_id(), selected_measure(), input$aggregation)
+      shiny::bindCache(selected_model_run(), selected_measure(), input$aggregation)
 
     site_data <- shiny::reactive({
       selected_data() |>

@@ -54,11 +54,11 @@ mod_principal_high_level_pods <- function() {
     dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
-mod_principal_high_level_summary_data <- function(id, pods) {
+mod_principal_high_level_summary_data <- function(r, pods) {
   start_year <- end_year <- NULL
-  c(start_year, end_year) %<-% cosmos_get_model_run_years(id)
+  c(start_year, end_year) %<-% get_model_run_years(r)
 
-  cosmos_get_principal_high_level(id) |>
+  get_principal_high_level(r) |>
     tidyr::pivot_longer(-c("pod", "sitetret"), names_to = "model_run") |>
     dplyr::mutate(year = ifelse(.data$model_run == "baseline", start_year, end_year)) |>
     dplyr::select(-"model_run") |>
@@ -124,15 +124,15 @@ mod_principal_high_level_plot <- function(data, activity_type) {
 #' principal_high_level Server Functions
 #'
 #' @noRd
-mod_principal_high_level_server <- function(id, selected_model_run_id, selected_site) {
+mod_principal_high_level_server <- function(id, selected_model_run, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     pods <- mod_principal_high_level_pods()
 
     summary_data <- shiny::reactive({
-      id <- selected_model_run_id()
-      mod_principal_high_level_summary_data(id, pods)
+      selected_model_run() |>
+        mod_principal_high_level_summary_data(pods)
     }) |>
-      shiny::bindCache(selected_model_run_id())
+      shiny::bindCache(selected_model_run())
 
     site_data <- shiny::reactive({
       summary_data() |>
