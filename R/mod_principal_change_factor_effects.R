@@ -168,7 +168,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run) {
 
       shiny::updateSelectInput(session, "measure", choices = measures)
     }) |>
-      dplyr::bindEvent(principal_change_factors())
+      shiny::bindEvent(principal_change_factors())
 
     individual_change_factors <- shiny::reactive({
       m <- shiny::req(input$measure)
