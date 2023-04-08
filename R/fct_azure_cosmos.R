@@ -18,7 +18,7 @@ get_results_container <- function() {
   )
 }
 
-get_result_sets <- function(dataset, local = getOption("golem.app.prod")) {
+get_result_sets <- function(dataset, local = !getOption("golem.app.prod")) {
   if (local) {
     path <- file.path(Sys.getenv("RESULTS_PATH"), dataset)
 
@@ -42,7 +42,7 @@ get_result_sets <- function(dataset, local = getOption("golem.app.prod")) {
   )
 }
 
-get_results <- function(filename, local = getOption("golem.app.prod")) {
+get_results <- function(filename, local = !getOption("golem.app.prod")) {
   if (local) {
     r <- jsonlite::read_json(filename, simplifyVector = FALSE)
   } else {
