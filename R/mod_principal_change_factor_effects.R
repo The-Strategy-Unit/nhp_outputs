@@ -126,7 +126,7 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
-mod_principal_change_factor_effects_server <- function(id, selected_model_run) {
+mod_principal_change_factor_effects_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
     shiny::observe({
       activity_types <- get_activity_type_pod_measure_options() |>
@@ -143,7 +143,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run) {
     principal_change_factors <- shiny::reactive({
       at <- shiny::req(input$activity_type)
 
-      selected_model_run() |>
+      selected_data() |>
         get_principal_change_factors(at) |>
         dplyr::mutate(
           dplyr::across("change_factor", forcats::fct_inorder),

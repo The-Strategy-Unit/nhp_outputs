@@ -104,20 +104,20 @@ mod_model_results_capacity_fhs_available_plot <- function(data) {
 #' capacity_beds Server Functions
 #'
 #' @noRd
-mod_model_results_capacity_server <- function(id, selected_model_run) {
+mod_model_results_capacity_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
     beds_data <- shiny::reactive({
-      selected_model_run() |>
+      selected_data() |>
         get_bed_occupancy()
     })
 
     variants <- shiny::reactive({
-      selected_model_run() |>
+      selected_data() |>
         get_variants()
     })
 
     four_hour_sessions <- shiny::reactive({
-      selected_model_run() |>
+      selected_data() |>
         get_theatres_available() |>
         dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
         tidyr::unnest("model_runs") |>

@@ -87,12 +87,12 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
 #' model_results_distribution Server Functions
 #'
 #' @noRd
-mod_model_results_distribution_server <- function(id, selected_model_run, selected_site) {
+mod_model_results_distribution_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     selected_data <- shiny::reactive({
-      mod_model_results_distribution_get_data(selected_model_run(), selected_measure())
+      mod_model_results_distribution_get_data(selected_data(), selected_measure())
     })
 
     site_data <- shiny::reactive({

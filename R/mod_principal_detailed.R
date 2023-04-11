@@ -59,13 +59,13 @@ mod_principal_detailed_table <- function(data, aggregation) {
 #' principal_detailed Server Functions
 #'
 #' @noRd
-mod_principal_detailed_server <- function(id, selected_model_run, selected_site) {
+mod_principal_detailed_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     available_aggregations <- shiny::reactive({
-      selected_model_run() |>
-        get_available_aggregations(id)
+      selected_data() |>
+        get_available_aggregations()
     })
 
     shiny::observe({
@@ -91,7 +91,7 @@ mod_principal_detailed_server <- function(id, selected_model_run, selected_site)
         "Treatment Specialty" = "tretspef"
       )
 
-      selected_model_run() |>
+      selected_data() |>
         get_aggregation(pod, measure, agg_col) |>
         shiny::req() |>
         dplyr::transmute(

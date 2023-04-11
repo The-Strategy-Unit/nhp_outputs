@@ -124,12 +124,12 @@ mod_principal_high_level_plot <- function(data, activity_type) {
 #' principal_high_level Server Functions
 #'
 #' @noRd
-mod_principal_high_level_server <- function(id, selected_model_run, selected_site) {
+mod_principal_high_level_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     pods <- mod_principal_high_level_pods()
 
     summary_data <- shiny::reactive({
-      selected_model_run() |>
+      selected_data() |>
         mod_principal_high_level_summary_data(pods)
     })
 

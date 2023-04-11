@@ -68,10 +68,10 @@ mod_principal_summary_table <- function(data) {
 #' principal_summary Server Functions
 #'
 #' @noRd
-mod_principal_summary_server <- function(id, selected_model_run, selected_site) {
+mod_principal_summary_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     summary_data <- shiny::reactive({
-      id <- selected_model_run()
+      id <- selected_data()
       mod_principal_summary_data(id)
     })
 
