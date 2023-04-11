@@ -101,18 +101,21 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       shiny::updateSelectInput(session, "create_datetime", choices = choices)
     })
 
-    selected_results <- shiny::reactive({
+    selected_filename <- shiny::reactive({
       rs <- result_sets()
       sc <- shiny::req(input$scenario)
       cd <- shiny::req(input$create_datetime)
 
-      filename <- result_sets() |>
+      result_sets() |>
         shiny::req() |>
         dplyr::filter(.data$scenario == sc, .data$create_datetime == cd) |>
         dplyr::pull(filename)
-
-      get_results(filename)
     })
+
+    selected_results <- shiny::reactive({
+      get_results(selected_filename())
+    }) |>
+      shiny::bindCache(selected_filename())
 
     shiny::observe({
       trust_sites <- selected_results() |>
