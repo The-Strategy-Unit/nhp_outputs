@@ -66,8 +66,7 @@ mod_principal_detailed_server <- function(id, selected_model_run, selected_site)
     available_aggregations <- shiny::reactive({
       selected_model_run() |>
         get_available_aggregations(id)
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     shiny::observe({
       c(activity_type, pod, measure) %<-% selected_measure()
@@ -104,8 +103,7 @@ mod_principal_detailed_server <- function(id, selected_model_run, selected_site)
           change = .data$final - .data$baseline,
           change_pcnt = .data$change / .data$baseline
         )
-    }) |>
-      shiny::bindCache(selected_model_run(), selected_measure(), input$aggregation)
+    })
 
     site_data <- shiny::reactive({
       selected_data() |>

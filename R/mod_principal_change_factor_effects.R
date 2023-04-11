@@ -155,8 +155,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run) {
             "health_status_adjustment"
           )
         )
-    }) |>
-      shiny::bindCache(selected_model_run(), input$activity_type)
+    })
 
     shiny::observe({
       at <- shiny::req(input$activity_type)

@@ -64,8 +64,7 @@ mod_model_core_activity_server <- function(id, selected_model_run, selected_site
       selected_model_run() |>
         get_model_core_activity() |>
         dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures"))
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     site_data <- shiny::reactive({
       summarised_data() |>

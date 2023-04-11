@@ -99,15 +99,13 @@ mod_principal_capacity_requirements_server <- function(id, selected_model_run) {
         get_bed_occupancy() |>
         dplyr::filter(.data$model_run == 1) |>
         dplyr::select("quarter", "ward_group", "baseline", "principal")
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     four_hour_sessions <- shiny::reactive({
       selected_model_run() |>
         get_theatres_available() |>
         dplyr::select("tretspef", "baseline", "principal")
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     output$beds <- gt::render_gt({
       beds_data() |>

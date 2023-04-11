@@ -131,8 +131,7 @@ mod_principal_high_level_server <- function(id, selected_model_run, selected_sit
     summary_data <- shiny::reactive({
       selected_model_run() |>
         mod_principal_high_level_summary_data(pods)
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     site_data <- shiny::reactive({
       summary_data() |>

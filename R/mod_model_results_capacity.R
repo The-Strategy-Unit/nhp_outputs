@@ -109,14 +109,12 @@ mod_model_results_capacity_server <- function(id, selected_model_run) {
     beds_data <- shiny::reactive({
       selected_model_run() |>
         get_bed_occupancy()
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     variants <- shiny::reactive({
       selected_model_run() |>
         get_variants()
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     four_hour_sessions <- shiny::reactive({
       selected_model_run() |>
@@ -124,8 +122,7 @@ mod_model_results_capacity_server <- function(id, selected_model_run) {
         dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
         tidyr::unnest("model_runs") |>
         dplyr::inner_join(variants(), by = "model_run")
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     output$beds <- plotly::renderPlotly({
       beds_data() |>

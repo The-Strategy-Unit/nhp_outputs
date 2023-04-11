@@ -73,8 +73,7 @@ mod_principal_summary_server <- function(id, selected_model_run, selected_site) 
     summary_data <- shiny::reactive({
       id <- selected_model_run()
       mod_principal_summary_data(id)
-    }) |>
-      shiny::bindCache(selected_model_run())
+    })
 
     site_data <- shiny::reactive({
       summary_data() |>

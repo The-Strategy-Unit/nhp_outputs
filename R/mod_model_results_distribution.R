@@ -93,8 +93,7 @@ mod_model_results_distribution_server <- function(id, selected_model_run, select
 
     selected_data <- shiny::reactive({
       mod_model_results_distribution_get_data(selected_model_run(), selected_measure())
-    }) |>
-      shiny::bindCache(selected_model_run(), selected_measure())
+    })
 
     site_data <- shiny::reactive({
       selected_data() |>
