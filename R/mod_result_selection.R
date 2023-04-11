@@ -25,26 +25,35 @@ mod_result_selection_ui <- function(id) {
 #' @noRd
 mod_result_selection_server <- function(id, user_allowed_datasets) {
   shiny::moduleServer(id, function(input, output, session) {
-    results_sets <- shiny::reactive({
+    available_datasets <- shiny::reactive({
+      get_user_allowed_datasets(session$user)
+    })
+
+    return (shiny::reactive(NULL))
+    
+    shiny::observe({
+      ds <- available_datasets()
+      shiny::updateSelectInput(session, "dataset", choices = ds)
+    }) |>
+      shiny::bindEvent(available_datasets())
+
+    result_sets <- shiny::reactive({
       app_version <- Sys.getenv("NHP_APP_VERSION", "dev") |>
         stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
 
       rs <- get_result_sets(input$dataset)
 
       # handle case where no result sets are available
-      shiny::req(nrow(rs) > 0)
+      shiny::req(length(rs) > 0)
 
       rs |>
-        dplyr::filter(.data$dataset %in% user_allowed_datasets()) |>
-        dplyr::group_nest(.data$dataset, .data$scenario, .key = "create_datetime") |>
-        dplyr::mutate(
-          dplyr::across("create_datetime", purrr::map, tibble::deframe)
+        stringr::str_remove("^.*/|\\.json$") |>
+        stringr::str_split("-") |>
+        purrr::map_dfr(
+          purrr::set_names,
+          c("scenario", "create_datetime")
         ) |>
-        dplyr::group_nest(.data$dataset, .key = "scenario") |>
-        dplyr::mutate(
-          dplyr::across("scenario", purrr::map, tibble::deframe)
-        ) |>
-        tibble::deframe()
+        dplyr::mutate(filename = rs)
     })
 
     shiny::observe({
@@ -64,18 +73,9 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       }
     )
 
-    shiny::observe({
-      # TODO: THERE IS A CIRCULAR REFERENCE NOW ON THIS
-      #       change to use the available datasets object instead
-      x <- shiny::req(results_sets())
-      shiny::updateSelectInput(session, "dataset", choices = names(x))
-    })
-
     scenarios <- shiny::reactive({
-      x <- shiny::req(results_sets())
-      v <- shiny::req(input$dataset)
-      shiny::req(v %in% names(x))
-      x[[v]]
+      x <- shiny::req(result_sets())
+      sort(unique(x$scenario))
     })
 
     shiny::observe({
@@ -85,9 +85,11 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
 
     create_datetimes <- shiny::reactive({
       x <- shiny::req(scenarios())
-      v <- shiny::req(input$scenario)
-      shiny::req(v %in% names(x))
-      x[[v]]
+      result_sets() |>
+        dplyr::filter(.data$scenario == x) |>
+        dplyr::pull(.data$create_datetime) |>
+        unique() |>
+        sort()
     })
 
     shiny::observe({
@@ -98,40 +100,37 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
         lubridate::with_tz() |>
         format("%d/%m/%Y %H:%M:%S")
 
-      choices <- purrr::set_names(names(x), labels)
+      # choices <- purrr::set_names(names(x), labels)
+      choices <- x
       shiny::updateSelectInput(session, "create_datetime", choices = choices)
     })
 
-    run_id <- shiny::reactive({
-      ds <- shiny::req(input$dataset)
+    selected_model_run_data <- shiny::reactive({
+      rs <- result_sets()
       sc <- shiny::req(input$scenario)
       cd <- shiny::req(input$create_datetime)
 
-      rs <- shiny::req(results_sets())
+      filename <- result_sets() |>
+        dplyr::filter(.data$scenario == sc, .data$create_datetime == cd) |>
+        dplyr::pull(filename)
 
-      purrr::reduce(c(ds, sc, cd), .init = rs, \(.x, .y) {
-        shiny::req(.y %in% names(.x))
-        .x[[.y]]
-      })
+      get_results(filename)
     })
 
     shiny::observe({
-      id <- shiny::req(run_id())
+      id <- shiny::req(selected_model_run_data())
 
       trust_sites <- get_trust_sites(id)
 
       shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
     }) |>
-      shiny::bindEvent(run_id())
+      shiny::bindEvent(selected_model_run_data())
 
     selected_model_run <- shiny::reactive({
-      ds <- shiny::req(input$dataset)
-      sc <- shiny::req(input$scenario)
-      cd <- shiny::req(input$create_datetime)
-      id <- shiny::req(run_id())
-      site <- shiny::req(input$site_selection)
-
-      list(ds = ds, sc = sc, cd = cd, id = id, site = site)
+      list(
+        data = selected_model_run_data(),
+        site = input$site_selection
+      )
     })
 
     return(selected_model_run)

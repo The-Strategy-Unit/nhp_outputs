@@ -9,9 +9,9 @@ app_server <- function(input, output, session) {
   })
 
   # this module returns a reactive which contains the data path
-  selected_model_run <- mod_result_selection_server("result_selection", user_allowed_datasets)
+  result_selection <- mod_result_selection_server("result_selection", user_allowed_datasets)
   selected_model_run <- shiny::reactive({
-    selected_model_run()$id
+    selected_model_run()$data
   })
   selected_site <- shiny::reactive({
     selected_model_run()$site
