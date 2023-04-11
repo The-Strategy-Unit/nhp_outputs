@@ -65,28 +65,28 @@ test_that("it sets up mod_measure_selection_server", {
 
   stub(mod_principal_detailed_server, "mod_measure_selection_server", m)
 
-  selected_model_id <- reactiveVal()
+  selected_data <- reactiveVal()
   selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
+  testServer(mod_principal_detailed_server, args = list(selected_data, selected_site), {
     expect_called(m, 1)
     expect_args(m, 1, "measure_selection")
     expect_equal(selected_measure, "mod_measure_selection_server")
   })
 })
 
-test_that("it calls cosmos_get_available_aggregations", {
-  m <- mock("cosmos_get_available_aggregations")
+test_that("it calls get_available_aggregations", {
+  m <- mock("get_available_aggregations")
 
-  stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", m)
+  stub(mod_principal_detailed_server, "get_available_aggregations", m)
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
 
-  selected_model_id <- reactiveVal()
+  selected_data <- reactiveVal()
   selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
-    selected_model_id(1)
-    expect_equal(available_aggregations(), "cosmos_get_available_aggregations")
+  testServer(mod_principal_detailed_server, args = list(selected_data, selected_site), {
+    selected_data(1)
+    expect_equal(available_aggregations(), "get_available_aggregations")
     expect_called(m, 1)
     expect_args(m, 1, 1)
   })
@@ -96,14 +96,14 @@ test_that("it updates the aggregation drop down", {
   m <- mock()
 
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
-  stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
+  stub(mod_principal_detailed_server, "get_available_aggregations", available_aggregations_expected)
   stub(mod_principal_detailed_server, "shiny::updateSelectInput", m)
 
-  selected_model_id <- reactiveVal()
+  selected_data <- reactiveVal()
   selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
-    selected_model_id(1)
+  testServer(mod_principal_detailed_server, args = list(selected_data, selected_site), {
+    selected_data(1)
     selected_measure(selected_measure_expected)
     session$private$flush() # manually trigger an invalidation
 
@@ -112,18 +112,18 @@ test_that("it updates the aggregation drop down", {
   })
 })
 
-test_that("it calls cosmos_get_aggregation", {
+test_that("it calls get_aggregation", {
   m <- mock(aggregations_age_group_expected, aggregations_tretspef_expected)
 
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
-  stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
-  stub(mod_principal_detailed_server, "cosmos_get_aggregation", m)
+  stub(mod_principal_detailed_server, "get_available_aggregations", available_aggregations_expected)
+  stub(mod_principal_detailed_server, "get_aggregation", m)
 
-  selected_model_id <- reactiveVal()
+  selected_data <- reactiveVal()
   selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
-    selected_model_id(1)
+  testServer(mod_principal_detailed_server, args = list(selected_data, selected_site), {
+    selected_data(1)
     selected_measure(selected_measure_expected)
 
     expected <- aggregations_age_group_expected |>
@@ -137,7 +137,7 @@ test_that("it calls cosmos_get_aggregation", {
         change_pcnt = change / baseline
       )
     session$setInputs(aggregation = "Age Group")
-    expect_equal(selected_data(), expected)
+    expect_equal(aggregated_data(), expected)
 
     expected <- aggregations_tretspef_expected |>
       dplyr::transmute(
@@ -150,7 +150,7 @@ test_that("it calls cosmos_get_aggregation", {
         change_pcnt = change / baseline
       )
     session$setInputs(aggregation = "Treatment Specialty")
-    expect_equal(selected_data(), expected)
+    expect_equal(aggregated_data(), expected)
 
     expect_called(m, 2)
     expect_args(m, 1, 1, "aae_type-01", "ambulance", "age_group")
@@ -162,16 +162,16 @@ test_that("it renders the table", {
   m <- mock()
 
   stub(mod_principal_detailed_server, "mod_measure_selection_server", reactiveVal)
-  stub(mod_principal_detailed_server, "cosmos_get_available_aggregations", available_aggregations_expected)
-  stub(mod_principal_detailed_server, "cosmos_get_aggregation", aggregations_age_group_expected)
+  stub(mod_principal_detailed_server, "get_available_aggregations", available_aggregations_expected)
+  stub(mod_principal_detailed_server, "get_aggregation", aggregations_age_group_expected)
   stub(mod_principal_detailed_server, "dplyr::transmute", \(x, ...) x)
   stub(mod_principal_detailed_server, "mod_principal_detailed_table", m)
 
-  selected_model_id <- reactiveVal()
+  selected_data <- reactiveVal()
   selected_site <- reactiveVal()
 
-  testServer(mod_principal_detailed_server, args = list(selected_model_id, selected_site), {
-    selected_model_id(1)
+  testServer(mod_principal_detailed_server, args = list(selected_data, selected_site), {
+    selected_data(1)
     selected_site("trust")
     selected_measure(selected_measure_expected)
     session$setInputs(aggregation = "Age Group")

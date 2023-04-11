@@ -34,10 +34,10 @@ mod_principal_detailed_ui <- function(id) {
 mod_principal_detailed_table <- function(data, aggregation) {
   data |>
     dplyr::mutate(
-      dplyr::across("sex", ~ ifelse(.x == 1, "Male", "Female")),
-      dplyr::across("final", gt_bar, scales::comma_format(1), "#686f73", "#686f73"),
-      dplyr::across("change", gt_bar, scales::comma_format(1)),
-      dplyr::across("change_pcnt", gt_bar, scales::percent_format(1))
+      dplyr::across("sex", \(.x) ifelse(.x == 1, "Male", "Female")),
+      dplyr::across("final", \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")),
+      dplyr::across("change", \(.x) gt_bar(.x, scales::comma_format(1))),
+      dplyr::across("change_pcnt", \(.x) gt_bar(.x, scales::percent_format(1)))
     ) |>
     gt::gt(groupname_col = "sex") |>
     gt::cols_label(
@@ -82,7 +82,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       shiny::updateSelectInput(session, "aggregation", choices = unname(an[a]))
     })
 
-    selected_data <- shiny::reactive({
+    aggregated_data <- shiny::reactive({
       activity_type <- pod <- measure <- NULL
       c(activity_type, pod, measure) %<-% selected_measure()
 
@@ -106,7 +106,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
     })
 
     site_data <- shiny::reactive({
-      selected_data() |>
+      aggregated_data() |>
         shiny::req() |>
         dplyr::filter(.data$sitetret == selected_site(), .data$baseline > 0) |>
         dplyr::select(-"sitetret")

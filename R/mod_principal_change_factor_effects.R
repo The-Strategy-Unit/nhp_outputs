@@ -55,20 +55,18 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     dplyr::mutate(
       dplyr::across(
         "change_factor",
-        forcats::fct_reorder,
-        -.data$value
+        \(.x) forcats::fct_reorder(.x, -.data$value)
       ),
       # baseline may now not be the first item, move it back to start
       dplyr::across(
         "change_factor",
-        forcats::fct_relevel,
-        "baseline"
+        \(.x) forcats::fct_relevel(.x, "baseline")
       )
     )
 
   cfs <- data |>
     dplyr::group_by(.data$change_factor) |>
-    dplyr::summarise(dplyr::across("value", sum, na.rm = TRUE)) |>
+    dplyr::summarise(dplyr::across("value", \(.x) sum(.x, na.rm = TRUE))) |>
     dplyr::mutate(cuvalue = cumsum(.data$value)) |>
     dplyr::mutate(
       hidden = tidyr::replace_na(dplyr::lag(.data$cuvalue) + pmin(.data$value, 0), 0),
@@ -97,9 +95,9 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     ) |>
     tidyr::pivot_longer(c("value", "hidden")) |>
     dplyr::mutate(
-      dplyr::across("colour", ~ ifelse(.data$name == "hidden", NA, .x)),
-      dplyr::across("name", forcats::fct_relevel, "hidden", "value"),
-      dplyr::across("change_factor", factor, rev(levels))
+      dplyr::across("colour", \(.x) ifelse(.data$name == "hidden", NA, .x)),
+      dplyr::across("name", \(.x) forcats::fct_relevel(.x, "hidden", "value")),
+      dplyr::across("change_factor", \(.x) factor(.x, rev(levels)))
     )
 }
 
@@ -149,10 +147,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
           dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
             "change_factor",
-            forcats::fct_relevel,
-            "baseline",
-            "demographic_adjustment",
-            "health_status_adjustment"
+            \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
           )
         )
     })
@@ -180,9 +175,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         )
 
       if (input$sort_type == "descending value") {
-        dplyr::mutate(d, dplyr::across("strategy", forcats::fct_reorder, -.data$value))
+        dplyr::mutate(d, dplyr::across("strategy", \(.x) forcats::fct_reorder(.x, -.data$value)))
       } else {
-        dplyr::mutate(d, dplyr::across("strategy", forcats::fct_reorder, .data$strategy))
+        dplyr::mutate(d, dplyr::across("strategy", \(.x) forcats::fct_reorder(.x, .data$strategy)))
       }
     })
 

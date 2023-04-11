@@ -91,12 +91,12 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
-    selected_data <- shiny::reactive({
+    aggregated_data <- shiny::reactive({
       mod_model_results_distribution_get_data(selected_data(), selected_measure())
     })
 
     site_data <- shiny::reactive({
-      selected_data() |>
+      aggregated_data() |>
         require_rows() |>
         dplyr::filter(.data$sitetret == selected_site()) |>
         dplyr::select(-"sitetret")

@@ -58,12 +58,12 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
 
     output$download_results <- shiny::downloadHandler(
       filename = function() {
-        params <- shiny::req(selected_data())$params
+        params <- shiny::req(selected_results())$params
 
         glue::glue("{params$dataset}-{params$scenario}-{params$create_datetime}.json")
       },
       content = function(file) {
-        shiny::req(selected_data()) |>
+        shiny::req(selected_results()) |>
           jsonlite::write_json(file, pretty = TRUE, auto_unbox = TRUE)
       }
     )

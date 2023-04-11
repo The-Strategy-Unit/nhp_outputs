@@ -25,21 +25,6 @@ fhs_expected <- tibble::tribble(
   "c", 80, 90, c(70, 80, 90)
 )
 
-theatres_expected <- tibble::tribble(
-  ~baseline, ~principal, ~model_run, ~value, ~variant,
-  10, 20, 1, 4, "a",
-  10, 20, 2, 5, "a",
-  10, 20, 3, 6, "b"
-)
-
-theatres_data_expected <- list(
-  "four_hour_sessions" = fhs_expected,
-  "theatres" = tibble::tribble(
-    ~tretspef, ~baseline, ~principal, ~model_runs,
-    NA, 10, 20, 4:6
-  )
-)
-
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -105,7 +90,7 @@ test_that("beds_available_plot combines the plots into a plotly object", {
 
 test_that("fhs_available_plot returns a ggplot object", {
   data <- fhs_expected |>
-    dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+    dplyr::mutate(dplyr::across("model_runs", \(.x) purrr::map(.x, tibble::enframe, "model_run"))) |>
     tidyr::unnest("model_runs") |>
     dplyr::mutate(variant = "a")
 
@@ -117,33 +102,47 @@ test_that("fhs_available_plot returns a ggplot object", {
 # server
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-test_that("it calls cosmos_get_bed_occupancy correctly", {
+test_that("it calls get_bed_occupancy correctly", {
   m <- mock("beds_data")
 
-  stub(mod_model_results_capacity_server, "cosmos_get_bed_occupancy", m)
+  stub(mod_model_results_capacity_server, "get_bed_occupancy", m)
 
   shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
-    selected_model_run("id")
+    selected_data("data")
 
     expect_equal(beds_data(), "beds_data")
 
     expect_called(m, 1)
-    expect_args(m, 1, "id")
+    expect_args(m, 1, "data")
   })
 })
 
-test_that("it calls cosmos_get_theatres_available correctly", {
-  m <- mock("theatres_data")
+test_that("it calls get_theatres_available correctly", {
+  m <- mock(fhs_expected)
 
-  stub(mod_model_results_capacity_server, "cosmos_get_theatres_available", m)
+  stub(mod_model_results_capacity_server, "get_theatres_available", m)
+  stub(
+    mod_model_results_capacity_server,
+    "get_variants",
+    tibble::tibble(model_run = 1:3, variant = c("a", "a", "b"))
+  )
+
+  expected <- tibble::tibble(
+    tretspef = c("a", "a", "a", "b", "b", "b", "c", "c", "c"),
+    baseline = c(50, 50, 50, 60, 60, 60, 80, 80, 80),
+    principal = c(45, 45, 45, 75, 75, 75, 90, 90, 90),
+    model_run = c(1, 2, 3, 1, 2, 3, 1, 2, 3),
+    value = c(10, 20, 30, 40, 50, 60, 70, 80, 90),
+    variant = c("a", "a", "b", "a", "a", "b", "a", "a", "b")
+  )
 
   shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
-    selected_model_run("id")
+    selected_data("data")
 
-    expect_equal(theatres_data(), "theatres_data")
+    expect_equal(four_hour_sessions(), expected)
 
     expect_called(m, 1)
-    expect_args(m, 1, "id")
+    expect_args(m, 1, "data")
   })
 })
 
@@ -152,16 +151,16 @@ test_that("it sets the reactives up correctly", {
     model_run = 1:3,
     variant = c("a", "a", "b")
   )
-  stub(mod_model_results_capacity_server, "cosmos_get_theatres_available", theatres_data_expected)
-  stub(mod_model_results_capacity_server, "cosmos_get_variants", expected_variants)
+  stub(mod_model_results_capacity_server, "get_theatres_available", fhs_expected)
+  stub(mod_model_results_capacity_server, "get_variants", expected_variants)
 
   fhs_data <- fhs_expected |>
-    dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+    dplyr::mutate(dplyr::across("model_runs", \(.x) purrr::map(.x, tibble::enframe, "model_run"))) |>
     tidyr::unnest("model_runs") |>
     dplyr::inner_join(expected_variants, by = "model_run")
 
   shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
-    selected_model_run("id")
+    selected_data(0)
 
     expect_equal(four_hour_sessions(), fhs_data)
   })

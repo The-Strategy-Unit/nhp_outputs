@@ -144,9 +144,7 @@ get_model_run_distribution <- function(r, pod, measure) {
     dplyr::mutate(
       dplyr::across(
         "model_runs",
-        purrr::map,
-        tibble::enframe,
-        name = "model_run"
+        \(.x) purrr::map(.x, tibble::enframe, name = "model_run")
       )
     ) |>
     tidyr::unnest("model_runs") |>
@@ -233,7 +231,7 @@ trust_site_aggregation <- function(data) {
     ) |>
     dplyr::summarise(
       sitetret = "trust",
-      dplyr::across(where(is.numeric), sum, na.rm = TRUE),
+      dplyr::across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE)),
       .groups = "drop"
     ) |>
     dplyr::bind_rows(data)

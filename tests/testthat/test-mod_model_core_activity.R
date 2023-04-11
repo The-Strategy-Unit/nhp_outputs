@@ -54,10 +54,10 @@ test_that("it gets the activity type/pod/measure reference data", {
   })
 })
 
-test_that("it calls cosmos_get_model_core_activity", {
+test_that("it calls get_model_core_activity", {
   m <- mock(model_core_activity_expected)
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
-  stub(mod_model_core_activity_server, "cosmos_get_model_core_activity", m)
+  stub(mod_model_core_activity_server, "get_model_core_activity", m)
 
   selected_model_run <- reactiveVal()
 
@@ -77,7 +77,7 @@ test_that("it renders the table", {
   m <- mock()
 
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
-  stub(mod_model_core_activity_server, "cosmos_get_model_core_activity", model_core_activity_expected)
+  stub(mod_model_core_activity_server, "get_model_core_activity", model_core_activity_expected)
   stub(mod_model_core_activity_server, "mod_model_core_activity_server_table", "table")
   stub(mod_model_core_activity_server, "gt::render_gt", m)
 

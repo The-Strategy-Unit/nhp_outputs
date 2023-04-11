@@ -81,7 +81,7 @@ mod_principal_capacity_requirements_fhs_table <- function(data) {
       baseline = "Baseline",
       principal = "Principal"
     ) |>
-    gt::summary_rows(
+    gt::grand_summary_rows(
       columns = c("baseline", "principal"),
       fns = list(total = "sum"),
       formatter = gt::fmt_integer

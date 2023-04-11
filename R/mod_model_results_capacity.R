@@ -119,7 +119,7 @@ mod_model_results_capacity_server <- function(id, selected_data) {
     four_hour_sessions <- shiny::reactive({
       selected_data() |>
         get_theatres_available() |>
-        dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+        dplyr::mutate(dplyr::across("model_runs", \(.x) purrr::map(.x, tibble::enframe, "model_run"))) |>
         tidyr::unnest("model_runs") |>
         dplyr::inner_join(variants(), by = "model_run")
     })
