@@ -371,6 +371,23 @@ test_that("get_model_run_distribution gets the results", {
   expect_args(m, 1, expected)
 })
 
+test_that("get_model_run_distribution returns NULL if filter returns no rows", {
+  r <- list(
+    results = list(
+      default = tibble::tibble(
+        pod = "a",
+        measure = "b",
+        sitetret = "c",
+        baseline = "d",
+        model_runs = "e"
+      )
+    )
+  )
+
+  expect_null(get_model_run_distribution(r, "a", "x"))
+  expect_null(get_model_run_distribution(r, "x", "b"))
+})
+
 test_that("get_aggregation gets the results", {
   m <- mock("tsa")
   stub(get_aggregation, "trust_site_aggregation", m)
@@ -396,6 +413,21 @@ test_that("get_aggregation gets the results", {
   expect_equal(actual, "tsa")
   expect_called(m, 1)
   expect_args(m, 1, expected)
+})
+
+test_that("get_aggregation returns NULL if filter returns no rows", {
+  r <- list(
+    results = list(
+      "sex+tretspef" = tibble::tibble(
+        pod = "a",
+        measure = "b",
+        value = 1
+      )
+    )
+  )
+
+  expect_null(get_aggregation(r, "a", "x", "tretspef"))
+  expect_null(get_aggregation(r, "x", "b", "tretspef"))
 })
 
 test_that("get_principal_change_factors gets the results", {

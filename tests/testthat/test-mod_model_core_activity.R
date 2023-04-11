@@ -73,6 +73,35 @@ test_that("it calls get_model_core_activity", {
   })
 })
 
+test_that("it filters for the site data", {
+  stub(mod_model_core_activity_server, "mod_principal_high_level_pods", "pods")
+  stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
+  stub(
+    mod_model_core_activity_server,
+    "get_model_core_activity",
+    tibble::tibble(
+      sitetret = c("a", "b"),
+      pod = c("aae_type-01", "aae_type-01"),
+      measure = c("ambulance", "ambulance"),
+      value = 1:2
+    )
+  )
+
+  shiny::testServer(mod_model_core_activity_server, args = list(reactiveVal(1), reactiveVal("a")), {
+    expect_equal(
+      site_data(),
+      tibble::tibble(
+        pod = "aae_type-01",
+        measure = "ambulance",
+        value = 1,
+        activity_type = "aae",
+        activity_type_name = "A&E",
+        pod_name = "Type 1 Department"
+      )
+    )
+  })
+})
+
 test_that("it renders the table", {
   m <- mock()
 

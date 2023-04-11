@@ -125,13 +125,13 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
     })
 
-    return(
-      shiny::reactive({
+    return_reactive <- shiny::reactive({
         list(
           data = selected_results(),
           site = input$site_selection
         )
       })
-    )
+    
+    return_reactive
   })
 }

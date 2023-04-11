@@ -150,6 +150,24 @@ test_that("it gets the summary data", {
   })
 })
 
+test_that("it filters for the site data", {
+  stub(mod_principal_high_level_server, "mod_principal_high_level_pods", "pods")
+  stub(
+    mod_principal_high_level_server,
+    "mod_principal_high_level_summary_data",
+    tibble::tibble(
+      sitetret = c("a", "b"),
+      value = 1:2
+    )
+  )
+  shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(1), reactiveVal("a")), {
+    expect_equal(
+      site_data(),
+      tibble::tibble(value = 1)
+    )
+  })
+})
+
 test_that("it creates the table", {
   m <- mock()
   stub(mod_principal_high_level_server, "gt::render_gt", m)

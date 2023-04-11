@@ -131,7 +131,13 @@ test_that("it returns a reactive", {
       site_selection = "trust"
     )
 
-    expect_equal(selected_results(), "data")
+    expect_equal(
+      return_reactive(),
+      list(
+        data = "data",
+        site = "trust"
+      )
+    )
   })
 
   expect_called(m, 1)
