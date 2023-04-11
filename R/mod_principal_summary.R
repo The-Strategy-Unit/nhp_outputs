@@ -71,8 +71,8 @@ mod_principal_summary_table <- function(data) {
 mod_principal_summary_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     summary_data <- shiny::reactive({
-      id <- selected_data()
-      mod_principal_summary_data(id)
+      selected_data() |>
+        mod_principal_summary_data()
     })
 
     site_data <- shiny::reactive({
