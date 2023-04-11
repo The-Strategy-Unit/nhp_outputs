@@ -68,7 +68,7 @@ get_results <- function(filename, local = !getOption("golem.app.prod", FALSE)) {
 }
 
 get_user_allowed_datasets <- function(user) {
-  # TODO: this should be grabbed from cosmos
+  # TODO: there should exist a configuration for users somewhere
   if (is.null(user)) {
     "synthetic"
   } else {
