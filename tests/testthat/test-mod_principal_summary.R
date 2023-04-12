@@ -10,6 +10,7 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
+  set.seed(123)
   expect_snapshot(mod_principal_summary_ui("id"))
 })
 
