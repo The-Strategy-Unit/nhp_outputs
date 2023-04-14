@@ -31,13 +31,25 @@
       mod_principal_summary_table(data)
     Output
       <div id="osncjrvket" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-        <style>html {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+        <style>#osncjrvket table {
+        font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      #osncjrvket thead, #osncjrvket tbody, #osncjrvket tfoot, #osncjrvket tr, #osncjrvket td, #osncjrvket th {
+        border-style: none;
+      }
+      
+      #osncjrvket p {
+        margin: 0;
+        padding: 0;
       }
       
       #osncjrvket .gt_table {
         display: table;
         border-collapse: collapse;
+        line-height: normal;
         margin-left: auto;
         margin-right: auto;
         color: #333333;
@@ -58,18 +70,6 @@
         border-left-style: none;
         border-left-width: 2px;
         border-left-color: #D3D3D3;
-      }
-      
-      #osncjrvket .gt_heading {
-        background-color: #FFFFFF;
-        text-align: left;
-        border-bottom-color: #FFFFFF;
-        border-left-style: none;
-        border-left-width: 1px;
-        border-left-color: #D3D3D3;
-        border-right-style: none;
-        border-right-width: 1px;
-        border-right-color: #D3D3D3;
       }
       
       #osncjrvket .gt_caption {
@@ -93,12 +93,24 @@
         color: #333333;
         font-size: 12px;
         font-weight: initial;
-        padding-top: 0;
-        padding-bottom: 6px;
+        padding-top: 3px;
+        padding-bottom: 5px;
         padding-left: 5px;
         padding-right: 5px;
         border-top-color: #FFFFFF;
         border-top-width: 0;
+      }
+      
+      #osncjrvket .gt_heading {
+        background-color: #FFFFFF;
+        text-align: left;
+        border-bottom-color: #FFFFFF;
+        border-left-style: none;
+        border-left-width: 1px;
+        border-left-color: #D3D3D3;
+        border-right-style: none;
+        border-right-width: 1px;
+        border-right-color: #D3D3D3;
       }
       
       #osncjrvket .gt_bottom_border {
@@ -172,6 +184,10 @@
         overflow-x: hidden;
         display: inline-block;
         width: 100%;
+      }
+      
+      #osncjrvket .gt_spanner_row {
+        border-bottom-style: hidden;
       }
       
       #osncjrvket .gt_group_heading {
@@ -273,6 +289,10 @@
         border-top-width: 2px;
       }
       
+      #osncjrvket .gt_row_group_first th {
+        border-top-width: 2px;
+      }
+      
       #osncjrvket .gt_summary_row {
         color: #333333;
         background-color: #FFFFFF;
@@ -322,6 +342,16 @@
         border-top-color: #D3D3D3;
       }
       
+      #osncjrvket .gt_last_grand_summary_row_top {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 5px;
+        padding-right: 5px;
+        border-bottom-style: double;
+        border-bottom-width: 6px;
+        border-bottom-color: #D3D3D3;
+      }
+      
       #osncjrvket .gt_striped {
         background-color: rgba(128, 128, 128, 0.05);
       }
@@ -352,8 +382,8 @@
       #osncjrvket .gt_footnote {
         margin: 0px;
         font-size: 90%;
-        padding-left: 4px;
-        padding-right: 4px;
+        padding-top: 4px;
+        padding-bottom: 4px;
         padding-left: 5px;
         padding-right: 5px;
       }
@@ -410,10 +440,9 @@
       }
       
       #osncjrvket .gt_footnote_marks {
-        font-style: italic;
-        font-weight: normal;
         font-size: 75%;
         vertical-align: 0.4em;
+        position: initial;
       }
       
       #osncjrvket .gt_asterisk {
@@ -441,10 +470,10 @@
         text-indent: 25px;
       }
       </style>
-        <table class="gt_table">
-        
-        <thead class="gt_col_headings">
-          <tr>
+        <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+        <thead>
+          
+          <tr class="gt_col_headings">
             <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
             <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="baseline">baseline</th>
             <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="principal">principal</th>

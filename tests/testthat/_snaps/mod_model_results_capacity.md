@@ -28,7 +28,7 @@
               </div>
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-20413e15413994e90f1d1b2e2a06c063" class="loader">Loading...</div>
+                  <div id="spinner-923352d96b7c8432680baa17223c3b34" class="loader">Loading...</div>
                 </div>
                 <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-beds" style="width:100%;height:800px;"></div>
               </div>
@@ -49,7 +49,7 @@
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-9b49b3f464160711aaa7aab548081729" class="loader">Loading...</div>
+                  <div id="spinner-5f400f4115a9b2f125f52d160e698941" class="loader">Loading...</div>
                 </div>
                 <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-fhs" style="width:100%;height:800px;"></div>
               </div>

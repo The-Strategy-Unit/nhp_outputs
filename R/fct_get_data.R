@@ -199,9 +199,7 @@ get_bed_occupancy <- function(r) {
     dplyr::mutate(
       dplyr::across(
         "model_runs",
-        purrr::map,
-        tibble::enframe,
-        name = "model_run"
+        \(.x) purrr::map(.x, tibble::enframe, name = "model_run")
       )
     ) |>
     tidyr::unnest("model_runs") |>
