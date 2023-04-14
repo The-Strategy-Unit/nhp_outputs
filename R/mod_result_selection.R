@@ -109,7 +109,7 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       result_sets() |>
         shiny::req() |>
         dplyr::filter(.data$scenario == sc, .data$create_datetime == cd) |>
-        dplyr::pull(filename)
+        dplyr::pull(.data$filename)
     })
 
     selected_results <- shiny::reactive({

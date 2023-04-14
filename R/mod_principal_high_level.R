@@ -64,7 +64,7 @@ mod_principal_high_level_summary_data <- function(r, pods) {
     dplyr::select(-"model_run") |>
     tidyr::complete(
       year = seq(start_year, end_year),
-      tidyr::nesting(sitetret, pod)
+      tidyr::nesting(sitetret, pod) # nolint (visible binding global variable)
     ) |>
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::select(-"pod") |>
