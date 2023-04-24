@@ -42,6 +42,16 @@
 			"isBackground": true,
 			"problemMatcher": [],
 			"label": "R: Deploy to dev"
+		},
+		{
+			"type": "R",
+			"code": [
+				"covr::package_coverage() |> covr::to_cobetura('coverage.xml')"
+			],
+			"group": "none",
+			"isBackground": "true",
+			"problemMatcher": [],
+			"label": "R: Generate Coverage"
 		}
 	]
 }
