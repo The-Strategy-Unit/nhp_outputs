@@ -44,6 +44,7 @@ Suggests:
     attempt,
     covr,
     devtools,
+    languageserver,
     mockery,
     pkgload,
     readr,
@@ -51,6 +52,7 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     utils,
+    vscDebugger,
     watchr (>= 0.0.0.9000)
 Encoding: UTF-8
 RoxygenNote: 7.2.3
@@ -61,3 +63,4 @@ Depends:
 Config/testthat/edition: 3
 Remotes:  
     github::tomjemmett/watchr
+    github::ManuelHentschel/vscDebugger
