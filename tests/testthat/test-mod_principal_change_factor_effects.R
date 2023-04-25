@@ -227,9 +227,10 @@ test_that("it sets up the individual change factors", {
 
   testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     selected_model_id(1)
-    session$setInputs(
-      activity_type = "ip", measure = "admissions", sort_type = "descending value", include_baseline = TRUE
-    )
+    session$setInputs(activity_type = "ip")
+    session$setInputs(measure = "admissions")
+    session$setInputs(sort_type = "descending value")
+    session$setInputs(include_baseline = TRUE)
 
     expected <- change_factors_expected$ip |>
       dplyr::filter(measure == "admissions", strategy != "-", value < 0)
@@ -260,14 +261,15 @@ test_that("it renders the plots", {
   selected_model_id <- reactiveVal(1)
 
   testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
-    session$setInputs(
-      activity_type = "ip", measure = "admissions", sort_type = "descending value", include_baseline = TRUE
-    )
+    session$setInputs(activity_type = "ip")
+    session$setInputs(measure = "admissions")
+    session$setInputs(sort_type = "descending value")
+    session$setInputs(include_baseline = TRUE)
     selected_model_id(1)
 
-    expect_called(m, 3)
-    expect_args(m, 1, "cfd")
-    expect_equal(mock_args(m)[[2]][-1], list("activity_avoidance", "#f9bf07", "Activity Avoidance", "Admissions"))
-    expect_equal(mock_args(m)[[3]][-1], list("efficiencies", "#ec6555", "Efficiencies", "Admissions"))
+    expect_called(m, 7)
+    expect_args(m, 3, "cfd")
+    expect_equal(mock_args(m)[[6]][-1], list("activity_avoidance", "#f9bf07", "Activity Avoidance", "Admissions"))
+    expect_equal(mock_args(m)[[7]][-1], list("efficiencies", "#ec6555", "Efficiencies", "Admissions"))
   })
 })

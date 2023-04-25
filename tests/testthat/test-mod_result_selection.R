@@ -124,12 +124,10 @@ test_that("it returns a reactive", {
       create_datetime = c("20220101_012345", "", "20220101_012345")
     )
 
-    session$setInputs(
-      dataset = "a",
-      scenario = "1",
-      create_datetime = "20220101_012345",
-      site_selection = "trust"
-    )
+    session$setInputs(dataset = "a")
+    session$setInputs(scenario = "1")
+    session$setInputs(create_datetime = "20220101_012345")
+    session$setInputs(site_selection = "trust")
 
     expect_equal(
       return_reactive(),
@@ -165,12 +163,10 @@ test_that("it downloads the results", {
   stub(mod_result_selection_server, "get_results", expected)
 
   testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
-    session$setInputs(
-      dataset = "a",
-      scenario = "1",
-      create_datetime = "20220101_012345",
-      site_selection = "trust"
-    )
+    session$setInputs(dataset = "a")
+    session$setInputs(scenario = "1")
+    session$setInputs(create_datetime = "20220101_012345")
+    session$setInputs(site_selection = "trust")
 
     results_file <- output$download_results
     withr::local_file(results_file)
