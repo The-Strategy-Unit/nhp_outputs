@@ -36,13 +36,15 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       shiny::bindEvent(available_datasets())
 
     result_sets <- shiny::reactive({
-      rs <- get_result_sets(input$dataset)
+      ds <- shiny::req(input$dataset)
+      rs <- get_result_sets(ds)
 
+      print(rs)
       # handle case where no result sets are available
       shiny::req(length(rs) > 0)
 
       rs |>
-        stringr::str_remove("^.*/|\\.json$") |>
+        stringr::str_remove_all("^.*/|\\.json(\\.gz)?$") |>
         stringr::str_split("-") |>
         purrr::map_dfr(
           purrr::set_names,
@@ -113,7 +115,9 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
     })
 
     selected_results <- shiny::reactive({
-      get_results(selected_filename())
+      selected_filename() |>
+        shiny::req() |>
+        get_results()
     }) |>
       shiny::bindCache(selected_filename())
 

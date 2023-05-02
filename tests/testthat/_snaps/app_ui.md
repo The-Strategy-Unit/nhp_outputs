@@ -115,12 +115,6 @@
                           <p>Upload Params</p>
                         </a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_rm" href="#" data-target="#shiny-tab-tab_rm" data-toggle="tab" data-value="tab_rm">
-                          <i class="fas fa-person-running" role="presentation" aria-label="person-running icon" verify_fa="FALSE" cl="fas fa-person-running nav-icon"></i>
-                          <p>Running Models</p>
-                        </a>
-                      </li>
                     </ul>
                   </li>
                   <div id="sidebarMenu" class="sidebarMenuSelectedTabItem" data-value="null"></div>

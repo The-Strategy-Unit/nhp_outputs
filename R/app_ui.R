@@ -65,11 +65,6 @@ app_ui <- function(request) {
           text = "Upload Params",
           tabName = "tab_up",
           icon = shiny::icon("sliders-h")
-        ),
-        bs4Dash::menuSubItem(
-          text = "Running Models",
-          tabName = "tab_rm",
-          icon = shiny::icon("running")
         )
       )
     )
