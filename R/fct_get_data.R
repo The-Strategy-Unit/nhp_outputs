@@ -22,12 +22,17 @@ get_result_sets <- function(dataset, local = !getOption("golem.app.prod", FALSE)
   if (local) {
     path <- file.path(Sys.getenv("RESULTS_PATH"), dataset)
 
-    files <- fs::dir_ls(path, glob = "*.json")
-
     return(
-      purrr::set_names(
-        files,
-        stringr::str_sub(files, stringr::str_length(path) + 2, -6)
+      tryCatch(
+        {
+          files <- fs::dir_ls(path, glob = "*.json")
+
+          purrr::set_names(
+            files,
+            stringr::str_sub(files, stringr::str_length(path) + 2, -6)
+          )
+        },
+        error = \(...) character()
       )
     )
   }

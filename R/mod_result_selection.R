@@ -35,12 +35,22 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
     }) |>
       shiny::bindEvent(available_datasets())
 
+    # blank out the dropdowns when the dataset changes
+    shiny::observe({
+      shiny::updateSelectInput(session, "scenario", choices = character())
+      shiny::updateSelectInput(session, "create_datetime", choices = character())
+      shiny::updateSelectInput(session, "trust", choices = character())
+    }) |>
+      shiny::bindEvent(input$dataset)
+
     result_sets <- shiny::reactive({
       ds <- shiny::req(input$dataset)
       rs <- get_result_sets(ds)
 
       # handle case where no result sets are available
-      shiny::req(length(rs) > 0)
+      if (length(rs) == 0) {
+        return(NULL)
+      }
 
       rs |>
         stringr::str_remove_all("^.*/|\\.json(\\.gz)?$") |>
@@ -129,12 +139,12 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
     })
 
     return_reactive <- shiny::reactive({
-        list(
-          data = selected_results(),
-          site = input$site_selection
-        )
-      })
-    
+      list(
+        data = selected_results(),
+        site = input$site_selection
+      )
+    })
+
     return_reactive
   })
 }
