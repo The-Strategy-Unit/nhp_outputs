@@ -253,7 +253,7 @@ process_param_file <- function(path,
 validate_params <- function(params) {
   c(
     "model_runs must be a power of 2" = params$model_runs %in% 2^(0:10),
-    "start_year must be 2018" = params$start_year == 2018,
+    "start_year must be 2018 or 2019" = params$start_year %in% c(2018, 2019),
     "end_year must be after start_year" = params$start_year < params$end_year,
     purrr::map(validation_functions, ~ .x(params)) |>
       purrr::flatten_lgl()
