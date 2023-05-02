@@ -14,7 +14,6 @@ test_that("it loads the module correctly: mod_model_core_activity_server", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -35,7 +34,6 @@ test_that("it loads the module correctly: mod_model_results_capacity_server", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -56,7 +54,6 @@ test_that("it loads the module correctly: mod_model_results_distribution_server"
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -77,7 +74,6 @@ test_that("it loads the module correctly: mod_params_upload_server", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -98,7 +94,6 @@ test_that("it loads the module correctly: mod_principal_capacity_requirements_se
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -119,7 +114,6 @@ test_that("it loads the module correctly: mod_principal_change_factor_effects_se
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -140,7 +134,6 @@ test_that("it loads the module correctly: mod_principal_detailed_server", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -161,7 +154,6 @@ test_that("it loads the module correctly: mod_principal_high_level_server", {
   stub(app_server, "mod_principal_high_level_server", m)
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -182,7 +174,6 @@ test_that("it loads the module correctly: mod_principal_summary_server", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", m)
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
@@ -203,33 +194,10 @@ test_that("it loads the module correctly: mod_result_selection_server", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", m)
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   testServer(app_server, {
     expect_called(m, 1)
     expect_args(m, 1, "result_selection", user_allowed_datasets)
-  })
-})
-
-test_that("it loads the module correctly: mod_running_models_server", {
-  m <- mock()
-
-  stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
-  stub(app_server, "mod_model_results_capacity_server", "mod_model_results_capacity_server")
-  stub(app_server, "mod_model_results_distribution_server", "mod_model_results_distribution_server")
-  stub(app_server, "mod_params_upload_server", "mod_params_upload_server")
-  stub(app_server, "mod_principal_capacity_requirements_server", "mod_principal_capacity_requirements_server")
-  stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
-  stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
-  stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
-  stub(app_server, "mod_running_models_server", m)
-
-  testServer(app_server, {
-    expect_called(m, 1)
-    expect_args(m, 1, "running_models")
   })
 })
 
@@ -246,7 +214,6 @@ test_that("it gets the list of allowed datasets for the current user", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   stub(app_server, "get_user_allowed_datasets", m)
 
@@ -270,7 +237,6 @@ test_that("it sets up the selected_data/site reactives correctly", {
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_result_selection_server", "mod_result_selection_server")
-  stub(app_server, "mod_running_models_server", "mod_running_models_server")
 
   stub(app_server, "mod_result_selection_server", m)
 

@@ -18,7 +18,6 @@ app_server <- function(input, output, session) {
   })
 
   mod_params_upload_server("params_upload", user_allowed_datasets)
-  mod_running_models_server("running_models")
 
   mod_principal_summary_server("principal_summary", selected_data, selected_site)
   mod_principal_high_level_server("principal_high_level", selected_data, selected_site)

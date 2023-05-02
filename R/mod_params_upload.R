@@ -374,14 +374,20 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
 
       shiny::validate(
         shiny::need(
-          stringr::str_detect(input$scenario_name, "[^a-zA-Z0-9\\_]", TRUE),
-          "scenario can only contain letters, numbers, or _ characters"
+          stringr::str_detect(input$scenario_name, "[^a-zA-Z0-9\\-]", TRUE),
+          "scenario can only contain letters, numbers, or - characters"
         )
       )
 
-      # create an identity to use when inserting into cosmosDB
-      #  (create this before adding in the user and create_datetime items)
-      params$id <- digest::digest(jsonlite::toJSON(params), "sha256", serialize = FALSE)
+      # generate an id based on the dataset, scenario, and a hash of the params
+      # make sure to add the user after creating the hash
+      # the id must be at most 63 characters long, and must match the regex:
+      #   '[a-z0-9]([-a-z0-9]*[a-z0-9])?'
+      hash <- digest::digest(jsonlite::toJSON(params), "crc32", serialize = FALSE)
+      params$id <- glue::glue("{params$dataset}-{params$scenario}") |>
+        stringr::str_sub(1, 63 - stringr::str_length(hash)) |>
+        stringr::str_to_lower() |>
+        paste0("-", hash)
 
       params$user <- session$user
 
@@ -395,27 +401,12 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       shinyjs::disable("submit_model_run")
       shiny::updateActionButton(session, "submit_model_run", "Submitted...")
 
-      job_name <- "test" # batch_submit_model_run(params)
-      running_jobs[[job_name]] <- job_name
+      status_code <- run_model(params)
 
-      status(paste("Submitted to batch:", job_name, "(Goto running models tab to view progress)"))
-    })
-
-    job_check_timer <- shiny::reactiveTimer(5000)
-    shiny::observeEvent(job_check_timer(), {
-      for (job_id in ls(running_jobs)) {
-        status <- batch_job_status(job_id)
-
-        if (status == "success") {
-          bs4Dash::toast("Job Success", paste(job_id, "completed successfully"))
-          batch_delete_job(job_id)
-        } else if (status == "failure") {
-          bs4Dash::toast("Job Failure", paste(job_id, "failed"))
-        }
-
-        if (status != "running") {
-          rm(list = job_id, envir = running_jobs)
-        }
+      if (status_code == "200") {
+        status(paste("Submitted to ACI:", params$id))
+      } else {
+        status(paste("Error:", status_code))
       }
     })
 
