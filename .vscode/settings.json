@@ -4,5 +4,6 @@
       "R/*.R",
       "tests/**/*.R"
     ]
-  }
+  },
+  "triggerTaskOnSave.restart": true
 }

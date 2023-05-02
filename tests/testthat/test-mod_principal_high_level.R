@@ -83,7 +83,7 @@ summary_data_expected <- tibble::tribble(
   2020, "RXX", 47000, "op", "Outpatient Procedure", "2020/21",
   2020, "trust", 137000, "aae", "A&E Attendance", "2020/21"
 ) |>
-  dplyr::mutate(dplyr::across(pod_name, factor, levels(pods_expected$pod_name)))
+  dplyr::mutate(dplyr::across(pod_name, \(.x) factor(.x, levels(pods_expected$pod_name))))
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
@@ -104,8 +104,8 @@ test_that("mod_principal_high_level_pods returns the correct list of pods", {
 
 test_that("mod_principal_high_level_summary_data processes data correctly", {
   m <- mock(c(2018, 2020), principal_high_level_expected)
-  stub(mod_principal_high_level_summary_data, "cosmos_get_model_run_years", m)
-  stub(mod_principal_high_level_summary_data, "cosmos_get_principal_high_level", m)
+  stub(mod_principal_high_level_summary_data, "get_model_run_years", m)
+  stub(mod_principal_high_level_summary_data, "get_principal_high_level", m)
 
   actual <- mod_principal_high_level_summary_data(1, pods_expected)
   expect_equal(actual, summary_data_expected)
@@ -147,6 +147,24 @@ test_that("it gets the summary data", {
     expect_equal(summary_data(), "summary data")
     expect_called(m, 1)
     expect_args(m, 1, 1, "pods")
+  })
+})
+
+test_that("it filters for the site data", {
+  stub(mod_principal_high_level_server, "mod_principal_high_level_pods", "pods")
+  stub(
+    mod_principal_high_level_server,
+    "mod_principal_high_level_summary_data",
+    tibble::tibble(
+      sitetret = c("a", "b"),
+      value = 1:2
+    )
+  )
+  shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(1), reactiveVal("a")), {
+    expect_equal(
+      site_data(),
+      tibble::tibble(value = 1)
+    )
   })
 })
 

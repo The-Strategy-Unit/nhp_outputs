@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "reditorsupport.r",
+        "rdebugger.r-debugger",
+        "meakbiyik.vscode-r-test-adapter",
+        "ryanluker.vscode-coverage-gutters"
+    ]
+}

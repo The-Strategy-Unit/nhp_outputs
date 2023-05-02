@@ -79,7 +79,7 @@ process_param_file <- function(path,
     ),
     "non-demographic_adjustment" = nda
   )
-  
+
   params$activity_avoidance <- list()
   params$efficiencies <- list()
 
@@ -129,7 +129,7 @@ process_param_file <- function(path,
       value = list(list(interval = c(.data$lo, .data$hi)))
     ) |>
     tibble::deframe()
-    
+
   params$efficiencies$op <- data$am_tc_op |>
     dplyr::filter(.data$include != 0) |>
     dplyr::rowwise() |>
@@ -202,7 +202,7 @@ process_param_file <- function(path,
     aae = data$ba_aae |>
       dplyr::rowwise() |>
       dplyr::transmute(
-        arrivalmode,
+        .data$arrivalmode,
         interval = list(c(.data$ba_lo, .data$ba_hi))
       ) |>
       tibble::deframe()

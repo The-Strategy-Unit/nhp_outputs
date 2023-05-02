@@ -95,10 +95,6 @@ app_ui <- function(request) {
         mod_params_upload_ui("params_upload")
       ),
       bs4Dash::tabItem(
-        tabName = "tab_rm",
-        mod_running_models_ui("running_models")
-      ),
-      bs4Dash::tabItem(
         tabName = "tab_ps",
         mod_principal_summary_ui("principal_summary")
       ),

@@ -104,29 +104,22 @@ mod_model_results_capacity_fhs_available_plot <- function(data) {
 #' capacity_beds Server Functions
 #'
 #' @noRd
-mod_model_results_capacity_server <- function(id, selected_model_run_id) {
+mod_model_results_capacity_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
     beds_data <- shiny::reactive({
-      id <- selected_model_run_id()
-      cosmos_get_bed_occupancy(id)
-    }) |>
-      shiny::bindCache(selected_model_run_id())
+      selected_data() |>
+        get_bed_occupancy()
+    })
 
     variants <- shiny::reactive({
-      id <- selected_model_run_id()
-      cosmos_get_variants(id)
-    }) |>
-      shiny::bindCache(selected_model_run_id())
-
-    theatres_data <- shiny::reactive({
-      id <- selected_model_run_id() # nolint
-      cosmos_get_theatres_available(id)
-    }) |>
-      shiny::bindCache(selected_model_run_id())
+      selected_data() |>
+        get_variants()
+    })
 
     four_hour_sessions <- shiny::reactive({
-      theatres_data()$four_hour_sessions |>
-        dplyr::mutate(dplyr::across("model_runs", purrr::map, tibble::enframe, "model_run")) |>
+      selected_data() |>
+        get_theatres_available() |>
+        dplyr::mutate(dplyr::across("model_runs", \(.x) purrr::map(.x, tibble::enframe, "model_run"))) |>
         tidyr::unnest("model_runs") |>
         dplyr::inner_join(variants(), by = "model_run")
     })

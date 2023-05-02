@@ -153,15 +153,14 @@
                   </div>
                 </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_up">params_upload</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_rm">running_models</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">principal_summary</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_high_level</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_detailed</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_change_factor_effects</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_capacity_requirements</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">model_core_activity</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">model_results_distribution</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_results_capacity</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">running_models</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_summary</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_high_level</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_detailed</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_change_factor_effects</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_capacity_requirements</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">model_core_activity</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_results_distribution</div>
               </div>
             </section>
           </div>

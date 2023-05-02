@@ -81,10 +81,10 @@ mod_principal_capacity_requirements_fhs_table <- function(data) {
       baseline = "Baseline",
       principal = "Principal"
     ) |>
-    gt::summary_rows(
+    gt::grand_summary_rows(
       columns = c("baseline", "principal"),
       fns = list(total = "sum"),
-      formatter = gt::fmt_integer
+      fmt = ~gt::fmt_integer(.)
     ) |>
     gt_theme()
 }
@@ -92,24 +92,18 @@ mod_principal_capacity_requirements_fhs_table <- function(data) {
 #' principal_capacity_requirements Server Functions
 #'
 #' @noRd
-mod_principal_capacity_requirements_server <- function(id, selected_model_run_id) {
+mod_principal_capacity_requirements_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
     beds_data <- shiny::reactive({
-      id <- selected_model_run_id()
-      cosmos_get_bed_occupancy(id) |>
+      selected_data() |>
+        get_bed_occupancy() |>
         dplyr::filter(.data$model_run == 1) |>
         dplyr::select("quarter", "ward_group", "baseline", "principal")
-    }) |>
-      shiny::bindCache(selected_model_run_id())
-
-    theatres_data <- shiny::reactive({
-      id <- selected_model_run_id()
-      cosmos_get_theatres_available(id)
-    }) |>
-      shiny::bindCache(selected_model_run_id())
+    })
 
     four_hour_sessions <- shiny::reactive({
-      theatres_data()$four_hour_sessions |>
+      selected_data() |>
+        get_theatres_available() |>
         dplyr::select("tretspef", "baseline", "principal")
     })
 

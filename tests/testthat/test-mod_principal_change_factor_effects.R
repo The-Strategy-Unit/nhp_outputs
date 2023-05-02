@@ -46,10 +46,7 @@ change_factors_expected <- list(
     dplyr::across("change_factor", forcats::fct_inorder),
     dplyr::across(
       "change_factor",
-      forcats::fct_relevel,
-      "baseline",
-      "demographic_adjustment",
-      "health_status_adjustment"
+      \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
     )
   ))
 
@@ -69,11 +66,17 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
   dplyr::mutate(
     dplyr::across(
       "change_factor",
-      forcats::fct_relevel,
-      "Estimate", "health_status_adjustment", "activity_avoidance", "demographic_adjustment", "baseline"
+      \(.x) forcats::fct_relevel(
+        .x,
+        "Estimate",
+        "health_status_adjustment",
+        "activity_avoidance",
+        "demographic_adjustment",
+        "baseline"
+      )
     ),
     dplyr::across(
-      "name", forcats::fct_relevel, c("hidden", "value")
+      "name", \(.x) forcats::fct_relevel(.x, c("hidden", "value"))
     )
   )
 
@@ -91,11 +94,16 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
   dplyr::mutate(
     dplyr::across(
       "change_factor",
-      forcats::fct_relevel,
-      "Estimate", "health_status_adjustment", "activity_avoidance", "demographic_adjustment"
+      \(.x) forcats::fct_relevel(
+        .x,
+        "Estimate",
+        "health_status_adjustment",
+        "activity_avoidance",
+        "demographic_adjustment"
+      )
     ),
     dplyr::across(
-      "name", forcats::fct_relevel, c("hidden", "value")
+      "name", \(.x) forcats::fct_relevel(.x, c("hidden", "value"))
     )
   )
 
@@ -162,7 +170,7 @@ test_that("it loads the data from cosmos when the activity_type or id changes", 
   m <- mock(change_factors_expected$aae, cycle = TRUE)
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
-  stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", m)
+  stub(mod_principal_change_factor_effects_server, "get_principal_change_factors", m)
 
   selected_model_id <- reactiveVal()
 
@@ -187,7 +195,7 @@ test_that("it updates the measures dropdown when the change factors updates", {
   cfe <- \(id, at) change_factors_expected[[at]]
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
-  stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
+  stub(mod_principal_change_factor_effects_server, "get_principal_change_factors", cfe)
   stub(mod_principal_change_factor_effects_server, "shiny::updateSelectInput", m)
 
   selected_model_id <- reactiveVal()
@@ -211,7 +219,7 @@ test_that("it sets up the individual change factors", {
   cfe <- \(id, at) change_factors_expected[[at]]
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
-  stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
+  stub(mod_principal_change_factor_effects_server, "get_principal_change_factors", cfe)
   stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", NULL)
   stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_cf_plot", NULL)
 
@@ -219,21 +227,22 @@ test_that("it sets up the individual change factors", {
 
   testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
     selected_model_id(1)
-    session$setInputs(
-      activity_type = "ip", measure = "admissions", sort_type = "descending value", include_baseline = TRUE
-    )
+    session$setInputs(activity_type = "ip")
+    session$setInputs(measure = "admissions")
+    session$setInputs(sort_type = "descending value")
+    session$setInputs(include_baseline = TRUE)
 
     expected <- change_factors_expected$ip |>
       dplyr::filter(measure == "admissions", strategy != "-", value < 0)
 
     expected_1 <- expected |>
-      dplyr::mutate(dplyr::across(strategy, forcats::fct_reorder, -value))
+      dplyr::mutate(dplyr::across(strategy, \(.x) forcats::fct_reorder(.x, -value)))
 
     expect_equal(individual_change_factors(), expected_1)
 
     session$setInputs(sort_type = "ascending value")
     expected_2 <- expected |>
-      dplyr::mutate(dplyr::across(strategy, forcats::fct_reorder, strategy))
+      dplyr::mutate(dplyr::across(strategy, \(.x) forcats::fct_reorder(.x, strategy)))
 
     expect_equal(individual_change_factors(), expected_2)
   })
@@ -244,7 +253,7 @@ test_that("it renders the plots", {
   cfe <- \(id, at) change_factors_expected[[at]]
 
   stub(mod_principal_change_factor_effects_server, "get_activity_type_pod_measure_options", atpmo_expected)
-  stub(mod_principal_change_factor_effects_server, "cosmos_get_principal_change_factors", cfe)
+  stub(mod_principal_change_factor_effects_server, "get_principal_change_factors", cfe)
   stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_summarised", "cfd")
   stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_cf_plot", m)
   stub(mod_principal_change_factor_effects_server, "mod_principal_change_factor_effects_ind_plot", m)
@@ -252,14 +261,15 @@ test_that("it renders the plots", {
   selected_model_id <- reactiveVal(1)
 
   testServer(mod_principal_change_factor_effects_server, args = list(selected_model_id), {
-    session$setInputs(
-      activity_type = "ip", measure = "admissions", sort_type = "descending value", include_baseline = TRUE
-    )
+    session$setInputs(activity_type = "ip")
+    session$setInputs(measure = "admissions")
+    session$setInputs(sort_type = "descending value")
+    session$setInputs(include_baseline = TRUE)
     selected_model_id(1)
 
-    expect_called(m, 3)
-    expect_args(m, 1, "cfd")
-    expect_equal(mock_args(m)[[2]][-1], list("activity_avoidance", "#f9bf07", "Activity Avoidance", "Admissions"))
-    expect_equal(mock_args(m)[[3]][-1], list("efficiencies", "#ec6555", "Efficiencies", "Admissions"))
+    expect_called(m, 7)
+    expect_args(m, 3, "cfd")
+    expect_equal(mock_args(m)[[6]][-1], list("activity_avoidance", "#f9bf07", "Activity Avoidance", "Admissions"))
+    expect_equal(mock_args(m)[[7]][-1], list("efficiencies", "#ec6555", "Efficiencies", "Admissions"))
   })
 })

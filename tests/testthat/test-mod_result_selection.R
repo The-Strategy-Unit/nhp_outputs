@@ -5,12 +5,11 @@ library(mockery)
 # setup
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-available_result_sets <- tibble::tribble(
-  ~dataset, ~scenario, ~create_datetime, ~id,
-  "a", "1", "20220101_012345", "a__1__20220101_012345",
-  "a", "2", "20220102_103254", "a__2__20220102_103254",
-  "a", "1", "20220203_112233", "a__1__20220203_112233",
-  "b", "1", "20220201_112233", "b__1__20220201_112233"
+available_result_sets <- c(
+  "1-20220101_012345",
+  "2-20220102_103254",
+  "1-20220203_112233",
+  "1-20220201_112233"
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -33,35 +32,22 @@ test_that("ui is created correctly", {
 test_that("it populates the list of available result sets", {
   m <- mock(available_result_sets, cycle = TRUE)
 
-  stub(mod_result_selection_server, "cosmos_get_result_sets", m)
+  stub(mod_result_selection_server, "get_result_sets", m)
 
   testServer(mod_result_selection_server, args = list(reactiveVal()), {
-    expected <- list(
-      a = list(
-        "1" = c(
-          "20220101_012345" = "a__1__20220101_012345",
-          "20220203_112233" = "a__1__20220203_112233"
-        ),
-        "2" = c(
-          "20220102_103254" = "a__2__20220102_103254"
-        )
-      ),
-      b = list(
-        "1" = c(
-          "20220201_112233" = "b__1__20220201_112233"
-        )
-      )
+    session$setInputs(dataset = "synthetic")
+
+    expected <- tibble::tibble(
+      scenario = c("1", "2", "1", "1"),
+      create_datetime = c("20220101_012345", "20220102_103254", "20220203_112233", "20220201_112233"),
+      filename = available_result_sets
     )
 
-    user_allowed_datasets("a")
-    actual <- results_sets()
-    expect_equal(actual, expected["a"])
-
-    user_allowed_datasets(c("a", "b"))
-    actual <- results_sets()
+    actual <- result_sets()
     expect_equal(actual, expected)
 
-    expect_called(m, 2)
+    expect_called(m, 1)
+    expect_args(m, 1, "synthetic")
   })
 })
 
@@ -69,7 +55,7 @@ test_that("it shows the download button when golem.app.prod = FALSE", {
   withr::local_options(c("golem.app.prod" = FALSE))
 
   m <- mock()
-  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "shinyjs::toggle", m)
 
   testServer(mod_result_selection_server, args = list(reactiveVal()), {
@@ -84,7 +70,7 @@ test_that("it shows the download button when the user is in the correct group", 
   withr::local_options(c("golem.app.prod" = TRUE))
 
   m <- mock()
-  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "shinyjs::toggle", m)
 
   testServer(mod_result_selection_server, args = list(reactiveVal()), {
@@ -105,7 +91,8 @@ test_that("it shows the download button when the user is in the correct group", 
 test_that("it sets up the dropdowns", {
   m <- mock()
 
-  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "get_user_allowed_datasets", "a")
+  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "shiny::updateSelectInput", m)
 
   testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
@@ -118,49 +105,41 @@ test_that("it sets up the dropdowns", {
     expect_args(m, 2, session, "scenario", choices = c("1", "2"))
     expect_args(m, 3, session, "create_datetime", choices = c(
       "01/01/2022 01:23:45" = "20220101_012345",
+      "01/02/2022 11:22:33" = "20220201_112233",
       "03/02/2022 11:22:33" = "20220203_112233"
     ))
   })
 })
 
-test_that("chosing an invalid dataset causes an error", {
-  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
-  stub(mod_result_selection_server, "shiny::updateSelectInput", NULL)
-
-  testServer(mod_result_selection_server, args = list(reactiveVal("a", "b")), {
-    session$setInputs(dataset = "Z")
-
-    expect_error(scenarios())
-  })
-})
-
-test_that("chosing an invalid combination of dataset and scenario causes an error", {
-  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
-  stub(mod_result_selection_server, "shiny::updateSelectInput", NULL)
-
-  testServer(mod_result_selection_server, args = list(reactiveVal("a", "b")), {
-    session$setInputs(dataset = "a")
-    session$setInputs(scenario = "Z")
-
-    expect_error(create_datetimes())
-  })
-})
-
 test_that("it returns a reactive", {
-  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
+  m <- mock("data")
+
+  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "get_results", m)
+  stub(mod_result_selection_server, "get_trust_sites", "trust")
 
   testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
-    session$setInputs(
-      dataset = "a",
-      scenario = "1",
-      create_datetime = "20220101_012345",
-      site_selection = "trust"
+    result_sets <- \() tibble::tibble(
+      scenario = c("1", "1", "2"),
+      create_datetime = c("20220101_012345", "", "20220101_012345")
     )
 
-    expect_equal(selected_model_run(), list(
-      ds = "a", sc = "1", cd = "20220101_012345", id = "a__1__20220101_012345", site = "trust"
-    ))
+    session$setInputs(dataset = "a")
+    session$setInputs(scenario = "1")
+    session$setInputs(create_datetime = "20220101_012345")
+    session$setInputs(site_selection = "trust")
+
+    expect_equal(
+      return_reactive(),
+      list(
+        data = "data",
+        site = "trust"
+      )
+    )
   })
+
+  expect_called(m, 1)
+  expect_args(m, 1, "1-20220101_012345")
 
   server <- function(input, output, session) {
     results <- mod_result_selection_server("id", reactiveVal("a"))
@@ -171,25 +150,38 @@ test_that("it returns a reactive", {
 })
 
 test_that("it downloads the results", {
-  m <- mock(list(data = 1))
-  stub(mod_result_selection_server, "cosmos_get_result_sets", available_result_sets)
-  stub(mod_result_selection_server, "cosmos_get_full_model_run_data", m)
+  expected <- list(
+    params = list(
+      "dataset" = "a",
+      "scenario" = "1",
+      "create_datetime" = "20220101_012345"
+    )
+  )
+
+  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "get_trust_sites", "trust")
+  stub(mod_result_selection_server, "get_results", expected)
 
   testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
-    session$setInputs(
-      dataset = "a",
-      scenario = "1",
-      create_datetime = "20220101_012345",
-      site_selection = "trust"
-    )
+    session$setInputs(dataset = "a")
+    session$setInputs(scenario = "1")
+    session$setInputs(create_datetime = "20220101_012345")
+    session$setInputs(site_selection = "trust")
 
     results_file <- output$download_results
     withr::local_file(results_file)
 
-    expect_called(m, 1)
-    expect_args(m, 1, "a__1__20220101_012345")
+    expect_true(stringr::str_ends(results_file, "a-1-20220101_012345.json"))
 
     results <- readr::read_lines(results_file)
-    expect_equal(results, c("{", "  \"data\": 1", "}"))
+    expect_equal(results, c(
+      "{",
+      "  \"params\": {",
+      "    \"dataset\": \"a\",",
+      "    \"scenario\": \"1\",",
+      "    \"create_datetime\": \"20220101_012345\"",
+      "  }",
+      "}"
+    ))
   })
 })

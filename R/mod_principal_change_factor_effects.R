@@ -55,20 +55,18 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     dplyr::mutate(
       dplyr::across(
         "change_factor",
-        forcats::fct_reorder,
-        -.data$value
+        \(.x) forcats::fct_reorder(.x, -.data$value)
       ),
       # baseline may now not be the first item, move it back to start
       dplyr::across(
         "change_factor",
-        forcats::fct_relevel,
-        "baseline"
+        \(.x) forcats::fct_relevel(.x, "baseline")
       )
     )
 
   cfs <- data |>
     dplyr::group_by(.data$change_factor) |>
-    dplyr::summarise(dplyr::across("value", sum, na.rm = TRUE)) |>
+    dplyr::summarise(dplyr::across("value", \(.x) sum(.x, na.rm = TRUE))) |>
     dplyr::mutate(cuvalue = cumsum(.data$value)) |>
     dplyr::mutate(
       hidden = tidyr::replace_na(dplyr::lag(.data$cuvalue) + pmin(.data$value, 0), 0),
@@ -97,9 +95,9 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     ) |>
     tidyr::pivot_longer(c("value", "hidden")) |>
     dplyr::mutate(
-      dplyr::across("colour", ~ ifelse(.data$name == "hidden", NA, .x)),
-      dplyr::across("name", forcats::fct_relevel, "hidden", "value"),
-      dplyr::across("change_factor", factor, rev(levels))
+      dplyr::across("colour", \(.x) ifelse(.data$name == "hidden", NA, .x)),
+      dplyr::across("name", \(.x) forcats::fct_relevel(.x, "hidden", "value")),
+      dplyr::across("change_factor", \(.x) factor(.x, rev(levels)))
     )
 }
 
@@ -126,7 +124,7 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
-mod_principal_change_factor_effects_server <- function(id, selected_model_run_id) {
+mod_principal_change_factor_effects_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
     shiny::observe({
       activity_types <- get_activity_type_pod_measure_options() |>
@@ -143,23 +141,18 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
     principal_change_factors <- shiny::reactive({
       at <- shiny::req(input$activity_type)
 
-      id <- selected_model_run_id()
-
-      cosmos_get_principal_change_factors(id, at) |>
+      selected_data() |>
+        get_principal_change_factors(at) |>
         dplyr::mutate(
           dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
             "change_factor",
-            forcats::fct_relevel,
-            "baseline",
-            "demographic_adjustment",
-            "health_status_adjustment"
+            \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
           )
         )
-    }) |>
-      shiny::bindCache(selected_model_run_id(), input$activity_type)
+    })
 
-    shiny::observeEvent(principal_change_factors(), {
+    shiny::observe({
       at <- shiny::req(input$activity_type)
       pcf <- shiny::req(principal_change_factors())
 
@@ -168,7 +161,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
       shiny::req(length(measures) > 0)
 
       shiny::updateSelectInput(session, "measure", choices = measures)
-    })
+    }) |>
+      shiny::bindEvent(principal_change_factors())
 
     individual_change_factors <- shiny::reactive({
       m <- shiny::req(input$measure)
@@ -181,9 +175,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_model_run_id
         )
 
       if (input$sort_type == "descending value") {
-        dplyr::mutate(d, dplyr::across("strategy", forcats::fct_reorder, -.data$value))
+        dplyr::mutate(d, dplyr::across("strategy", \(.x) forcats::fct_reorder(.x, -.data$value)))
       } else {
-        dplyr::mutate(d, dplyr::across("strategy", forcats::fct_reorder, .data$strategy))
+        dplyr::mutate(d, dplyr::across("strategy", \(.x) forcats::fct_reorder(.x, .data$strategy)))
       }
     })
 

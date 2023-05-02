@@ -69,7 +69,6 @@ test_that("fhs_table returns a gt", {
   set.seed(1) # ensure gt id always regenerated identically
 
   table <- fhs_expected |>
-    dplyr::select("baseline", "principal") |>
     mod_principal_capacity_requirements_fhs_table()
 
   expect_s3_class(table, "gt_tbl")
@@ -80,43 +79,34 @@ test_that("fhs_table returns a gt", {
 # server
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-test_that("it calls cosmos_get_bed_occupancy correctly", {
+test_that("it calls get_bed_occupancy correctly", {
   m <- mock(beds_expected)
 
-  stub(mod_principal_capacity_requirements_server, "cosmos_get_bed_occupancy", m)
+  stub(mod_principal_capacity_requirements_server, "get_bed_occupancy", m)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
+    selected_data("data")
 
     expect_equal(beds_data(), beds_data_filtered_expected)
 
     expect_called(m, 1)
-    expect_args(m, 1, "id")
+    expect_args(m, 1, "data")
   })
 })
 
-test_that("it calls cosmos_get_theatres_available correctly", {
-  m <- mock("theatres_data")
+test_that("it calls get_theatres_available correctly", {
+  d <- tibble::tibble(tretspef = 1, baseline = 2, principal = 3)
+  m <- mock(d)
 
-  stub(mod_principal_capacity_requirements_server, "cosmos_get_theatres_available", m)
+  stub(mod_principal_capacity_requirements_server, "get_theatres_available", m)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
+    selected_data("data")
 
-    expect_equal(theatres_data(), "theatres_data")
+    expect_equal(four_hour_sessions(), d)
 
     expect_called(m, 1)
-    expect_args(m, 1, "id")
-  })
-})
-
-test_that("it sets the reactives up correctly", {
-  stub(mod_principal_capacity_requirements_server, "cosmos_get_theatres_available", theatres_data_expected)
-
-  shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
-
-    expect_equal(four_hour_sessions(), fhs_expected)
+    expect_args(m, 1, "data")
   })
 })
 
@@ -124,13 +114,13 @@ test_that("it renders the tables", {
   m <- mock(
     mod_principal_capacity_requirements_get_utilisation_table(fhs_expected)
   )
-  stub(mod_principal_capacity_requirements_server, "cosmos_get_bed_occupancy", beds_expected)
-  stub(mod_principal_capacity_requirements_server, "cosmos_get_theatres_available", theatres_data_expected)
+  stub(mod_principal_capacity_requirements_server, "get_bed_occupancy", beds_expected)
+  stub(mod_principal_capacity_requirements_server, "get_theatres_available", fhs_expected)
   stub(mod_principal_capacity_requirements_server, "mod_principal_capacity_requirements_beds_table", m)
   stub(mod_principal_capacity_requirements_server, "mod_principal_capacity_requirements_fhs_table", m)
 
   shiny::testServer(mod_principal_capacity_requirements_server, args = list(reactiveVal()), {
-    selected_model_run_id("id")
+    selected_data("data")
 
     session$private$flush()
 
