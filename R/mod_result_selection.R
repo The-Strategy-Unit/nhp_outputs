@@ -39,7 +39,6 @@ mod_result_selection_server <- function(id, user_allowed_datasets) {
       ds <- shiny::req(input$dataset)
       rs <- get_result_sets(ds)
 
-      print(rs)
       # handle case where no result sets are available
       shiny::req(length(rs) > 0)
 
