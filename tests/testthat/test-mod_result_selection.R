@@ -90,20 +90,31 @@ test_that("it shows the download button when the user is in the correct group", 
 
 test_that("it sets up the dropdowns", {
   m <- mock()
+  m_get_result_sets <- mock(character(), available_result_sets)
 
   stub(mod_result_selection_server, "get_user_allowed_datasets", "a")
-  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "get_result_sets", m_get_result_sets)
   stub(mod_result_selection_server, "shiny::updateSelectInput", m)
 
   testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
     session$private$flush()
-    session$setInputs(dataset = "a")
+    session$setInputs(dataset = "b")
     session$setInputs(scenario = "1")
+    session$setInputs(dataset = "a")
 
-    expect_called(m, 3)
+    expect_called(m, 9)
     expect_args(m, 1, session, "dataset", choices = "a")
-    expect_args(m, 2, session, "scenario", choices = c("1", "2"))
-    expect_args(m, 3, session, "create_datetime", choices = c(
+
+    expect_args(m, 2, session, "scenario", choices = character(0))
+    expect_args(m, 3, session, "create_datetime", choices = character(0))
+    expect_args(m, 4, session, "trust", choices = character(0))
+
+    expect_args(m, 5, session, "scenario", choices = character(0))
+    expect_args(m, 6, session, "create_datetime", choices = character(0))
+    expect_args(m, 7, session, "trust", choices = character(0))
+
+    expect_args(m, 8, session, "scenario", choices = c("1", "2"))
+    expect_args(m, 9, session, "create_datetime", choices = c(
       "01/01/2022 01:23:45" = "20220101_012345",
       "01/02/2022 11:22:33" = "20220201_112233",
       "03/02/2022 11:22:33" = "20220203_112233"
