@@ -372,19 +372,19 @@ mod_params_upload_server <- function(id, user_allowed_datasets) {
       params$demographic_factors$file <- shiny::req(input$demographics_file)
       params$scenario <- shiny::req(input$scenario_name)
 
-      shiny::validate(
-        shiny::need(
-          stringr::str_detect(input$scenario_name, "[^a-zA-Z0-9\\-]", TRUE),
-          "scenario can only contain letters, numbers, or - characters"
-        )
-      )
-
       # generate an id based on the dataset, scenario, and a hash of the params
       # make sure to add the user after creating the hash
       # the id must be at most 63 characters long, and must match the regex:
       #   '[a-z0-9]([-a-z0-9]*[a-z0-9])?'
+      scenario_sanitized <- params$scenario |>
+        stringr::str_to_lower() |>
+        stringr::str_replace_all(
+          "[^a-z0-9]+",
+          "-"
+        )
       hash <- digest::digest(jsonlite::toJSON(params), "crc32", serialize = FALSE)
-      params$id <- glue::glue("{params$dataset}-{params$scenario}") |>
+
+      params$id <- glue::glue("{params$dataset}-{scenario_sanitized}") |>
         stringr::str_sub(1, 63 - stringr::str_length(hash)) |>
         stringr::str_to_lower() |>
         paste0("-", hash)
