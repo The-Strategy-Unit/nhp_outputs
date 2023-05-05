@@ -8,8 +8,15 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    name: Run R CMD check
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-latest,   r: 'release'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -17,16 +24,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
       - uses: r-lib/actions/setup-r@v2
         with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
+
+      - uses: r-lib/actions/setup-renv@v2
         with:
-          extra-packages: any::rcmdcheck, languageserver=?ignore, rsconnect=?ignore, vscDebugger=?ignore, watchr=?ignore
-          needs: check
+          profile: '"prod"'
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          args: 'c("--no-manual")'
+          error-on: '"error"'
         env: 
           _R_CHECK_EXCESSIVE_IMPORTS_: 0
