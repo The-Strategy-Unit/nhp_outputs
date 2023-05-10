@@ -56,16 +56,6 @@ app_ui <- function(request) {
           text = "Capacity requirements",
           tabName = "tab_mcap"
         )
-      ),
-      htmltools::tags$hr(),
-      bs4Dash::menuItem(
-        "Run Model",
-        startExpanded = FALSE,
-        bs4Dash::menuSubItem(
-          text = "Upload Params",
-          tabName = "tab_up",
-          icon = shiny::icon("sliders-h")
-        )
       )
     )
   )
@@ -84,10 +74,6 @@ app_ui <- function(request) {
             mod_result_selection_ui("result_selection")
           )
         )
-      ),
-      bs4Dash::tabItem(
-        tabName = "tab_up",
-        mod_params_upload_ui("params_upload")
       ),
       bs4Dash::tabItem(
         tabName = "tab_ps",

@@ -33,4 +33,3 @@ run_app <- function(onStart = NULL, # nolint
     golem_opts = list(...)
   )
 }
-LEM_

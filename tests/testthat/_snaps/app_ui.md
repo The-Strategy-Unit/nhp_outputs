@@ -100,23 +100,6 @@
                       </li>
                     </ul>
                   </li>
-                  <hr/>
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                      <p>
-                        Run Model
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview" data-expanded="RunModel">
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_up" href="#" data-target="#shiny-tab-tab_up" data-toggle="tab" data-value="tab_up">
-                          <i class="fas fa-sliders" role="presentation" aria-label="sliders icon" verify_fa="FALSE" cl="fas fa-sliders nav-icon"></i>
-                          <p>Upload Params</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
                   <div id="sidebarMenu" class="sidebarMenuSelectedTabItem" data-value="null"></div>
                 </ul>
               </nav>
@@ -146,15 +129,14 @@
                     </div>
                   </div>
                 </div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_up">params_upload</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">running_models</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_summary</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_high_level</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_detailed</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_change_factor_effects</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_capacity_requirements</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">model_core_activity</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_results_distribution</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">params_upload</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">running_models</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_summary</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_high_level</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_detailed</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_change_factor_effects</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">principal_capacity_requirements</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_core_activity</div>
               </div>
             </section>
           </div>
