@@ -17,8 +17,6 @@ app_server <- function(input, output, session) {
     selected_results()$site
   })
 
-  mod_params_upload_server("params_upload", user_allowed_datasets)
-
   mod_principal_summary_server("principal_summary", selected_data, selected_site)
   mod_principal_high_level_server("principal_high_level", selected_data, selected_site)
   mod_principal_detailed_server("principal_detailed", selected_data, selected_site)
