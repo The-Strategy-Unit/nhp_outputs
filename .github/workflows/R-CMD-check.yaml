@@ -37,6 +37,9 @@ jobs:
         with:
           profile: '"prod"'
 
+      - run: install.packages("rcmdcheck")
+        shell: Rscript {0}
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
