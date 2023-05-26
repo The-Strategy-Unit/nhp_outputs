@@ -1,159 +1,108 @@
 library(shiny)
 library(mockery)
 
-test_that("get_results_container uses managed token", {
+test_that("get_container uses managed token", {
   m1 <- mock("t1")
   m2 <- mock("t2")
-  m3 <- mock("container")
-  m4 <- mock("token")
+  m3 <- mock("ep")
+  m4 <- mock("container")
 
   withr::local_envvar(
-    "AAD_TENANT_ID" = "",
-    "STORAGE_URL" = "url"
+    "AZ_STORAGE_EP" = "url/results",
+    "AZ_STORAGE_KEY" = "",
+    "AZ_STORAGE_CONTAINER" = "results"
   )
 
-  stub(get_results_container, "AzureAuth::get_managed_token", m1)
-  stub(get_results_container, "AzureAuth::get_azure_token", m2)
-  stub(get_results_container, "AzureStor::storage_container", m3)
-  stub(get_results_container, "AzureAuth::extract_jwt", m4)
+  stub(get_container, "AzureAuth::get_managed_token", m1)
+  stub(get_container, "AzureAuth::extract_jwt", m2)
+  stub(get_container, "AzureStor::blob_endpoint", m3)
+  stub(get_container, "AzureStor::storage_container", m4)
 
-  expect_equal(get_results_container(), "container")
+  expect_equal(get_container(), "container")
 
   expect_called(m1, 1)
-  expect_called(m2, 0)
+  expect_called(m2, 1)
   expect_called(m3, 1)
   expect_called(m4, 1)
 
   expect_args(m1, 1, "https://storage.azure.com/")
-  expect_args(m3, 1, "url/results", "token")
-  expect_args(m4, 1, "t1")
+  expect_args(m2, 1, "t1")
+  expect_args(m3, 1, "url/results", token = "t2")
+  expect_args(m4, 1, "ep", "results")
 })
 
-test_that("get_results_container uses azure token", {
+test_that("get_container uses azure key if present", {
   m1 <- mock("t1")
   m2 <- mock("t2")
-  m3 <- mock("container")
-  m4 <- mock("token")
+  m3 <- mock("ep")
+  m4 <- mock("container")
 
   withr::local_envvar(
-    "AAD_TENANT_ID" = "tenant",
-    "AAD_APP_ID" = "app",
-    "AAD_APP_SECRET" = "secret",
-    "STORAGE_URL" = "url"
+    "AZ_STORAGE_EP" = "url/results",
+    "AZ_STORAGE_KEY" = "key",
+    "AZ_STORAGE_CONTAINER" = "results"
   )
 
-  stub(get_results_container, "AzureAuth::get_managed_token", m1)
-  stub(get_results_container, "AzureAuth::get_azure_token", m2)
-  stub(get_results_container, "AzureStor::storage_container", m3)
-  stub(get_results_container, "AzureAuth::extract_jwt", m4)
+  stub(get_container, "AzureAuth::get_managed_token", m1)
+  stub(get_container, "AzureAuth::extract_jwt", m2)
+  stub(get_container, "AzureStor::blob_endpoint", m3)
+  stub(get_container, "AzureStor::storage_container", m4)
 
-  expect_equal(get_results_container(), "container")
+  expect_equal(get_container(), "container")
 
   expect_called(m1, 0)
-  expect_called(m2, 1)
+  expect_called(m2, 0)
   expect_called(m3, 1)
   expect_called(m4, 1)
 
-  expect_args(m2, 1, "https://storage.azure.com/", "tenant", "app", "secret")
-  expect_args(m3, 1, "url/results", "token")
-  expect_args(m4, 1, "t2")
+  expect_args(m3, 1, "url/results", key = "key")
+  expect_args(m4, 1, "ep", "results")
 })
 
-test_that("get_result_sets returns files on the local filesystem", {
+test_that("get_result_sets returns files", {
   withr::local_envvar("RESULTS_PATH" = "results")
 
-  m1 <- mock("results/a/1.json")
-  m2 <- mock("1.json")
-
-  stub(get_result_sets, "fs::dir_ls", m1)
-  stub(get_result_sets, "AzureStor::list_blobs", m2)
-  stub(get_result_sets, "get_results_container", "container")
-
-  result <- get_result_sets("a", TRUE)
-
-  expect_equal(result, c("1" = "results/a/1.json"))
-
-  expect_called(m1, 1)
-  expect_called(m2, 0)
-
-  expect_args(m1, 1, "results/a", glob = "*.json")
-})
-
-test_that("get_result_sets returns files from azure", {
-  withr::local_envvar("RESULTS_PATH" = "results")
-
-  m1 <- mock("results/a/1.json")
-  m2 <- mock("1.json")
-
-  stub(get_result_sets, "fs::dir_ls", m1)
-  stub(get_result_sets, "AzureStor::list_blobs", m2)
-  stub(get_result_sets, "get_results_container", "container")
-
-  result <- get_result_sets("a", FALSE)
-
-  expect_equal(result, "1.json")
-
-  expect_called(m1, 0)
-  expect_called(m2, 1)
-
-  expect_args(m2, 1, "container", "dev/a", "name")
-})
-
-test_that("get_results returns data from local storage", {
-  data <- list(
-    population_variants = list("a", "b"),
-    results = list(
-      "a" = list(
-        list(
-          x = 1,
-          model_runs = list(1, 2, 3)
-        ),
-        list(
-          x = 2,
-          model_runs = list(2, 3, 4)
-        )
-      ),
-      b = list(
-        list(
-          x = 3,
-          model_runs = list(3, 4, 5)
-        ),
-        list(
-          x = 4,
-          model_runs = list(4, 5, 6)
-        )
-      )
+  m1 <- mock(
+    tibble::tribble(
+      ~name, ~isdir,
+      "d", TRUE,
+      "1", FALSE,
+      "2", FALSE,
+      "3", FALSE,
+      "4", FALSE
     )
   )
-
-  expected <- list(
-    population_variants = c("a", "b"),
-    results = list(
-      "a" = tibble::tibble(
-        x = 1:2,
-        model_runs = c(list(1:3), list(2:4))
-      ),
-      "b" = tibble::tibble(
-        x = 3:4,
-        model_runs = c(list(3:5), list(4:6))
-      )
-    )
+  m2 <- mock(
+    list(dataset = "a"),
+    list(dataset = "b"),
+    list(dataset = "a"),
+    list(dataset = "c")
   )
 
-  m1 <- mock(data)
-  m2 <- mock(data)
+  stub(get_result_sets, "get_container", "container")
+  stub(get_result_sets, "AzureStor::list_blobs", m1)
+  stub(get_result_sets, "AzureStor::get_storage_metadata", m2)
 
-  stub(get_results, "jsonlite::read_json", m1)
-  stub(get_results, "jsonlite::parse_gzjson_raw", m2)
+  expected <- tibble::tribble(
+    ~file, ~dataset,
+    "1", "a",
+    "2", "b",
+    "3", "a"
+  )
 
-  results <- get_results("file", TRUE)
+  result <- get_result_sets(c("a", "b"), "dev")
+
+  expect_equal(result, expected)
 
   expect_called(m1, 1)
-  expect_called(m2, 0)
+  expect_called(m2, 4)
 
-  expect_args(m1, 1, "file", simplifyVector = FALSE)
+  expect_args(m1, 1, "container", "dev", "all", TRUE)
 
-  expect_equal(results, expected)
+  expect_args(m2, 1, "container", "1")
+  expect_args(m2, 2, "container", "2")
+  expect_args(m2, 3, "container", "3")
+  expect_args(m2, 4, "container", "4")
 })
 
 test_that("get_results returns data from azure", {
@@ -197,37 +146,31 @@ test_that("get_results returns data from azure", {
     )
   )
 
-  m1 <- mock(data)
-  m2 <- mock(data)
+  m1 <- mock()
+  m2 <- mock("data")
+  m3 <- mock(data)
 
-  m3 <- mock()
-  m4 <- mock("data")
-
-  stub(get_results, "jsonlite::read_json", m1)
-  stub(get_results, "jsonlite::parse_gzjson_raw", m2)
-  stub(get_results, "get_results_container", "container")
+  stub(get_results, "get_container", "container")
   stub(get_results, "withr::local_tempfile", "tf")
-  stub(get_results, "AzureStor::download_blob", m3)
-  stub(get_results, "readBin", m4)
+  stub(get_results, "AzureStor::download_blob", m1)
+  stub(get_results, "readBin", m2)
+  stub(get_results, "jsonlite::parse_gzjson_raw", m3)
   stub(get_results, "file.size", 10)
 
-  results <- get_results("file", FALSE)
+  results <- get_results("file")
 
-  expect_called(m1, 0)
+  expect_called(m1, 1)
   expect_called(m2, 1)
   expect_called(m3, 1)
-  expect_called(m4, 1)
 
-  expect_args(m2, 1, "data", simplifyVector = FALSE)
-  expect_args(m3, 1, "container", "file", "tf")
-  expect_args(m4, 1, "tf", raw(), 10)
+  expect_args(m1, 1, "container", "file", "tf")
+  expect_args(m2, 1, "tf", raw(), 10)
+  expect_args(m3, 1, "data", simplifyVector = FALSE)
 
   expect_equal(results, expected)
 })
 
 test_that("user_allowed_datasets returns correct values", {
-  expect_equal(get_user_allowed_datasets(NULL), "synthetic")
-
   expect_equal(
     get_user_allowed_datasets("a"),
     c(
