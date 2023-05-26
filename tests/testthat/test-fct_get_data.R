@@ -171,8 +171,6 @@ test_that("get_results returns data from azure", {
 })
 
 test_that("user_allowed_datasets returns correct values", {
-  expect_equal(get_user_allowed_datasets(NULL), "synthetic")
-
   expect_equal(
     get_user_allowed_datasets("a"),
     c(

@@ -52,14 +52,16 @@ get_results <- function(filename) {
 
 get_user_allowed_datasets <- function(user) {
   # TODO: there should exist a configuration for users somewhere
-  if (is.null(user)) {
-    "synthetic"
-  } else {
-    c(
-      "synthetic",
-      "RA9", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RYJ"
-    )
-  }
+  c(
+    "synthetic",
+    "RA9", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RYJ"
+  )
+}
+
+get_available_datasets <- function(app_version = "dev") {
+  cont <- get_results_container()
+
+  AzureStor::list_blobs(cont, app_version, "name", recursive = FALSE)
 }
 
 get_available_datasets <- function(app_version = "dev") {
