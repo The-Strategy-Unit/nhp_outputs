@@ -4,12 +4,8 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  user_allowed_datasets <- shiny::reactive({
-    get_user_allowed_datasets(session$user)
-  })
-
   # this module returns a reactive which contains the data path
-  selected_results <- mod_result_selection_server("result_selection", user_allowed_datasets)
+  selected_results <- mod_result_selection_server("result_selection")
   selected_data <- shiny::reactive({
     selected_results()$data
   })

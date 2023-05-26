@@ -5,11 +5,12 @@ library(mockery)
 # setup
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-available_result_sets <- c(
-  "1-20220101_012345",
-  "2-20220102_103254",
-  "1-20220203_112233",
-  "1-20220201_112233"
+available_result_sets <- tibble::tribble(
+  ~file, ~dataset, ~scenario, ~create_datetime,
+  "1", "a", "a1", "20210203_012345",
+  "1", "a", "a1", "20220101_103254",
+  "2", "a", "a2", "20230101_000000",
+  "3", "b", "b3", "20230101_000000"
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -30,24 +31,23 @@ test_that("ui is created correctly", {
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("it populates the list of available result sets", {
-  m <- mock(available_result_sets, cycle = TRUE)
+  m_ad <- mock(c("a", "b"), cycle = TRUE)
+  m_rs <- mock(available_result_sets, cycle = TRUE)
 
-  stub(mod_result_selection_server, "get_result_sets", m)
+  stub(mod_result_selection_server, "get_user_allowed_datasets", m_ad)
+  stub(mod_result_selection_server, "get_result_sets", m_rs)
 
-  testServer(mod_result_selection_server, args = list(reactiveVal()), {
-    session$setInputs(dataset = "synthetic")
-
-    expected <- tibble::tibble(
-      scenario = c("1", "2", "1", "1"),
-      create_datetime = c("20220101_012345", "20220102_103254", "20220203_112233", "20220201_112233"),
-      filename = available_result_sets
-    )
+  testServer(mod_result_selection_server, {
+    session$setInputs(dataset = "a")
 
     actual <- result_sets()
-    expect_equal(actual, expected)
+    expect_equal(actual, available_result_sets)
 
-    expect_called(m, 1)
-    expect_args(m, 1, "synthetic")
+    expect_called(m_ad, 1)
+    expect_args(m_ad, 1, NULL)
+
+    expect_called(m_rs, 1)
+    expect_args(m_rs, 1, c("a", "b"), "dev")
   })
 })
 
@@ -55,10 +55,11 @@ test_that("it shows the download button when golem.app.prod = FALSE", {
   withr::local_options(c("golem.app.prod" = FALSE))
 
   m <- mock()
+  stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
   stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "shinyjs::toggle", m)
 
-  testServer(mod_result_selection_server, args = list(reactiveVal()), {
+  testServer(mod_result_selection_server, {
     session$private$flush()
 
     expect_called(m, 1)
@@ -73,13 +74,13 @@ test_that("it shows the download button when the user is in the correct group", 
   stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "shinyjs::toggle", m)
 
-  testServer(mod_result_selection_server, args = list(reactiveVal()), {
+  testServer(mod_result_selection_server, {
     session$private$flush()
   })
 
   session <- shiny::MockShinySession$new()
   session$groups <- "nhp_power_users"
-  testServer(mod_result_selection_server, args = list(reactiveVal()), session = session, {
+  testServer(mod_result_selection_server, session = session, {
     session$private$flush()
   })
 
@@ -90,34 +91,31 @@ test_that("it shows the download button when the user is in the correct group", 
 
 test_that("it sets up the dropdowns", {
   m <- mock()
-  m_get_result_sets <- mock(character(), available_result_sets)
+  m_get_result_sets <- mock(available_result_sets)
 
+  stub(mod_result_selection_server, "readRDS", c("A" = "a", "B" = "b"))
   stub(mod_result_selection_server, "get_user_allowed_datasets", "a")
   stub(mod_result_selection_server, "get_result_sets", m_get_result_sets)
   stub(mod_result_selection_server, "shiny::updateSelectInput", m)
 
-  testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
+  testServer(mod_result_selection_server, {
     session$private$flush()
     session$setInputs(dataset = "b")
-    session$setInputs(scenario = "1")
+    session$setInputs(scenario = "b3")
     session$setInputs(dataset = "a")
+    session$setInputs(scenario = "a1")
 
-    expect_called(m, 9)
-    expect_args(m, 1, session, "dataset", choices = "a")
+    expect_args(m, 1, session, "dataset", choices = c("A" = "a", "B" = "b"))
 
-    expect_args(m, 2, session, "scenario", choices = character(0))
-    expect_args(m, 3, session, "create_datetime", choices = character(0))
-    expect_args(m, 4, session, "trust", choices = character(0))
+    expect_args(m, 2, session, "scenario", choices = c("b3"))
+    expect_args(m, 3, session, "create_datetime", choices = c(
+      "01/01/2023 00:00:00" = "20230101_000000"
+    ))
 
-    expect_args(m, 5, session, "scenario", choices = character(0))
-    expect_args(m, 6, session, "create_datetime", choices = character(0))
-    expect_args(m, 7, session, "trust", choices = character(0))
-
-    expect_args(m, 8, session, "scenario", choices = c("1", "2"))
-    expect_args(m, 9, session, "create_datetime", choices = c(
-      "01/01/2022 01:23:45" = "20220101_012345",
-      "01/02/2022 11:22:33" = "20220201_112233",
-      "03/02/2022 11:22:33" = "20220203_112233"
+    expect_args(m, 4, session, "scenario", choices = c("a2", "a1"))
+    expect_args(m, 5, session, "create_datetime", choices = c(
+      "01/01/2022 10:32:54" = "20220101_103254",
+      "03/02/2021 01:23:45" = "20210203_012345"
     ))
   })
 })
@@ -129,15 +127,15 @@ test_that("it returns a reactive", {
   stub(mod_result_selection_server, "get_results", m)
   stub(mod_result_selection_server, "get_trust_sites", "trust")
 
-  testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
+  testServer(mod_result_selection_server, {
     result_sets <- \() tibble::tibble(
       scenario = c("1", "1", "2"),
       create_datetime = c("20220101_012345", "", "20220101_012345")
     )
 
     session$setInputs(dataset = "a")
-    session$setInputs(scenario = "1")
-    session$setInputs(create_datetime = "20220101_012345")
+    session$setInputs(scenario = "a1")
+    session$setInputs(create_datetime = "20210203_012345")
     session$setInputs(site_selection = "trust")
 
     expect_equal(
@@ -150,10 +148,10 @@ test_that("it returns a reactive", {
   })
 
   expect_called(m, 1)
-  expect_args(m, 1, "1-20220101_012345")
+  expect_args(m, 1, "1")
 
   server <- function(input, output, session) {
-    results <- mod_result_selection_server("id", reactiveVal("a"))
+    results <- mod_result_selection_server("id")
   }
   testServer(server, {
     expect_true(shiny::is.reactive(results))
@@ -173,7 +171,8 @@ test_that("it downloads the results", {
   stub(mod_result_selection_server, "get_trust_sites", "trust")
   stub(mod_result_selection_server, "get_results", expected)
 
-  testServer(mod_result_selection_server, args = list(reactiveVal("a")), {
+
+  testServer(mod_result_selection_server, {
     session$setInputs(dataset = "a")
     session$setInputs(scenario = "1")
     session$setInputs(create_datetime = "20220101_012345")

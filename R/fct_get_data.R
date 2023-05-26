@@ -1,63 +1,41 @@
-get_results_container <- function() {
-  resource <- `__STORAGE_EP__`
+get_container <- function() {
+  ep_uri <- Sys.getenv("AZ_STORAGE_EP")
+  sa_key <- Sys.getenv("AZ_STORAGE_KEY")
 
-  t <- if (Sys.getenv("AAD_TENANT_ID") == "") {
-    AzureAuth::get_managed_token(resource)
+  ep <- if (sa_key != "") {
+    AzureStor::blob_endpoint(ep_uri, key = sa_key)
   } else {
-    AzureAuth::get_azure_token(
-      resource,
-      Sys.getenv("AAD_TENANT_ID"),
-      Sys.getenv("AAD_APP_ID"),
-      Sys.getenv("AAD_APP_SECRET")
-    )
-  }
+    token <- AzureAuth::get_managed_token("https://storage.azure.com/") |>
+      AzureAuth::extract_jwt()
 
-  AzureStor::storage_container(
-    glue::glue("{Sys.getenv('STORAGE_URL')}/results"),
-    token = AzureAuth::extract_jwt(t)
-  )
+    AzureStor::blob_endpoint(ep_uri, token = token)
+  }
+  AzureStor::storage_container(ep, Sys.getenv("AZ_STORAGE_CONTAINER"))
 }
 
-get_result_sets <- function(dataset, local = !getOption("golem.app.prod", FALSE)) {
-  if (local) {
-    path <- file.path(Sys.getenv("RESULTS_PATH"), dataset)
+get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL),
+                            app_version = "dev") {
+  ds <- tibble::tibble(dataset = allowed_datasets)
 
-    return(
-      tryCatch(
-        {
-          files <- fs::dir_ls(path, glob = "*.json")
+  cont <- get_container()
 
-          purrr::set_names(
-            files,
-            stringr::str_sub(files, stringr::str_length(path) + 2, -6)
-          )
-        },
-        error = \(...) character()
-      )
-    )
-  }
-
-  app_version <- Sys.getenv("NHP_APP_VERSION", "dev") |>
-    stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
-
-  AzureStor::list_blobs(
-    get_results_container(),
-    paste(app_version, dataset, sep = "/"),
-    "name"
-  )
+  cont |>
+    AzureStor::list_blobs(app_version, "all", TRUE) |>
+    dplyr::filter(!.data[["isdir"]]) |>
+    purrr::pluck("name") |>
+    purrr::set_names() |>
+    purrr::map(\(name, ...) AzureStor::get_storage_metadata(cont, name)) |>
+    dplyr::bind_rows(.id = "file") |>
+    dplyr::semi_join(ds, by = dplyr::join_by("dataset"))
 }
 
-get_results <- function(filename, local = !getOption("golem.app.prod", FALSE)) {
-  if (local) {
-    r <- jsonlite::read_json(filename, simplifyVector = FALSE)
-  } else {
-    cont <- get_results_container()
-    tf <- withr::local_tempfile()
-    AzureStor::download_blob(cont, filename, tf)
+get_results <- function(filename) {
+  cont <- get_container()
+  tf <- withr::local_tempfile()
+  AzureStor::download_blob(cont, filename, tf)
 
-    r <- readBin(tf, raw(), n = file.size(tf)) |>
-      jsonlite::parse_gzjson_raw(simplifyVector = FALSE)
-  }
+  r <- readBin(tf, raw(), n = file.size(tf)) |>
+    jsonlite::parse_gzjson_raw(simplifyVector = FALSE)
 
   r$population_variants <- as.character(r$population_variants)
 
@@ -82,6 +60,12 @@ get_user_allowed_datasets <- function(user) {
       "RA9", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RYJ"
     )
   }
+}
+
+get_available_datasets <- function(app_version = "dev") {
+  cont <- get_results_container()
+
+  AzureStor::list_blobs(cont, app_version, "name", recursive = FALSE)
 }
 
 get_trust_sites <- function(r) {
