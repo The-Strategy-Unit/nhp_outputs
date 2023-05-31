@@ -25,12 +25,16 @@ mod_result_selection_ui <- function(id) {
 #' @noRd
 mod_result_selection_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
+    
+    url_query <- shiny::reactive({
+      stringr::str_split(session$clientData$url_hash, "/")[[1]][-1]
+    })
 
     # static data files ----
     providers <- c("Synthetic" = "synthetic", readRDS(app_sys("app", "data", "providers.Rds")))
 
     # reactives ----
-    available_datasets <- shiny::reactive({
+    allowed_datasets <- shiny::reactive({
       get_user_allowed_datasets(session$user)
     })
 
@@ -38,7 +42,25 @@ mod_result_selection_server <- function(id) {
       app_version <- Sys.getenv("NHP_APP_VERSION", "dev") |>
         stringr::str_replace("(\\d+\\.\\d+)\\..*", "\\1")
 
-      get_result_sets(available_datasets(), app_version)
+      get_result_sets(allowed_datasets(), app_version)
+    })
+
+    filter_result_sets <- function(ds, sc, cd) {
+      result_sets() |>
+        shiny::req() |>
+        dplyr::filter(
+          .data[["dataset"]] == ds,
+          .data[["scenario"]] == sc,
+          .data[["create_datetime"]] == cd
+        ) |>
+        require_rows()
+    }
+
+    datasets <- shiny::reactive({
+      rs <- shiny::req(result_sets())
+      ds <- unique(rs$dataset)
+
+      providers[providers %in% ds]
     })
 
     scenarios <- shiny::reactive({
@@ -65,19 +87,11 @@ mod_result_selection_server <- function(id) {
     })
 
     selected_filename <- shiny::reactive({
-      rs <- result_sets()
       ds <- shiny::req(input$dataset)
       sc <- shiny::req(input$scenario)
       cd <- shiny::req(input$create_datetime)
 
-      result_sets() |>
-        shiny::req() |>
-        dplyr::filter(
-          .data[["dataset"]] == ds,
-          .data[["scenario"]] == sc,
-          .data[["create_datetime"]] == cd
-        ) |>
-        dplyr::pull(.data[["file"]])
+      filter_result_sets(ds, sc, cd)$file
     })
 
     selected_results <- shiny::reactive({
@@ -89,13 +103,12 @@ mod_result_selection_server <- function(id) {
 
     # observers to update the dropdowns ----
     shiny::observe({
-      rs <- shiny::req(result_sets())
-      ds <- unique(rs$dataset)
+      ds <- shiny::req(datasets())
 
       shiny::updateSelectInput(
         session,
         "dataset",
-        choices = providers[providers %in% ds]
+        choices = ds
       )
     })
 
@@ -131,22 +144,63 @@ mod_result_selection_server <- function(id) {
 
       shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
     })
+    
+    # url routing ----
+    # observe the url route and update the select options
+    shiny::observe(
+      {
+        c(ds, sc, cd) %<-% shiny::req(url_query())
+
+        # decode the scenario
+        sc <- utils::URLdecode(sc)
+
+        # make sure the options are valid
+        filter_result_sets(ds, sc, cd)
+
+        shiny::updateSelectInput(session, "dataset", selected = ds)
+        shiny::updateSelectInput(session, "scenario", selected = sc)
+        shiny::updateSelectInput(session, "create_datetime", selected = cd)
+      },
+      # make sure priority of this observer is higher than the observer for updating the url
+      priority = -1
+    )
+
+    # update the url route after dropdowns change
+    shiny::observe(
+      {
+        ds <- shiny::req(input$dataset)
+        sc <- shiny::req(input$scenario)
+        cd <- shiny::req(input$create_datetime)
+
+        # make sure the options are valid
+        filter_result_sets(ds, sc, cd)
+
+        # encode the scenario
+        sc <- utils::URLencode(sc)
+
+        shinyjs::runjs(
+          glue::glue(
+            "window.location.href='#/{ds}/{sc}/{cd}';"
+          )
+        )
+      },
+      # make sure the priority of this observer is lower than the observer for updating the dropdowns
+      priority = -2
+    )
 
     # download button ----
 
     shiny::observe({
-      show_button <- !getOption("golem.app.prod", TRUE) || "nhp_power_users" %in% session$groups
+      show_button <- !getOption("golem.app.prod", FALSE) || "nhp_power_users" %in% session$groups
       shinyjs::toggle("download_results", selector = show_button)
     })
 
     output$download_results <- shiny::downloadHandler(
       filename = function() {
-        params <- shiny::req(selected_results())$params
-
-        glue::glue("{params$dataset}-{params$scenario}-{params$create_datetime}.json")
+        paste0(selected_results()$params$id, ".json")
       },
       content = function(file) {
-        shiny::req(selected_results()) |>
+        selected_results() |>
           jsonlite::write_json(file, pretty = TRUE, auto_unbox = TRUE)
       }
     )
