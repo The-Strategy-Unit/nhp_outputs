@@ -180,7 +180,9 @@ mod_result_selection_server <- function(id) {
 
         shinyjs::runjs(
           glue::glue(
-            "window.location.href='#/{ds}/{sc}/{cd}';"
+            "window.location.href = ",
+            "window.location.toString().replace(window.location.hash, '') + ",
+            "'#/{ds}/{sc}/{cd}';"
           )
         )
       },
