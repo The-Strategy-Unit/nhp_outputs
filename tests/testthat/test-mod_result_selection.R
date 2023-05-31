@@ -6,11 +6,11 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 available_result_sets <- tibble::tribble(
-  ~file, ~dataset, ~scenario, ~create_datetime,
-  "1", "a", "a1", "20210203_012345",
-  "1", "a", "a1", "20220101_103254",
-  "2", "a", "a2", "20230101_000000",
-  "3", "b", "b3", "20230101_000000"
+  ~file, ~dataset, ~scenario, ~create_datetime, ~id,
+  "1", "a", "a1", "20210203_012345", "1.json",
+  "1", "a", "a1", "20220101_103254", "1.json",
+  "2", "a", "a2", "20230101_000000", "2.json",
+  "3", "b", "b3", "20230101_000000", "3.json"
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -163,7 +163,8 @@ test_that("it downloads the results", {
     params = list(
       "dataset" = "a",
       "scenario" = "1",
-      "create_datetime" = "20220101_012345"
+      "create_datetime" = "20220101_012345",
+      "id" = "1"
     )
   )
 
@@ -174,14 +175,14 @@ test_that("it downloads the results", {
 
   testServer(mod_result_selection_server, {
     session$setInputs(dataset = "a")
-    session$setInputs(scenario = "1")
-    session$setInputs(create_datetime = "20220101_012345")
+    session$setInputs(scenario = "a1")
+    session$setInputs(create_datetime = "20210203_012345")
     session$setInputs(site_selection = "trust")
 
     results_file <- output$download_results
     withr::local_file(results_file)
 
-    expect_true(stringr::str_ends(results_file, "a-1-20220101_012345.json"))
+    expect_true(stringr::str_ends(results_file, "1.json"))
 
     results <- readr::read_lines(results_file)
     expect_equal(results, c(
@@ -189,7 +190,8 @@ test_that("it downloads the results", {
       "  \"params\": {",
       "    \"dataset\": \"a\",",
       "    \"scenario\": \"1\",",
-      "    \"create_datetime\": \"20220101_012345\"",
+      "    \"create_datetime\": \"20220101_012345\",",
+      "    \"id\": \"1\"",
       "  }",
       "}"
     ))
