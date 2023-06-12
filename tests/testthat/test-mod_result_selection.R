@@ -197,3 +197,20 @@ test_that("it downloads the results", {
     ))
   })
 })
+
+test_that("url_query parses the selections out of the url hash", {
+  # in order to get this test to work, you need to set the url hash. but you can't update session$clientData in a
+  # MockShinySession currently. We can override the function, but must make sure to restore it whether the test succeeds
+  # or fails
+  original_fn <- get("$.mockclientdata", envir = asNamespace("shiny"))
+  withr::defer({
+    assignInNamespace("$.mockclientdata", original_fn, "shiny")
+  })
+
+  assignInNamespace("$.mockclientdata", \(x, name) "#/abc/def/hij", "shiny")
+  testServer(mod_result_selection_server, {
+    expect_equal(url_query(), c("abc", "def", "hij"))
+
+    browser()
+  })
+})

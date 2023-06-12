@@ -25,7 +25,6 @@ mod_result_selection_ui <- function(id) {
 #' @noRd
 mod_result_selection_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
-    
     url_query <- shiny::reactive({
       stringr::str_split(session$clientData$url_hash, "/")[[1]][-1]
     })
@@ -65,7 +64,7 @@ mod_result_selection_server <- function(id) {
 
     scenarios <- shiny::reactive({
       ds <- shiny::req(input$dataset)
-      
+
       result_sets() |>
         dplyr::filter(.data[["dataset"]] == ds) |>
         dplyr::arrange(dplyr::desc(.data[["create_datetime"]])) |>
@@ -73,7 +72,7 @@ mod_result_selection_server <- function(id) {
         unique()
     }) |>
       shiny::bindEvent(input$dataset)
-      
+
     create_datetimes <- shiny::reactive({
       x <- shiny::req(input$scenario)
 
@@ -144,11 +143,12 @@ mod_result_selection_server <- function(id) {
 
       shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
     })
-    
+
     # url routing ----
     # observe the url route and update the select options
     shiny::observe(
       {
+        # these lines currently can't be hit by unit tests - need to investigate e2e tests
         c(ds, sc, cd) %<-% shiny::req(url_query())
 
         # decode the scenario
