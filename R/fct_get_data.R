@@ -58,18 +58,6 @@ get_user_allowed_datasets <- function(user) {
   )
 }
 
-get_available_datasets <- function(app_version = "dev") {
-  cont <- get_results_container()
-
-  AzureStor::list_blobs(cont, app_version, "name", recursive = FALSE)
-}
-
-get_available_datasets <- function(app_version = "dev") {
-  cont <- get_results_container()
-
-  AzureStor::list_blobs(cont, app_version, "name", recursive = FALSE)
-}
-
 get_trust_sites <- function(r) {
   sites <- r$results$default$sitetret
   unique(c("trust", sort(sites)))
