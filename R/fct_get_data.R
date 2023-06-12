@@ -58,18 +58,6 @@ get_user_allowed_datasets <- function(user) {
   )
 }
 
-get_available_datasets <- function(app_version = "dev") {
-  cont <- get_results_container()
-
-  AzureStor::list_blobs(cont, app_version, "name", recursive = FALSE)
-}
-
-get_available_datasets <- function(app_version = "dev") {
-  cont <- get_results_container()
-
-  AzureStor::list_blobs(cont, app_version, "name", recursive = FALSE)
-}
-
 get_trust_sites <- function(r) {
   sites <- r$results$default$sitetret
   unique(c("trust", sort(sites)))
@@ -198,16 +186,27 @@ get_bed_occupancy <- function(r) {
 }
 
 get_theatres_available <- function(r) {
-  r$results$theatres_available |>
-    dplyr::select(
-      "tretspef",
-      "baseline",
-      "principal",
-      "median",
-      "lwr_ci",
-      "upr_ci",
-      "model_runs"
-    )
+  # incase the theatres data doesn't exist
+  empty_structure <- tibble::tibble(
+    tretspef = character(),
+    baseline = integer(),
+    principal = integer(),
+    lwr_ci = double(),
+    median = double(),
+    upr_ci = double(),
+    model_runs = list()
+  )
+
+  dplyr::select(
+    r$results$theatres_available %||% empty_structure,
+    "tretspef",
+    "baseline",
+    "principal",
+    "median",
+    "lwr_ci",
+    "upr_ci",
+    "model_runs"
+  )
 }
 
 trust_site_aggregation <- function(data) {
