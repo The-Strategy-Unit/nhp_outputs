@@ -10,7 +10,15 @@
 				"$testthat"
 			],
 			"group": "test",
-			"label": "R: Test"
+			"label": "R: Test",
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"clear": true
+			}
 		},
 		{
 			"type": "R",
@@ -31,7 +39,15 @@
 			"group": "none",
 			"isBackground": true,
 			"problemMatcher": [],
-			"label": "R: Run App (watch)"
+			"label": "R: Run App (watch)",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"clear": true
+			}
 		},
 		{
 			"type": "R",
