@@ -1,3 +1,18 @@
+mod_result_selection_parse_url_hash <- function(url_hash) {
+  stringr::str_split(url_hash, "/")[[1]][-1]
+}
+
+mod_result_selection_filter_result_sets <- function(result_sets, ds, sc, cd) {
+  result_sets |>
+    shiny::req() |>
+    dplyr::filter(
+      .data[["dataset"]] == ds,
+      .data[["scenario"]] == sc,
+      .data[["create_datetime"]] == cd
+    ) |>
+    require_rows()
+}
+
 #' result_selection UI Function
 #'
 #' @description A shiny Module.
@@ -25,8 +40,20 @@ mod_result_selection_ui <- function(id) {
 #' @noRd
 mod_result_selection_server <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
-    url_query <- shiny::reactive({
-      stringr::str_split(session$clientData$url_hash, "/")[[1]][-1]
+    # it's not easy to mock changing the url_hash in a unit test, so instead we
+    # use this pattern:
+    #   * url_query is a reactiveVal, not a reactive, so we can update the value
+    #     and test things that depend upon it
+    #   * we use a function thats defined outside of this module for parsing the
+    #     url which can be tested by itself, but mocked in tests of the module
+    #   * we observe the url_hash, perform the business logic, and update the
+    #     url_query reactiveVal
+    url_query <- shiny::reactiveVal()
+
+    shiny::observe({
+      session$clientData$url_hash |>
+        mod_result_selection_parse_url_hash() |>
+        url_query()
     })
 
     # static data files ----
@@ -43,17 +70,6 @@ mod_result_selection_server <- function(id) {
 
       get_result_sets(allowed_datasets(), app_version)
     })
-
-    filter_result_sets <- function(ds, sc, cd) {
-      result_sets() |>
-        shiny::req() |>
-        dplyr::filter(
-          .data[["dataset"]] == ds,
-          .data[["scenario"]] == sc,
-          .data[["create_datetime"]] == cd
-        ) |>
-        require_rows()
-    }
 
     datasets <- shiny::reactive({
       rs <- shiny::req(result_sets())
@@ -90,7 +106,7 @@ mod_result_selection_server <- function(id) {
       sc <- shiny::req(input$scenario)
       cd <- shiny::req(input$create_datetime)
 
-      filter_result_sets(ds, sc, cd)$file
+      mod_result_selection_filter_result_sets(result_sets(), ds, sc, cd)$file
     })
 
     selected_results <- shiny::reactive({
@@ -148,14 +164,13 @@ mod_result_selection_server <- function(id) {
     # observe the url route and update the select options
     shiny::observe(
       {
-        # these lines currently can't be hit by unit tests - need to investigate e2e tests
         c(ds, sc, cd) %<-% shiny::req(url_query())
 
         # decode the scenario
         sc <- utils::URLdecode(sc)
 
         # make sure the options are valid
-        filter_result_sets(ds, sc, cd)
+        mod_result_selection_filter_result_sets(result_sets(), ds, sc, cd)
 
         shiny::updateSelectInput(session, "dataset", selected = ds)
         shiny::updateSelectInput(session, "scenario", selected = sc)
@@ -173,7 +188,7 @@ mod_result_selection_server <- function(id) {
         cd <- shiny::req(input$create_datetime)
 
         # make sure the options are valid
-        filter_result_sets(ds, sc, cd)
+        mod_result_selection_filter_result_sets(result_sets(), ds, sc, cd)
 
         # encode the scenario
         sc <- utils::URLencode(sc)

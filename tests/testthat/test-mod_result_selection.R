@@ -198,19 +198,43 @@ test_that("it downloads the results", {
   })
 })
 
-test_that("url_query parses the selections out of the url hash", {
-  # in order to get this test to work, you need to set the url hash. but you can't update session$clientData in a
-  # MockShinySession currently. We can override the function, but must make sure to restore it whether the test succeeds
-  # or fails
-  original_fn <- get("$.mockclientdata", envir = asNamespace("shiny"))
-  withr::defer({
-    assignInNamespace("$.mockclientdata", original_fn, "shiny")
-  })
+test_that("mod_result_selection_server_parse_url_hash parses the selections out of the url hash", {
+  actual <- mod_result_selection_parse_url_hash("#/abc/def/hij")
+  expect_equal(actual, c("abc", "def", "hij"))
+})
 
-  assignInNamespace("$.mockclientdata", \(x, name) "#/abc/def/hij", "shiny")
+test_that("we correctly parse the url_hash", {
+  m <- mock(c("abc", "def", "hij"))
+  stub(
+    mod_result_selection_server,
+    "mod_result_selection_parse_url_hash",
+    m
+  )
+
   testServer(mod_result_selection_server, {
-    expect_equal(url_query(), c("abc", "def", "hij"))
+    session$private$flush()
 
-    browser()
+    expect_called(m, 1)
+    expect_args(m, 1, "#mockhash")
+    expect_equal(url_query(), c("abc", "def", "hij"))
+  })
+})
+
+test_that("we update dropdown selections when url_query changes", {
+  m <- mock()
+  stub(mod_result_selection_server, "shiny::updateSelectInput", m)
+  stub(mod_result_selection_server, "get_result_sets", NULL)
+  stub(mod_result_selection_server, "mod_result_selection_filter_result_sets", NULL)
+
+  testServer(mod_result_selection_server, {
+    # need to flush before and after
+    session$private$flush()
+    url_query(c("abc", "def%20hij", "klm"))
+    session$private$flush()
+
+    expect_called(m, 3)
+    expect_args(m, 1, session, "dataset", selected = "abc")
+    expect_args(m, 2, session, "scenario", selected = "def hij")
+    expect_args(m, 3, session, "create_datetime", selected = "klm")
   })
 })
