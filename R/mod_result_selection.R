@@ -90,11 +90,15 @@ mod_result_selection_server <- function(id) {
       shiny::bindEvent(input$dataset)
 
     create_datetimes <- shiny::reactive({
-      x <- shiny::req(input$scenario)
+      ds <- shiny::req(input$dataset)
+      sc <- shiny::req(input$scenario)
 
       result_sets() |>
         shiny::req() |>
-        dplyr::filter(.data[["scenario"]] == x) |>
+        dplyr::filter(
+          .data[["dataset"]] == ds,
+          .data[["scenario"]] == sc
+        ) |>
         dplyr::pull(.data[["create_datetime"]]) |>
         unique() |>
         sort() |>
