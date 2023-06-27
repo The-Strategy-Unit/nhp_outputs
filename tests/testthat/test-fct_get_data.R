@@ -508,3 +508,34 @@ test_that("trust_site_aggregation adds in a trust level aggregatrion", {
 
   expect_equal(actual, expected)
 })
+
+test_that("get_time_profiles extracts the time profiles correctly", {
+  # arrange
+  r <- list(
+    params = list(
+      start_year = 2020,
+      end_year = 2030
+    ),
+    results = list(
+      default = tibble::tibble(
+        baseline = 0,
+        principal = 10,
+        model_runs = list(20:40),
+        time_profiles = list(
+          1:9
+        ),
+        lwr_ci = 20,
+        median = 30,
+        upr_ci = 40
+      )
+    )
+  )
+  # act
+  actual <- get_time_profiles(r, "default")
+
+  # assert
+  expect_equal(
+    actual,
+    tibble::tibble(value = 0:10, year = 2020:2030)
+  )
+})

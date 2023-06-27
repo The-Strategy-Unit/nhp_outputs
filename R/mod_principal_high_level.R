@@ -54,36 +54,27 @@ mod_principal_high_level_pods <- function() {
     dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
-mod_principal_high_level_summary_data <- function(r, pods) {
-  start_year <- end_year <- NULL
-  c(start_year, end_year) %<-% get_model_run_years(r)
-
-  get_principal_high_level(r) |>
-    tidyr::pivot_longer(-c("pod", "sitetret"), names_to = "model_run") |>
-    dplyr::mutate(year = ifelse(.data$model_run == "baseline", start_year, end_year)) |>
-    dplyr::select(-"model_run") |>
-    tidyr::complete(
-      year = seq(start_year, end_year),
-      tidyr::nesting(sitetret, pod) # nolint (visible binding global variable)
+mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_level_pods()) {
+  get_time_profiles(r, "default") |>
+    dplyr::filter(
+      !.data[["measure"]] %in% c("beddays", "procedures", "tele_attendances")
     ) |>
-    dplyr::inner_join(pods, by = "pod") |>
-    dplyr::select(-"pod") |>
-    dplyr::group_by(.data$activity_type, .data$sitetret, .data$pod_name) |>
+    dplyr::select(-"measure") |>
     dplyr::mutate(
-      dplyr::across("value", purrr::compose(as.integer, zoo::na.approx)),
-      fyear = fyear_str(.data$year)
+      dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x)),
+      fyear = fyear_str(.data[["year"]])
     ) |>
-    dplyr::ungroup()
+    dplyr::summarise(
+      dplyr::across("value", sum),
+      .by = -"value"
+    ) |>
+    trust_site_aggregation() |>
+    dplyr::inner_join(pods, by = "pod") |>
+    dplyr::select(-"pod")
 }
 
 mod_principal_high_level_table <- function(data) {
   data |>
-    dplyr::mutate(
-      dplyr::across(
-        "fyear",
-        ~ ifelse(.data$year == min(.data$year), "Baseline", .x)
-      )
-    ) |>
     dplyr::select(-"activity_type", -"year") |>
     tidyr::pivot_wider(names_from = "fyear", values_from = "value") |>
     gt::gt() |>
@@ -94,7 +85,7 @@ mod_principal_high_level_table <- function(data) {
     gt::cols_label(
       "pod_name" = ""
     ) |>
-    gt::fmt_integer(c("Baseline", tidyselect::matches("\\d{4}/\\d{2}"))) |>
+    gt::fmt_integer(c(tidyselect::matches("\\d{4}/\\d{2}"))) |>
     gt_theme()
 }
 
@@ -104,8 +95,7 @@ mod_principal_high_level_plot <- function(data, activity_type) {
 
   data |>
     dplyr::filter(
-      .data$activity_type == .env$activity_type,
-      .data$year %in% c(start_year, end_year)
+      .data$activity_type == .env$activity_type
     ) |>
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$value, colour = .data$pod_name)) +
     ggplot2::geom_line() +
