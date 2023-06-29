@@ -167,6 +167,7 @@ get_bed_occupancy <- function(r) {
     dplyr::select(
       "measure",
       "quarter",
+      "ward_type",
       "ward_group",
       "baseline",
       "principal",

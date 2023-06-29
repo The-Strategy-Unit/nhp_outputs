@@ -33,18 +33,21 @@ mod_principal_capacity_requirements_ui <- function(id) {
 mod_principal_capacity_requirements_beds_table <- function(data) {
   data |>
     dplyr::arrange(
-      .data$quarter,
-      dplyr::desc(.data$principal),
-      dplyr::desc(.data$baseline)
+      .data[["quarter"]],
+      dplyr::desc(.data[["principal"]]),
+      dplyr::desc(.data[["baseline"]])
     ) |>
-    dplyr::filter(.data$principal > 0.5) |>
+    dplyr::filter(.data[["principal"]] > 0.5) |>
     tidyr::pivot_wider(names_from = "quarter", values_from = c("baseline", "principal")) |>
-    gt::gt(rowname_col = "ward_group") |>
+    gt::gt(rowname_col = "ward_group", groupname_col = "ward_type") |>
     gt::fmt_integer(-"ward_group") |>
     gt::summary_rows(
-      groups = NULL,
-      fns = list(Total = "sum"),
-      formatter = gt::fmt_integer
+      fns = list(id = "sum", label = "Total") ~ sum(., na.rm = TRUE),
+      fmt = ~ gt::fmt_integer(.)
+    ) |>
+    gt::grand_summary_rows(
+      fns = list(id = "sum", label = "Grand Total") ~ sum(., na.rm = TRUE),
+      fmt = ~ gt::fmt_integer(.)
     ) |>
     gt::tab_spanner("Q1 (Apr-Jun)", tidyselect::ends_with("Q1")) |>
     gt::tab_spanner("Q2 (Jul-Sep)", tidyselect::ends_with("Q2")) |>
@@ -69,9 +72,7 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
         columns = tidyselect::matches("principal_q[1-3]")
       )
     ) |>
-    gt::tab_options(
-      grand_summary_row.background.color = "#686f73"
-    )
+    gt_theme()
 }
 
 mod_principal_capacity_requirements_fhs_table <- function(data) {
@@ -83,8 +84,8 @@ mod_principal_capacity_requirements_fhs_table <- function(data) {
     ) |>
     gt::grand_summary_rows(
       columns = c("baseline", "principal"),
-      fns = list(total = "sum"),
-      fmt = ~gt::fmt_integer(.)
+      fns = list(id = "sum", label = "Grand Total") ~ sum(., na.rm = TRUE),
+      fmt = ~ gt::fmt_integer(.)
     ) |>
     gt_theme()
 }
@@ -98,7 +99,7 @@ mod_principal_capacity_requirements_server <- function(id, selected_data) {
       selected_data() |>
         get_bed_occupancy() |>
         dplyr::filter(.data$model_run == 1) |>
-        dplyr::select("quarter", "ward_group", "baseline", "principal")
+        dplyr::select("quarter", "ward_type", "ward_group", "baseline", "principal")
     })
 
     four_hour_sessions <- shiny::reactive({

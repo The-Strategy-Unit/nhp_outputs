@@ -430,6 +430,7 @@ test_that("get_bed_occupancy gets the results", {
       bed_occupancy = tibble::tibble(
         measure = "m",
         quarter = "q",
+        ward_type = "t",
         ward_group = "w",
         baseline = "b",
         principal = "p",
@@ -444,6 +445,7 @@ test_that("get_bed_occupancy gets the results", {
   expected <- tibble::tibble(
     measure = c("m", "m", "m"),
     quarter = c("q", "q", "q"),
+    ward_type = c("t", "t", "t"),
     ward_group = c("w", "w", "w"),
     baseline = c("b", "b", "b"),
     principal = c("p", "p", "p"),
