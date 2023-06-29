@@ -195,8 +195,8 @@
         padding-bottom: 8px;
         padding-left: 5px;
         padding-right: 5px;
-        color: #333333;
-        background-color: #FCDF83;
+        color: #FFFFFF;
+        background-color: #686F73;
         font-size: 100%;
         font-weight: initial;
         text-transform: inherit;
@@ -218,8 +218,8 @@
       
       #osncjrvket .gt_empty_group_heading {
         padding: 0.5px;
-        color: #333333;
-        background-color: #FCDF83;
+        color: #FFFFFF;
+        background-color: #686F73;
         font-size: 100%;
         font-weight: initial;
         border-top-style: solid;
@@ -294,8 +294,8 @@
       }
       
       #osncjrvket .gt_summary_row {
-        color: #333333;
-        background-color: #FFFFFF;
+        color: #FFFFFF;
+        background-color: #B2B7B9;
         text-transform: inherit;
         padding-top: 8px;
         padding-bottom: 8px;
@@ -323,8 +323,8 @@
       }
       
       #osncjrvket .gt_grand_summary_row {
-        color: #333333;
-        background-color: #FFFFFF;
+        color: #FFFFFF;
+        background-color: #343739;
         text-transform: inherit;
         padding-top: 8px;
         padding-bottom: 8px;
