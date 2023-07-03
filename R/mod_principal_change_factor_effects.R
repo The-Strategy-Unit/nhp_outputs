@@ -102,8 +102,30 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
 }
 
 mod_principal_change_factor_effects_cf_plot <- function(data) {
-  ggplot2::ggplot(data, ggplot2::aes(.data$value, .data$change_factor)) +
-    ggplot2::geom_col(ggplot2::aes(fill = .data$colour), show.legend = FALSE, position = "stack") +
+  data |>
+    dplyr::mutate(
+      tooltip = ifelse(
+        .data[["name"]] == "hidden",
+        0,
+        value
+      ),
+      tooltip = glue::glue("{change_factor}: {scales::comma(sum(tooltip), accuracy = 1)}"),
+      .by = "change_factor"
+    ) |>
+    ggplot2::ggplot(
+      ggplot2::aes(
+        .data[["value"]],
+        .data[["change_factor"]],
+        text = .data[["tooltip"]]
+      )
+    ) +
+    ggplot2::geom_col(
+      ggplot2::aes(
+        fill = .data[["colour"]]
+      ),
+      show.legend = FALSE,
+      position = "stack"
+    ) +
     ggplot2::scale_fill_identity() +
     ggplot2::scale_x_continuous(labels = scales::comma) +
     ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
@@ -188,7 +210,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         mod_principal_change_factor_effects_summarised(measure, input$include_baseline) |>
         mod_principal_change_factor_effects_cf_plot()
 
-      plotly::ggplotly(p) |>
+      plotly::ggplotly(p, tooltip = "text") |>
         plotly::layout(showlegend = FALSE)
     })
 
