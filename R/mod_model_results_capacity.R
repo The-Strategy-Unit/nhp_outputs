@@ -15,10 +15,21 @@ mod_model_results_capacity_ui <- function(id) {
       bs4Dash::box(
         title = "Beds",
         width = 12,
-        shiny::selectInput(
-          ns("beds_quarter"),
-          "Quarter",
-          purrr::set_names(c("q1", "q2", "q3", "q4"), stringr::str_to_upper)
+        shiny::fluidRow(
+          col_3(
+            shiny::selectInput(
+              ns("beds_quarter"),
+              "Quarter",
+              purrr::set_names(c("q1", "q2", "q3", "q4"), stringr::str_to_upper)
+            )
+          ),
+          col_3(
+            shiny::selectInput(
+              ns("beds_ward_type"),
+              "Ward Type",
+              NULL
+            )
+          )
         ),
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("beds"), height = "800px"),
@@ -35,11 +46,18 @@ mod_model_results_capacity_ui <- function(id) {
   )
 }
 
-mod_model_results_capacity_beds_density_plot <- function(data, baseline) {
+mod_model_results_capacity_beds_density_plot <- function(data, baseline, px, py) {
   data |>
-    ggplot2::ggplot(ggplot2::aes(.data$n)) +
+    ggplot2::ggplot(ggplot2::aes(.data$value)) +
     ggplot2::geom_density(fill = "#f9bf07", colour = "#2c2825", alpha = 0.5) +
     ggplot2::geom_vline(xintercept = baseline) +
+    ggplot2::annotate(
+      "segment",
+      x = px, xend = px,
+      y = 0, yend = py,
+      linetype = "dashed"
+    ) +
+    ggplot2::annotate("point", x = px, y = py) +
     ggplot2::theme(
       axis.text = ggplot2::element_blank(),
       axis.title = ggplot2::element_blank(),
@@ -47,11 +65,12 @@ mod_model_results_capacity_beds_density_plot <- function(data, baseline) {
     )
 }
 
-mod_model_results_capacity_beds_beeswarm_plot <- function(data, baseline) {
+mod_model_results_capacity_beds_beeswarm_plot <- function(data, baseline, principal) {
   data |>
-    ggplot2::ggplot(ggplot2::aes("1", .data$n, colour = .data$variant)) +
+    ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(yintercept = baseline) +
+    ggplot2::geom_hline(yintercept = principal, linetype = "dashed") +
     # have to use coord flip with boxplots/violin plots and plotly...
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
@@ -64,16 +83,19 @@ mod_model_results_capacity_beds_beeswarm_plot <- function(data, baseline) {
 }
 
 mod_model_results_capacity_beds_available_plot <- function(data) {
-  b <- data |>
+  ds <- data |>
     dplyr::filter(.data$model_run == 1) |>
-    dplyr::pull(.data$baseline) |>
-    sum()
+    dplyr::summarise(
+      dplyr::across(c("baseline", "principal"), sum)
+    )
 
-  d <- data |>
-    dplyr::count(.data$model_run, .data$variant, wt = .data$value)
+  b <- ds$baseline[[1]]
+  px <- ds$principal[[1]]
+  dn <- density(data$value)
+  py <- approx(dn$x, dn$y, px)$y
 
-  p1 <- mod_model_results_capacity_beds_density_plot(d, b)
-  p2 <- mod_model_results_capacity_beds_beeswarm_plot(d, b)
+  p1 <- mod_model_results_capacity_beds_density_plot(data, b, px, py)
+  p2 <- mod_model_results_capacity_beds_beeswarm_plot(data, b, px)
 
   p1p <- plotly::ggplotly(p1)
   p2p <- plotly::ggplotly(p2)
@@ -106,10 +128,50 @@ mod_model_results_capacity_fhs_available_plot <- function(data) {
 #' @noRd
 mod_model_results_capacity_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
-    beds_data <- shiny::reactive({
+    all_beds_data <- shiny::reactive({
       selected_data() |>
         get_bed_occupancy()
     })
+
+    beds_data <- shiny::reactive({
+      wt <- shiny::req(input$beds_ward_type)
+      qt <- shiny::req(input$beds_quarter)
+
+      all_beds_data() |>
+        dplyr::filter(
+          .data[["ward_type"]] == wt,
+          .data[["quarter"]] == qt
+        ) |>
+        dplyr::summarise(
+          dplyr::across(c("baseline", "principal", "value"), sum),
+          .by = c("model_run", "variant")
+        )
+    })
+
+    ward_types <- shiny::reactive({
+      all_beds_data() |>
+        dplyr::filter(
+          .data$quarter == input$beds_quarter
+        ) |>
+        dplyr::pull("ward_type") |>
+        unique()
+    })
+
+    shiny::observe({
+      current_selection <- input$beds_ward_type
+
+      if (!current_selection %in% ward_types()) {
+        current_selection <- ward_types()[[1]]
+      }
+
+      shiny::updateSelectInput(
+        session,
+        "beds_ward_type",
+        choices = ward_types(),
+        selected = current_selection
+      )
+    }) |>
+      shiny::bindEvent(ward_types())
 
     variants <- shiny::reactive({
       selected_data() |>
@@ -126,7 +188,6 @@ mod_model_results_capacity_server <- function(id, selected_data) {
 
     output$beds <- plotly::renderPlotly({
       beds_data() |>
-        dplyr::filter(.data$quarter == input$beds_quarter) |>
         mod_model_results_capacity_beds_available_plot()
     })
 

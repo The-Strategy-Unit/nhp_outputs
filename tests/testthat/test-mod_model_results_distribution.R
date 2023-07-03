@@ -7,10 +7,10 @@ library(mockery)
 
 selected_measure_expected <- c(activity_type = "aae", pod = "aae_type-01", measure = "ambulance")
 model_run_distribution_expected <- tibble::tribble(
-  ~sitetret, ~baseline, ~model_run, ~value, ~variant,
-  "trust", 30000, 1, 34000, "principal",
-  "trust", 30000, 2, 35000, "high migration",
-  "trust", 30000, 3, 36000, "high migration"
+  ~sitetret, ~baseline, ~principal, ~model_run, ~value, ~variant,
+  "trust", 30000, 31000, 1, 34000, "principal",
+  "trust", 30000, 31000, 2, 35000, "high migration",
+  "trust", 30000, 31000, 3, 36000, "high migration"
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
