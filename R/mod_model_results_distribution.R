@@ -40,11 +40,22 @@ mod_model_results_distribution_get_data <- function(r, selected_measure) {
 mod_model_results_distibution_density_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
 
+  px <- data$principal[[1]]
+  dn <- density(data$value)
+  py <- approx(dn$x, dn$y, px)$y
+
   data |>
     require_rows() |>
     ggplot2::ggplot(ggplot2::aes(.data$value)) +
     ggplot2::geom_density(fill = "#f9bf07", colour = "#2c2825", alpha = 0.5) +
     ggplot2::geom_vline(xintercept = b) +
+    ggplot2::annotate(
+      "segment",
+      x = px, xend = px,
+      y = 0, yend = py,
+      linetype = "dashed"
+    ) +
+    ggplot2::annotate("point", x = px, y = py) +
     ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::theme(
       axis.text = ggplot2::element_blank(),
@@ -55,11 +66,14 @@ mod_model_results_distibution_density_plot <- function(data, show_origin) {
 
 mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
+  p <- data$principal[[1]]
+
   data |>
     require_rows() |>
     ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(yintercept = b) +
+    ggplot2::geom_hline(yintercept = p, linetype = "dashed") +
     ggplot2::expand_limits(y = ifelse(show_origin, 0, b)) +
     ggplot2::scale_fill_manual(values = c(
       "principal" = "#f9bf07",

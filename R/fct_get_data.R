@@ -113,7 +113,7 @@ get_model_run_distribution <- function(r, pod, measure) {
       .data$pod == .env$pod,
       .data$measure == .env$measure
     ) |>
-    dplyr::select("sitetret", "baseline", "model_runs")
+    dplyr::select("sitetret", "baseline", "principal", "model_runs")
 
   if (nrow(filtered_results) == 0) {
     return(NULL)

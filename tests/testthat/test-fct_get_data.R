@@ -291,20 +291,20 @@ test_that("get_model_run_distribution gets the results", {
   r <- list(
     results = list(
       default = tibble::tribble(
-        ~sitetret, ~baseline, ~model_runs, ~pod, ~measure,
-        "a", 100, c(100, 200, 300), "a", "a",
-        "a", 101, c(101, 201, 301), "a", "b",
-        "a", 102, c(102, 202, 302), "b", "a",
-        "a", 103, c(103, 203, 303), "b", "b"
+        ~sitetret, ~baseline, ~principal, ~model_runs, ~pod, ~measure,
+        "a", 100, 110, c(100, 200, 300), "a", "a",
+        "a", 101, 111, c(101, 201, 301), "a", "b",
+        "a", 102, 112, c(102, 202, 302), "b", "a",
+        "a", 103, 113, c(103, 203, 303), "b", "b"
       )
     )
   )
 
   expected <- tibble::tribble(
-    ~sitetret, ~baseline, ~model_run, ~value, ~variant,
-    "a", 100, 1, 100, "a",
-    "a", 100, 2, 200, "a",
-    "a", 100, 3, 300, "b"
+    ~sitetret, ~baseline, ~principal, ~model_run, ~value, ~variant,
+    "a", 100, 110, 1, 100, "a",
+    "a", 100, 110, 2, 200, "a",
+    "a", 100, 110, 3, 300, "b"
   )
 
   actual <- get_model_run_distribution(r, "a", "a")
@@ -322,7 +322,8 @@ test_that("get_model_run_distribution returns NULL if filter returns no rows", {
         measure = "b",
         sitetret = "c",
         baseline = "d",
-        model_runs = "e"
+        principal = "e",
+        model_runs = "f"
       )
     )
   )
