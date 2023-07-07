@@ -26,4 +26,17 @@ app_server <- function(input, output, session) {
   if (!getOption("golem.app.prod", FALSE)) {
     session$allowReconnect("force")
   }
+
+  shiny::observe({
+    shiny::req("nhp_devs" %in% session$groups)
+
+    u <- shiny::parseQueryString(session$clientData$url_search)
+
+    shiny::req(!is.null(u$reset_cache))
+    cat("reset cache\n")
+
+    dc <- shiny::shinyOptions()$cache
+
+    dc$reset()
+  })
 }
