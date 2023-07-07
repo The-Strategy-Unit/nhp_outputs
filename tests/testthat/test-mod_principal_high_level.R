@@ -45,43 +45,45 @@ pods_expected <- tibble::tribble(
   dplyr::mutate(dplyr::across(pod_name, forcats::fct_inorder))
 
 principal_high_level_expected <- tibble::tribble(
-  ~sitetret, ~pod,                          ~baseline, ~principal,
-  "trust",   "aae",                            135000,     137000,
-  "RXX",     "ip_elective_admission",            8800,      10700,
-  "RXX",     "ip_elective_daycase",             58000,      74000,
-  "RXX",     "ip_maternity_admission",           1100,       1200,
-  "RXX",     "ip_non-elective_admission",       60000,      70000,
-  "RXX",     "op_first",                       140000,     150000,
-  "RXX",     "op_follow-up",                   370000,     390000,
-  "RXX",     "op_procedure",                    42000,      47000
+  ~sitetret, ~pod, ~measure, ~year, ~value,
+  "trust", "aae", "a", 2018, 135000,
+  "trust", "aae", "a", 2020, 137000,
+  "RXX", "ip_elective_admission", "a", 2018, 8800,
+  "RXX", "ip_elective_admission", "a", 2020, 10700,
+  "RXX", "ip_elective_daycase", "a", 2018, 58000,
+  "RXX", "ip_elective_daycase", "a", 2020, 74000,
+  "RXX", "ip_maternity_admission", "a", 2018, 1100,
+  "RXX", "ip_maternity_admission", "a", 2020, 1200,
+  "RXX", "ip_non-elective_admission", "a", 2018, 60000,
+  "RXX", "ip_non-elective_admission", "a", 2020, 70000,
+  "RXX", "ip_non-elective_admission", "beddays", 2018, 60000,
+  "RXX", "ip_non-elective_admission", "beddays", 2020, 70000,
+  "RXX", "op_first", "a", 2018, 140000,
+  "RXX", "op_first", "a", 2020, 150000,
+  "RXX", "op_first", "tele_attendances", 2018, 140000,
+  "RXX", "op_first", "tele_attendances", 2020, 150000,
+  "RXX", "op_follow-up", "a", 2018, 370000,
+  "RXX", "op_follow-up", "a", 2020, 390000,
+  "RXX", "op_procedure", "procedures", 2018, 42000,
+  "RXX", "op_procedure", "procedures", 2020, 47000
 )
 
 summary_data_expected <- tibble::tribble(
-  ~year, ~sitetret, ~value, ~activity_type, ~pod_name, ~fyear,
-  2018, "RXX", 8800, "ip", "Elective Admission", "2018/19",
-  2018, "RXX", 58000, "ip", "Daycase Admission", "2018/19",
-  2018, "RXX", 1100, "ip", "Maternity Admission", "2018/19",
-  2018, "RXX", 60000, "ip", "Non-Elective Admission", "2018/19",
-  2018, "RXX", 140000, "op", "First Outpatient Attendance", "2018/19",
-  2018, "RXX", 370000, "op", "Follow-up Outpatient Attendance", "2018/19",
-  2018, "RXX", 42000, "op", "Outpatient Procedure", "2018/19",
-  2018, "trust", 135000, "aae", "A&E Attendance", "2018/19",
-  2019, "RXX", 9750, "ip", "Elective Admission", "2019/20",
-  2019, "RXX", 66000, "ip", "Daycase Admission", "2019/20",
-  2019, "RXX", 1150, "ip", "Maternity Admission", "2019/20",
-  2019, "RXX", 65000, "ip", "Non-Elective Admission", "2019/20",
-  2019, "RXX", 145000, "op", "First Outpatient Attendance", "2019/20",
-  2019, "RXX", 380000, "op", "Follow-up Outpatient Attendance", "2019/20",
-  2019, "RXX", 44500, "op", "Outpatient Procedure", "2019/20",
-  2019, "trust", 136000, "aae", "A&E Attendance", "2019/20",
-  2020, "RXX", 10700, "ip", "Elective Admission", "2020/21",
-  2020, "RXX", 74000, "ip", "Daycase Admission", "2020/21",
-  2020, "RXX", 1200, "ip", "Maternity Admission", "2020/21",
-  2020, "RXX", 70000, "ip", "Non-Elective Admission", "2020/21",
-  2020, "RXX", 150000, "op", "First Outpatient Attendance", "2020/21",
-  2020, "RXX", 390000, "op", "Follow-up Outpatient Attendance", "2020/21",
-  2020, "RXX", 47000, "op", "Outpatient Procedure", "2020/21",
-  2020, "trust", 137000, "aae", "A&E Attendance", "2020/21"
+  ~sitetret, ~year, ~fyear, ~value, ~activity_type, ~pod_name,
+  "trust", 2018, "2018/19", 135000, "aae", "A&E Attendance",
+  "trust", 2020, "2020/21", 137000, "aae", "A&E Attendance",
+  "RXX", 2018, "2018/19", 8800, "ip", "Elective Admission",
+  "RXX", 2020, "2020/21", 10700, "ip", "Elective Admission",
+  "RXX", 2018, "2018/19", 58000, "ip", "Daycase Admission",
+  "RXX", 2020, "2020/21", 74000, "ip", "Daycase Admission",
+  "RXX", 2018, "2018/19", 1100, "ip", "Maternity Admission",
+  "RXX", 2020, "2020/21", 1200, "ip", "Maternity Admission",
+  "RXX", 2018, "2018/19", 60000, "ip", "Non-Elective Admission",
+  "RXX", 2020, "2020/21", 70000, "ip", "Non-Elective Admission",
+  "RXX", 2018, "2018/19", 140000, "op", "First Outpatient Attendance",
+  "RXX", 2020, "2020/21", 150000, "op", "First Outpatient Attendance",
+  "RXX", 2018, "2018/19", 370000, "op", "Follow-up Outpatient Attendance",
+  "RXX", 2020, "2020/21", 390000, "op", "Follow-up Outpatient Attendance"
 ) |>
   dplyr::mutate(dplyr::across(pod_name, \(.x) factor(.x, levels(pods_expected$pod_name))))
 
@@ -103,9 +105,10 @@ test_that("mod_principal_high_level_pods returns the correct list of pods", {
 })
 
 test_that("mod_principal_high_level_summary_data processes data correctly", {
-  m <- mock(c(2018, 2020), principal_high_level_expected)
-  stub(mod_principal_high_level_summary_data, "get_model_run_years", m)
-  stub(mod_principal_high_level_summary_data, "get_principal_high_level", m)
+  m <- mock(principal_high_level_expected)
+
+  stub(mod_principal_high_level_summary_data, "get_time_profiles", m)
+  stub(mod_principal_high_level_summary_data, "trust_site_aggregation", identity)
 
   actual <- mod_principal_high_level_summary_data(1, pods_expected)
   expect_equal(actual, summary_data_expected)
