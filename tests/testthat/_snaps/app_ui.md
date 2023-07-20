@@ -3,7 +3,7 @@
     Code
       app_ui()
     Output
-      <body data-help="0" data-fullscreen="0" data-dark="1" data-scrollToTop="0" class="sidebar-mini">
+      <body data-help="1" data-fullscreen="0" data-dark="1" data-scrollToTop="0" class="sidebar-mini">
         <div class="wrapper">
           <nav data-fixed="false" class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
