@@ -175,7 +175,7 @@ test_that("user_allowed_datasets returns correct values", {
     get_user_allowed_datasets("a"),
     c(
       "synthetic",
-      "RA9", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RYJ"
+      "RA9", "RAS", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RXN", "RTX", "RYJ"
     )
   )
 })

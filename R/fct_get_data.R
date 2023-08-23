@@ -52,9 +52,10 @@ get_results <- function(filename) {
 
 get_user_allowed_datasets <- function(user) {
   # TODO: there should exist a configuration for users somewhere
+
   c(
     "synthetic",
-    "RA9", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RYJ"
+    "RA9", "RAS", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RXN", "RTX", "RYJ"
   )
 }
 
