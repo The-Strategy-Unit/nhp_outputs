@@ -61,7 +61,7 @@ mod_result_selection_server <- function(id) {
 
     # reactives ----
     allowed_datasets <- shiny::reactive({
-      get_user_allowed_datasets(session$user)
+      get_user_allowed_datasets(session$groups)
     })
 
     result_sets <- shiny::reactive({

@@ -171,13 +171,32 @@ test_that("get_results returns data from azure", {
 })
 
 test_that("user_allowed_datasets returns correct values", {
+  stub(get_user_allowed_datasets, "jsonlite::read_json", c("A", "B", "C"))
+
+  for (i in list(NULL, "nhp_devs", "nhp_power_users")) {
+    expect_equal(
+      get_user_allowed_datasets(NULL),
+      c(
+        "synthetic", "A", "B", "C"
+      )
+    )
+  }
+
   expect_equal(
-    get_user_allowed_datasets("a"),
+    get_user_allowed_datasets("X"),
     c(
-      "synthetic",
-      "RA9", "RAS", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RXN", "RTX", "RYJ"
+      "synthetic"
     )
   )
+
+  for (i in list("A", "B", "C")) {
+    expect_equal(
+      get_user_allowed_datasets(paste0("nhp_provider_", i)),
+      c(
+        "synthetic", i
+      )
+    )
+  }
 })
 
 test_that("get_trust_sites returns the list of trust sites", {
