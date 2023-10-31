@@ -50,13 +50,17 @@ get_results <- function(filename) {
   r
 }
 
-get_user_allowed_datasets <- function(user) {
-  # TODO: there should exist a configuration for users somewhere
+get_user_allowed_datasets <- function(groups) {
+  p <- jsonlite::read_json(app_sys("app", "data", "providers.json"), simplifyVector = TRUE)
 
-  c(
-    "synthetic",
-    "RA9", "RAS", "RD8", "RGP", "RGR", "RH5", "RH8", "RHW", "RN5", "RNQ", "RX1", "RXC", "RXN_RTX", "RXN", "RTX", "RYJ"
-  )
+  if (!(is.null(groups) || any(c("nhp_devs", "nhp_power_users") %in% groups))) {
+    a <- groups |>
+      stringr::str_subset("^nhp_provider_") |>
+      stringr::str_remove("^nhp_provider_")
+    p <- intersect(p, a)
+  }
+
+  c("synthetic", p)
 }
 
 get_trust_sites <- function(r) {
