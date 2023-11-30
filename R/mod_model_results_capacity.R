@@ -34,13 +34,6 @@ mod_model_results_capacity_ui <- function(id) {
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("beds"), height = "800px"),
         )
-      ),
-      bs4Dash::box(
-        title = "Elective 4 hour sessions",
-        width = 12,
-        shinycssloaders::withSpinner(
-          plotly::plotlyOutput(ns("fhs"), height = "800px"),
-        )
       )
     )
   )
@@ -105,24 +98,6 @@ mod_model_results_capacity_beds_available_plot <- function(data) {
   plotly::layout(sp, legend = list(orientation = "h"))
 }
 
-mod_model_results_capacity_fhs_available_plot <- function(data) {
-  data |>
-    dplyr::group_by(.data$model_run, .data$variant) |>
-    dplyr::summarise(dplyr::across(c("baseline", "value"), sum), .groups = "drop") |>
-    ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
-    ggbeeswarm::geom_quasirandom(alpha = 0.5) +
-    ggplot2::geom_hline(ggplot2::aes(yintercept = .data$baseline), colour = "#2c2825") +
-    ggplot2::scale_y_continuous(labels = scales::comma) +
-    ggplot2::theme(
-      axis.text.y = ggplot2::element_blank(),
-      axis.title.y = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank()
-    ) +
-    ggplot2::labs(x = "", y = "Elective 4 hour sessions") +
-    ggplot2::coord_flip()
-}
-
-
 #' capacity_beds Server Functions
 #'
 #' @noRd
@@ -178,24 +153,10 @@ mod_model_results_capacity_server <- function(id, selected_data) {
         get_variants()
     })
 
-    four_hour_sessions <- shiny::reactive({
-      selected_data() |>
-        get_theatres_available() |>
-        dplyr::mutate(dplyr::across("model_runs", \(.x) purrr::map(.x, tibble::enframe, "model_run"))) |>
-        tidyr::unnest("model_runs") |>
-        dplyr::inner_join(variants(), by = "model_run")
-    })
-
     output$beds <- plotly::renderPlotly({
       beds_data() |>
         mod_model_results_capacity_beds_available_plot()
     })
 
-    output$fhs <- plotly::renderPlotly({
-      four_hour_sessions() |>
-        mod_model_results_capacity_fhs_available_plot() |>
-        plotly::ggplotly() |>
-        plotly::layout(legend = list(orientation = "h"))
-    })
   })
 }

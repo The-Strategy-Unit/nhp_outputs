@@ -15,7 +15,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-activity_type-label" for="id-activity_type">Activity Type</label>
                   <div>
-                    <select id="id-activity_type"></select>
+                    <select id="id-activity_type" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure-label" for="id-measure">Measure</label>
                   <div>
-                    <select id="id-measure"></select>
+                    <select id="id-measure" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
@@ -32,7 +32,7 @@
               <div class="form-group shiny-input-container">
                 <div class="checkbox">
                   <label>
-                    <input id="id-include_baseline" type="checkbox" checked="checked"/>
+                    <input id="id-include_baseline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
                     <span>Include baseline?</span>
                   </label>
                 </div>
@@ -67,7 +67,7 @@
             <div class="form-group shiny-input-container">
               <label class="control-label" id="id-sort_type-label" for="id-sort_type">Sort By</label>
               <div>
-                <select id="id-sort_type"><option value="alphabetical" selected>alphabetical</option>
+                <select id="id-sort_type" class="shiny-input-select"><option value="alphabetical" selected>alphabetical</option>
       <option value="descending value">descending value</option></select>
                 <script type="application/json" data-for="id-sort_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
               </div>

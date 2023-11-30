@@ -15,7 +15,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure_selection-activity_type-label" for="id-measure_selection-activity_type">Activity Type</label>
                   <div>
-                    <select id="id-measure_selection-activity_type"></select>
+                    <select id="id-measure_selection-activity_type" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-measure_selection-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure_selection-pod-label" for="id-measure_selection-pod">Point of Delivery</label>
                   <div>
-                    <select id="id-measure_selection-pod"></select>
+                    <select id="id-measure_selection-pod" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-measure_selection-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
@@ -33,7 +33,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure_selection-measure-label" for="id-measure_selection-measure">Measure</label>
                   <div>
-                    <select id="id-measure_selection-measure"></select>
+                    <select id="id-measure_selection-measure" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-measure_selection-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
@@ -42,7 +42,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-aggregation-label" for="id-aggregation">Show Results By</label>
                   <div>
-                    <select id="id-aggregation"></select>
+                    <select id="id-aggregation" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-aggregation" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>

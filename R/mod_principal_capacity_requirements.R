@@ -18,13 +18,6 @@ mod_principal_capacity_requirements_ui <- function(id) {
         shinycssloaders::withSpinner(
           gt::gt_output(ns("beds"))
         )
-      ),
-      bs4Dash::box(
-        title = "Elective 4 Hour Sessions",
-        width = 4,
-        shinycssloaders::withSpinner(
-          gt::gt_output(ns("fhs"))
-        )
       )
     )
   )
@@ -75,21 +68,6 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
     gt_theme()
 }
 
-mod_principal_capacity_requirements_fhs_table <- function(data) {
-  data |>
-    gt::gt(rowname_col = "tretspef") |>
-    gt::cols_label(
-      baseline = "Baseline",
-      principal = "Principal"
-    ) |>
-    gt::grand_summary_rows(
-      columns = c("baseline", "principal"),
-      fns = list(id = "sum", label = "Grand Total") ~ sum(., na.rm = TRUE),
-      fmt = ~ gt::fmt_integer(.)
-    ) |>
-    gt_theme()
-}
-
 #' principal_capacity_requirements Server Functions
 #'
 #' @noRd
@@ -102,20 +80,9 @@ mod_principal_capacity_requirements_server <- function(id, selected_data) {
         dplyr::select("quarter", "ward_type", "ward_group", "baseline", "principal")
     })
 
-    four_hour_sessions <- shiny::reactive({
-      selected_data() |>
-        get_theatres_available() |>
-        dplyr::select("tretspef", "baseline", "principal")
-    })
-
     output$beds <- gt::render_gt({
       beds_data() |>
         mod_principal_capacity_requirements_beds_table()
-    })
-
-    output$fhs <- gt::render_gt({
-      four_hour_sessions() |>
-        mod_principal_capacity_requirements_fhs_table()
     })
   })
 }

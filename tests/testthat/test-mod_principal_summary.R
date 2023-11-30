@@ -42,12 +42,6 @@ test_that("mod_principal_summary_data summarises the data", {
       "q2", 2, 3, 4,
     )
   )
-  m3 <- mock(
-    tibble::tibble(
-      baseline = 1:2,
-      principal = 3:4
-    )
-  )
 
   expected <- tibble::tribble(
     ~sitetret, ~pod_name,                          ~baseline, ~principal,
@@ -55,8 +49,7 @@ test_that("mod_principal_summary_data summarises the data", {
     "trust",   "A 2",                              3,         4,
     "trust",   "B 1",                              4,         5,
     "trust",   "B 2",                              6,         7,
-    "trust",   "Beds Available",                   4,         6,
-    "trust",   "4 Hour Elective Theatre Sessions", 3,         7
+    "trust",   "Beds Available",                   4,         6
   )
 
   stub(
@@ -71,17 +64,14 @@ test_that("mod_principal_summary_data summarises the data", {
 
   stub(mod_principal_summary_data, "get_principal_high_level", m1)
   stub(mod_principal_summary_data, "get_bed_occupancy", m2)
-  stub(mod_principal_summary_data, "get_theatres_available", m3)
 
   actual <- mod_principal_summary_data("data")
 
   expect_called(m1, 1)
   expect_called(m2, 1)
-  expect_called(m3, 1)
 
   expect_args(m1, 1, "data")
   expect_args(m2, 1, "data")
-  expect_args(m3, 1, "data")
 
   expect_equal(actual, expected)
 })
