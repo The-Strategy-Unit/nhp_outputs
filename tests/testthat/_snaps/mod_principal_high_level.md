@@ -42,9 +42,9 @@
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-6126a34bade7b052b050756754010682" class="loader">Loading...</div>
+                  <div id="spinner-1036da88255df0034024698e9c879289" class="loader">Loading...</div>
                 </div>
-                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-aae" style="width:100%;height:400px;"></div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-aae" style="width:100%;height:400px;"></div>
               </div>
             </div>
           </div>
@@ -63,9 +63,9 @@
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-dc840f4675ff7a7977841e0f5ea9bf4c" class="loader">Loading...</div>
+                  <div id="spinner-f1538b8eec72fc9b3f61a73d3538e670" class="loader">Loading...</div>
                 </div>
-                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-ip" style="width:100%;height:400px;"></div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-ip" style="width:100%;height:400px;"></div>
               </div>
             </div>
           </div>
@@ -84,9 +84,9 @@
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-a5e353201233e8e149621c7f4bbe70cc" class="loader">Loading...</div>
+                  <div id="spinner-9de7b030b822539546ffbeef17eb9576" class="loader">Loading...</div>
                 </div>
-                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-op" style="width:100%;height:400px;"></div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-op" style="width:100%;height:400px;"></div>
               </div>
             </div>
           </div>
