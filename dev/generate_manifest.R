@@ -1,5 +1,3 @@
-devtools::load_all()
-
 files <- c(
   "DESCRIPTION",
   "NAMESPACE",
