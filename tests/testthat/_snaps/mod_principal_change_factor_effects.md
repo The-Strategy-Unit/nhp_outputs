@@ -15,7 +15,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-activity_type-label" for="id-activity_type">Activity Type</label>
                   <div>
-                    <select id="id-activity_type"></select>
+                    <select id="id-activity_type" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure-label" for="id-measure">Measure</label>
                   <div>
-                    <select id="id-measure"></select>
+                    <select id="id-measure" class="shiny-input-select"></select>
                     <script type="application/json" data-for="id-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
@@ -32,7 +32,7 @@
               <div class="form-group shiny-input-container">
                 <div class="checkbox">
                   <label>
-                    <input id="id-include_baseline" type="checkbox" checked="checked"/>
+                    <input id="id-include_baseline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
                     <span>Include baseline?</span>
                   </label>
                 </div>
@@ -50,9 +50,9 @@
           <div class="card-body">
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-be440495b826e6d62f5b12c96d4f47c3" class="loader">Loading...</div>
+                <div id="spinner-e50b7789e5c6936391faab18e81a96e7" class="loader">Loading...</div>
               </div>
-              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
+              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
             </div>
           </div>
         </div>
@@ -67,21 +67,21 @@
             <div class="form-group shiny-input-container">
               <label class="control-label" id="id-sort_type-label" for="id-sort_type">Sort By</label>
               <div>
-                <select id="id-sort_type"><option value="alphabetical" selected>alphabetical</option>
+                <select id="id-sort_type" class="shiny-input-select"><option value="alphabetical" selected>alphabetical</option>
       <option value="descending value">descending value</option></select>
                 <script type="application/json" data-for="id-sort_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
               </div>
             </div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-dc732f55442e8f8f9480e50d499c7819" class="loader">Loading...</div>
+                <div id="spinner-7fe157d749ee969d53dc2207c0ebf017" class="loader">Loading...</div>
               </div>
               <div class="row">
                 <div class="col-sm-6">
-                  <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>
+                  <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>
                 </div>
                 <div class="col-sm-6">
-                  <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item-overflow-hidden html-fill-item" id="id-efficiencies" style="width:100%;height:600px;"></div>
+                  <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-efficiencies" style="width:100%;height:600px;"></div>
                 </div>
               </div>
             </div>

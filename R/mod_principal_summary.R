@@ -41,12 +41,6 @@ mod_principal_summary_data <- function(r) {
           dplyr::across(c("baseline", "principal"), mean),
           sitetret = "trust",
           pod_name = "Beds Available"
-        ),
-      get_theatres_available(r) |>
-        dplyr::summarise(
-          sitetret = "trust",
-          pod_name = "4 Hour Elective Theatre Sessions",
-          dplyr::across(c("baseline", "principal"), sum)
         )
     ) |>
     dplyr::select("sitetret", "pod_name", "baseline", "principal")

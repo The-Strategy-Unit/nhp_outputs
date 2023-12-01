@@ -191,30 +191,6 @@ get_bed_occupancy <- function(r) {
     dplyr::inner_join(get_variants(r), by = "model_run")
 }
 
-get_theatres_available <- function(r) {
-  # incase the theatres data doesn't exist
-  empty_structure <- tibble::tibble(
-    tretspef = character(),
-    baseline = integer(),
-    principal = integer(),
-    lwr_ci = double(),
-    median = double(),
-    upr_ci = double(),
-    model_runs = list()
-  )
-
-  dplyr::select(
-    r$results$theatres_available %||% empty_structure,
-    "tretspef",
-    "baseline",
-    "principal",
-    "median",
-    "lwr_ci",
-    "upr_ci",
-    "model_runs"
-  )
-}
-
 trust_site_aggregation <- function(data) {
   data |>
     dplyr::filter(.data$sitetret != "trust") |>

@@ -71,6 +71,7 @@ test_that("it shows the download button when the user is in the correct group", 
   withr::local_options(c("golem.app.prod" = TRUE))
 
   m <- mock()
+  stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
   stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "shinyjs::toggle", m)
 
@@ -123,6 +124,7 @@ test_that("it sets up the dropdowns", {
 test_that("it returns a reactive", {
   m <- mock("data")
 
+  stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
   stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "get_results", m)
   stub(mod_result_selection_server, "get_trust_sites", "trust")
@@ -168,6 +170,7 @@ test_that("it downloads the results", {
     )
   )
 
+  stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
   stub(mod_result_selection_server, "get_result_sets", available_result_sets)
   stub(mod_result_selection_server, "get_trust_sites", "trust")
   stub(mod_result_selection_server, "get_results", expected)
@@ -205,6 +208,10 @@ test_that("mod_result_selection_server_parse_url_hash parses the selections out 
 
 test_that("we correctly parse the url_hash", {
   m <- mock(c("abc", "def", "hij"))
+
+  stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
+  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
+
   stub(
     mod_result_selection_server,
     "mod_result_selection_parse_url_hash",
@@ -223,6 +230,7 @@ test_that("we correctly parse the url_hash", {
 test_that("we update dropdown selections when url_query changes", {
   m <- mock()
   stub(mod_result_selection_server, "shiny::updateSelectInput", m)
+  stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
   stub(mod_result_selection_server, "get_result_sets", NULL)
   stub(mod_result_selection_server, "mod_result_selection_filter_result_sets", NULL)
 

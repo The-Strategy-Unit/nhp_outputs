@@ -482,27 +482,6 @@ test_that("get_bed_occupancy gets the results", {
   expect_equal(actual, expected)
 })
 
-test_that("get_theatres_available gets the results", {
-  r <- list(
-    results = list(
-      theatres_available = tibble::tibble(
-        tretspef = "t",
-        baseline = "b",
-        principal = "p",
-        median = 1,
-        lwr_ci = 0,
-        upr_ci = 2,
-        model_runs = list(4:6)
-      )
-    )
-  )
-
-  actual <- get_theatres_available(r)
-  expected <- r$results$theatres_available
-
-  expect_equal(actual, expected)
-})
-
 test_that("trust_site_aggregation adds in a trust level aggregatrion", {
   df <- tibble::tribble(
     ~sitetret, ~x, ~v,
