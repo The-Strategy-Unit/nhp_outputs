@@ -1,3 +1,5 @@
+devtools::load_all()
+
 files <- c(
   "DESCRIPTION",
   "NAMESPACE",
@@ -6,4 +8,5 @@ files <- c(
   fs::dir_ls("inst", recurse = TRUE, type = "file")
 )
 
+options(rsconnect.packrat = TRUE)
 rsconnect::writeManifest(appFiles = files)
