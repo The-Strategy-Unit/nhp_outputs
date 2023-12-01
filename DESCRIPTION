@@ -41,6 +41,7 @@ Imports:
     zeallot,
     zoo
 Suggests:
+    devtools,
     mockery,
     readr,
     testthat (>= 3.0.0),
