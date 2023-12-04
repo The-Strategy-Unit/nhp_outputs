@@ -31,7 +31,11 @@
           <script type="application/json" data-for="id-site_selection" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
         </div>
       </div>
-      <a class="btn btn-default shiny-download-link  shinyjs-hide" download href="" id="id-download_results" target="_blank">
+      <a class="btn btn-default shiny-download-link  shinyjs-hide" download href="" id="id-download_results_xlsx" target="_blank">
+        <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
+        Download results (.xlsx)
+      </a>
+      <a class="btn btn-default shiny-download-link  shinyjs-hide" download href="" id="id-download_results_json" target="_blank">
         <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
         Download results (.json)
       </a>

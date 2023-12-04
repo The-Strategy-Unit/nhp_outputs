@@ -51,7 +51,7 @@ test_that("it populates the list of available result sets", {
   })
 })
 
-test_that("it shows the download button when golem.app.prod = FALSE", {
+test_that("it shows the download buttons when golem.app.prod = FALSE", {
   withr::local_options(c("golem.app.prod" = FALSE))
 
   m <- mock()
@@ -62,8 +62,9 @@ test_that("it shows the download button when golem.app.prod = FALSE", {
   testServer(mod_result_selection_server, {
     session$private$flush()
 
-    expect_called(m, 1)
-    expect_args(m, 1, "download_results", selector = TRUE)
+    expect_called(m, 2)
+    expect_args(m, 1, "download_results_xlsx", selector = TRUE)
+    expect_args(m, 2, "download_results_json", selector = TRUE)
   })
 })
 
@@ -85,9 +86,11 @@ test_that("it shows the download button when the user is in the correct group", 
     session$private$flush()
   })
 
-  expect_called(m, 2)
-  expect_args(m, 1, "download_results", selector = FALSE)
-  expect_args(m, 2, "download_results", selector = TRUE)
+  expect_called(m, 4)
+  expect_args(m, 1, "download_results_xlsx", selector = FALSE)
+  expect_args(m, 2, "download_results_json", selector = FALSE)
+  expect_args(m, 3, "download_results_xlsx", selector = TRUE)
+  expect_args(m, 4, "download_results_json", selector = TRUE)
 })
 
 test_that("it sets up the dropdowns", {
@@ -160,7 +163,43 @@ test_that("it returns a reactive", {
   })
 })
 
-test_that("it downloads the results", {
+test_that("it downloads the results (xlsx)", {
+  expected <- list(
+    params = list(
+      "dataset" = "a",
+      "scenario" = "1",
+      "create_datetime" = "20220101_012345",
+      "id" = "1"
+    ),
+    results = list(
+      a = tibble::tibble(
+        "column" = 1:10
+      )
+    )
+  )
+
+  stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
+  stub(mod_result_selection_server, "get_result_sets", available_result_sets)
+  stub(mod_result_selection_server, "get_trust_sites", "trust")
+  stub(mod_result_selection_server, "get_results", expected)
+
+  testServer(mod_result_selection_server, {
+    session$setInputs(dataset = "a")
+    session$setInputs(scenario = "a1")
+    session$setInputs(create_datetime = "20210203_012345")
+    session$setInputs(site_selection = "trust")
+
+    results_file <- output$download_results_xlsx
+    withr::local_file(results_file)
+
+    expect_true(stringr::str_ends(results_file, "1.xlsx"))
+
+    actual <- readxl::read_excel(results_file, sheet = "a")
+    expect_equal(actual, expected$results$a)
+  })
+})
+
+test_that("it downloads the results (json)", {
   expected <- list(
     params = list(
       "dataset" = "a",
@@ -182,7 +221,7 @@ test_that("it downloads the results", {
     session$setInputs(create_datetime = "20210203_012345")
     session$setInputs(site_selection = "trust")
 
-    results_file <- output$download_results
+    results_file <- output$download_results_json
     withr::local_file(results_file)
 
     expect_true(stringr::str_ends(results_file, "1.json"))

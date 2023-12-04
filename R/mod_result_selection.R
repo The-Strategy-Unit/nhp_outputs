@@ -30,7 +30,8 @@ mod_result_selection_ui <- function(id) {
     shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
     shiny::selectInput(ns("site_selection"), "Site", NULL),
     shinyjs::hidden(
-      shiny::downloadButton(ns("download_results"), "Download results (.json)")
+      shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
+      shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
     )
   )
 }
@@ -209,14 +210,30 @@ mod_result_selection_server <- function(id) {
       priority = -2
     )
 
-    # download button ----
+    # download buttons ----
 
     shiny::observe({
       show_button <- !getOption("golem.app.prod", FALSE) || "nhp_power_users" %in% session$groups
-      shinyjs::toggle("download_results", selector = show_button)
+      shinyjs::toggle("download_results_xlsx", selector = show_button)
+      shinyjs::toggle("download_results_json", selector = show_button)
     })
 
-    output$download_results <- shiny::downloadHandler(
+    output$download_results_xlsx <- shiny::downloadHandler(
+      filename = function() {
+        paste0(selected_results()$params$id, ".xlsx")
+      },
+      content = function(file) {
+        selected_results() |>
+          purrr::pluck("results") |>
+          purrr::map(
+            dplyr::select,
+            -tidyselect::where(is.list)
+          ) |>
+          writexl::write_xlsx(file)
+      }
+    )
+
+    output$download_results_json <- shiny::downloadHandler(
       filename = function() {
         paste0(selected_results()$params$id, ".json")
       },
@@ -225,6 +242,7 @@ mod_result_selection_server <- function(id) {
           jsonlite::write_json(file, pretty = TRUE, auto_unbox = TRUE)
       }
     )
+
 
     # return reactive ----
     return_reactive <- shiny::reactive({
