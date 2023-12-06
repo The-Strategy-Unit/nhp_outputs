@@ -38,6 +38,7 @@ Imports:
     tidyselect,
     uuid,
     withr,
+    writexl,
     zeallot,
     zoo
 Suggests:
