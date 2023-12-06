@@ -1,0 +1,14 @@
+name: "Connect Publish (manual)"
+on:
+  workflow_dispatch:
+    inputs:
+      namespace:
+        required: true
+        type: string
+
+jobs:
+  connect-publish-manual:
+    uses: ./.github/workflows/connect-publish.yaml
+    with:
+      namespace: ${{ inputs.namespace }}
+    secrets: inherit
