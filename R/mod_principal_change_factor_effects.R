@@ -107,7 +107,7 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
       tooltip = ifelse(
         .data[["name"]] == "hidden",
         0,
-        value
+        .data[["value"]]
       ),
       tooltip = glue::glue("{change_factor}: {scales::comma(sum(tooltip), accuracy = 1)}"),
       .by = "change_factor"
