@@ -41,7 +41,7 @@
               </div>
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
                 <div class="load-container shiny-spinner-hidden load1">
-                  <div id="spinner-47cb56358f5f381d24443e735b9811da" class="loader">Loading...</div>
+                  <div id="spinner-c7e0edfeda344eef14dc75a11c0c5b2f" class="loader">Loading...</div>
                 </div>
                 <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-beds" style="width:100%;height:800px;"></div>
               </div>
