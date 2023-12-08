@@ -10,22 +10,18 @@ Imports:
     bs4Dash,
     cachem,
     config (>= 0.3.1),
-    digest,
     dplyr,
     forcats,
-    fs,
     ggbeeswarm,
     ggplot2,
     glue,
     golem (>= 0.3.1),
     gt,
     htmltools,
-    httr,
     jsonlite,
     lubridate,
     plotly,
     purrr,
-    readxl,
     rlang,
     scales,
     shiny (>= 1.7.1),
@@ -39,12 +35,12 @@ Imports:
     uuid,
     withr,
     writexl,
-    zeallot,
-    zoo
+    zeallot
 Suggests:
     devtools,
     mockery,
     readr,
+    readxl,
     testthat (>= 3.0.0),
     utils
 Encoding: UTF-8
