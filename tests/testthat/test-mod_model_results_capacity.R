@@ -72,8 +72,8 @@ test_that("beds_available_plot combines the plots into a plotly object", {
   expect_equal(p, "layout")
 
   expect_called(m, 6)
-  expect_args(m, 1, beds_data_expected, 190, 210, 0.5)
-  expect_args(m, 2, beds_data_expected, 190, 210)
+  expect_args(m, 1, beds_data_expected, 190, 5, 0.5)
+  expect_args(m, 2, beds_data_expected, 190, 5)
   expect_args(m, 3, "density_plot")
   expect_args(m, 4, "beeswarm_plot")
   expect_args(m, 5, "density_plotly", "beeswarm_plotly", nrows = 2)
