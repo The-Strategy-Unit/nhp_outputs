@@ -58,12 +58,12 @@ mod_model_results_capacity_beds_density_plot <- function(data, baseline, px, py)
     )
 }
 
-mod_model_results_capacity_beds_beeswarm_plot <- function(data, baseline, principal) {
+mod_model_results_capacity_beds_beeswarm_plot <- function(data, baseline, median) {
   data |>
     ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(yintercept = baseline) +
-    ggplot2::geom_hline(yintercept = principal, linetype = "dashed") +
+    ggplot2::geom_hline(yintercept = median, linetype = "dashed") +
     # have to use coord flip with boxplots/violin plots and plotly...
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(labels = scales::comma) +
@@ -83,7 +83,7 @@ mod_model_results_capacity_beds_available_plot <- function(data) {
     )
 
   b <- ds$baseline[[1]]
-  px <- ds$principal[[1]]
+  px <- median(data$value)
   dn <- density(data$value)
   py <- approx(dn$x, dn$y, px)$y
 

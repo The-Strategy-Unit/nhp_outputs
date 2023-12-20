@@ -40,7 +40,7 @@ mod_model_results_distribution_get_data <- function(r, selected_measure) {
 mod_model_results_distibution_density_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
 
-  px <- data$principal[[1]]
+  px <- median(data$value)
   dn <- density(data$value)
   py <- approx(dn$x, dn$y, px)$y
 
@@ -66,7 +66,7 @@ mod_model_results_distibution_density_plot <- function(data, show_origin) {
 
 mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
-  p <- data$principal[[1]]
+  p <- median(data$value)
 
   data |>
     require_rows() |>
