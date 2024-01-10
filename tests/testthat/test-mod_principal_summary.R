@@ -27,7 +27,8 @@ test_that("mod_principal_summary_data summarises the data", {
       "b_1", "trust", 4, 5,
       "b_2", "trust", 6, 7,
       "c_1", "trust", 8, 9
-    )
+    ),
+    cycle = TRUE
   )
   m2 <- mock(
     tibble::tribble(
@@ -44,19 +45,23 @@ test_that("mod_principal_summary_data summarises the data", {
   )
 
   expected <- tibble::tribble(
-    ~sitetret, ~pod_name,                          ~baseline, ~principal,
-    "trust",   "A 1",                              1,         2,
-    "trust",   "A 2",                              3,         4,
-    "trust",   "B 1",                              4,         5,
-    "trust",   "B 2",                              6,         7,
-    "trust",   "Beds Available",                   4,         6
+    ~sitetret, ~pod_name, ~baseline, ~principal,
+    "trust", "A 1",            1, 2,
+    "trust", "A 1",            1, 2,
+    "trust", "A 2",            3, 4,
+    "trust", "A 2",            3, 4,
+    "trust", "B 1",            4, 5,
+    "trust", "B 1",            4, 5,
+    "trust", "B 2",            6, 7,
+    "trust", "B 2",            6, 7,
+    "trust", "Beds Available", 4, 6
   )
 
   stub(
     mod_principal_summary_data,
     "mod_principal_high_level_pods",
     tibble::tibble(
-      activity_type = c("a", "a", "b", "b"),
+      activity_type = c("ip", "ip", "op", "aae"),
       pod = c("a_1", "a_2", "b_1", "b_2"),
       pod_name = c("A 1", "A 2", "B 1", "B 2")
     )
@@ -67,10 +72,11 @@ test_that("mod_principal_summary_data summarises the data", {
 
   actual <- mod_principal_summary_data("data")
 
-  expect_called(m1, 1)
+  expect_called(m1, 2)
   expect_called(m2, 1)
 
-  expect_args(m1, 1, "data")
+  expect_args(m1, 1, "data", c("admissions", "attendances", "walk-in", "ambulance"))
+  expect_args(m1, 2, "data", "tele_attendances")
   expect_args(m2, 1, "data")
 
   expect_equal(actual, expected)

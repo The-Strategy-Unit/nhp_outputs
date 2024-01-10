@@ -88,13 +88,13 @@ get_model_run_years <- function(r) {
   r$params[c("start_year", "end_year")]
 }
 
-get_principal_high_level <- function(r) {
+get_principal_high_level <- function(r, measures) {
   r$results$default |>
-    dplyr::filter(!.data$measure %in% c("beddays", "procedures", "tele_attendances")) |>
+    dplyr::filter(.data$measure %in% measures) |>
     dplyr::select("pod", "sitetret", "baseline", "principal") |>
-    dplyr::mutate(
-      dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x))
-    ) |>
+    dplyr::mutate(dplyr::across("pod", ~ ifelse(
+      stringr::str_starts(.x, "aae"), "aae", .x
+    ))) |>
     dplyr::group_by(.data$pod, .data$sitetret) |>
     dplyr::summarise(dplyr::across(where(is.numeric), sum), .groups = "drop") |>
     trust_site_aggregation()
