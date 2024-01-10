@@ -260,7 +260,9 @@ test_that("get_principal_high_level gets the results", {
     "op_1", "a", 9, 10
   )
 
-  actual <- get_principal_high_level(r)
+  actual <- get_principal_high_level(
+    r, measures = c("admissions", "attendances", "walk-in", "ambulance")
+  )
 
   expect_equal(actual, "tsa")
   expect_called(m, 1)
