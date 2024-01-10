@@ -28,21 +28,36 @@ mod_principal_summary_ui <- function(id) {
 mod_principal_summary_data <- function(r) {
   pods <- mod_principal_high_level_pods()
 
-  get_principal_high_level(r) |>
+  main_summary <- get_principal_high_level(
+    r,
+    c("admissions", "attendances", "walk-in", "ambulance")
+  ) |>
+    dplyr::inner_join(pods, by = "pod")
+
+  tele_attendances <- get_principal_high_level(r, "tele_attendances") |>
     dplyr::inner_join(pods, by = "pod") |>
-    dplyr::bind_rows(
-      get_bed_occupancy(r) |>
-        dplyr::filter(.data$model_run == 1) |>
-        dplyr::group_by(.data$quarter) |>
-        dplyr::summarise(
-          dplyr::across(c("baseline", "principal"), sum)
-        ) |>
-        dplyr::summarise(
-          dplyr::across(c("baseline", "principal"), mean),
-          sitetret = "trust",
-          pod_name = "Beds Available"
-        )
+    dplyr::filter(pod_name != "Outpatient Procedure") |>
+    dplyr:: mutate(
+      pod_name = stringr::str_replace(pod_name, "Attendance", "Tele-attendance")
+    )
+
+  bed_occupancy <- get_bed_occupancy(r) |>
+    dplyr::filter(.data$model_run == 1) |>
+    dplyr::group_by(.data$quarter) |>
+    dplyr::summarise(dplyr::across(c("baseline", "principal"), sum)) |>
+    dplyr::summarise(
+      dplyr::across(c("baseline", "principal"), mean),
+      sitetret = "trust",
+      pod_name = "Beds Available"
+    )
+
+  dplyr::bind_rows(main_summary, tele_attendances, bed_occupancy) |>
+    dplyr::mutate(
+      dplyr::across(
+        "activity_type",
+        ~forcats::fct_relevel(.x, "ip", "op", "aae"))
     ) |>
+    dplyr::arrange(activity_type, pod) |>
     dplyr::select("sitetret", "pod_name", "baseline", "principal")
 }
 
