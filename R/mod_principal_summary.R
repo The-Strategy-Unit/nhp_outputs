@@ -11,16 +11,16 @@ mod_principal_summary_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::fluidRow(
-      col_3(),
+      col_2(),
       bs4Dash::box(
         title = "Summary",
         collapsible = FALSE,
-        width = 6,
+        width = 8,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("summary_table"))
         )
       ),
-      col_3()
+      col_2()
     )
   )
 }
@@ -36,9 +36,9 @@ mod_principal_summary_data <- function(r) {
 
   tele_attendances <- get_principal_high_level(r, "tele_attendances") |>
     dplyr::inner_join(pods, by = "pod") |>
-    dplyr::filter(pod_name != "Outpatient Procedure") |>
+    dplyr::filter(.data$pod_name != "Outpatient Procedure") |>
     dplyr:: mutate(
-      pod_name = stringr::str_replace(pod_name, "Attendance", "Tele-attendance")
+      "pod_name" = stringr::str_replace(.data$pod_name, "Attendance", "Tele-attendance")
     )
 
   bed_occupancy <- get_bed_occupancy(r) |>
@@ -57,21 +57,43 @@ mod_principal_summary_data <- function(r) {
         "activity_type",
         ~forcats::fct_relevel(.x, "ip", "op", "aae"))
     ) |>
-    dplyr::arrange(activity_type, pod) |>
-    dplyr::select("sitetret", "pod_name", "baseline", "principal")
+    dplyr::mutate(
+      change = .data$principal - .data$baseline,
+      change_pcnt = (.data$principal - .data$baseline) / .data$baseline
+    ) |>
+    dplyr::arrange(.data$activity_type, .data$pod) |>
+    dplyr::select(
+      "sitetret", "pod_name",
+      "baseline", "principal",
+      "change", "change_pcnt"
+    )
 }
 
 mod_principal_summary_table <- function(data) {
-  gt::gt(data) |>
+
+  data |>
+    dplyr::mutate(
+      dplyr::across("principal", \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")),
+      dplyr::across("change", \(.x) gt_bar(.x, scales::comma_format(1))),
+      dplyr::across("change_pcnt", \(.x) gt_bar(.x, scales::percent_format(1)))
+    ) |>
+    gt::gt() |>
+    gt::cols_align(align = "left", columns = "pod_name") |>
+    gt::cols_label(
+      "pod_name" = "Point of Delivery",
+      "baseline" = "Baseline",
+      "principal" = "Principal",
+      "change" = "Change",
+      "change_pcnt" = "Percent Change"
+    ) |>
+    gt::fmt_integer("baseline") |>
+    gt::cols_width(.data$principal ~ px(150), .data$change ~ px(150), .data$change_pcnt ~ px(150)) |>
     gt::cols_align(
       align = "left",
-      columns = "pod_name"
+      columns = c("baseline", "principal", "change", "change_pcnt")
     ) |>
-    gt::cols_label(
-      "pod_name" = ""
-    ) |>
-    gt::fmt_integer(c("baseline", "principal")) |>
     gt_theme()
+
 }
 
 #' principal_summary Server Functions

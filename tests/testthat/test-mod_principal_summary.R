@@ -55,7 +55,11 @@ test_that("mod_principal_summary_data summarises the data", {
     "trust", "B 2",            6, 7,
     "trust", "B 2",            6, 7,
     "trust", "Beds Available", 4, 6
-  )
+  ) |>
+    dplyr::mutate(
+      change = principal - baseline,
+      change_pcnt = change / baseline
+    )
 
   stub(
     mod_principal_summary_data,
@@ -83,11 +87,17 @@ test_that("mod_principal_summary_data summarises the data", {
 })
 
 test_that("mod_principal_summary_table creates a gt object", {
+  set.seed(1)
+
   data <- tibble::tibble(
     pod_name = c("a", "b", "c"),
     baseline = 1:3,
     principal = 4:6
-  )
+  ) |>
+    dplyr::mutate(
+      change = principal - baseline,
+      change_pcnt = change / baseline
+    )
 
   expect_snapshot(mod_principal_summary_table(data))
 })

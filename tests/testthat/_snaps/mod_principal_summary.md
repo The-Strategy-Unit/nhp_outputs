@@ -4,8 +4,8 @@
       mod_principal_summary_ui("id")
     Output
       <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
           <div class="card bs4Dash">
             <div class="card-header">
               <h3 class="card-title">Summary</h3>
@@ -20,9 +20,9 @@
               </div>
             </div>
           </div>
-          <script type="application/json">{"title":"Summary","solidHeader":true,"width":6,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"title":"Summary","solidHeader":true,"width":8,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
-        <div class="col-sm-3"></div>
+        <div class="col-sm-2"></div>
       </div>
 
 # mod_principal_summary_table creates a gt object
@@ -30,23 +30,23 @@
     Code
       mod_principal_summary_table(data)
     Output
-      <div id="osncjrvket" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-        <style>#osncjrvket table {
+      <div id="ydgabwknrs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+        <style>#ydgabwknrs table {
         font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
       
-      #osncjrvket thead, #osncjrvket tbody, #osncjrvket tfoot, #osncjrvket tr, #osncjrvket td, #osncjrvket th {
+      #ydgabwknrs thead, #ydgabwknrs tbody, #ydgabwknrs tfoot, #ydgabwknrs tr, #ydgabwknrs td, #ydgabwknrs th {
         border-style: none;
       }
       
-      #osncjrvket p {
+      #ydgabwknrs p {
         margin: 0;
         padding: 0;
       }
       
-      #osncjrvket .gt_table {
+      #ydgabwknrs .gt_table {
         display: table;
         border-collapse: collapse;
         line-height: normal;
@@ -72,12 +72,12 @@
         border-left-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_caption {
+      #ydgabwknrs .gt_caption {
         padding-top: 4px;
         padding-bottom: 4px;
       }
       
-      #osncjrvket .gt_title {
+      #ydgabwknrs .gt_title {
         color: #333333;
         font-size: 125%;
         font-weight: initial;
@@ -89,7 +89,7 @@
         border-bottom-width: 0;
       }
       
-      #osncjrvket .gt_subtitle {
+      #ydgabwknrs .gt_subtitle {
         color: #333333;
         font-size: 12px;
         font-weight: initial;
@@ -101,7 +101,7 @@
         border-top-width: 0;
       }
       
-      #osncjrvket .gt_heading {
+      #ydgabwknrs .gt_heading {
         background-color: #FFFFFF;
         text-align: left;
         border-bottom-color: #FFFFFF;
@@ -113,13 +113,13 @@
         border-right-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_bottom_border {
+      #ydgabwknrs .gt_bottom_border {
         border-bottom-style: solid;
         border-bottom-width: 2px;
         border-bottom-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_col_headings {
+      #ydgabwknrs .gt_col_headings {
         border-top-style: solid;
         border-top-width: 2px;
         border-top-color: #D3D3D3;
@@ -134,7 +134,7 @@
         border-right-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_col_heading {
+      #ydgabwknrs .gt_col_heading {
         color: #333333;
         background-color: #FFFFFF;
         font-size: 100%;
@@ -154,7 +154,7 @@
         overflow-x: hidden;
       }
       
-      #osncjrvket .gt_column_spanner_outer {
+      #ydgabwknrs .gt_column_spanner_outer {
         color: #333333;
         background-color: #FFFFFF;
         font-size: 100%;
@@ -166,15 +166,15 @@
         padding-right: 4px;
       }
       
-      #osncjrvket .gt_column_spanner_outer:first-child {
+      #ydgabwknrs .gt_column_spanner_outer:first-child {
         padding-left: 0;
       }
       
-      #osncjrvket .gt_column_spanner_outer:last-child {
+      #ydgabwknrs .gt_column_spanner_outer:last-child {
         padding-right: 0;
       }
       
-      #osncjrvket .gt_column_spanner {
+      #ydgabwknrs .gt_column_spanner {
         border-bottom-style: solid;
         border-bottom-width: 1px;
         border-bottom-color: #000000;
@@ -186,11 +186,11 @@
         width: 100%;
       }
       
-      #osncjrvket .gt_spanner_row {
+      #ydgabwknrs .gt_spanner_row {
         border-bottom-style: hidden;
       }
       
-      #osncjrvket .gt_group_heading {
+      #ydgabwknrs .gt_group_heading {
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 5px;
@@ -216,7 +216,7 @@
         text-align: left;
       }
       
-      #osncjrvket .gt_empty_group_heading {
+      #ydgabwknrs .gt_empty_group_heading {
         padding: 0.5px;
         color: #FFFFFF;
         background-color: #686F73;
@@ -231,15 +231,15 @@
         vertical-align: middle;
       }
       
-      #osncjrvket .gt_from_md > :first-child {
+      #ydgabwknrs .gt_from_md > :first-child {
         margin-top: 0;
       }
       
-      #osncjrvket .gt_from_md > :last-child {
+      #ydgabwknrs .gt_from_md > :last-child {
         margin-bottom: 0;
       }
       
-      #osncjrvket .gt_row {
+      #ydgabwknrs .gt_row {
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 5px;
@@ -258,7 +258,7 @@
         overflow-x: hidden;
       }
       
-      #osncjrvket .gt_stub {
+      #ydgabwknrs .gt_stub {
         color: #333333;
         background-color: #FFFFFF;
         font-size: 100%;
@@ -271,7 +271,7 @@
         padding-right: 5px;
       }
       
-      #osncjrvket .gt_stub_row_group {
+      #ydgabwknrs .gt_stub_row_group {
         color: #333333;
         background-color: #FFFFFF;
         font-size: 100%;
@@ -285,15 +285,15 @@
         vertical-align: top;
       }
       
-      #osncjrvket .gt_row_group_first td {
+      #ydgabwknrs .gt_row_group_first td {
         border-top-width: 2px;
       }
       
-      #osncjrvket .gt_row_group_first th {
+      #ydgabwknrs .gt_row_group_first th {
         border-top-width: 2px;
       }
       
-      #osncjrvket .gt_summary_row {
+      #ydgabwknrs .gt_summary_row {
         color: #FFFFFF;
         background-color: #B2B7B9;
         text-transform: inherit;
@@ -303,16 +303,16 @@
         padding-right: 5px;
       }
       
-      #osncjrvket .gt_first_summary_row {
+      #ydgabwknrs .gt_first_summary_row {
         border-top-style: solid;
         border-top-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_first_summary_row.thick {
+      #ydgabwknrs .gt_first_summary_row.thick {
         border-top-width: 2px;
       }
       
-      #osncjrvket .gt_last_summary_row {
+      #ydgabwknrs .gt_last_summary_row {
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 5px;
@@ -322,7 +322,7 @@
         border-bottom-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_grand_summary_row {
+      #ydgabwknrs .gt_grand_summary_row {
         color: #FFFFFF;
         background-color: #343739;
         text-transform: inherit;
@@ -332,7 +332,7 @@
         padding-right: 5px;
       }
       
-      #osncjrvket .gt_first_grand_summary_row {
+      #ydgabwknrs .gt_first_grand_summary_row {
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 5px;
@@ -342,7 +342,7 @@
         border-top-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_last_grand_summary_row_top {
+      #ydgabwknrs .gt_last_grand_summary_row_top {
         padding-top: 8px;
         padding-bottom: 8px;
         padding-left: 5px;
@@ -352,11 +352,11 @@
         border-bottom-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_striped {
+      #ydgabwknrs .gt_striped {
         background-color: rgba(128, 128, 128, 0.05);
       }
       
-      #osncjrvket .gt_table_body {
+      #ydgabwknrs .gt_table_body {
         border-top-style: solid;
         border-top-width: 2px;
         border-top-color: #D3D3D3;
@@ -365,7 +365,7 @@
         border-bottom-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_footnotes {
+      #ydgabwknrs .gt_footnotes {
         color: #333333;
         background-color: #FFFFFF;
         border-bottom-style: none;
@@ -379,7 +379,7 @@
         border-right-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_footnote {
+      #ydgabwknrs .gt_footnote {
         margin: 0px;
         font-size: 90%;
         padding-top: 4px;
@@ -388,7 +388,7 @@
         padding-right: 5px;
       }
       
-      #osncjrvket .gt_sourcenotes {
+      #ydgabwknrs .gt_sourcenotes {
         color: #333333;
         background-color: #FFFFFF;
         border-bottom-style: none;
@@ -402,7 +402,7 @@
         border-right-color: #D3D3D3;
       }
       
-      #osncjrvket .gt_sourcenote {
+      #ydgabwknrs .gt_sourcenote {
         font-size: 90%;
         padding-top: 4px;
         padding-bottom: 4px;
@@ -410,85 +410,136 @@
         padding-right: 5px;
       }
       
-      #osncjrvket .gt_left {
+      #ydgabwknrs .gt_left {
         text-align: left;
       }
       
-      #osncjrvket .gt_center {
+      #ydgabwknrs .gt_center {
         text-align: center;
       }
       
-      #osncjrvket .gt_right {
+      #ydgabwknrs .gt_right {
         text-align: right;
         font-variant-numeric: tabular-nums;
       }
       
-      #osncjrvket .gt_font_normal {
+      #ydgabwknrs .gt_font_normal {
         font-weight: normal;
       }
       
-      #osncjrvket .gt_font_bold {
+      #ydgabwknrs .gt_font_bold {
         font-weight: bold;
       }
       
-      #osncjrvket .gt_font_italic {
+      #ydgabwknrs .gt_font_italic {
         font-style: italic;
       }
       
-      #osncjrvket .gt_super {
+      #ydgabwknrs .gt_super {
         font-size: 65%;
       }
       
-      #osncjrvket .gt_footnote_marks {
+      #ydgabwknrs .gt_footnote_marks {
         font-size: 75%;
         vertical-align: 0.4em;
         position: initial;
       }
       
-      #osncjrvket .gt_asterisk {
+      #ydgabwknrs .gt_asterisk {
         font-size: 100%;
         vertical-align: 0;
       }
       
-      #osncjrvket .gt_indent_1 {
+      #ydgabwknrs .gt_indent_1 {
         text-indent: 5px;
       }
       
-      #osncjrvket .gt_indent_2 {
+      #ydgabwknrs .gt_indent_2 {
         text-indent: 10px;
       }
       
-      #osncjrvket .gt_indent_3 {
+      #ydgabwknrs .gt_indent_3 {
         text-indent: 15px;
       }
       
-      #osncjrvket .gt_indent_4 {
+      #ydgabwknrs .gt_indent_4 {
         text-indent: 20px;
       }
       
-      #osncjrvket .gt_indent_5 {
+      #ydgabwknrs .gt_indent_5 {
         text-indent: 25px;
       }
       </style>
-        <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+        <table class="gt_table" style="table-layout: fixed;" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+        <colgroup>
+          <col/>
+          <col/>
+          <col style="width:150px;"/>
+          <col style="width:150px;"/>
+          <col style="width:150px;"/>
+        </colgroup>
         <thead>
           
           <tr class="gt_col_headings">
-            <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=""></th>
-            <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="baseline">baseline</th>
-            <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="principal">principal</th>
+            <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Point of Delivery">Point of Delivery</th>
+            <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Baseline">Baseline</th>
+            <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Principal">Principal</th>
+            <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Change">Change</th>
+            <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Percent Change">Percent Change</th>
           </tr>
         </thead>
         <tbody class="gt_table_body">
           <tr><td headers="pod_name" class="gt_row gt_left">a</td>
-      <td headers="baseline" class="gt_row gt_right">1</td>
-      <td headers="principal" class="gt_row gt_right">4</td></tr>
+      <td headers="baseline" class="gt_row gt_left">1</td>
+      <td headers="principal" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #686f73; width: 33.3333333333333%">&nbsp;</span>
+        <span style="width: 50%" align="right">4</span>
+      </div></td>
+      <td headers="change" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #f9bf07; width: 50%">&nbsp;</span>
+        <span style="width: 50%" align="right">3</span>
+      </div></td>
+      <td headers="change_pcnt" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #f9bf07; width: 50%">&nbsp;</span>
+        <span style="width: 50%" align="right">300%</span>
+      </div></td></tr>
           <tr><td headers="pod_name" class="gt_row gt_left">b</td>
-      <td headers="baseline" class="gt_row gt_right">2</td>
-      <td headers="principal" class="gt_row gt_right">5</td></tr>
+      <td headers="baseline" class="gt_row gt_left">2</td>
+      <td headers="principal" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #686f73; width: 41.6666666666667%">&nbsp;</span>
+        <span style="width: 50%" align="right">5</span>
+      </div></td>
+      <td headers="change" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #f9bf07; width: 50%">&nbsp;</span>
+        <span style="width: 50%" align="right">3</span>
+      </div></td>
+      <td headers="change_pcnt" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #f9bf07; width: 25%">&nbsp;</span>
+        <span style="width: 50%" align="right">150%</span>
+      </div></td></tr>
           <tr><td headers="pod_name" class="gt_row gt_left">c</td>
-      <td headers="baseline" class="gt_row gt_right">3</td>
-      <td headers="principal" class="gt_row gt_right">6</td></tr>
+      <td headers="baseline" class="gt_row gt_left">3</td>
+      <td headers="principal" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #686f73; width: 50%">&nbsp;</span>
+        <span style="width: 50%" align="right">6</span>
+      </div></td>
+      <td headers="change" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #f9bf07; width: 50%">&nbsp;</span>
+        <span style="width: 50%" align="right">3</span>
+      </div></td>
+      <td headers="change_pcnt" class="gt_row gt_left"><div>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: transparent; width: 0%">&nbsp;</span>
+        <span style="display: inline-block; direction: ltr; border: 0; background-color: #f9bf07; width: 16.6666666666667%">&nbsp;</span>
+        <span style="width: 50%" align="right">100%</span>
+      </div></td></tr>
         </tbody>
         
         

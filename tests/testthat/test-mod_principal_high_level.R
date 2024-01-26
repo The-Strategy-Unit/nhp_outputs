@@ -66,33 +66,53 @@ principal_high_level_expected <- tibble::tribble(
   "RXX", "op_follow-up", "a", 2020, 390000,
   "RXX", "op_procedure", "procedures", 2018, 42000,
   "RXX", "op_procedure", "procedures", 2020, 47000
-)
+) |>
+  dplyr::mutate(
+    .by = c(sitetret, pod, measure),
+    change = value - dplyr::lag(value),
+    change_pcnt = change / dplyr::lag(value),
+    .after = year
+  )
 
 summary_data_expected <- tibble::tribble(
   ~sitetret, ~year, ~fyear, ~value, ~activity_type, ~pod_name,
   "trust", 2018, "2018/19", 135000, "aae", "A&E Attendance",
   "trust", 2020, "2020/21", 137000, "aae", "A&E Attendance",
-  "RXX", 2018, "2018/19", 8800, "ip", "Elective Admission",
-  "RXX", 2020, "2020/21", 10700, "ip", "Elective Admission",
-  "RXX", 2018, "2018/19", 58000, "ip", "Daycase Admission",
-  "RXX", 2020, "2020/21", 74000, "ip", "Daycase Admission",
-  "RXX", 2018, "2018/19", 1100, "ip", "Maternity Admission",
-  "RXX", 2020, "2020/21", 1200, "ip", "Maternity Admission",
-  "RXX", 2018, "2018/19", 60000, "ip", "Non-Elective Admission",
-  "RXX", 2020, "2020/21", 70000, "ip", "Non-Elective Admission",
-  "RXX", 2018, "2018/19", 140000, "op", "First Outpatient Attendance",
-  "RXX", 2020, "2020/21", 150000, "op", "First Outpatient Attendance",
-  "RXX", 2018, "2018/19", 370000, "op", "Follow-up Outpatient Attendance",
-  "RXX", 2020, "2020/21", 390000, "op", "Follow-up Outpatient Attendance"
+  "RXX",   2018, "2018/19", 8800,   "ip",  "Elective Admission",
+  "RXX",   2020, "2020/21", 10700,  "ip",  "Elective Admission",
+  "RXX",   2018, "2018/19", 58000,  "ip",  "Daycase Admission",
+  "RXX",   2020, "2020/21", 74000,  "ip",  "Daycase Admission",
+  "RXX",   2018, "2018/19", 1100,   "ip",  "Maternity Admission",
+  "RXX",   2020, "2020/21", 1200,   "ip",  "Maternity Admission",
+  "RXX",   2018, "2018/19", 60000,  "ip",  "Non-Elective Admission",
+  "RXX",   2020, "2020/21", 70000,  "ip",  "Non-Elective Admission",
+  "RXX",   2018, "2018/19", 140000, "op",  "First Outpatient Attendance",
+  "RXX",   2020, "2020/21", 150000, "op",  "First Outpatient Attendance",
+  "RXX",   2018, "2018/19", 370000, "op",  "Follow-up Outpatient Attendance",
+  "RXX",   2020, "2020/21", 390000, "op",  "Follow-up Outpatient Attendance"
 ) |>
-  dplyr::mutate(dplyr::across(pod_name, \(.x) factor(.x, levels(pods_expected$pod_name))))
+  dplyr::mutate(
+    .by = c(sitetret, pod_name),
+    change = value - dplyr::lag(value),
+    change_pcnt = change / dplyr::lag(value),
+    .after = year
+  ) |>
+  dplyr::mutate(
+    dplyr::across(pod_name, \(.x) factor(.x, levels(pods_expected$pod_name)))
+  )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
-  expect_snapshot(mod_principal_high_level_ui("id"))
+  ui <- mod_principal_high_level_ui("id") |>
+    as.character() |>
+    stringr::str_replace_all(" data-tabsetid=\"\\d+\"", "") |>
+    stringr::str_replace_all("#?tab-\\d+-\\d+", "")
+
+
+  expect_snapshot(ui)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -117,7 +137,7 @@ test_that("mod_principal_high_level_summary_data processes data correctly", {
 test_that("mod_principal_high_level_table returns a gt", {
   set.seed(1) # ensure gt id always regenerated identically
 
-  table <- mod_principal_high_level_table(summary_data_expected)
+  table <- mod_principal_high_level_table(summary_data_expected, summary_type = "value")
 
   expect_s3_class(table, "gt_tbl")
   expect_snapshot(gt::as_raw_html(table))
@@ -178,7 +198,7 @@ test_that("it creates the table", {
   stub(mod_principal_high_level_server, "mod_principal_high_level_table", NULL)
 
   shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal()), {
-    expect_called(m, 1)
+    expect_called(m, 3)
   })
 })
 
