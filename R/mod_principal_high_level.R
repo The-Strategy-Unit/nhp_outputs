@@ -89,9 +89,9 @@ mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_l
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::select(-"pod") |>
     dplyr::mutate(
-      .by = c(sitetret, pod_name),
-      change = value - dplyr::lag(value),
-      change_pcnt = change / dplyr::lag(value)
+      .by = c("sitetret", "pod_name"),
+      change = .data$value - dplyr::lag(.data$value),
+      change_pcnt = .data$change / dplyr::lag(.data$value)
     )
 }
 

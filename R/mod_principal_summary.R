@@ -36,9 +36,9 @@ mod_principal_summary_data <- function(r) {
 
   tele_attendances <- get_principal_high_level(r, "tele_attendances") |>
     dplyr::inner_join(pods, by = "pod") |>
-    dplyr::filter(pod_name != "Outpatient Procedure") |>
+    dplyr::filter(.data$pod_name != "Outpatient Procedure") |>
     dplyr:: mutate(
-      pod_name = stringr::str_replace(pod_name, "Attendance", "Tele-attendance")
+      "pod_name" = stringr::str_replace(.data$pod_name, "Attendance", "Tele-attendance")
     )
 
   bed_occupancy <- get_bed_occupancy(r) |>
@@ -58,10 +58,10 @@ mod_principal_summary_data <- function(r) {
         ~forcats::fct_relevel(.x, "ip", "op", "aae"))
     ) |>
     dplyr::mutate(
-      change = principal - baseline,
-      change_pcnt = (principal - baseline) / baseline
+      change = .data$principal - .data$baseline,
+      change_pcnt = (.data$principal - .data$baseline) / .data$baseline
     ) |>
-    dplyr::arrange(activity_type, pod) |>
+    dplyr::arrange(.data$activity_type, .data$pod) |>
     dplyr::select(
       "sitetret", "pod_name",
       "baseline", "principal",
@@ -80,11 +80,11 @@ mod_principal_summary_table <- function(data) {
     gt::gt() |>
     gt::cols_align(align = "left", columns = "pod_name") |>
     gt::cols_label(
-      pod_name = "Point of Delivery",
-      baseline = "Baseline",
-      principal = "Principal",
-      change = "Change",
-      change_pcnt = "Percent Change"
+      "pod_name" = "Point of Delivery",
+      "baseline" = "Baseline",
+      "principal" = "Principal",
+      "change" = "Change",
+      "change_pcnt" = "Percent Change"
     ) |>
     gt::fmt_integer("baseline") |>
     gt::cols_width(.data$principal ~ px(150), .data$change ~ px(150), .data$change_pcnt ~ px(150)) |>
