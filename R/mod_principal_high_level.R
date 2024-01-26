@@ -95,30 +95,35 @@ mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_l
     )
 }
 
-mod_principal_high_level_table <-
-  function(data, summary_type = c("value", "change", "change_pcnt")) {
-  summary_table <- data |>
-    dplyr::select(
-      "fyear", "pod_name", tidyselect::matches("\\d{4}/\\d{2}"),
-      summary_type
-    ) |>
-    tidyr::pivot_wider(names_from = "fyear", values_from = summary_type) |>
-    gt::gt() |>
-    gt::sub_missing(missing_text = "---") |>
-    gt::cols_align(
-      align = "left",
-      columns = "pod_name"
-    ) |>
-    gt::cols_label("pod_name" = "Point of Delivery")
+mod_principal_high_level_table <- function(data, summary_type = c("value", "change", "change_pcnt")) {
+
+  fyear_rx  <- "\\d{4}/\\d{2}"
+
+  suppressWarnings(  # TODO: warning in test, all_of should work
+    summary_table <- data |>
+      dplyr::select(
+        "fyear", "pod_name",
+        tidyselect::matches(fyear_rx),
+        tidyselect::all_of(summary_type)
+      ) |>
+      tidyr::pivot_wider(names_from = "fyear", values_from = summary_type) |>
+      gt::gt() |>
+      gt::sub_missing() |>
+      gt::cols_align(
+        align = "left",
+        columns = "pod_name"
+      ) |>
+      gt::cols_label("pod_name" = "Point of Delivery")
+  )
 
   if (summary_type %in% c("value", "change")) {
     summary_table <- summary_table |>
-      gt::fmt_integer(c(tidyselect::matches("\\d{4}/\\d{2}")))
+      gt::fmt_integer(tidyselect::matches(fyear_rx))
   }
 
   if (summary_type == "change_pcnt") {
     summary_table <- summary_table |>
-      gt::fmt_percent(tidyselect::matches("\\d{4}/\\d{2}"), decimals = 1)
+      gt::fmt_percent(tidyselect::matches(fyear_rx), decimals = 1)
   }
 
   summary_table |> gt_theme()
