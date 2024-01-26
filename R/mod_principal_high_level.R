@@ -14,8 +14,25 @@ mod_principal_high_level_ui <- function(id) {
     shiny::fluidRow(
       bs4Dash::box(
         title = "Activity by type and year",
-        shinycssloaders::withSpinner(
-          gt::gt_output(ns("activity"))
+        bs4Dash::tabsetPanel(
+          shiny::tabPanel(
+            "Value",
+            shinycssloaders::withSpinner(
+              gt::gt_output(ns("activity_value"))
+            )
+          ),
+          shiny::tabPanel(
+            "Change",
+            shinycssloaders::withSpinner(
+              gt::gt_output(ns("activity_change"))
+            )
+          ),
+          shiny::tabPanel(
+            "Percent change",
+            shinycssloaders::withSpinner(
+              gt::gt_output(ns("activity_change_pcnt"))
+            )
+          )
         ),
         width = 12
       )
@@ -70,23 +87,41 @@ mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_l
     ) |>
     trust_site_aggregation() |>
     dplyr::inner_join(pods, by = "pod") |>
-    dplyr::select(-"pod")
+    dplyr::select(-"pod") |>
+    dplyr::mutate(
+      .by = c(sitetret, pod_name),
+      change = value - dplyr::lag(value),
+      change_pcnt = change / dplyr::lag(value)
+    )
 }
 
-mod_principal_high_level_table <- function(data) {
-  data |>
-    dplyr::select(-"activity_type", -"year") |>
-    tidyr::pivot_wider(names_from = "fyear", values_from = "value") |>
+mod_principal_high_level_table <-
+  function(data, summary_type = c("value", "change", "change_pcnt")) {
+  summary_table <- data |>
+    dplyr::select(
+      "fyear", "pod_name", tidyselect::matches("\\d{4}/\\d{2}"),
+      summary_type
+    ) |>
+    tidyr::pivot_wider(names_from = "fyear", values_from = summary_type) |>
     gt::gt() |>
+    gt::sub_missing(missing_text = "---") |>
     gt::cols_align(
       align = "left",
       columns = "pod_name"
     ) |>
-    gt::cols_label(
-      "pod_name" = ""
-    ) |>
-    gt::fmt_integer(c(tidyselect::matches("\\d{4}/\\d{2}"))) |>
-    gt_theme()
+    gt::cols_label("pod_name" = "Point of Delivery")
+
+  if (summary_type %in% c("value", "change")) {
+    summary_table <- summary_table |>
+      gt::fmt_integer(c(tidyselect::matches("\\d{4}/\\d{2}")))
+  }
+
+  if (summary_type == "change_pcnt") {
+    summary_table <- summary_table |>
+      gt::fmt_percent(tidyselect::matches("\\d{4}/\\d{2}"), decimals = 1)
+  }
+
+  summary_table |> gt_theme()
 }
 
 mod_principal_high_level_plot <- function(data, activity_type) {
@@ -129,9 +164,19 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
         dplyr::select(-"sitetret")
     })
 
-    output$activity <- gt::render_gt({
+    output$activity_value <- gt::render_gt({
       site_data() |>
-        mod_principal_high_level_table()
+        mod_principal_high_level_table(summary_type = "value")
+    })
+
+    output$activity_change<- gt::render_gt({
+      site_data() |>
+        mod_principal_high_level_table(summary_type = "change")
+    })
+
+    output$activity_change_pcnt <- gt::render_gt({
+      site_data() |>
+        mod_principal_high_level_table(summary_type = "change_pcnt")
     })
 
     output$aae <- plotly::renderPlotly({
