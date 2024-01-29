@@ -179,6 +179,7 @@ test_that("it updates the ward type dropdown", {
 test_that("it renders the plots", {
   m <- mock()
   stub(mod_model_results_capacity_server, "mod_model_results_capacity_beds_available_plot", "beds")
+  stub(mod_model_results_capacity_server, "mod_model_results_capacity_beds_ecdf_plot", "beds_ecdf")
   stub(mod_model_results_capacity_server, "plotly::ggplotly", \(x, ...) x)
   stub(mod_model_results_capacity_server, "plotly::layout", \(x, ...) x)
   stub(mod_model_results_capacity_server, "plotly::renderPlotly", m)
@@ -188,7 +189,8 @@ test_that("it renders the plots", {
   shiny::testServer(mod_model_results_capacity_server, args = list(reactiveVal()), {
     selected_model_run("id")
 
-    expect_called(m, 1)
+    expect_called(m, 2)
     expect_args(m, 1, "beds")
+    expect_args(m, 2, "beds_ecdf")
   })
 })

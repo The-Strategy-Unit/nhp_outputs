@@ -6,8 +6,8 @@
       <h1>Distribution of projections: activity distribution</h1>
       <div class="col-sm-12">
         <div class="card bs4Dash">
-          <div class="card-header border-0">
-            <h3 class="card-title"></h3>
+          <div class="card-header">
+            <h3 class="card-title">Make selections</h3>
           </div>
           <div class="card-body">
             <div class="row">
@@ -41,12 +41,12 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Make selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
-          <div class="card-header border-0">
-            <h3 class="card-title"></h3>
+          <div class="card-header">
+            <h3 class="card-title">Density</h3>
           </div>
           <div class="card-body">
             <div class="form-group shiny-input-container">
@@ -65,6 +65,22 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Density","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+      </div>
+      <div class="col-sm-12">
+        <div class="card bs4Dash">
+          <div class="card-header">
+            <h3 class="card-title">Empirical Cumulative Distribution</h3>
+          </div>
+          <div class="card-body">
+            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+              <div class="load-container shiny-spinner-hidden load1">
+                <div id="spinner-614ce4c67d4056404abe5e1868ca5c9d" class="loader">Loading...</div>
+              </div>
+              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-ecdf" style="width:100%;height:400px;"></div>
+            </div>
+          </div>
+        </div>
+        <script type="application/json">{"title":"Empirical Cumulative Distribution","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 
