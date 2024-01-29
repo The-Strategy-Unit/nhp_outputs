@@ -110,9 +110,9 @@ mod_model_results_capacity_beds_available_plot <- function(data) {
 }
 
 mod_model_results_capacity_beds_ecdf_plot <- function(data) {
-  values_ecdf <- ecdf(data[["value"]])
+  values_ecdf <- stats::ecdf(data[["value"]])
   pcnt <- c(0.25, 0.5, 0.75)
-  quantiles_ecdf <- quantile(values_ecdf, pcnt)
+  quantiles_ecdf <- stats::quantile(values_ecdf, pcnt)
   min_value <- min(data[["value"]])
 
   quantile_guides <- tibble::tibble(
@@ -127,7 +127,12 @@ mod_model_results_capacity_beds_ecdf_plot <- function(data) {
     ggplot2::ggplot(ggplot2::aes(.data$value)) +
     ggplot2::stat_ecdf(geom = "step", pad = FALSE) +
     ggplot2::geom_segment(
-      ggplot2::aes(x = x_start, y = y_start, xend = x_end, yend = y_end),
+      ggplot2::aes(
+        x = .data$x_start,
+        y = .data$y_start,
+        xend = .data$x_end,
+        yend = .data$y_end
+      ),
       data = quantile_guides,
       linetype = "dashed",
       colour = "red"
