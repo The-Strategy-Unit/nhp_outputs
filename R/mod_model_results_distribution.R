@@ -12,8 +12,8 @@ mod_model_results_distribution_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution"),
     bs4Dash::box(
+      title = "Make selections",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shiny::fluidRow(
         mod_measure_selection_ui(ns("measure_selection"), 4),
@@ -106,7 +106,7 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
   plotly::layout(sp, legend = list(orientation = "h"))
 }
 
-mod_model_results_ecdf_plot <- function(data) {
+mod_model_results_distribution_ecdf_plot <- function(data) {
 
   values_ecdf <- ecdf(data[["value"]])
   pcnt <- c(0.25, 0.5, 0.75)
@@ -170,7 +170,7 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
       data <- shiny::req(site_data())
       shiny::req(nrow(data) > 0)
 
-      mod_model_results_ecdf_plot(data)
+      mod_model_results_distribution_ecdf_plot(data)
     })
 
   })
