@@ -20,12 +20,20 @@ mod_model_results_distribution_ui <- function(id) {
       )
     ),
     bs4Dash::box(
+      title = "Distribution plots",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?"),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("distribution"), height = "800px")
+      )
+    ),
+    bs4Dash::box(
+      title = "Empirical Cumulative Distribution",
+      collapsible = FALSE,
+      width = 12,
+      shinycssloaders::withSpinner(
+        shiny::plotOutput(ns("ecdf"), height = "800px")
       )
     )
   )
@@ -98,6 +106,13 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
   plotly::layout(sp, legend = list(orientation = "h"))
 }
 
+mod_model_results_ecdf_plot <- function(data) {
+  data |>
+    require_rows() |>
+    ggplot2::ggplot(ggplot2::aes(.data$value)) +
+    ggplot2::stat_ecdf(geom = "step", pad = FALSE)
+}
+
 #' model_results_distribution Server Functions
 #'
 #' @noRd
@@ -123,5 +138,13 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
 
       mod_model_results_distibution_plot(data, input$show_origin)
     })
+
+    output$ecdf <- shiny::renderPlot({
+      data <- shiny::req(site_data())
+      shiny::req(nrow(data) > 0)
+
+      mod_model_results_ecdf_plot(data)
+    })
+
   })
 }
