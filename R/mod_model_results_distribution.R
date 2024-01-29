@@ -20,7 +20,7 @@ mod_model_results_distribution_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Distribution plots",
+      title = "Density",
       collapsible = FALSE,
       width = 12,
       shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?"),
@@ -33,7 +33,7 @@ mod_model_results_distribution_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
-        shiny::plotOutput(ns("ecdf"), height = "800px")
+        plotly::plotlyOutput(ns("ecdf"), height = "400px")
       )
     )
   )
@@ -107,10 +107,37 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
 }
 
 mod_model_results_ecdf_plot <- function(data) {
+
+  values_ecdf <- ecdf(data[["value"]])
+  pcnt <- c(0.25, 0.5, 0.75)
+  quantiles_ecdf <- quantile(values_ecdf, pcnt)
+  min_value <- min(data[["value"]])
+
+  quantile_guides <- tibble::tibble(
+    x_start = c(rep(min_value, 3), quantiles_ecdf),
+    y_start = c(pcnt, rep(0, 3)),
+    x_end = rep(quantiles_ecdf, 2),
+    y_end = rep(pcnt, 2)
+  )
+
   data |>
     require_rows() |>
     ggplot2::ggplot(ggplot2::aes(.data$value)) +
-    ggplot2::stat_ecdf(geom = "step", pad = FALSE)
+    ggplot2::stat_ecdf(geom = "step", pad = FALSE) +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = x_start, y = y_start, xend = x_end, yend = y_end),
+      data = quantile_guides,
+      linetype = "dashed",
+      colour = "red"
+    ) +
+    ggplot2::ylab("Fraction of model runs") +
+    ggplot2::scale_x_continuous(
+      labels = scales::comma,
+      expand = c(0, 0),
+      limits = c(min_value, NA)
+    ) +
+    ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, NA)) +
+    ggplot2::theme(axis.title.x = ggplot2::element_blank())
 }
 
 #' model_results_distribution Server Functions
@@ -139,7 +166,7 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
       mod_model_results_distibution_plot(data, input$show_origin)
     })
 
-    output$ecdf <- shiny::renderPlot({
+    output$ecdf <- plotly::renderPlotly({
       data <- shiny::req(site_data())
       shiny::req(nrow(data) > 0)
 
