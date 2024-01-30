@@ -12,20 +12,28 @@ mod_model_results_distribution_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution"),
     bs4Dash::box(
+      title = "Make selections",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shiny::fluidRow(
         mod_measure_selection_ui(ns("measure_selection"), 4),
       )
     ),
     bs4Dash::box(
+      title = "Density",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?"),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("distribution"), height = "800px")
+      )
+    ),
+    bs4Dash::box(
+      title = "Empirical Cumulative Distribution",
+      collapsible = FALSE,
+      width = 12,
+      shinycssloaders::withSpinner(
+        plotly::plotlyOutput(ns("ecdf"), height = "400px")
       )
     )
   )
@@ -98,6 +106,45 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
   plotly::layout(sp, legend = list(orientation = "h"))
 }
 
+mod_model_results_distribution_ecdf_plot <- function(data) {
+
+  values_ecdf <- stats::ecdf(data[["value"]])
+  pcnt <- c(0.25, 0.5, 0.75)
+  quantiles_ecdf <- stats::quantile(values_ecdf, pcnt)
+  min_value <- min(data[["value"]])
+
+  quantile_guides <- tibble::tibble(
+    x_start = c(rep(min_value, 3), quantiles_ecdf),
+    y_start = c(pcnt, rep(0, 3)),
+    x_end = rep(quantiles_ecdf, 2),
+    y_end = rep(pcnt, 2)
+  )
+
+  data |>
+    require_rows() |>
+    ggplot2::ggplot(ggplot2::aes(.data$value)) +
+    ggplot2::stat_ecdf(geom = "step", pad = FALSE) +
+    ggplot2::geom_segment(
+      ggplot2::aes(
+        x = .data$x_start,
+        y = .data$y_start,
+        xend = .data$x_end,
+        yend = .data$y_end
+      ),
+      data = quantile_guides,
+      linetype = "dashed",
+      colour = "red"
+    ) +
+    ggplot2::ylab("Fraction of model runs") +
+    ggplot2::scale_x_continuous(
+      labels = scales::comma,
+      expand = c(0, 0),
+      limits = c(min_value, NA)
+    ) +
+    ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, NA)) +
+    ggplot2::theme(axis.title.x = ggplot2::element_blank())
+}
+
 #' model_results_distribution Server Functions
 #'
 #' @noRd
@@ -123,5 +170,13 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
 
       mod_model_results_distibution_plot(data, input$show_origin)
     })
+
+    output$ecdf <- plotly::renderPlotly({
+      data <- shiny::req(site_data())
+      shiny::req(nrow(data) > 0)
+
+      mod_model_results_distribution_ecdf_plot(data)
+    })
+
   })
 }
