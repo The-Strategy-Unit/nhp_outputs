@@ -13,6 +13,10 @@ get_container <- function() {
   AzureStor::storage_container(ep, Sys.getenv("AZ_STORAGE_CONTAINER"))
 }
 
+get_params <- function(r) {
+  r$params
+}
+
 get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL),
                             app_version = "dev") {
   ds <- tibble::tibble(dataset = allowed_datasets)
