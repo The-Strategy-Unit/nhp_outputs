@@ -112,6 +112,7 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
+  set.seed(123)
   expect_snapshot(mod_principal_change_factor_effects_ui("id"))
 })
 

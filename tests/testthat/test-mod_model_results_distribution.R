@@ -18,6 +18,7 @@ model_run_distribution_expected <- tibble::tribble(
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
+  set.seed(123)
   expect_snapshot(mod_model_results_distribution_ui("id"))
 })
 
