@@ -100,6 +100,22 @@
                       </li>
                     </ul>
                   </li>
+                  <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                      <p>
+                        Information
+                        <i class="right fas fa-angle-left"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview" data-expanded="Information">
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_params" href="#" data-target="#shiny-tab-tab_params" data-toggle="tab" data-value="tab_params">
+                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
+                          <p>Input parameters</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
                   <div id="sidebarMenu" class="sidebarMenuSelectedTabItem" data-value="null"></div>
                 </ul>
               </nav>
@@ -137,6 +153,217 @@
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_change_factor_effects</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">principal_capacity_requirements</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_core_activity</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_params">
+                  <h1>Information: parameter inputs</h1>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Meta information</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_meta"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Meta information","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Demographic factors</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_demographic_factors"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Demographic factors","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Baseline adjustment</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_baseline_adjustment"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Baseline adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Covid adjustment</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_covid_adjustment"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Covid adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Waiting list adjustment</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_waiting_list_adjustment"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Waiting list adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Expatriation</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_expat"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Expatriation","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Repatriation (local)</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_repat_local"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Repatriation (local)","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Repatriation (non-local)</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_repat_nonlocal"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Repatriation (non-local)","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Non-demographic adjustment</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_non_demographic_adjustment"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Non-demographic adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Activity avoidance</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_activity_avoidance"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Activity avoidance","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Efficiences</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_efficiencies"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Efficiences","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Bed occupancy</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_bed_occupancy"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Bed occupancy","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash collapsed-card">
+                      <div class="card-header">
+                        <h3 class="card-title">Time profile mappings</h3>
+                        <div class="card-tools float-right">
+                          <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
+                            <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <pre class="shiny-text-output noplaceholder" id="info_params-params_time_profile_mappings"></pre>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Time profile mappings","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                </div>
               </div>
             </section>
           </div>

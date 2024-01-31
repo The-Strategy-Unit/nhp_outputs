@@ -56,6 +56,14 @@ app_ui <- function(request) {
           text = "Capacity requirements",
           tabName = "tab_mcap"
         )
+      ),
+      bs4Dash::menuItem(
+        "Information",
+        startExpanded = FALSE,
+        bs4Dash::menuSubItem(
+          text = "Input parameters",
+          tabName = "tab_params"
+        )
       )
     )
   )
@@ -106,6 +114,10 @@ app_ui <- function(request) {
       bs4Dash::tabItem(
         tabName = "tab_mcap",
         mod_model_results_capacity_ui("model_results_capacity")
+      ),
+      bs4Dash::tabItem(
+        tabName = "tab_params",
+        mod_info_params_ui("info_params")
       )
     )
   )

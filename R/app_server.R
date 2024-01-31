@@ -23,6 +23,8 @@ app_server <- function(input, output, session) {
   mod_model_results_distribution_server("model_results_distribution", selected_data, selected_site)
   mod_model_results_capacity_server("model_results_capacity", selected_data)
 
+  mod_info_params_server("info_params", selected_data)
+
   if (!getOption("golem.app.prod", FALSE)) {
     session$allowReconnect("force")
   }
