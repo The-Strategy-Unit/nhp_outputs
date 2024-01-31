@@ -25,52 +25,50 @@ mod_principal_summary_ui <- function(id) {
   )
 }
 
-mod_principal_summary_data <- function(r) {
+mod_principal_summary_data <- function(r, sites) {
   pods <- mod_principal_high_level_pods()
 
   main_summary <- get_principal_high_level(
     r,
-    c("admissions", "attendances", "walk-in", "ambulance")
+    c("admissions", "attendances", "walk-in", "ambulance"),
+    sites
   ) |>
     dplyr::inner_join(pods, by = "pod")
 
-  tele_attendances <- get_principal_high_level(r, "tele_attendances") |>
+  tele_attendances <- get_principal_high_level(r, "tele_attendances", sites) |>
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::filter(.data$pod_name != "Outpatient Procedure") |>
-    dplyr:: mutate(
+    dplyr::mutate(
       "pod_name" = stringr::str_replace(.data$pod_name, "Attendance", "Tele-attendance")
     )
 
-  bed_occupancy <- get_bed_occupancy(r) |>
-    dplyr::filter(.data$model_run == 1) |>
-    dplyr::group_by(.data$quarter) |>
-    dplyr::summarise(dplyr::across(c("baseline", "principal"), sum)) |>
-    dplyr::summarise(
-      dplyr::across(c("baseline", "principal"), mean),
-      sitetret = "trust",
-      pod_name = "Beds Available"
-    )
+  bed_occupancy <- if (length(sites) == 0) {
+    get_bed_occupancy(r) |>
+      dplyr::filter(.data$model_run == 1) |>
+      dplyr::group_by(.data$quarter) |>
+      dplyr::summarise(dplyr::across(c("baseline", "principal"), sum)) |>
+      dplyr::summarise(
+        dplyr::across(c("baseline", "principal"), mean),
+        pod_name = "Beds Available"
+      )
+  }
 
   dplyr::bind_rows(main_summary, tele_attendances, bed_occupancy) |>
     dplyr::mutate(
       dplyr::across(
         "activity_type",
-        ~forcats::fct_relevel(.x, "ip", "op", "aae"))
+        ~ forcats::fct_relevel(.x, "ip", "op", after = 0)
+      )
     ) |>
     dplyr::mutate(
       change = .data$principal - .data$baseline,
       change_pcnt = (.data$principal - .data$baseline) / .data$baseline
     ) |>
     dplyr::arrange(.data$activity_type, .data$pod) |>
-    dplyr::select(
-      "sitetret", "pod_name",
-      "baseline", "principal",
-      "change", "change_pcnt"
-    )
+    dplyr::select("pod_name", "baseline", "principal", "change", "change_pcnt")
 }
 
 mod_principal_summary_table <- function(data) {
-
   data |>
     dplyr::mutate(
       dplyr::across("principal", \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")),
@@ -93,7 +91,6 @@ mod_principal_summary_table <- function(data) {
       columns = c("baseline", "principal", "change", "change_pcnt")
     ) |>
     gt_theme()
-
 }
 
 #' principal_summary Server Functions
@@ -103,17 +100,11 @@ mod_principal_summary_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     summary_data <- shiny::reactive({
       selected_data() |>
-        mod_principal_summary_data()
-    })
-
-    site_data <- shiny::reactive({
-      summary_data() |>
-        dplyr::filter(.data$sitetret == selected_site()) |>
-        dplyr::select(-"sitetret")
+        mod_principal_summary_data(selected_site())
     })
 
     output$summary_table <- gt::render_gt({
-      site_data() |>
+      summary_data() |>
         mod_principal_summary_table()
     })
   })

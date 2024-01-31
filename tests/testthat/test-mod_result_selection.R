@@ -100,6 +100,7 @@ test_that("it sets up the dropdowns", {
   stub(mod_result_selection_server, "readRDS", c("A" = "a", "B" = "b"))
   stub(mod_result_selection_server, "get_user_allowed_datasets", "a")
   stub(mod_result_selection_server, "get_result_sets", m_get_result_sets)
+  stub(mod_result_selection_server, "get_trust_sites", c("a", "b"))
   stub(mod_result_selection_server, "shiny::updateSelectInput", m)
 
   testServer(mod_result_selection_server, {
@@ -111,13 +112,14 @@ test_that("it sets up the dropdowns", {
 
     expect_args(m, 1, session, "dataset", choices = c("A" = "a", "B" = "b"))
 
-    expect_args(m, 2, session, "scenario", choices = c("b3"))
-    expect_args(m, 3, session, "create_datetime", choices = c(
+    expect_args(m, 2, session, "site_selection", choices = c("a", "b"))
+    expect_args(m, 3, session, "scenario", choices = c("b3"))
+    expect_args(m, 4, session, "create_datetime", choices = c(
       "01/01/2023 00:00:00" = "20230101_000000"
     ))
 
-    expect_args(m, 4, session, "scenario", choices = c("a2", "a1"))
-    expect_args(m, 5, session, "create_datetime", choices = c(
+    expect_args(m, 5, session, "scenario", choices = c("a2", "a1"))
+    expect_args(m, 6, session, "create_datetime", choices = c(
       "01/01/2022 10:32:54" = "20220101_103254",
       "03/02/2021 01:23:45" = "20210203_012345"
     ))
@@ -271,6 +273,7 @@ test_that("we update dropdown selections when url_query changes", {
   stub(mod_result_selection_server, "shiny::updateSelectInput", m)
   stub(mod_result_selection_server, "get_user_allowed_datasets", c("a", "b"))
   stub(mod_result_selection_server, "get_result_sets", NULL)
+  stub(mod_result_selection_server, "get_trust_sites", c("a", "b"))
   stub(mod_result_selection_server, "mod_result_selection_filter_result_sets", NULL)
 
   testServer(mod_result_selection_server, {
@@ -279,9 +282,10 @@ test_that("we update dropdown selections when url_query changes", {
     url_query(c("abc", "def%20hij", "klm"))
     session$private$flush()
 
-    expect_called(m, 3)
-    expect_args(m, 1, session, "dataset", selected = "abc")
-    expect_args(m, 2, session, "scenario", selected = "def hij")
-    expect_args(m, 3, session, "create_datetime", selected = "klm")
+    expect_called(m, 4)
+    expect_args(m, 1, session, "site_selection", choices = c("a", "b"))
+    expect_args(m, 2, session, "dataset", selected = "abc")
+    expect_args(m, 3, session, "scenario", selected = "def hij")
+    expect_args(m, 4, session, "create_datetime", selected = "klm")
   })
 })

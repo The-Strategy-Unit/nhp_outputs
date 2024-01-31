@@ -45,54 +45,54 @@ pods_expected <- tibble::tribble(
   dplyr::mutate(dplyr::across(pod_name, forcats::fct_inorder))
 
 principal_high_level_expected <- tibble::tribble(
-  ~sitetret, ~pod, ~measure, ~year, ~value,
-  "trust", "aae", "a", 2018, 135000,
-  "trust", "aae", "a", 2020, 137000,
-  "RXX", "ip_elective_admission", "a", 2018, 8800,
-  "RXX", "ip_elective_admission", "a", 2020, 10700,
-  "RXX", "ip_elective_daycase", "a", 2018, 58000,
-  "RXX", "ip_elective_daycase", "a", 2020, 74000,
-  "RXX", "ip_maternity_admission", "a", 2018, 1100,
-  "RXX", "ip_maternity_admission", "a", 2020, 1200,
-  "RXX", "ip_non-elective_admission", "a", 2018, 60000,
-  "RXX", "ip_non-elective_admission", "a", 2020, 70000,
-  "RXX", "ip_non-elective_admission", "beddays", 2018, 60000,
-  "RXX", "ip_non-elective_admission", "beddays", 2020, 70000,
-  "RXX", "op_first", "a", 2018, 140000,
-  "RXX", "op_first", "a", 2020, 150000,
-  "RXX", "op_first", "tele_attendances", 2018, 140000,
-  "RXX", "op_first", "tele_attendances", 2020, 150000,
-  "RXX", "op_follow-up", "a", 2018, 370000,
-  "RXX", "op_follow-up", "a", 2020, 390000,
-  "RXX", "op_procedure", "procedures", 2018, 42000,
-  "RXX", "op_procedure", "procedures", 2020, 47000
+  ~pod, ~measure, ~year, ~value,
+  "aae", "a", 2018, 135000,
+  "aae", "a", 2020, 137000,
+  "ip_elective_admission", "a", 2018, 8800,
+  "ip_elective_admission", "a", 2020, 10700,
+  "ip_elective_daycase", "a", 2018, 58000,
+  "ip_elective_daycase", "a", 2020, 74000,
+  "ip_maternity_admission", "a", 2018, 1100,
+  "ip_maternity_admission", "a", 2020, 1200,
+  "ip_non-elective_admission", "a", 2018, 60000,
+  "ip_non-elective_admission", "a", 2020, 70000,
+  "ip_non-elective_admission", "beddays", 2018, 60000,
+  "ip_non-elective_admission", "beddays", 2020, 70000,
+  "op_first", "a", 2018, 140000,
+  "op_first", "a", 2020, 150000,
+  "op_first", "tele_attendances", 2018, 140000,
+  "op_first", "tele_attendances", 2020, 150000,
+  "op_follow-up", "a", 2018, 370000,
+  "op_follow-up", "a", 2020, 390000,
+  "op_procedure", "procedures", 2018, 42000,
+  "op_procedure", "procedures", 2020, 47000
 ) |>
   dplyr::mutate(
-    .by = c(sitetret, pod, measure),
+    .by = c(pod, measure),
     change = value - dplyr::lag(value),
     change_pcnt = change / dplyr::lag(value),
     .after = year
   )
 
 summary_data_expected <- tibble::tribble(
-  ~sitetret, ~year, ~fyear, ~value, ~activity_type, ~pod_name,
-  "trust", 2018, "2018/19", 135000, "aae", "A&E Attendance",
-  "trust", 2020, "2020/21", 137000, "aae", "A&E Attendance",
-  "RXX", 2018, "2018/19", 8800, "ip", "Elective Admission",
-  "RXX", 2020, "2020/21", 10700, "ip", "Elective Admission",
-  "RXX", 2018, "2018/19", 58000, "ip", "Daycase Admission",
-  "RXX", 2020, "2020/21", 74000, "ip", "Daycase Admission",
-  "RXX", 2018, "2018/19", 1100, "ip", "Maternity Admission",
-  "RXX", 2020, "2020/21", 1200, "ip", "Maternity Admission",
-  "RXX", 2018, "2018/19", 60000, "ip", "Non-Elective Admission",
-  "RXX", 2020, "2020/21", 70000, "ip", "Non-Elective Admission",
-  "RXX", 2018, "2018/19", 140000, "op", "First Outpatient Attendance",
-  "RXX", 2020, "2020/21", 150000, "op", "First Outpatient Attendance",
-  "RXX", 2018, "2018/19", 370000, "op", "Follow-up Outpatient Attendance",
-  "RXX", 2020, "2020/21", 390000, "op", "Follow-up Outpatient Attendance"
+  ~year, ~fyear, ~value, ~activity_type, ~pod_name,
+  2018, "2018/19", 135000, "aae", "A&E Attendance",
+  2020, "2020/21", 137000, "aae", "A&E Attendance",
+  2018, "2018/19", 8800, "ip", "Elective Admission",
+  2020, "2020/21", 10700, "ip", "Elective Admission",
+  2018, "2018/19", 58000, "ip", "Daycase Admission",
+  2020, "2020/21", 74000, "ip", "Daycase Admission",
+  2018, "2018/19", 1100, "ip", "Maternity Admission",
+  2020, "2020/21", 1200, "ip", "Maternity Admission",
+  2018, "2018/19", 60000, "ip", "Non-Elective Admission",
+  2020, "2020/21", 70000, "ip", "Non-Elective Admission",
+  2018, "2018/19", 140000, "op", "First Outpatient Attendance",
+  2020, "2020/21", 150000, "op", "First Outpatient Attendance",
+  2018, "2018/19", 370000, "op", "Follow-up Outpatient Attendance",
+  2020, "2020/21", 390000, "op", "Follow-up Outpatient Attendance"
 ) |>
   dplyr::mutate(
-    .by = c(sitetret, pod_name),
+    .by = c(pod_name),
     change = value - dplyr::lag(value),
     change_pcnt = change / dplyr::lag(value),
     .after = year
@@ -126,13 +126,21 @@ test_that("mod_principal_high_level_pods returns the correct list of pods", {
 })
 
 test_that("mod_principal_high_level_summary_data processes data correctly", {
-  m <- mock(principal_high_level_expected)
+  m1 <- mock(principal_high_level_expected)
+  m2 <- function(x, y) {
+    # instead of a mock, act like a spy
+    expect_equal(y, "a")
+    x
+  }
 
-  stub(mod_principal_high_level_summary_data, "get_time_profiles", m)
-  stub(mod_principal_high_level_summary_data, "trust_site_aggregation", identity)
+  stub(mod_principal_high_level_summary_data, "get_time_profiles", m1)
+  stub(mod_principal_high_level_summary_data, "trust_site_aggregation", m2)
 
-  actual <- mod_principal_high_level_summary_data(1, pods_expected)
+  actual <- mod_principal_high_level_summary_data(1, pods_expected, "a")
   expect_equal(actual, summary_data_expected)
+
+  expect_called(m1, 1)
+  expect_args(m1, 1, 1, "default")
 })
 
 test_that("mod_principal_high_level_table returns a gt", {
@@ -167,10 +175,10 @@ test_that("it gets the summary data", {
   stub(mod_principal_high_level_server, "mod_principal_high_level_pods", "pods")
   stub(mod_principal_high_level_server, "mod_principal_high_level_summary_data", m)
 
-  shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(1)), {
+  shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(1), reactiveVal("a")), {
     expect_equal(summary_data(), "summary data")
     expect_called(m, 1)
-    expect_args(m, 1, 1, "pods")
+    expect_args(m, 1, 1, "pods", "a")
   })
 })
 
@@ -180,13 +188,12 @@ test_that("it filters for the site data", {
     mod_principal_high_level_server,
     "mod_principal_high_level_summary_data",
     tibble::tibble(
-      sitetret = c("a", "b"),
-      value = 1:2
+      value = 1
     )
   )
   shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(1), reactiveVal("a")), {
     expect_equal(
-      site_data(),
+      summary_data(),
       tibble::tibble(value = 1)
     )
   })

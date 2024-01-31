@@ -7,10 +7,10 @@ library(mockery)
 
 selected_measure_expected <- c(activity_type = "aae", pod = "aae_type-01", measure = "ambulance")
 model_run_distribution_expected <- tibble::tribble(
-  ~sitetret, ~baseline, ~principal, ~model_run, ~value, ~variant,
-  "trust", 30000, 31000, 1, 34000, "principal",
-  "trust", 30000, 31000, 2, 35000, "high migration",
-  "trust", 30000, 31000, 3, 36000, "high migration"
+  ~baseline, ~principal, ~model_run, ~value, ~variant,
+  30000, 31000, 1, 34000, "principal",
+  30000, 31000, 2, 35000, "high migration",
+  30000, 31000, 3, 36000, "high migration"
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -27,15 +27,15 @@ test_that("ui is created correctly", {
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("get_data calls get_model_run_distribution", {
-  m <- mock("cosmos results")
+  m <- mock("results")
 
   stub(mod_model_results_distribution_get_data, "get_model_run_distribution", m)
 
-  actual <- mod_model_results_distribution_get_data("id", selected_measure_expected)
+  actual <- mod_model_results_distribution_get_data("id", selected_measure_expected, "a")
 
-  expect_equal(actual, "cosmos results")
+  expect_equal(actual, "results")
   expect_called(m, 1)
-  expect_args(m, 1, "id", "aae_type-01", "ambulance")
+  expect_args(m, 1, "id", "aae_type-01", "ambulance", "a")
 })
 
 test_that("density_plot returns a ggplot", {
@@ -109,13 +109,13 @@ test_that("it calls mod_model_results_distribution_get_data", {
 
   shiny::testServer(mod_model_results_distribution_server, args = list(selected_data, selected_site), {
     selected_data("data")
-    selected_site("trust")
+    selected_site("a")
     selected_measure(selected_measure_expected)
 
     expect_equal(aggregated_data(), model_run_distribution_expected)
 
     expect_called(m, 1)
-    expect_args(m, 1, "data", selected_measure_expected)
+    expect_args(m, 1, "data", selected_measure_expected, "a")
   })
 })
 
@@ -142,6 +142,6 @@ test_that("it renders the plot", {
     session$setInputs(show_origin = FALSE)
 
     expect_called(m, 1)
-    expect_args(m, 1, model_run_distribution_expected |> dplyr::select(-"sitetret"), FALSE)
+    expect_args(m, 1, model_run_distribution_expected, FALSE)
   })
 })

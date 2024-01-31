@@ -28,7 +28,7 @@ mod_result_selection_ui <- function(id) {
     shiny::selectInput(ns("dataset"), "Dataset", NULL),
     shiny::selectInput(ns("scenario"), "Scenario", NULL),
     shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
-    shiny::selectInput(ns("site_selection"), "Site", NULL),
+    shiny::selectInput(ns("site_selection"), "Site", NULL, multiple = TRUE),
     shinyjs::hidden(
       shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
       shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
@@ -121,6 +121,13 @@ mod_result_selection_server <- function(id) {
     }) |>
       shiny::bindCache(selected_filename())
 
+    trust_sites <- shiny::reactive({
+      selected_results() |>
+        shiny::req() |>
+        get_trust_sites() |>
+        stringr::str_subset("trust", TRUE)
+    })
+
     # observers to update the dropdowns ----
     shiny::observe({
       ds <- shiny::req(datasets())
@@ -158,11 +165,7 @@ mod_result_selection_server <- function(id) {
     })
 
     shiny::observe({
-      trust_sites <- selected_results() |>
-        shiny::req() |>
-        get_trust_sites()
-
-      shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
+      shiny::updateSelectInput(session, "site_selection", choices = trust_sites())
     })
 
     # url routing ----
@@ -246,9 +249,15 @@ mod_result_selection_server <- function(id) {
 
     # return reactive ----
     return_reactive <- shiny::reactive({
+      sites <- input$site_selection
+
+      if (length(sites) == length(trust_sites())) {
+        sites <- character(0)
+      }
+
       list(
         data = selected_results(),
-        site = input$site_selection
+        site = sites
       )
     })
 

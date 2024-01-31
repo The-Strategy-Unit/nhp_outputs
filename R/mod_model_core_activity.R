@@ -62,18 +62,12 @@ mod_model_core_activity_server <- function(id, selected_data, selected_site) {
 
     summarised_data <- shiny::reactive({
       selected_data() |>
-        get_model_core_activity() |>
+        get_model_core_activity(selected_site()) |>
         dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures"))
     })
 
-    site_data <- shiny::reactive({
-      summarised_data() |>
-        dplyr::filter(.data$sitetret == selected_site()) |>
-        dplyr::select(-"sitetret")
-    })
-
     output$core_activity <- gt::render_gt({
-      site_data() |>
+      summarised_data() |>
         mod_model_core_activity_server_table()
     })
   })
