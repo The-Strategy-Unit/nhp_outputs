@@ -78,18 +78,18 @@ summary_data_expected <- tibble::tribble(
   ~sitetret, ~year, ~fyear, ~value, ~activity_type, ~pod_name,
   "trust", 2018, "2018/19", 135000, "aae", "A&E Attendance",
   "trust", 2020, "2020/21", 137000, "aae", "A&E Attendance",
-  "RXX",   2018, "2018/19", 8800,   "ip",  "Elective Admission",
-  "RXX",   2020, "2020/21", 10700,  "ip",  "Elective Admission",
-  "RXX",   2018, "2018/19", 58000,  "ip",  "Daycase Admission",
-  "RXX",   2020, "2020/21", 74000,  "ip",  "Daycase Admission",
-  "RXX",   2018, "2018/19", 1100,   "ip",  "Maternity Admission",
-  "RXX",   2020, "2020/21", 1200,   "ip",  "Maternity Admission",
-  "RXX",   2018, "2018/19", 60000,  "ip",  "Non-Elective Admission",
-  "RXX",   2020, "2020/21", 70000,  "ip",  "Non-Elective Admission",
-  "RXX",   2018, "2018/19", 140000, "op",  "First Outpatient Attendance",
-  "RXX",   2020, "2020/21", 150000, "op",  "First Outpatient Attendance",
-  "RXX",   2018, "2018/19", 370000, "op",  "Follow-up Outpatient Attendance",
-  "RXX",   2020, "2020/21", 390000, "op",  "Follow-up Outpatient Attendance"
+  "RXX", 2018, "2018/19", 8800, "ip", "Elective Admission",
+  "RXX", 2020, "2020/21", 10700, "ip", "Elective Admission",
+  "RXX", 2018, "2018/19", 58000, "ip", "Daycase Admission",
+  "RXX", 2020, "2020/21", 74000, "ip", "Daycase Admission",
+  "RXX", 2018, "2018/19", 1100, "ip", "Maternity Admission",
+  "RXX", 2020, "2020/21", 1200, "ip", "Maternity Admission",
+  "RXX", 2018, "2018/19", 60000, "ip", "Non-Elective Admission",
+  "RXX", 2020, "2020/21", 70000, "ip", "Non-Elective Admission",
+  "RXX", 2018, "2018/19", 140000, "op", "First Outpatient Attendance",
+  "RXX", 2020, "2020/21", 150000, "op", "First Outpatient Attendance",
+  "RXX", 2018, "2018/19", 370000, "op", "Follow-up Outpatient Attendance",
+  "RXX", 2020, "2020/21", 390000, "op", "Follow-up Outpatient Attendance"
 ) |>
   dplyr::mutate(
     .by = c(sitetret, pod_name),
@@ -106,11 +106,12 @@ summary_data_expected <- tibble::tribble(
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
+  set.seed(123)
+
   ui <- mod_principal_high_level_ui("id") |>
     as.character() |>
     stringr::str_replace_all(" data-tabsetid=\"\\d+\"", "") |>
     stringr::str_replace_all("#?tab-\\d+-\\d+", "")
-
 
   expect_snapshot(ui)
 })

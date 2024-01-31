@@ -50,7 +50,7 @@
           <div class="card-body">
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-3f020bffec20c6e5bdd6a8bde6bea89d" class="loader">Loading...</div>
+                <div id="spinner-af0436a5b97182f13f6c004f219de9f2" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
             </div>
@@ -74,7 +74,7 @@
             </div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-fe8ea4b55bcaa40e6cf4c9016863fefe" class="loader">Loading...</div>
+                <div id="spinner-d2d6da84c1d4683fcf9a1d949270ea60" class="loader">Loading...</div>
               </div>
               <div class="row">
                 <div class="col-sm-6">

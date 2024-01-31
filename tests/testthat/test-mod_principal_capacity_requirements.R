@@ -26,6 +26,7 @@ beds_data_filtered_expected <- beds_expected |>
 # ui
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 test_that("ui is created correctly", {
+  set.seed(123)
   expect_snapshot(mod_principal_capacity_requirements_ui("id"))
 })
 

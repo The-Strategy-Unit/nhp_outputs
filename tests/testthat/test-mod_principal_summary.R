@@ -46,14 +46,14 @@ test_that("mod_principal_summary_data summarises the data", {
 
   expected <- tibble::tribble(
     ~sitetret, ~pod_name, ~baseline, ~principal,
-    "trust", "A 1",            1, 2,
-    "trust", "A 1",            1, 2,
-    "trust", "A 2",            3, 4,
-    "trust", "A 2",            3, 4,
-    "trust", "B 1",            4, 5,
-    "trust", "B 1",            4, 5,
-    "trust", "B 2",            6, 7,
-    "trust", "B 2",            6, 7,
+    "trust", "A 1", 1, 2,
+    "trust", "A 1", 1, 2,
+    "trust", "A 2", 3, 4,
+    "trust", "A 2", 3, 4,
+    "trust", "B 1", 4, 5,
+    "trust", "B 1", 4, 5,
+    "trust", "B 2", 6, 7,
+    "trust", "B 2", 6, 7,
     "trust", "Beds Available", 4, 6
   ) |>
     dplyr::mutate(
@@ -99,7 +99,9 @@ test_that("mod_principal_summary_table creates a gt object", {
       change_pcnt = change / baseline
     )
 
-  expect_snapshot(mod_principal_summary_table(data))
+  table <- mod_principal_summary_table(data)
+
+  expect_snapshot(table)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

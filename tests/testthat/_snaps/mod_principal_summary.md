@@ -28,7 +28,7 @@
 # mod_principal_summary_table creates a gt object
 
     Code
-      mod_principal_summary_table(data)
+      table
     Output
       <div id="ydgabwknrs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
         <style>#ydgabwknrs table {
@@ -479,7 +479,6 @@
           <col style="width:150px;"/>
         </colgroup>
         <thead>
-          
           <tr class="gt_col_headings">
             <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Point of Delivery">Point of Delivery</th>
             <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Baseline">Baseline</th>
