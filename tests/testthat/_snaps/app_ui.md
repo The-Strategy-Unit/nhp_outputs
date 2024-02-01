@@ -139,7 +139,7 @@
                   <div class="col-sm-12">
                     <div class="card bs4Dash collapsed-card">
                       <div class="card-header">
-                        <h3 class="card-title">Meta information</h3>
+                        <h3 class="card-title">Years</h3>
                         <div class="card-tools float-right">
                           <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
                             <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
@@ -147,10 +147,10 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_meta"></pre>
+                        <div id="info_params-params_years" class="shiny-html-output"></div>
                       </div>
                     </div>
-                    <script type="application/json">{"title":"Meta information","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                    <script type="application/json">{"title":"Years","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
                   </div>
                   <div class="col-sm-12">
                     <div class="card bs4Dash collapsed-card">
@@ -163,7 +163,7 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_demographic_factors"></pre>
+                        <div id="info_params-params_demographic_factors" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Demographic factors","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -179,7 +179,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_baseline_adjustment"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_baseline_adjustment_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_baseline_adjustment_op" class="shiny-html-output"></div>
+                        <p>A&amp;E</p>
+                        <div id="info_params-params_baseline_adjustment_aae" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Baseline adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -195,7 +200,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_covid_adjustment"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_covid_adjustment_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_covid_adjustment_op" class="shiny-html-output"></div>
+                        <p>A&amp;E</p>
+                        <div id="info_params-params_covid_adjustment_aae" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Covid adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -211,7 +221,10 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_waiting_list_adjustment"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_waiting_list_adjustment_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_waiting_list_adjustment_op" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Waiting list adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -227,7 +240,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_expat"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_expat_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_expat_op" class="shiny-html-output"></div>
+                        <p>A&amp;E</p>
+                        <div id="info_params-params_expat_aae" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Expatriation","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -243,7 +261,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_repat_local"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_repat_local_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_repat_local_op" class="shiny-html-output"></div>
+                        <p>A&amp;E</p>
+                        <div id="info_params-params_repat_local_aae" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Repatriation (local)","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -259,7 +282,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_repat_nonlocal"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_repat_nonlocal_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_repat_nonlocal_op" class="shiny-html-output"></div>
+                        <p>A&amp;E</p>
+                        <div id="info_params-params_repat_nonlocal_aae" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Repatriation (non-local)","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -275,7 +303,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_non_demographic_adjustment"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_non_demographic_adjustment_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_non_demographic_adjustment_op" class="shiny-html-output"></div>
+                        <p>A&amp;E</p>
+                        <div id="info_params-params_non_demographic_adjustment_aae" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Non-demographic adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -291,7 +324,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_activity_avoidance"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_activity_avoidance_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_activity_avoidance_op" class="shiny-html-output"></div>
+                        <p>A&amp;E</p>
+                        <div id="info_params-params_activity_avoidance_aae" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Activity avoidance","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -299,7 +337,7 @@
                   <div class="col-sm-12">
                     <div class="card bs4Dash collapsed-card">
                       <div class="card-header">
-                        <h3 class="card-title">Efficiences</h3>
+                        <h3 class="card-title">Efficiencies</h3>
                         <div class="card-tools float-right">
                           <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
                             <i class="fas fa-plus" role="presentation" aria-label="plus icon" verify_fa="FALSE"></i>
@@ -307,10 +345,13 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_efficiencies"></pre>
+                        <p>Inpatients</p>
+                        <div id="info_params-params_efficiencies_ip" class="shiny-html-output"></div>
+                        <p>Outpatients</p>
+                        <div id="info_params-params_efficiencies_op" class="shiny-html-output"></div>
                       </div>
                     </div>
-                    <script type="application/json">{"title":"Efficiences","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
+                    <script type="application/json">{"title":"Efficiencies","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
                   </div>
                   <div class="col-sm-12">
                     <div class="card bs4Dash collapsed-card">
@@ -323,7 +364,10 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_bed_occupancy"></pre>
+                        <p>Day and night</p>
+                        <div id="info_params-params_bed_occupancy_day_night" class="shiny-html-output"></div>
+                        <p>Specialty mapping</p>
+                        <div id="info_params-params_bed_occupancy_specialty_mapping" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Bed occupancy","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -339,7 +383,12 @@
                         </div>
                       </div>
                       <div class="card-body">
-                        <pre class="shiny-text-output noplaceholder" id="info_params-params_time_profile_mappings"></pre>
+                        <p>Activity avoidance</p>
+                        <div id="info_params-params_time_profile_mappings_activity_avoidance" class="shiny-html-output"></div>
+                        <p>Efficiencies</p>
+                        <div id="info_params-params_time_profile_mappings_efficiencies" class="shiny-html-output"></div>
+                        <p>Others</p>
+                        <div id="info_params-params_time_profile_mappings_others" class="shiny-html-output"></div>
                       </div>
                     </div>
                     <script type="application/json">{"title":"Time profile mappings","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
