@@ -5,6 +5,7 @@
       "tests/**/*.R"
     ]
   },
+  "triggerTaskOnSave.on": true,
   "triggerTaskOnSave.restart": true,
   "azurite.location": "../.azurite"
 }

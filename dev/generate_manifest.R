@@ -6,5 +6,11 @@ files <- c(
   fs::dir_ls("inst", recurse = TRUE, type = "file")
 )
 
-options(rsconnect.packrat = TRUE)
+# monkey patch the function to use our prod profile
+assignInNamespace(
+  "renvLockFile",
+  \(...) "renv/profiles/dev/renv.lock",
+  "rsconnect"
+)
+
 rsconnect::writeManifest(appFiles = files)
