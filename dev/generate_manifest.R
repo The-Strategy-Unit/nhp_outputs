@@ -9,7 +9,7 @@ files <- c(
 # monkey patch the function to use our prod profile
 assignInNamespace(
   "renvLockFile",
-  \(...) "renv/profiles/prod/renv.lock",
+  \(...) "renv/profiles/dev/renv.lock",
   "rsconnect"
 )
 
