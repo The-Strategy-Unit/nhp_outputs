@@ -60,8 +60,9 @@ test_that("it calls get_model_core_activity", {
   stub(mod_model_core_activity_server, "get_model_core_activity", m)
 
   selected_model_run <- reactiveVal()
+  selected_site <- reactiveVal("a")
 
-  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run), {
+  shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run, selected_site), {
     selected_model_run("id")
 
     expected <- model_core_activity_expected |>
@@ -69,7 +70,7 @@ test_that("it calls get_model_core_activity", {
     expect_equal(summarised_data(), expected)
 
     expect_called(m, 1)
-    expect_args(m, 1, "id")
+    expect_args(m, 1, "id", "a")
   })
 })
 
@@ -80,16 +81,15 @@ test_that("it filters for the site data", {
     mod_model_core_activity_server,
     "get_model_core_activity",
     tibble::tibble(
-      sitetret = c("a", "b"),
-      pod = c("aae_type-01", "aae_type-01"),
-      measure = c("ambulance", "ambulance"),
-      value = 1:2
+      pod = c("aae_type-01"),
+      measure = c("ambulance"),
+      value = 1
     )
   )
 
   shiny::testServer(mod_model_core_activity_server, args = list(reactiveVal(1), reactiveVal("a")), {
     expect_equal(
-      site_data(),
+      summarised_data(),
       tibble::tibble(
         pod = "aae_type-01",
         measure = "ambulance",

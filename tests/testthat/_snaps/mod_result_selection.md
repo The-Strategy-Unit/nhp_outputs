@@ -27,8 +27,8 @@
       <div class="form-group shiny-input-container">
         <label class="control-label" id="id-site_selection-label" for="id-site_selection">Site</label>
         <div>
-          <select id="id-site_selection" class="shiny-input-select"></select>
-          <script type="application/json" data-for="id-site_selection" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+          <select id="id-site_selection" class="shiny-input-select" multiple="multiple"></select>
+          <script type="application/json" data-for="id-site_selection">{"plugins":["selectize-plugin-a11y"]}</script>
         </div>
       </div>
       <a class="btn btn-default shiny-download-link  shinyjs-hide" download href="" id="id-download_results_xlsx" target="_blank">

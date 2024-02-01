@@ -39,10 +39,10 @@ mod_model_results_distribution_ui <- function(id) {
   )
 }
 
-mod_model_results_distribution_get_data <- function(r, selected_measure) {
+mod_model_results_distribution_get_data <- function(r, selected_measure, sites) {
   activity_type <- pod <- measure <- NULL
   c(activity_type, pod, measure) %<-% selected_measure
-  get_model_run_distribution(r, pod, measure)
+  get_model_run_distribution(r, pod, measure, sites)
 }
 
 mod_model_results_distibution_density_plot <- function(data, show_origin) {
@@ -107,7 +107,6 @@ mod_model_results_distibution_plot <- function(data, show_origin) {
 }
 
 mod_model_results_distribution_ecdf_plot <- function(data) {
-
   values_ecdf <- stats::ecdf(data[["value"]])
   pcnt <- c(0.25, 0.5, 0.75)
   quantiles_ecdf <- stats::quantile(values_ecdf, pcnt)
@@ -153,30 +152,23 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     aggregated_data <- shiny::reactive({
-      mod_model_results_distribution_get_data(selected_data(), selected_measure())
-    })
-
-    site_data <- shiny::reactive({
-      aggregated_data() |>
-        require_rows() |>
-        dplyr::filter(.data$sitetret == selected_site()) |>
-        dplyr::select(-"sitetret")
+      selected_data() |>
+        mod_model_results_distribution_get_data(selected_measure(), selected_site()) |>
+        require_rows()
     })
 
     output$distribution <- plotly::renderPlotly({
-      data <- shiny::req(site_data())
-      shiny::req(nrow(data) > 0)
+      data <- shiny::req(aggregated_data())
+
       shiny::req(is.logical(input$show_origin))
 
       mod_model_results_distibution_plot(data, input$show_origin)
     })
 
     output$ecdf <- plotly::renderPlotly({
-      data <- shiny::req(site_data())
-      shiny::req(nrow(data) > 0)
+      data <- shiny::req(aggregated_data())
 
       mod_model_results_distribution_ecdf_plot(data)
     })
-
   })
 }

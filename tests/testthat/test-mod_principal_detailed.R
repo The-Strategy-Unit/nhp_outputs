@@ -14,15 +14,15 @@ available_aggregations_expected <- list(
 )
 
 aggregations_age_group_expected <- tibble::tribble(
-  ~sitetret, ~sex, ~age_group, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
-  "trust", 1, " 0- 4", 900, 800, 850, 825, 875,
-  "trust", 1, " 5-14", 650, 550, 600, 625, 650
+  ~sex, ~age_group, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
+  1, " 0- 4", 900, 800, 850, 825, 875,
+  1, " 5-14", 650, 550, 600, 625, 650
 )
 
 aggregations_tretspef_expected <- tibble::tribble(
-  ~sitetret, ~sex, ~tretspef, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
-  "trust", 1, "100", 900, 800, 850, 825, 875,
-  "trust", 1, "300", 650, 550, 600, 625, 650
+  ~sex, ~tretspef, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
+  1, "100", 900, 800, 850, 825, 875,
+  1, "300", 650, 550, 600, 625, 650
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -120,7 +120,7 @@ test_that("it calls get_aggregation", {
   stub(mod_principal_detailed_server, "get_aggregation", m)
 
   selected_data <- reactiveVal()
-  selected_site <- reactiveVal()
+  selected_site <- reactiveVal("a")
 
   testServer(mod_principal_detailed_server, args = list(selected_data, selected_site), {
     selected_data(1)
@@ -128,7 +128,6 @@ test_that("it calls get_aggregation", {
 
     expected <- aggregations_age_group_expected |>
       dplyr::transmute(
-        sitetret,
         sex,
         agg = age_group,
         baseline,
@@ -141,7 +140,6 @@ test_that("it calls get_aggregation", {
 
     expected <- aggregations_tretspef_expected |>
       dplyr::transmute(
-        sitetret,
         sex,
         agg = tretspef,
         baseline,
@@ -150,11 +148,12 @@ test_that("it calls get_aggregation", {
         change_pcnt = change / baseline
       )
     session$setInputs(aggregation = "Treatment Specialty")
+
     expect_equal(aggregated_data(), expected)
 
     expect_called(m, 2)
-    expect_args(m, 1, 1, "aae_type-01", "ambulance", "age_group")
-    expect_args(m, 2, 1, "aae_type-01", "ambulance", "tretspef")
+    expect_args(m, 1, 1, "aae_type-01", "ambulance", "age_group", "a")
+    expect_args(m, 2, 1, "aae_type-01", "ambulance", "tretspef", "a")
   })
 })
 
@@ -172,11 +171,11 @@ test_that("it renders the table", {
 
   testServer(mod_principal_detailed_server, args = list(selected_data, selected_site), {
     selected_data(1)
-    selected_site("trust")
+    selected_site("a")
     selected_measure(selected_measure_expected)
     session$setInputs(aggregation = "Age Group")
 
     expect_called(m, 1)
-    expect_args(m, 1, aggregations_age_group_expected |> dplyr::select(-"sitetret"), "Age Group")
+    expect_args(m, 1, aggregations_age_group_expected, "Age Group")
   })
 })

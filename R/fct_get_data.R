@@ -68,8 +68,9 @@ get_user_allowed_datasets <- function(groups) {
 }
 
 get_trust_sites <- function(r) {
-  sites <- r$results$default$sitetret
-  unique(c("trust", sort(sites)))
+  r$results$default$sitetret |>
+    sort() |>
+    unique()
 }
 
 get_available_aggregations <- function(r) {
@@ -92,7 +93,7 @@ get_model_run_years <- function(r) {
   r$params[c("start_year", "end_year")]
 }
 
-get_principal_high_level <- function(r, measures) {
+get_principal_high_level <- function(r, measures, sites) {
   r$results$default |>
     dplyr::filter(.data$measure %in% measures) |>
     dplyr::select("pod", "sitetret", "baseline", "principal") |>
@@ -101,13 +102,13 @@ get_principal_high_level <- function(r, measures) {
     ))) |>
     dplyr::group_by(.data$pod, .data$sitetret) |>
     dplyr::summarise(dplyr::across(where(is.numeric), sum), .groups = "drop") |>
-    trust_site_aggregation()
+    trust_site_aggregation(sites)
 }
 
-get_model_core_activity <- function(r) {
+get_model_core_activity <- function(r, sites) {
   r$results$default |>
     dplyr::select(-"model_runs") |>
-    trust_site_aggregation()
+    trust_site_aggregation(sites)
 }
 
 get_variants <- function(r) {
@@ -116,7 +117,7 @@ get_variants <- function(r) {
     tibble::enframe("model_run", "variant")
 }
 
-get_model_run_distribution <- function(r, pod, measure) {
+get_model_run_distribution <- function(r, pod, measure, sites) {
   filtered_results <- r$results$default |>
     dplyr::filter(
       .data$pod == .env$pod,
@@ -137,10 +138,10 @@ get_model_run_distribution <- function(r, pod, measure) {
     ) |>
     tidyr::unnest("model_runs") |>
     dplyr::inner_join(get_variants(r), by = "model_run") |>
-    trust_site_aggregation()
+    trust_site_aggregation(sites)
 }
 
-get_aggregation <- function(r, pod, measure, agg_col) {
+get_aggregation <- function(r, pod, measure, agg_col, sites) {
   agg_type <- glue::glue("sex+{agg_col}") # nolint
   filtered_results <- r$results[[agg_type]] |>
     dplyr::filter(
@@ -157,7 +158,7 @@ get_aggregation <- function(r, pod, measure, agg_col) {
     dplyr::mutate(
       dplyr::across(dplyr::matches("sex"), as.character)
     ) |>
-    trust_site_aggregation()
+    trust_site_aggregation(sites)
 }
 
 get_principal_change_factors <- function(r, activity_type) {
@@ -195,20 +196,23 @@ get_bed_occupancy <- function(r) {
     dplyr::inner_join(get_variants(r), by = "model_run")
 }
 
-trust_site_aggregation <- function(data) {
-  data |>
-    dplyr::filter(.data$sitetret != "trust") |>
+trust_site_aggregation <- function(data, sites) {
+  data_filtered <- if (length(sites) == 0) {
+    data
+  } else {
+    dplyr::filter(data, .data$sitetret %in% sites)
+  }
+
+  data_filtered |>
     dplyr::group_by(
       dplyr::across(
-        c(where(is.character), dplyr::matches("model_run|year"), -"sitetret")
+        c(tidyselect::where(is.character), dplyr::matches("model_run|year"), -"sitetret")
       )
     ) |>
     dplyr::summarise(
-      sitetret = "trust",
       dplyr::across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE)),
       .groups = "drop"
-    ) |>
-    dplyr::bind_rows(data)
+    )
 }
 
 get_time_profiles <- function(r, result) {

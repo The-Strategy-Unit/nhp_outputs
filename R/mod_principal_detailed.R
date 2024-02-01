@@ -92,10 +92,9 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       )
 
       selected_data() |>
-        get_aggregation(pod, measure, agg_col) |>
+        get_aggregation(pod, measure, agg_col, selected_site()) |>
         shiny::req() |>
         dplyr::transmute(
-          .data$sitetret,
           .data$sex,
           agg = .data[[agg_col]],
           .data$baseline,
@@ -105,15 +104,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
         )
     })
 
-    site_data <- shiny::reactive({
-      aggregated_data() |>
-        shiny::req() |>
-        dplyr::filter(.data$sitetret == selected_site(), .data$baseline > 0) |>
-        dplyr::select(-"sitetret")
-    })
-
     output$results <- gt::render_gt({
-      d <- site_data()
+      d <- aggregated_data()
 
       # handle some edge cases where a dropdown is changed and the next dropdowns aren't yet changed: we get 0 rows of
       # data which causes a bunch of warning messages

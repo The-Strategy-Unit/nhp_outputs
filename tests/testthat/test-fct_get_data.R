@@ -207,7 +207,7 @@ test_that("get_trust_sites returns the list of trust sites", {
   )
   actual <- get_trust_sites(r)
 
-  expect_equal(actual, c("trust", "a", "b", "c"))
+  expect_equal(actual, c("a", "b", "c"))
 })
 
 test_that("get_available_aggregations gets the list of available aggregations", {
@@ -261,12 +261,14 @@ test_that("get_principal_high_level gets the results", {
   )
 
   actual <- get_principal_high_level(
-    r, measures = c("admissions", "attendances", "walk-in", "ambulance")
+    r,
+    c("admissions", "attendances", "walk-in", "ambulance"),
+    c("a")
   )
 
   expect_equal(actual, "tsa")
   expect_called(m, 1)
-  expect_args(m, 1, expected)
+  expect_args(m, 1, expected, "a")
 })
 
 test_that("get_model_core_activity gets the results", {
@@ -283,11 +285,11 @@ test_that("get_model_core_activity gets the results", {
     x = 1
   )
 
-  actual <- get_model_core_activity(r)
+  actual <- get_model_core_activity(r, "a")
 
   expect_equal(actual, "tsa")
   expect_called(m, 1)
-  expect_args(m, 1, expected)
+  expect_args(m, 1, expected, "a")
 })
 
 test_that("get_variants gets the results", {
@@ -328,11 +330,11 @@ test_that("get_model_run_distribution gets the results", {
     "a", 100, 110, 3, 300, "b"
   )
 
-  actual <- get_model_run_distribution(r, "a", "a")
+  actual <- get_model_run_distribution(r, "a", "a", "a")
 
   expect_equal(actual, "tsa")
   expect_called(m, 1)
-  expect_args(m, 1, expected)
+  expect_args(m, 1, expected, "a")
 })
 
 test_that("get_model_run_distribution returns NULL if filter returns no rows", {
@@ -373,11 +375,11 @@ test_that("get_aggregation gets the results", {
     tretspef = "a"
   )
 
-  actual <- get_aggregation(r, "a", "a", "tretspef")
+  actual <- get_aggregation(r, "a", "a", "tretspef", "a")
 
   expect_equal(actual, "tsa")
   expect_called(m, 1)
-  expect_args(m, 1, expected)
+  expect_args(m, 1, expected, "a")
 })
 
 test_that("get_aggregation returns NULL if filter returns no rows", {
@@ -487,7 +489,7 @@ test_that("get_bed_occupancy gets the results", {
 test_that("trust_site_aggregation adds in a trust level aggregatrion", {
   df <- tibble::tribble(
     ~sitetret, ~x, ~v,
-    "trust", "a", 1,
+    "x", "a", 1,
     "x", "b", 2,
     "y", "b", 3,
     "x", "c", 4,
@@ -504,9 +506,15 @@ test_that("trust_site_aggregation adds in a trust level aggregatrion", {
   ) |>
     dplyr::relocate(x, .before = sitetret)
 
-  actual <- trust_site_aggregation(df)
+  expect_equal(
+    trust_site_aggregation(df, "x"),
+    tibble::tibble(x = c("a", "b", "c"), v = c(1, 2, 4))
+  )
 
-  expect_equal(actual, expected)
+  expect_equal(
+    trust_site_aggregation(df, c("x", "y")),
+    tibble::tibble(x = c("a", "b", "c"), v = c(1, 5, 9))
+  )
 })
 
 test_that("get_time_profiles extracts the time profiles correctly", {

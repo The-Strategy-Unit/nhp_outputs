@@ -5132,6 +5132,9 @@
     "inst/app/data/providers.Rds": {
       "checksum": "d1e0a12ae6c284802807dbfd5b449261"
     },
+    "inst/app/data/sites.json": {
+      "checksum": "ffc29ef7cf2858ed308df7503fe1eeb9"
+    },
     "inst/golem-config.yml": {
       "checksum": "09c0c98bbf2c77819fd7e02027d19fed"
     },
@@ -5148,10 +5151,10 @@
       "checksum": "836c75cd501b8c1ab3538ddf36358b7f"
     },
     "R/app_server.R": {
-      "checksum": "0ef470e6fac8fc88f92a4287183521b5"
+      "checksum": "d4c09a88ae87ac88d2af1c754fd01b88"
     },
     "R/app_ui.R": {
-      "checksum": "8c6ecb499517a370994d29f6afcc8cc8"
+      "checksum": "1be7e4a5fec241c829aecd40b517a794"
     },
     "R/fct_create_data_cache.R": {
       "checksum": "114ac8eac09fa400476fd982d85ec034"
@@ -5160,7 +5163,7 @@
       "checksum": "6312f9d1625443a78b9229967946dc9d"
     },
     "R/fct_get_data.R": {
-      "checksum": "63f5c1b021ef433ae138d82207be2fde"
+      "checksum": "fb65ec4e88847daeb3a1d75756e9e3fc"
     },
     "R/fct_gt_bar.R": {
       "checksum": "1ad350f9e771572f3ef58ef813bed579"
@@ -5173,6 +5176,9 @@
     },
     "R/golem_utils_ui.R": {
       "checksum": "577504ff53fdf82063b799742ce4068a"
+    },
+    "R/mod_info_params.R": {
+      "checksum": "80fdb68f92d0a9fe4169922fc7c5f71f"
     },
     "R/mod_measure_selection.R": {
       "checksum": "9ffdc35244ede4d0e9aea4f3f429c271"
@@ -5196,19 +5202,19 @@
       "checksum": "c1c418cfa20f774b6715b94db1c204e2"
     },
     "R/mod_principal_high_level.R": {
-      "checksum": "b07778d8fb43ff1d753b6cfe8c90b647"
+      "checksum": "44cf927152ac6390ec883004193a6b6a"
     },
     "R/mod_principal_summary.R": {
       "checksum": "c00c5b6043205e40924fb5a4b7eba9c9"
     },
     "R/mod_result_selection.R": {
-      "checksum": "2a04889dd1a8f4e4a4f24ba9f7a98f58"
+      "checksum": "2f33a31b91c612b879709f6d7d08d089"
     },
     "R/run_app.R": {
       "checksum": "5b308bd882975a5546f75dd5905089c6"
     },
     "R/ZZZ.R": {
-      "checksum": "7e32c59a980cf3ad133d6aeb2e453a69"
+      "checksum": "d35800541ffef0b20667fcd1fbf4c985"
     }
   },
   "users": null

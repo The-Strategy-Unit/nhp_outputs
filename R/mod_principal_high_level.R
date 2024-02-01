@@ -71,7 +71,7 @@ mod_principal_high_level_pods <- function() {
     dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
-mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_level_pods()) {
+mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_level_pods(), sites) {
   get_time_profiles(r, "default") |>
     dplyr::filter(
       !.data[["measure"]] %in% c("beddays", "procedures", "tele_attendances")
@@ -85,21 +85,20 @@ mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_l
       dplyr::across("value", sum),
       .by = -"value"
     ) |>
-    trust_site_aggregation() |>
+    trust_site_aggregation(sites) |>
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::select(-"pod") |>
     dplyr::mutate(
-      .by = c("sitetret", "pod_name"),
+      .by = c("pod_name"),
       change = .data$value - dplyr::lag(.data$value),
       change_pcnt = .data$change / dplyr::lag(.data$value)
     )
 }
 
 mod_principal_high_level_table <- function(data, summary_type = c("value", "change", "change_pcnt")) {
+  fyear_rx <- "\\d{4}/\\d{2}"
 
-  fyear_rx  <- "\\d{4}/\\d{2}"
-
-  suppressWarnings(  # TODO: warning in test, all_of should work
+  suppressWarnings( # TODO: warning in test, all_of should work
     summary_table <- data |>
       dplyr::select(
         "fyear", "pod_name",
@@ -137,6 +136,7 @@ mod_principal_high_level_plot <- function(data, activity_type) {
     dplyr::filter(
       .data$activity_type == .env$activity_type
     ) |>
+    require_rows() |>
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$value, colour = .data$pod_name)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
@@ -160,34 +160,26 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
 
     summary_data <- shiny::reactive({
       selected_data() |>
-        mod_principal_high_level_summary_data(pods)
-    })
-
-    site_data <- shiny::reactive({
-      summary_data() |>
-        dplyr::filter(.data$sitetret == selected_site()) |>
-        dplyr::select(-"sitetret")
+        mod_principal_high_level_summary_data(pods, selected_site())
     })
 
     output$activity_value <- gt::render_gt({
-      site_data() |>
+      summary_data() |>
         mod_principal_high_level_table(summary_type = "value")
     })
 
-    output$activity_change<- gt::render_gt({
-      site_data() |>
+    output$activity_change <- gt::render_gt({
+      summary_data() |>
         mod_principal_high_level_table(summary_type = "change")
     })
 
     output$activity_change_pcnt <- gt::render_gt({
-      site_data() |>
+      summary_data() |>
         mod_principal_high_level_table(summary_type = "change_pcnt")
     })
 
     output$aae <- plotly::renderPlotly({
-      shiny::req(selected_site() == "trust")
-
-      site_data() |>
+      summary_data() |>
         mod_principal_high_level_plot("aae") |>
         plotly::ggplotly() |>
         plotly::layout(legend = list(
@@ -196,7 +188,7 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
     })
 
     output$ip <- plotly::renderPlotly({
-      site_data() |>
+      summary_data() |>
         mod_principal_high_level_plot("ip") |>
         plotly::ggplotly() |>
         plotly::layout(legend = list(
@@ -205,7 +197,7 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
     })
 
     output$op <- plotly::renderPlotly({
-      site_data() |>
+      summary_data() |>
         mod_principal_high_level_plot("op") |>
         plotly::ggplotly() |>
         plotly::layout(legend = list(
