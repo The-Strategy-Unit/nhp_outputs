@@ -142,7 +142,12 @@ get_model_run_distribution <- function(r, pod, measure, sites) {
 }
 
 get_aggregation <- function(r, pod, measure, agg_col, sites) {
-  agg_type <- glue::glue("sex+{agg_col}") # nolint
+  agg_type <- agg_col
+
+  if (agg_col != "tretspef_raw") {
+    agg_type <- glue::glue("sex+{agg_col}") # nolint
+  }
+
   filtered_results <- r$results[[agg_type]] |>
     dplyr::filter(
       .data$pod == .env$pod,
@@ -156,7 +161,7 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
 
   filtered_results |>
     dplyr::mutate(
-      dplyr::across(dplyr::matches("sex"), as.character)
+      dplyr::across(dplyr::matches("sex|tretspef_raw"), as.character)
     ) |>
     trust_site_aggregation(sites)
 }

@@ -53,6 +53,12 @@
                         </a>
                       </li>
                       <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_pg" href="#" data-target="#shiny-tab-tab_pg" data-toggle="tab" data-value="tab_pg">
+                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
+                          <p>Activity grouped</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_pd" href="#" data-target="#shiny-tab-tab_pd" data-toggle="tab" data-value="tab_pd">
                           <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
                           <p>Activity in detail</p>
@@ -147,6 +153,65 @@
                 </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">params_upload</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">running_models</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pg">
+                  <h1>Principal projection: activity grouped</h1>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash">
+                      <div class="card-header border-0">
+                        <h3 class="card-title"></h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <div class="form-group shiny-input-container">
+                              <label class="control-label" id="principal_grouped-measure_selection-activity_type-label" for="principal_grouped-measure_selection-activity_type">Activity Type</label>
+                              <div>
+                                <select id="principal_grouped-measure_selection-activity_type" class="shiny-input-select"></select>
+                                <script type="application/json" data-for="principal_grouped-measure_selection-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group shiny-input-container">
+                              <label class="control-label" id="principal_grouped-measure_selection-pod-label" for="principal_grouped-measure_selection-pod">Point of Delivery</label>
+                              <div>
+                                <select id="principal_grouped-measure_selection-pod" class="shiny-input-select"></select>
+                                <script type="application/json" data-for="principal_grouped-measure_selection-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-3">
+                            <div class="form-group shiny-input-container">
+                              <label class="control-label" id="principal_grouped-measure_selection-measure-label" for="principal_grouped-measure_selection-measure">Measure</label>
+                              <div>
+                                <select id="principal_grouped-measure_selection-measure" class="shiny-input-select"></select>
+                                <script type="application/json" data-for="principal_grouped-measure_selection-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash">
+                      <div class="card-header border-0">
+                        <h3 class="card-title"></h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                          <div class="load-container shiny-spinner-hidden load1">
+                            <div id="spinner-69c720310a602848aeff5d920323ca13" class="loader">Loading...</div>
+                          </div>
+                          <div style="height:400px" class="shiny-spinner-placeholder"></div>
+                          <div id="principal_grouped-results" class="shiny-html-output"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_summary</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_high_level</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_detailed</div>
