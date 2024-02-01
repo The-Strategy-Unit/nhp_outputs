@@ -136,6 +136,7 @@ mod_principal_high_level_plot <- function(data, activity_type) {
     dplyr::filter(
       .data$activity_type == .env$activity_type
     ) |>
+    require_rows() |>
     ggplot2::ggplot(ggplot2::aes(.data$year, .data$value, colour = .data$pod_name)) +
     ggplot2::geom_line() +
     ggplot2::geom_point() +
