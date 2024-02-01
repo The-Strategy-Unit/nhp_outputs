@@ -59,6 +59,7 @@ mod_result_selection_server <- function(id) {
 
     # static data files ----
     providers <- c("Synthetic" = "synthetic", readRDS(app_sys("app", "data", "providers.Rds")))
+    sites <- jsonlite::read_json(app_sys("app", "data", "sites.json"), simplify_vector = TRUE)
 
     # reactives ----
     allowed_datasets <- shiny::reactive({
@@ -165,7 +166,10 @@ mod_result_selection_server <- function(id) {
     })
 
     shiny::observe({
-      shiny::updateSelectInput(session, "site_selection", choices = trust_sites())
+      trust_sites <- trust_sites() |>
+        purrr::set_names(\(.x) purrr::map_chr(.x, \(.y) sites[[.y]] %||% .y))
+
+      shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
     })
 
     # url routing ----
