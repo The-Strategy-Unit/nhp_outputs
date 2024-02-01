@@ -100,7 +100,7 @@ test_that("it sets up the dropdowns", {
   stub(mod_result_selection_server, "readRDS", c("A" = "a", "B" = "b"))
   stub(mod_result_selection_server, "get_user_allowed_datasets", "a")
   stub(mod_result_selection_server, "get_result_sets", m_get_result_sets)
-  stub(mod_result_selection_server, "get_trust_sites", c("a", "b"))
+  stub(mod_result_selection_server, "get_trust_sites", c("RL400", "RL403"))
   stub(mod_result_selection_server, "shiny::updateSelectInput", m)
 
   testServer(mod_result_selection_server, {
@@ -112,7 +112,12 @@ test_that("it sets up the dropdowns", {
 
     expect_args(m, 1, session, "dataset", choices = c("A" = "a", "B" = "b"))
 
-    expect_args(m, 2, session, "site_selection", choices = c("a", "b"))
+    expected_sites <- c(
+      "Unknown (RL400)" = "RL400",
+      "NEW CROSS HOSPITAL (RL403)" = "RL403"
+    )
+
+    expect_args(m, 2, session, "site_selection", choices = expected_sites)
     expect_args(m, 3, session, "scenario", choices = c("b3"))
     expect_args(m, 4, session, "create_datetime", choices = c(
       "01/01/2023 00:00:00" = "20230101_000000"
@@ -283,7 +288,7 @@ test_that("we update dropdown selections when url_query changes", {
     session$private$flush()
 
     expect_called(m, 4)
-    expect_args(m, 1, session, "site_selection", choices = c("a", "b"))
+    # don't need to check site_selection, which is the first call
     expect_args(m, 2, session, "dataset", selected = "abc")
     expect_args(m, 3, session, "scenario", selected = "def hij")
     expect_args(m, 4, session, "create_datetime", selected = "klm")

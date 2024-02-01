@@ -26,3 +26,12 @@ require_rows <- function(x) {
   shiny::req(nrow(x) > 0)
   x
 }
+
+lookup_ods_org_code_name <- function(org_code) {
+  req <- httr::GET(
+    "https://uat.directory.spineservices.nhs.uk",
+    path = c("ORD", "2-0-0", "organisations", org_code)
+  )
+
+  httr::content(req)$Organisation$Name %||% "Unknown"
+}

@@ -166,8 +166,15 @@ mod_result_selection_server <- function(id) {
     })
 
     shiny::observe({
-      trust_sites <- trust_sites() |>
-        purrr::set_names(\(.x) purrr::map_chr(.x, \(.y) sites[[.y]] %||% .y))
+      trust_sites <- purrr::set_names(
+        trust_sites(),
+        \(.x) {
+          purrr::map_chr(
+            .x,
+            \(.y) glue::glue("{sites[[.y]] %||% lookup_ods_org_code_name(.y)} ({.y})")
+          )
+        }
+      )
 
       shiny::updateSelectInput(session, "site_selection", choices = trust_sites)
     })

@@ -23,3 +23,8 @@ test_that("fyear_str formats years correctly", {
   expect_equal(fyear_str(2018), "2018/19")
   expect_equal(fyear_str(2020), "2020/21")
 })
+
+test_that("lookup_ods_org_code_name returns correct names", {
+  expect_equal(lookup_ods_org_code_name("RL403"), "NEW CROSS HOSPITAL")
+  expect_equal(lookup_ods_org_code_name("RL400"), "Unknown")
+})
