@@ -87,7 +87,9 @@ mod_principal_grouped_server <- function(id, selected_data, selected_site) {
           tretspef_lookup,
           by = dplyr::join_by("tretspef_raw" == "Code")
         ) |>
-        dplyr::mutate(Group = dplyr::if_else(is.na(Group), "Other", Group)) |>
+        dplyr::mutate(
+          Group = dplyr::if_else(is.na(.data$Group), "Other", .data$Group)
+        ) |>
         dplyr::summarise(
           dplyr::across(c("baseline", "principal"), sum),
           .by = "Group"
