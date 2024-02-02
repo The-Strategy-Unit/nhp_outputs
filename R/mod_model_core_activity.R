@@ -28,6 +28,10 @@ mod_model_core_activity_ui <- function(id) {
 
 mod_model_core_activity_server_table <- function(data) {
   data |>
+    dplyr::mutate(
+      change = .data$median - .data$baseline,
+      change_pcnt = .data$change / .data$baseline
+    ) |>
     dplyr::select(
       "activity_type_name",
       "pod_name",
@@ -68,11 +72,7 @@ mod_model_core_activity_server <- function(id, selected_data, selected_site) {
     summarised_data <- shiny::reactive({
       selected_data() |>
         get_model_core_activity(selected_site()) |>
-        dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |>
-        dplyr::mutate(
-          change = .data$median - .data$baseline,
-          change_pcnt = .data$change / .data$baseline
-        )
+        dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures"))
     })
 
     output$core_activity <- gt::render_gt({

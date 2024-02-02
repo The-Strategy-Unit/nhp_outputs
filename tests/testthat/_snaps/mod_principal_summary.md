@@ -3,12 +3,13 @@
     Code
       mod_principal_summary_ui("id")
     Output
+      <h1>Principal projection: summary</h1>
       <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
           <div class="card bs4Dash">
-            <div class="card-header">
-              <h3 class="card-title">Summary</h3>
+            <div class="card-header border-0">
+              <h3 class="card-title"></h3>
             </div>
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
@@ -20,7 +21,7 @@
               </div>
             </div>
           </div>
-          <script type="application/json">{"title":"Summary","solidHeader":true,"width":8,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"solidHeader":true,"width":8,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
         <div class="col-sm-2"></div>
       </div>

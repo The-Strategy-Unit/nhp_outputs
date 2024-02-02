@@ -25,6 +25,10 @@ mod_principal_capacity_requirements_ui <- function(id) {
 
 mod_principal_capacity_requirements_beds_table <- function(data) {
   data |>
+    dplyr::mutate(
+      change = .data$principal - .data$baseline,
+      change_pcnt = .data$change / .data$baseline
+    ) |>
     dplyr::arrange(
       .data[["quarter"]],
       dplyr::desc(.data[["principal"]]),
@@ -90,11 +94,7 @@ mod_principal_capacity_requirements_server <- function(id, selected_data) {
       selected_data() |>
         get_bed_occupancy() |>
         dplyr::filter(.data$model_run == 1) |>
-        dplyr::select("quarter", "ward_type", "ward_group", "baseline", "principal") |>
-        dplyr::mutate(
-          change = .data$principal - .data$baseline,
-          change_pcnt = .data$change / .data$baseline
-        )
+        dplyr::select("quarter", "ward_type", "ward_group", "baseline", "principal")
     })
 
     output$beds <- gt::render_gt({
