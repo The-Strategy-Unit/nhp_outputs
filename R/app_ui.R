@@ -29,6 +29,10 @@ app_ui <- function(request) {
           tabName = "tab_phl"
         ),
         bs4Dash::menuSubItem(
+          text = "Activity grouped",
+          tabName = "tab_pg"
+        ),
+        bs4Dash::menuSubItem(
           text = "Activity in detail",
           tabName = "tab_pd"
         ),
@@ -90,6 +94,10 @@ app_ui <- function(request) {
       bs4Dash::tabItem(
         tabName = "tab_phl",
         mod_principal_high_level_ui("principal_high_level")
+      ),
+      bs4Dash::tabItem(
+        tabName = "tab_pg",
+        mod_principal_grouped_ui("principal_grouped")
       ),
       bs4Dash::tabItem(
         tabName = "tab_pd",

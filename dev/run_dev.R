@@ -8,3 +8,4 @@ golem::document_and_reload()
 # need to explicitly print for VS Code debugger to work
 app <- run_app()
 print(app)
+
