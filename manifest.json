@@ -5135,6 +5135,12 @@
     "inst/app/data/sites.json": {
       "checksum": "ffc29ef7cf2858ed308df7503fe1eeb9"
     },
+    "inst/app/data/tx-lookup-mike.json": {
+      "checksum": "474983db20cc6b01d7ee33d19027b51a"
+    },
+    "inst/app/data/tx-lookup.json": {
+      "checksum": "7cdb866926def922fe646e34056cbe3c"
+    },
     "inst/golem-config.yml": {
       "checksum": "09c0c98bbf2c77819fd7e02027d19fed"
     },
@@ -5151,10 +5157,10 @@
       "checksum": "836c75cd501b8c1ab3538ddf36358b7f"
     },
     "R/app_server.R": {
-      "checksum": "d4c09a88ae87ac88d2af1c754fd01b88"
+      "checksum": "5ae2987c702e1bc442d9485f1fa30d11"
     },
     "R/app_ui.R": {
-      "checksum": "1be7e4a5fec241c829aecd40b517a794"
+      "checksum": "83c22906d654f588c1002cb03eeb3c06"
     },
     "R/fct_create_data_cache.R": {
       "checksum": "114ac8eac09fa400476fd982d85ec034"
@@ -5163,7 +5169,7 @@
       "checksum": "6312f9d1625443a78b9229967946dc9d"
     },
     "R/fct_get_data.R": {
-      "checksum": "fb65ec4e88847daeb3a1d75756e9e3fc"
+      "checksum": "8ebbb74893008948b7e763ac2f59a4fc"
     },
     "R/fct_gt_bar.R": {
       "checksum": "1ad350f9e771572f3ef58ef813bed579"
@@ -5200,6 +5206,9 @@
     },
     "R/mod_principal_detailed.R": {
       "checksum": "c1c418cfa20f774b6715b94db1c204e2"
+    },
+    "R/mod_principal_grouped.R": {
+      "checksum": "b767132402106c7b97b69ebc63336c1a"
     },
     "R/mod_principal_high_level.R": {
       "checksum": "44cf927152ac6390ec883004193a6b6a"
