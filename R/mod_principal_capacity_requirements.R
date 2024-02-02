@@ -33,10 +33,11 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
     dplyr::filter(.data[["principal"]] > 0.5) |>
     tidyr::pivot_wider(
       names_from = "quarter",
-      values_from = c("baseline", "principal", "change")
+      values_from = c("baseline", "principal", "change", "change_pcnt")
     ) |>
     gt::gt(rowname_col = "ward_group", groupname_col = "ward_type") |>
-    gt::fmt_integer(-"ward_group") |>
+    gt::fmt_integer(-c("ward_group", tidyselect::starts_with("change_pcnt"))) |>
+    gt::fmt_percent(tidyselect::starts_with("change_pcnt"), decimals = 0) |>
     gt::summary_rows(
       fns = list(id = "sum", label = "Total") ~ sum(., na.rm = TRUE),
       fmt = ~ gt::fmt_integer(.)
@@ -54,15 +55,19 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
       baseline_q1 = "Baseline",
       principal_q1 = "Principal",
       change_q1 = "Change",
+      change_pcnt_q1 = "Percent Change",
       baseline_q2 = "Baseline",
       principal_q2 = "Principal",
       change_q2 = "Change",
+      change_pcnt_q2 = "Percent Change",
       baseline_q3 = "Baseline",
       principal_q3 = "Principal",
       change_q3 = "Change",
+      change_pcnt_q3 = "Percent Change",
       baseline_q4 = "Baseline",
       principal_q4 = "Principal",
-      change_q4 = "Change"
+      change_q4 = "Change",
+      change_pcnt_q4 = "Percent Change"
     ) |>
     gt::tab_style(
       style = gt::cell_borders(
@@ -70,7 +75,7 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
         color = "#d3d3d3"
       ),
       locations = gt::cells_body(
-        columns = tidyselect::matches("change_q[1-3]")
+        columns = tidyselect::matches("change_pcnt_q[1-3]")
       )
     ) |>
     gt_theme()
@@ -86,7 +91,10 @@ mod_principal_capacity_requirements_server <- function(id, selected_data) {
         get_bed_occupancy() |>
         dplyr::filter(.data$model_run == 1) |>
         dplyr::select("quarter", "ward_type", "ward_group", "baseline", "principal") |>
-        dplyr::mutate(change = .data$principal - .data$baseline)
+        dplyr::mutate(
+          change = .data$principal - .data$baseline,
+          change_pcnt = .data$change / .data$baseline
+        )
     })
 
     output$beds <- gt::render_gt({
