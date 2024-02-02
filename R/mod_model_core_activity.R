@@ -63,7 +63,11 @@ mod_model_core_activity_server <- function(id, selected_data, selected_site) {
     summarised_data <- shiny::reactive({
       selected_data() |>
         get_model_core_activity(selected_site()) |>
-        dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures"))
+        dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |>
+        dplyr::mutate(
+          change = .data$principal - .data$baseline,
+          change_pcnt = (.data$principal - .data$baseline) / .data$baseline
+        )
     })
 
     output$core_activity <- gt::render_gt({

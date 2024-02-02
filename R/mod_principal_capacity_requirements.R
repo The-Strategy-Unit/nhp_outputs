@@ -14,7 +14,7 @@ mod_principal_capacity_requirements_ui <- function(id) {
     shiny::fluidRow(
       bs4Dash::box(
         title = "Beds",
-        width = 8,
+        width = 12,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("beds"))
         )
@@ -31,7 +31,10 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
       dplyr::desc(.data[["baseline"]])
     ) |>
     dplyr::filter(.data[["principal"]] > 0.5) |>
-    tidyr::pivot_wider(names_from = "quarter", values_from = c("baseline", "principal")) |>
+    tidyr::pivot_wider(
+      names_from = "quarter",
+      values_from = c("baseline", "principal", "change")
+    ) |>
     gt::gt(rowname_col = "ward_group", groupname_col = "ward_type") |>
     gt::fmt_integer(-"ward_group") |>
     gt::summary_rows(
@@ -42,6 +45,7 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
       fns = list(id = "sum", label = "Grand Total") ~ sum(., na.rm = TRUE),
       fmt = ~ gt::fmt_integer(.)
     ) |>
+    gt::sub_missing() |>
     gt::tab_spanner("Q1 (Apr-Jun)", tidyselect::ends_with("Q1")) |>
     gt::tab_spanner("Q2 (Jul-Sep)", tidyselect::ends_with("Q2")) |>
     gt::tab_spanner("Q3 (Oct-Dec)", tidyselect::ends_with("Q3")) |>
@@ -49,12 +53,16 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
     gt::cols_label(
       baseline_q1 = "Baseline",
       principal_q1 = "Principal",
+      change_q1 = "Change",
       baseline_q2 = "Baseline",
       principal_q2 = "Principal",
+      change_q2 = "Change",
       baseline_q3 = "Baseline",
       principal_q3 = "Principal",
+      change_q3 = "Change",
       baseline_q4 = "Baseline",
-      principal_q4 = "Principal"
+      principal_q4 = "Principal",
+      change_q4 = "Change"
     ) |>
     gt::tab_style(
       style = gt::cell_borders(
@@ -62,7 +70,7 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
         color = "#d3d3d3"
       ),
       locations = gt::cells_body(
-        columns = tidyselect::matches("principal_q[1-3]")
+        columns = tidyselect::matches("change_q[1-3]")
       )
     ) |>
     gt_theme()
@@ -77,7 +85,8 @@ mod_principal_capacity_requirements_server <- function(id, selected_data) {
       selected_data() |>
         get_bed_occupancy() |>
         dplyr::filter(.data$model_run == 1) |>
-        dplyr::select("quarter", "ward_type", "ward_group", "baseline", "principal")
+        dplyr::select("quarter", "ward_type", "ward_group", "baseline", "principal") |>
+        dplyr::mutate(change = .data$principal - .data$baseline)
     })
 
     output$beds <- gt::render_gt({
