@@ -25,13 +25,28 @@ mod_result_selection_filter_result_sets <- function(result_sets, ds, sc, cd) {
 mod_result_selection_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::selectInput(ns("dataset"), "Dataset", NULL),
-    shiny::selectInput(ns("scenario"), "Scenario", NULL),
-    shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
-    shiny::selectInput(ns("site_selection"), "Site", NULL, multiple = TRUE),
-    shinyjs::hidden(
-      shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
-      shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
+    shiny::h1("NHP Model Results"),
+    bs4Dash::box(
+      title = "Make selections",
+      collapsible = FALSE,
+      width = 6,
+      shiny::selectInput(ns("dataset"), "Dataset", NULL),
+      shiny::selectInput(ns("scenario"), "Scenario", NULL),
+      shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
+      shiny::selectInput(ns("site_selection"), "Site (leave empty for all sites)", NULL, multiple = TRUE),
+      shinyjs::hidden(
+        shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
+        shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
+      )
+    ),
+    bs4Dash::box(
+      title = "Documentation",
+      collapsible = FALSE,
+      width = 6,
+      p(
+        "Documentation can be found on the",
+        a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site")
+      )
     )
   )
 }

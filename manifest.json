@@ -5158,7 +5158,7 @@
       "checksum": "5ae2987c702e1bc442d9485f1fa30d11"
     },
     "R/app_ui.R": {
-      "checksum": "83c22906d654f588c1002cb03eeb3c06"
+      "checksum": "0af93f7a1a6f5cb486d14b8bc187185d"
     },
     "R/fct_create_data_cache.R": {
       "checksum": "114ac8eac09fa400476fd982d85ec034"
@@ -5215,7 +5215,7 @@
       "checksum": "e6b28369b4d5c40df931a4a541b7bd59"
     },
     "R/mod_result_selection.R": {
-      "checksum": "2f33a31b91c612b879709f6d7d08d089"
+      "checksum": "942ca9d7118a06051c90c7ecb6c3eaec"
     },
     "R/run_app.R": {
       "checksum": "5b308bd882975a5546f75dd5905089c6"
