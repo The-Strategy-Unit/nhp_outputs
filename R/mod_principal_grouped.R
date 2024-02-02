@@ -71,20 +71,23 @@ mod_principal_grouped_server <- function(id, selected_data, selected_site) {
       c(activity_type, pod, measure) %<-% selected_measure()
 
       tretspef_lookup <- jsonlite::read_json(
-        app_sys("app", "data", "tx-lookup.json"),
+        app_sys("app", "data", "tx-lookup-mike.json"),
         simplifyVector = TRUE
       )
 
-      selected_data() |>
-        get_aggregation(pod, measure, "tretspef_raw", selected_site()) |>
+      agg_data <- selected_data() |>
+        get_aggregation(pod, measure, "tretspef_raw", selected_site())
+
+      if (is.null(agg_data)) {
+        return(NULL)  # A&E activity type isn't viable if selected
+      }
+
+      agg_data |>
         dplyr::left_join(
           tretspef_lookup,
           by = dplyr::join_by("tretspef_raw" == "Code")
         ) |>
-        dplyr::mutate(
-          Group = dplyr::if_else(is.na(.data$Group), "Other", .data$Group)
-        ) |>
-        shiny::req() |>
+        dplyr::mutate(Group = dplyr::if_else(is.na(Group), "Other", Group)) |>
         dplyr::summarise(
           dplyr::across(c("baseline", "principal"), sum),
           .by = "Group"
