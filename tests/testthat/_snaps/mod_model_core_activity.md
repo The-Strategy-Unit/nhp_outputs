@@ -6,7 +6,7 @@
       <h1>Distribution of projections: activity distribution summary</h1>
       <div class="row">
         <div class="col-sm-3"></div>
-        <div class="col-sm-8">
+        <div class="col-sm-12">
           <div class="card bs4Dash">
             <div class="card-header">
               <h3 class="card-title">Summary</h3>
@@ -21,7 +21,7 @@
               </div>
             </div>
           </div>
-          <script type="application/json">{"title":"Summary","solidHeader":true,"width":8,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"title":"Summary","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
         <div class="col-sm-3"></div>
       </div>

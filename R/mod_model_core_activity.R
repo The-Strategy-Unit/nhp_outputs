@@ -16,7 +16,7 @@ mod_model_core_activity_ui <- function(id) {
       bs4Dash::box(
         title = "Summary",
         collapsible = FALSE,
-        width = 8,
+        width = 12,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("core_activity"))
         )
