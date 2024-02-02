@@ -6,8 +6,8 @@
       <h1>Principal projection: impact of changes</h1>
       <div class="col-sm-12">
         <div class="card bs4Dash">
-          <div class="card-header border-0">
-            <h3 class="card-title"></h3>
+          <div class="card-header">
+            <h3 class="card-title">Make Selections</h3>
           </div>
           <div class="card-body">
             <div class="row">
@@ -29,18 +29,10 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group shiny-input-container">
-                <div class="checkbox">
-                  <label>
-                    <input id="id-include_baseline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-                    <span>Include baseline?</span>
-                  </label>
-                </div>
-              </div>
             </div>
           </div>
         </div>
-        <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Make Selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
@@ -48,6 +40,14 @@
             <h3 class="card-title">Impact of Changes</h3>
           </div>
           <div class="card-body">
+            <div class="form-group shiny-input-container">
+              <div class="checkbox">
+                <label>
+                  <input id="id-include_baseline" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+                  <span>Include baseline?</span>
+                </label>
+              </div>
+            </div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-af0436a5b97182f13f6c004f219de9f2" class="loader">Loading...</div>

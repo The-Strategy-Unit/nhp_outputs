@@ -17,10 +17,10 @@ mod_info_params_ui <- function(id) {
       title = "Documentation",
       collapsible = FALSE,
       width = 12,
-      p("This page contains a reminder of the parameter values you provided to the model inputs app."),
-      p(
+      htmltools::p("This page contains a reminder of the parameter values you provided to the model inputs app."),
+      htmltools::p(
         "Further information about the model and these outputs can be found on the",
-        a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site"),
+        htmltools::a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site"),
         "."
       )
     ),

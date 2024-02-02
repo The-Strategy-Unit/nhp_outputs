@@ -43,9 +43,9 @@ mod_result_selection_ui <- function(id) {
       title = "Documentation",
       collapsible = FALSE,
       width = 6,
-      p(
+      htmltools::p(
         "Further information about the model and these outputs can be found on the",
-        a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site"),
+        htmltools::a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site"),
         "."
       )
     )
