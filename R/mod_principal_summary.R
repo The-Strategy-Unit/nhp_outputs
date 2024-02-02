@@ -12,7 +12,7 @@ mod_principal_summary_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: summary"),
     bs4Dash::box(
-      headerBorder = FALSE,
+      title = "Summary by Point of Delivery",
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(

@@ -76,16 +76,7 @@ app_ui <- function(request) {
     bs4Dash::tabItems(
       bs4Dash::tabItem(
         tabName = "tab_home",
-        shiny::fluidRow(
-          col_6(
-            htmltools::h1("NHP Model")
-            # "About Text should go here"
-          ),
-          bs4Dash::box(
-            title = "Results Selection",
-            mod_result_selection_ui("result_selection")
-          )
-        )
+        mod_result_selection_ui("result_selection")
       ),
       bs4Dash::tabItem(
         tabName = "tab_ps",
@@ -134,6 +125,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     shinyjs::useShinyjs(),
     bs4Dash::dashboardPage(
+      help = NULL,
       header,
       sidebar,
       body

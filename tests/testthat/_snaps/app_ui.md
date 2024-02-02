@@ -3,7 +3,7 @@
     Code
       app_ui()
     Output
-      <body data-help="1" data-fullscreen="0" data-dark="1" data-scrollToTop="0" class="sidebar-mini">
+      <body data-help="0" data-fullscreen="0" data-dark="1" data-scrollToTop="0" class="sidebar-mini">
         <div class="wrapper">
           <nav data-fixed="false" class="main-header navbar navbar-expand navbar-white navbar-light">
             <ul class="navbar-nav">
@@ -130,35 +130,15 @@
           <div class="content-wrapper">
             <section class="content">
               <div class="tab-content">
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_home">
-                  <div class="row">
-                    <div class="col-sm-6">
-                      <h1>NHP Model</h1>
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="card bs4Dash">
-                        <div class="card-header">
-                          <h3 class="card-title">Results Selection</h3>
-                          <div class="card-tools float-right">
-                            <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
-                              <i class="fas fa-minus" role="presentation" aria-label="minus icon" verify_fa="FALSE"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <div class="card-body">result_selection</div>
-                      </div>
-                      <script type="application/json">{"title":"Results Selection","solidHeader":true,"width":6,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
-                    </div>
-                  </div>
-                </div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_home">result_selection</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">params_upload</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">running_models</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pg">
                   <h1>Principal projection: activity grouped</h1>
                   <div class="col-sm-12">
                     <div class="card bs4Dash">
-                      <div class="card-header border-0">
-                        <h3 class="card-title"></h3>
+                      <div class="card-header">
+                        <h3 class="card-title">Make Selections</h3>
                       </div>
                       <div class="card-body">
                         <div class="row">
@@ -192,12 +172,12 @@
                         </div>
                       </div>
                     </div>
-                    <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                    <script type="application/json">{"title":"Make Selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
                   </div>
                   <div class="col-sm-12">
                     <div class="card bs4Dash">
-                      <div class="card-header border-0">
-                        <h3 class="card-title"></h3>
+                      <div class="card-header">
+                        <h3 class="card-title">Activity by Treatment Code Group</h3>
                       </div>
                       <div class="card-body">
                         <div class="shiny-spinner-output-container shiny-spinner-hideui ">
@@ -209,7 +189,7 @@
                         </div>
                       </div>
                     </div>
-                    <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                    <script type="application/json">{"title":"Activity by Treatment Code Group","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
                   </div>
                 </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_summary</div>
@@ -219,7 +199,23 @@
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">principal_capacity_requirements</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_core_activity</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_params">
-                  <h1>Information: parameter inputs</h1>
+                  <h1>Information: input parameters</h1>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash">
+                      <div class="card-header">
+                        <h3 class="card-title">Documentation</h3>
+                      </div>
+                      <div class="card-body">
+                        <p>This page contains a reminder of the parameter values you provided to the model inputs app.</p>
+                        <p>
+                          Further information about the model and these outputs can be found on the
+                          <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a>
+                          .
+                        </p>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Documentation","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
                   <div class="col-sm-12">
                     <div class="card bs4Dash collapsed-card">
                       <div class="card-header">

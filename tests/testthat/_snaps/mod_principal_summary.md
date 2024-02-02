@@ -6,8 +6,8 @@
       <h1>Principal projection: summary</h1>
       <div class="col-sm-12">
         <div class="card bs4Dash">
-          <div class="card-header border-0">
-            <h3 class="card-title"></h3>
+          <div class="card-header">
+            <h3 class="card-title">Summary by Point of Delivery</h3>
           </div>
           <div class="card-body">
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
@@ -19,7 +19,7 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Summary by Point of Delivery","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 
 # mod_principal_summary_table creates a gt object
@@ -135,7 +135,7 @@
         color: #333333;
         background-color: #FFFFFF;
         font-size: 100%;
-        font-weight: normal;
+        font-weight: bold;
         text-transform: inherit;
         border-left-style: none;
         border-left-width: 1px;
@@ -155,7 +155,7 @@
         color: #333333;
         background-color: #FFFFFF;
         font-size: 100%;
-        font-weight: normal;
+        font-weight: bold;
         text-transform: inherit;
         padding-top: 0;
         padding-bottom: 0;
