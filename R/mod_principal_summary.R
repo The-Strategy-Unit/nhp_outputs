@@ -10,17 +10,14 @@
 mod_principal_summary_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::fluidRow(
-      col_2(),
-      bs4Dash::box(
-        title = "Summary",
-        collapsible = FALSE,
-        width = 8,
-        shinycssloaders::withSpinner(
-          gt::gt_output(ns("summary_table"))
-        )
-      ),
-      col_2()
+    shiny::h1("Principal projection: summary"),
+    bs4Dash::box(
+      headerBorder = FALSE,
+      collapsible = FALSE,
+      width = 12,
+      shinycssloaders::withSpinner(
+        gt::gt_output(ns("summary_table"))
+      )
     )
   )
 }

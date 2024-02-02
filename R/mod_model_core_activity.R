@@ -16,7 +16,7 @@ mod_model_core_activity_ui <- function(id) {
       bs4Dash::box(
         title = "Summary",
         collapsible = FALSE,
-        width = 6,
+        width = 12,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("core_activity"))
         )
@@ -28,26 +28,35 @@ mod_model_core_activity_ui <- function(id) {
 
 mod_model_core_activity_server_table <- function(data) {
   data |>
+    dplyr::mutate(
+      change = .data$median - .data$baseline,
+      change_pcnt = .data$change / .data$baseline
+    ) |>
     dplyr::select(
       "activity_type_name",
       "pod_name",
       "measure",
       "baseline",
       "median",
+      "change",
+      "change_pcnt",
       "lwr_ci",
       "upr_ci"
     ) |>
     gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
-    gt::fmt_integer(c("baseline", "median", "lwr_ci", "upr_ci")) |>
+    gt::fmt_integer(c("baseline", "median", "change", "lwr_ci", "upr_ci")) |>
+    gt::fmt_percent("change_pcnt", decimals = 0) |>
     gt::cols_label(
       "measure" = "Measure",
       "baseline" = "Baseline",
-      "median" = "Central Projection",
+      "median" = "Median",
+      "change" = "Change",
+      "change_pcnt" = "Percent Change",
       "lwr_ci" = "Lower",
       "upr_ci" = "Upper"
     ) |>
     gt::tab_spanner(
-      "90% Confidence Interval",
+      "80% Confidence Interval",
       c("lwr_ci", "upr_ci")
     ) |>
     gt_theme()
