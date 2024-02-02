@@ -12,7 +12,18 @@ mod_info_params_ui <- function(id) {
   ns <- shiny::NS(id)
 
   shiny::tagList(
-    shiny::h1("Information: parameter inputs"),
+    shiny::h1("Information: input parameters"),
+    bs4Dash::box(
+      title = "Documentation",
+      collapsible = FALSE,
+      width = 12,
+      p("This page contains a reminder of the parameter values you provided to the model inputs app."),
+      p(
+        "Further information about the model and these outputs can be found on the",
+        a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site"),
+        "."
+      )
+    ),
     bs4Dash::box(
       title = "Meta information",
       collapsed = TRUE,

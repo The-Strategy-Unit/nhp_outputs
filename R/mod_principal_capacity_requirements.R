@@ -13,7 +13,8 @@ mod_principal_capacity_requirements_ui <- function(id) {
     shiny::h1("Principal projection: capacity requirements"),
     shiny::fluidRow(
       bs4Dash::box(
-        title = "Beds",
+        title = "Beds by Quarter",
+        collapsible = FALSE,
         width = 12,
         shinycssloaders::withSpinner(
           gt::gt_output(ns("beds"))

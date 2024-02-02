@@ -125,6 +125,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     shinyjs::useShinyjs(),
     bs4Dash::dashboardPage(
+      help = NULL,
       header,
       sidebar,
       body

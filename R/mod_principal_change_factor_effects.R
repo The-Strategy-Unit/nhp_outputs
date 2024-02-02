@@ -12,19 +12,19 @@ mod_principal_change_factor_effects_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: impact of changes"),
     bs4Dash::box(
-      headerBorder = FALSE,
+      title = "Make Selections",
       collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
         col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-        col_4(shiny::selectInput(ns("measure"), "Measure", NULL)),
-        shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE)
+        col_4(shiny::selectInput(ns("measure"), "Measure", NULL))
       )
     ),
     bs4Dash::box(
       title = "Impact of Changes",
       collapsible = FALSE,
       width = 12,
+      shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("change_factors"), height = "600px")
       )

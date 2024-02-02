@@ -12,16 +12,16 @@ mod_principal_grouped_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: activity grouped"),
     bs4Dash::box(
+      title = "Make Selections",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shiny::fluidRow(
         mod_measure_selection_ui(ns("measure_selection"), width = 3)
       )
     ),
     bs4Dash::box(
+      title = "Activity by Treatment Code Group",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
         gt::gt_output(ns("results"))

@@ -12,8 +12,8 @@ mod_principal_detailed_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: activity in detail"),
     bs4Dash::box(
+      title = "Make Selections",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shiny::fluidRow(
         mod_measure_selection_ui(ns("measure_selection"), width = 3),
@@ -21,8 +21,8 @@ mod_principal_detailed_ui <- function(id) {
       )
     ),
     bs4Dash::box(
+      title = "Activity by Sex and Age or Treatment Specialty",
       collapsible = FALSE,
-      headerBorder = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
         gt::gt_output(ns("results"))

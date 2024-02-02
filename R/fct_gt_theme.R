@@ -10,6 +10,7 @@ gt_theme <- function(data) {
     data = data,
     heading.subtitle.font.size = 12,
     heading.align = "left",
+    column_labels.font.weight = "bold",
     row_group.border.top.width = gt::px(2),
     row_group.border.top.color = "black",
     row_group.border.bottom.color = "black",

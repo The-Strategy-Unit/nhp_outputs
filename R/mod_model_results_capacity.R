@@ -13,6 +13,7 @@ mod_model_results_capacity_ui <- function(id) {
     shiny::h1("Distribution of projections: capacity requirements distribution"),
     bs4Dash::box(
       title = "Make selections",
+      collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
         col_3(

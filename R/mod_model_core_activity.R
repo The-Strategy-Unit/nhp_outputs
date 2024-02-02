@@ -14,7 +14,7 @@ mod_model_core_activity_ui <- function(id) {
     shiny::fluidRow(
       col_3(),
       bs4Dash::box(
-        title = "Summary",
+        title = "Summary by Activity Type and Measure",
         collapsible = FALSE,
         width = 12,
         shinycssloaders::withSpinner(
