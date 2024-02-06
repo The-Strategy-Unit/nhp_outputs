@@ -12,6 +12,24 @@ mod_model_results_capacity_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Distribution of projections: capacity requirements distribution"),
     bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+          "model project information site"
+        ),
+        "for definitions of terms, along with the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/modelling_methodology/capacity_conversion/beds.html",
+          "calculation for beds."
+        )
+      )
+    ),
+    bs4Dash::box(
       title = "Make selections",
       collapsible = FALSE,
       width = 12,

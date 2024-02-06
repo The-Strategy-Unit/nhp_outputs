@@ -12,6 +12,21 @@ mod_principal_summary_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: summary"),
     bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "Bed availability data is not available at site level.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
+          "model project information site"
+        ),
+        "for definitions of terms."
+      )
+    ),
+    bs4Dash::box(
       title = "Summary by Point of Delivery",
       collapsible = FALSE,
       width = 12,

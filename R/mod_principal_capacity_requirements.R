@@ -11,6 +11,24 @@ mod_principal_capacity_requirements_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Principal projection: capacity requirements"),
+    bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+          "model project information site"
+        ),
+        "for definitions of terms, along with the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/modelling_methodology/capacity_conversion/beds.html",
+          "calculation for beds."
+        )
+      )
+    ),
     shiny::fluidRow(
       bs4Dash::box(
         title = "Beds by Quarter",
@@ -60,19 +78,19 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
       baseline_q1 = "Baseline",
       principal_q1 = "Principal",
       change_q1 = "Change",
-      change_pcnt_q1 = "Percent Change",
+      change_pcnt_q1 = gt::html("Percent<br>Change"),
       baseline_q2 = "Baseline",
       principal_q2 = "Principal",
       change_q2 = "Change",
-      change_pcnt_q2 = "Percent Change",
+      change_pcnt_q2 = gt::html("Percent<br>Change"),
       baseline_q3 = "Baseline",
       principal_q3 = "Principal",
       change_q3 = "Change",
-      change_pcnt_q3 = "Percent Change",
+      change_pcnt_q3 = gt::html("Percent<br>Change"),
       baseline_q4 = "Baseline",
       principal_q4 = "Principal",
       change_q4 = "Change",
-      change_pcnt_q4 = "Percent Change"
+      change_pcnt_q4 = gt::html("Percent<br>Change"),
     ) |>
     gt::tab_style(
       style = gt::cell_borders(

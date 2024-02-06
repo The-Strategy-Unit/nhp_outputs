@@ -11,6 +11,21 @@ mod_model_core_activity_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution summary"),
+    bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "A&E results are not available at site level.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+          "model project information site"
+        ),
+        "for definitions of terms."
+      )
+    ),
     shiny::fluidRow(
       col_3(),
       bs4Dash::box(
@@ -51,7 +66,7 @@ mod_model_core_activity_server_table <- function(data) {
       "baseline" = "Baseline",
       "median" = "Median",
       "change" = "Change",
-      "change_pcnt" = "Percent Change",
+      "change_pcnt" = gt::html("Percent<br>Change"),
       "lwr_ci" = "Lower",
       "upr_ci" = "Upper"
     ) |>

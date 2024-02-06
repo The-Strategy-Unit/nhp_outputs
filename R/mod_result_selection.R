@@ -33,20 +33,31 @@ mod_result_selection_ui <- function(id) {
       shiny::selectInput(ns("dataset"), "Dataset", NULL),
       shiny::selectInput(ns("scenario"), "Scenario", NULL),
       shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
-      shiny::selectInput(ns("site_selection"), "Site (leave empty for all sites)", NULL, multiple = TRUE),
+      shiny::selectInput(ns("site_selection"), "Site (leave empty for all sites)", NULL, multiple = TRUE)
+    ),
+    bs4Dash::box(
+      title = "Download results",
+      collapsible = FALSE,
+      width = 6,
       shinyjs::hidden(
         shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
         shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
       )
     ),
     bs4Dash::box(
-      title = "Documentation",
+      title = "Notes",
       collapsible = FALSE,
       width = 6,
       htmltools::p(
-        "Further information about the model and these outputs can be found on the",
-        htmltools::a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site"),
-        "."
+        "Further information about the model and these results can be found on the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+          "model project information site."
+        )
+      ),
+      htmltools::p(
+        "Note that some data is presented at trust level even if you make a site selection.",
+        "Check the notes in each tab for details."
       )
     )
   )
