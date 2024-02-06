@@ -138,6 +138,23 @@
                   <div class="col-sm-12">
                     <div class="card bs4Dash">
                       <div class="card-header">
+                        <h3 class="card-title">Notes</h3>
+                      </div>
+                      <div class="card-body">
+                        <p>
+                          Data is shown at trust level unless sites are selected from the 'Home' tab.
+                          A&amp;E results are not available at site level.
+                          See the
+                          <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>
+                          for definitions of terms.
+                        </p>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash">
+                      <div class="card-header">
                         <h3 class="card-title">Make Selections</h3>
                       </div>
                       <div class="card-body">
@@ -203,18 +220,17 @@
                   <div class="col-sm-12">
                     <div class="card bs4Dash">
                       <div class="card-header">
-                        <h3 class="card-title">Documentation</h3>
+                        <h3 class="card-title">Notes</h3>
                       </div>
                       <div class="card-body">
-                        <p>This page contains a reminder of the parameter values you provided to the model inputs app.</p>
                         <p>
+                          This page contains a reminder of the parameter values you provided to the model inputs app.
                           Further information about the model and these outputs can be found on the
-                          <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a>
-                          .
+                          <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site.</a>
                         </p>
                       </div>
                     </div>
-                    <script type="application/json">{"title":"Documentation","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                    <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
                   </div>
                   <div class="col-sm-12">
                     <div class="card bs4Dash collapsed-card">

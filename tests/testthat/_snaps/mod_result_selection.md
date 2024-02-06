@@ -38,6 +38,16 @@
                 <script type="application/json" data-for="id-site_selection">{"plugins":["selectize-plugin-a11y"]}</script>
               </div>
             </div>
+          </div>
+        </div>
+        <script type="application/json">{"title":"Make selections","solidHeader":true,"width":6,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+      </div>
+      <div class="col-sm-6">
+        <div class="card bs4Dash">
+          <div class="card-header">
+            <h3 class="card-title">Download results</h3>
+          </div>
+          <div class="card-body">
             <a class="btn btn-default shiny-download-link  shinyjs-hide" download href="" id="id-download_results_xlsx" target="_blank">
               <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
               Download results (.xlsx)
@@ -48,21 +58,24 @@
             </a>
           </div>
         </div>
-        <script type="application/json">{"title":"Make selections","solidHeader":true,"width":6,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Download results","solidHeader":true,"width":6,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-6">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Documentation</h3>
+            <h3 class="card-title">Notes</h3>
           </div>
           <div class="card-body">
             <p>
-              Further information about the model and these outputs can be found on the
-              <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a>
-              .
+              Further information about the model and these results can be found on the
+              <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site.</a>
+            </p>
+            <p>
+              Note that some data is presented at trust level even if you make a site selection.
+              Check the notes in each tab for details.
             </p>
           </div>
         </div>
-        <script type="application/json">{"title":"Documentation","solidHeader":true,"width":6,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Notes","solidHeader":true,"width":6,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 

@@ -7,6 +7,23 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
+            <h3 class="card-title">Notes</h3>
+          </div>
+          <div class="card-body">
+            <p>
+              The data on this page is presented at trust level only.
+              The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.
+              See the
+              <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>
+              for definitions of terms.
+            </p>
+          </div>
+        </div>
+        <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+      </div>
+      <div class="col-sm-12">
+        <div class="card bs4Dash">
+          <div class="card-header">
             <h3 class="card-title">Make Selections</h3>
           </div>
           <div class="card-body">

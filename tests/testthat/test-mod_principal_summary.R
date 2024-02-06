@@ -45,18 +45,23 @@ test_that("mod_principal_summary_data summarises the data", {
   )
 
   expected <- tibble::tribble(
-    ~pod_name, ~baseline, ~principal,
-    "A 1", 1, 2,
-    "A 1", 1, 2,
-    "A 2", 3, 4,
-    "A 2", 3, 4,
-    "B 1", 4, 5,
-    "B 1", 4, 5,
-    "B 2", 6, 7,
-    "B 2", 6, 7,
-    "Beds Available", 4, 6
+    ~pod_name, ~activity_type, ~baseline, ~principal,
+    "A 1", "Inpatient", 1, 2,
+    "A 1", "Inpatient", 1, 2,
+    "A 1", "Inpatient", 1, 2,
+    "A 2", "Inpatient", 3, 4,
+    "A 2", "Inpatient", 3, 4,
+    "A 2", "Inpatient", 3, 4,
+    "B 1", "Outpatient", 4, 5,
+    "B 1", "Outpatient", 4, 5,
+    "B 1", "Outpatient", 4, 5,
+    "B 2", "A&E", 6, 7,
+    "B 2", "A&E", 6, 7,
+    "B 2", "A&E", 6, 7,
+    "Beds Available", "Beds Available", 4, 6
   ) |>
     dplyr::mutate(
+      activity_type = forcats::as_factor(activity_type),
       change = principal - baseline,
       change_pcnt = change / baseline
     )
@@ -76,11 +81,12 @@ test_that("mod_principal_summary_data summarises the data", {
 
   actual <- mod_principal_summary_data("data", character())
 
-  expect_called(m1, 2)
+  expect_called(m1, 3)
   expect_called(m2, 1)
 
   expect_args(m1, 1, "data", c("admissions", "attendances", "walk-in", "ambulance"), character())
   expect_args(m1, 2, "data", "tele_attendances", character())
+  expect_args(m1, 3, "data", "beddays", character())
   expect_args(m2, 1, "data")
 
   expect_equal(actual, expected)

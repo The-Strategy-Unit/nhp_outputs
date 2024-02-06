@@ -79,7 +79,7 @@ mod_principal_summary_data <- function(r, sites) {
   ) |>
     dplyr::mutate(
       activity_type = dplyr::case_match(
-        activity_type,
+        .data$activity_type,
         "ip" ~ "Inpatient",
         "op" ~ "Outpatient",
         "aae" ~ "A&E",
