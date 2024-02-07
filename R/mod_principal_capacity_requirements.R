@@ -43,6 +43,7 @@ mod_principal_capacity_requirements_ui <- function(id) {
 }
 
 mod_principal_capacity_requirements_beds_table <- function(data) {
+
   data |>
     dplyr::mutate(
       change = .data$principal - .data$baseline,
@@ -62,10 +63,12 @@ mod_principal_capacity_requirements_beds_table <- function(data) {
     gt::fmt_integer(-c("ward_group", tidyselect::starts_with("change_pcnt"))) |>
     gt::fmt_percent(tidyselect::starts_with("change_pcnt"), decimals = 0) |>
     gt::summary_rows(
+      columns = tidyselect::contains(c("baseline", "principal", "change_q")),
       fns = list(id = "sum", label = "Total") ~ sum(., na.rm = TRUE),
       fmt = ~ gt::fmt_integer(.)
     ) |>
     gt::grand_summary_rows(
+      columns = tidyselect::contains(c("baseline", "principal", "change_q")),
       fns = list(id = "sum", label = "Grand Total") ~ sum(., na.rm = TRUE),
       fmt = ~ gt::fmt_integer(.)
     ) |>
