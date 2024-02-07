@@ -7,6 +7,23 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
+            <h3 class="card-title">Notes</h3>
+          </div>
+          <div class="card-body">
+            <p>
+              Data is shown at trust level unless sites are selected from the 'Home' tab.
+              A&amp;E results are not available at site level.
+              See the
+              <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a>
+              for definitions of terms.
+            </p>
+          </div>
+        </div>
+        <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+      </div>
+      <div class="col-sm-12">
+        <div class="card bs4Dash">
+          <div class="card-header">
             <h3 class="card-title">Make selections</h3>
           </div>
           <div class="card-body">

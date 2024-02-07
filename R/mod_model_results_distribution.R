@@ -12,6 +12,21 @@ mod_model_results_distribution_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution"),
     bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "A&E results are not available at site level.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+          "model project information site"
+        ),
+        "for definitions of terms."
+      )
+    ),
+    bs4Dash::box(
       title = "Make selections",
       collapsible = FALSE,
       width = 12,

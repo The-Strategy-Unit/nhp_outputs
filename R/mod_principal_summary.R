@@ -12,6 +12,21 @@ mod_principal_summary_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: summary"),
     bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "A&E and bed-availability data are not available at site level.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
+          "model project information site"
+        ),
+        "for definitions of terms."
+      )
+    ),
+    bs4Dash::box(
       title = "Summary by Point of Delivery",
       collapsible = FALSE,
       width = 12,
@@ -39,6 +54,12 @@ mod_principal_summary_data <- function(r, sites) {
       "pod_name" = stringr::str_replace(.data$pod_name, "Attendance", "Tele-attendance")
     )
 
+  bed_days <- get_principal_high_level(r, "beddays", sites) |>
+    dplyr::inner_join(pods, by = "pod") |>
+    dplyr::mutate(
+      "pod_name" = stringr::str_replace(.data$pod_name, "Admission", "Bed Days")
+    )
+
   bed_occupancy <- if (length(sites) == 0) {
     get_bed_occupancy(r) |>
       dplyr::filter(.data$model_run == 1) |>
@@ -50,19 +71,38 @@ mod_principal_summary_data <- function(r, sites) {
       )
   }
 
-  dplyr::bind_rows(main_summary, tele_attendances, bed_occupancy) |>
+  dplyr::bind_rows(
+    main_summary,
+    tele_attendances,
+    bed_days,
+    bed_occupancy
+  ) |>
     dplyr::mutate(
+      activity_type = dplyr::case_match(
+        .data$activity_type,
+        "ip" ~ "Inpatient",
+        "op" ~ "Outpatient",
+        "aae" ~ "A&E",
+        .default = "Beds Available"
+      ),
       dplyr::across(
         "activity_type",
-        ~ forcats::fct_relevel(.x, "ip", "op", after = 0)
-      )
-    ) |>
-    dplyr::mutate(
+        ~ forcats::fct_relevel(.x, "Inpatient", "Outpatient", after = 0)
+      ),
+      measure = dplyr::case_when(
+        stringr::str_detect(pod_name, "Admission$") ~ "admission",
+        stringr::str_detect(pod_name, "Attendance$") ~ "attendance",
+        stringr::str_detect(pod_name, "Tele-attendance$") ~ "tele_attendance",
+        stringr::str_detect(pod_name, "Procedure$") ~ "procedure",
+        stringr::str_detect(pod_name, "Bed Days$") ~ "bed_days"
+      ),
       change = .data$principal - .data$baseline,
-      change_pcnt = (.data$principal - .data$baseline) / .data$baseline
+      change_pcnt = .data$change / .data$baseline
     ) |>
-    dplyr::arrange(.data$activity_type, .data$pod) |>
-    dplyr::select("pod_name", "baseline", "principal", "change", "change_pcnt")
+    dplyr::arrange(.data$activity_type, .data$measure, .data$pod_name) |>
+    dplyr::select(
+      "pod_name", "activity_type", "baseline", "principal", "change", "change_pcnt"
+    )
 }
 
 mod_principal_summary_table <- function(data) {
@@ -72,7 +112,7 @@ mod_principal_summary_table <- function(data) {
       dplyr::across("change", \(.x) gt_bar(.x, scales::comma_format(1))),
       dplyr::across("change_pcnt", \(.x) gt_bar(.x, scales::percent_format(1)))
     ) |>
-    gt::gt() |>
+    gt::gt(groupname_col = "activity_type") |>
     gt::cols_align(align = "left", columns = "pod_name") |>
     gt::cols_label(
       "pod_name" = "Point of Delivery",

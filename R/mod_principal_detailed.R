@@ -12,6 +12,21 @@ mod_principal_detailed_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: activity in detail"),
     bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "A&E results are not available at site level.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
+          "model project information site"
+        ),
+        "for definitions of terms."
+      )
+    ),
+    bs4Dash::box(
       title = "Make Selections",
       collapsible = FALSE,
       width = 12,
@@ -87,8 +102,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       c(activity_type, pod, measure) %<-% selected_measure()
 
       agg_col <- switch(shiny::req(input$aggregation),
-        "Age Group" = "age_group",
-        "Treatment Specialty" = "tretspef"
+                        "Age Group" = "age_group",
+                        "Treatment Specialty" = "tretspef"
       )
 
       selected_data() |>

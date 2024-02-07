@@ -14,14 +14,16 @@ mod_info_params_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Information: input parameters"),
     bs4Dash::box(
-      title = "Documentation",
+      title = "Notes",
       collapsible = FALSE,
       width = 12,
-      htmltools::p("This page contains a reminder of the parameter values you provided to the model inputs app."),
       htmltools::p(
+        "This page contains a reminder of the parameter values you provided to the model inputs app.",
         "Further information about the model and these outputs can be found on the",
-        htmltools::a(href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information", "model project information site"),
-        "."
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+          "model project information site."
+        ),
       )
     ),
     bs4Dash::box(

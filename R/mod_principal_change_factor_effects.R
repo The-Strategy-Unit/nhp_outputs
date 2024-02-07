@@ -12,6 +12,21 @@ mod_principal_change_factor_effects_ui <- function(id) {
   shiny::tagList(
     shiny::h1("Principal projection: impact of changes"),
     bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "The data on this page is presented at trust level only.",
+        "The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
+          "model project information site"
+        ),
+        "for definitions of terms."
+      )
+    ),
+    bs4Dash::box(
       title = "Make Selections",
       collapsible = FALSE,
       width = 12,

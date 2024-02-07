@@ -11,6 +11,21 @@ mod_principal_high_level_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
     shiny::h1("Principal projection: activity summary by year"),
+    bs4Dash::box(
+      title = "Notes",
+      collapsible = FALSE,
+      width = 12,
+      htmltools::p(
+        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
+        "A&E results are not available at site level.",
+        "See the",
+        htmltools::a(
+          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
+          "model project information site"
+        ),
+        "for definitions of terms."
+      )
+    ),
     shiny::fluidRow(
       bs4Dash::box(
         title = "Activity by type and year",
@@ -40,14 +55,6 @@ mod_principal_high_level_ui <- function(id) {
     ),
     shiny::fluidRow(
       bs4Dash::box(
-        title = "A&E Attendances",
-        collapsible = FALSE,
-        shinycssloaders::withSpinner(
-          plotly::plotlyOutput(ns("aae"))
-        ),
-        width = 4
-      ),
-      bs4Dash::box(
         title = "Inpatient Admissions",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
@@ -60,6 +67,14 @@ mod_principal_high_level_ui <- function(id) {
         collapsible = FALSE,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("op"))
+        ),
+        width = 4
+      ),
+      bs4Dash::box(
+        title = "A&E Attendances (trust-level only)",
+        collapsible = FALSE,
+        shinycssloaders::withSpinner(
+          plotly::plotlyOutput(ns("aae"))
         ),
         width = 4
       )
