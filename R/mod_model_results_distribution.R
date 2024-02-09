@@ -66,7 +66,7 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
 
   beeswarm_plot <- data |>
     require_rows() |>
-    ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
+    ggplot2::ggplot(ggplot2::aes("1.00", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(alpha = 0.5) +
     ggplot2::geom_hline(yintercept = b) +
     ggplot2::geom_hline(yintercept = p, linetype = "dashed") +
@@ -75,13 +75,17 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
       "principal" = "#f9bf07",
       "high_migration" = "#5881c1"
     )) +
-    # have to use coord flip with boxplots/violin plots and plotly...
     ggplot2::coord_flip() +
-    ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::scale_y_continuous(
+      labels = scales::comma,
+      expand = c(0, 0)
+    ) +
     ggplot2::theme(
-      axis.text.y = ggplot2::element_blank(),
-      axis.title = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank()
+      axis.title.x = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      # make y axes 'invisible' to help line up beeswarm and ECDF plots
+      axis.text.y = ggplot2::element_text(colour = "white"),
+      axis.title.y = ggplot2::element_text(colour = "white")
     )
 
   beeswarm_plot |>
@@ -89,11 +93,14 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
     plotly::layout(legend = list(orientation = "h"))
 }
 
-mod_model_results_distribution_ecdf_plot <- function(data) {
+mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
+  b <- data$baseline[[1]]
+  p <- data$principal[[1]]
+
   values_ecdf <- stats::ecdf(data[["value"]])
   pcnt <- c(0.25, 0.5, 0.75)
   quantiles_ecdf <- stats::quantile(values_ecdf, pcnt)
-  min_value <- min(data[["value"]])
+  min_value <- dplyr::if_else(show_origin, 0, min(data[["value"]]))
 
   quantile_guides <- tibble::tibble(
     x_start = c(rep(min_value, 3), quantiles_ecdf),
@@ -118,12 +125,13 @@ mod_model_results_distribution_ecdf_plot <- function(data) {
       colour = "red"
     ) +
     ggplot2::ylab("Fraction of model runs") +
+    ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::scale_x_continuous(
       labels = scales::comma,
       expand = c(0, 0),
       limits = c(min_value, NA)
     ) +
-    ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, NA)) +
+    ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
 
 }
@@ -152,7 +160,7 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
     output$ecdf <- plotly::renderPlotly({
       data <- shiny::req(aggregated_data())
 
-      mod_model_results_distribution_ecdf_plot(data)
+      mod_model_results_distribution_ecdf_plot(data, input$show_origin)
     })
   })
 }
