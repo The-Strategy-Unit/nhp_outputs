@@ -32,19 +32,19 @@ mod_model_results_distribution_ui <- function(id) {
       width = 12,
       shiny::fluidRow(
         mod_measure_selection_ui(ns("measure_selection"), 4),
+        shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?")
       )
     ),
     bs4Dash::box(
-      title = "Density",
+      title = "Beeswarm Distribution",
       collapsible = FALSE,
       width = 12,
-      shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?"),
       shinycssloaders::withSpinner(
-        plotly::plotlyOutput(ns("distribution"), height = "800px")
+        plotly::plotlyOutput(ns("beeswarm"), height = "400px")
       )
     ),
     bs4Dash::box(
-      title = "Empirical Cumulative Distribution",
+      title = "S-curve (Empirical Cumulative Distribution Function)",
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
@@ -60,38 +60,11 @@ mod_model_results_distribution_get_data <- function(r, selected_measure, sites) 
   get_model_run_distribution(r, pod, measure, sites)
 }
 
-mod_model_results_distibution_density_plot <- function(data, show_origin) {
-  b <- data$baseline[[1]]
-
-  px <- data$principal[[1]]
-  dn <- density(data$value)
-  py <- approx(dn$x, dn$y, px)$y
-
-  data |>
-    require_rows() |>
-    ggplot2::ggplot(ggplot2::aes(.data$value)) +
-    ggplot2::geom_density(fill = "#f9bf07", colour = "#2c2825", alpha = 0.5) +
-    ggplot2::geom_vline(xintercept = b) +
-    ggplot2::annotate(
-      "segment",
-      x = px, xend = px,
-      y = 0, yend = py,
-      linetype = "dashed"
-    ) +
-    ggplot2::annotate("point", x = px, y = py) +
-    ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
-    ggplot2::theme(
-      axis.text = ggplot2::element_blank(),
-      axis.title = ggplot2::element_blank(),
-      axis.ticks = ggplot2::element_blank()
-    )
-}
-
-mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
+mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
 
-  data |>
+  beeswarm_plot <- data |>
     require_rows() |>
     ggplot2::ggplot(ggplot2::aes("1", .data$value, colour = .data$variant)) +
     ggbeeswarm::geom_quasirandom(alpha = 0.5) +
@@ -110,15 +83,10 @@ mod_model_results_distibution_beeswarm_plot <- function(data, show_origin) {
       axis.title = ggplot2::element_blank(),
       axis.ticks.y = ggplot2::element_blank()
     )
-}
 
-mod_model_results_distibution_plot <- function(data, show_origin) {
-  p1 <- plotly::ggplotly(mod_model_results_distibution_density_plot(data, show_origin))
-  p2 <- plotly::ggplotly(mod_model_results_distibution_beeswarm_plot(data, show_origin))
-
-  sp <- plotly::subplot(p1, p2, nrows = 2)
-
-  plotly::layout(sp, legend = list(orientation = "h"))
+  beeswarm_plot |>
+    plotly::ggplotly() |>
+    plotly::layout(legend = list(orientation = "h"))
 }
 
 mod_model_results_distribution_ecdf_plot <- function(data) {
@@ -157,6 +125,7 @@ mod_model_results_distribution_ecdf_plot <- function(data) {
     ) +
     ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, NA)) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
+
 }
 
 #' model_results_distribution Server Functions
@@ -172,12 +141,12 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         require_rows()
     })
 
-    output$distribution <- plotly::renderPlotly({
+    output$beeswarm <- plotly::renderPlotly({
       data <- shiny::req(aggregated_data())
 
       shiny::req(is.logical(input$show_origin))
 
-      mod_model_results_distibution_plot(data, input$show_origin)
+      mod_model_results_distribution_beeswarm_plot(data, input$show_origin)
     })
 
     output$ecdf <- plotly::renderPlotly({
