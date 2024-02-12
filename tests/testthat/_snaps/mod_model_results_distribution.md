@@ -55,6 +55,14 @@
                   </div>
                 </div>
               </div>
+              <div class="form-group shiny-input-container">
+                <div class="checkbox">
+                  <label>
+                    <input id="id-show_origin" type="checkbox" class="shiny-input-checkbox"/>
+                    <span>Show Origin (zero)?</span>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -63,33 +71,27 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Density</h3>
+            <h3 class="card-title">Beeswarm Distribution</h3>
           </div>
           <div class="card-body">
-            <div class="form-group shiny-input-container">
-              <div class="checkbox">
-                <label>
-                  <input id="id-show_origin" type="checkbox" class="shiny-input-checkbox"/>
-                  <span>Show Origin (zero)?</span>
-                </label>
-              </div>
-            </div>
+            The <span style='color:darkgrey'>grey continuous line</span> is the baseline, <span style='color:red'>red-dashed</span> is the principal.
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-a83147027a00fa8812473aa2d1142727" class="loader">Loading...</div>
+                <div id="spinner-b48ec1189daabe57db8f00bbc7a75abd" class="loader">Loading...</div>
               </div>
-              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-distribution" style="width:100%;height:800px;"></div>
+              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-beeswarm" style="width:100%;height:400px;"></div>
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Density","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Beeswarm Distribution","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Empirical Cumulative Distribution</h3>
+            <h3 class="card-title">S-curve (Empirical Cumulative Distribution Function)</h3>
           </div>
           <div class="card-body">
+            The <span style='color:darkgrey'>grey continuous line</span> is the baseline, <span style='color:red'>red-dashed</span> is the principal, <span style='color:darkgrey'>grey-dashed</span> are the 10th and 90th percentiles.
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-12f18e766a1116015fed39b1b08fb463" class="loader">Loading...</div>
@@ -98,6 +100,6 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Empirical Cumulative Distribution","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"S-curve (Empirical Cumulative Distribution Function)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 

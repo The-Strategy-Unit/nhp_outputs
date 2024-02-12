@@ -38,49 +38,12 @@ test_that("get_data calls get_model_run_distribution", {
   expect_args(m, 1, "id", "aae_type-01", "ambulance", "a")
 })
 
-test_that("density_plot returns a ggplot", {
-  p <- mod_model_results_distibution_density_plot(
-    model_run_distribution_expected,
-    FALSE
-  )
-  expect_s3_class(p, "ggplot")
-})
-
 test_that("beeswarm returns a ggplot", {
-  p <- mod_model_results_distibution_beeswarm_plot(
+  p <- mod_model_results_distribution_beeswarm_plot(
     model_run_distribution_expected,
     FALSE
   )
-  expect_s3_class(p, "ggplot")
-})
-
-test_that("plot returns a plotly subplot", {
-  m_density <- mock("density")
-  m_beeswarm <- mock("beeswarm")
-  m_ggplotly <- mock("p_density", "p_beeswarm")
-  m_subplot <- mock("subplot")
-
-  stub(mod_model_results_distibution_plot, "mod_model_results_distibution_density_plot", m_density)
-  stub(mod_model_results_distibution_plot, "mod_model_results_distibution_beeswarm_plot", m_beeswarm)
-  stub(mod_model_results_distibution_plot, "plotly::ggplotly", m_ggplotly)
-  stub(mod_model_results_distibution_plot, "plotly::subplot", m_subplot)
-  stub(mod_model_results_distibution_plot, "plotly::layout", "layout")
-
-  p <- mod_model_results_distibution_plot(model_run_distribution_expected, FALSE)
-  expect_equal(p, "layout")
-
-  expect_called(m_density, 1)
-  expect_args(m_density, 1, model_run_distribution_expected, FALSE)
-
-  expect_called(m_beeswarm, 1)
-  expect_args(m_beeswarm, 1, model_run_distribution_expected, FALSE)
-
-  expect_called(m_ggplotly, 2)
-  expect_args(m_ggplotly, 1, "density")
-  expect_args(m_ggplotly, 2, "beeswarm")
-
-  expect_called(m_subplot, 1)
-  expect_args(m_subplot, 1, "p_density", "p_beeswarm", nrows = 2)
+  expect_s3_class(p, "plotly")
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -129,7 +92,7 @@ test_that("it renders the plot", {
     mod_model_results_distribution_server, "mod_model_results_distribution_get_data", model_run_distribution_expected
   )
   stub(
-    mod_model_results_distribution_server, "mod_model_results_distibution_plot", m
+    mod_model_results_distribution_server, "mod_model_results_distribution_beeswarm_plot", m
   )
 
   selected_model_run <- reactiveVal()
