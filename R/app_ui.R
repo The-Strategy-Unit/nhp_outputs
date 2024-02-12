@@ -25,16 +25,16 @@ app_ui <- function(request) {
           tabName = "tab_ps"
         ),
         bs4Dash::menuSubItem(
+          text = "Impact of changes",
+          tabName = "tab_pcf"
+        ),
+        bs4Dash::menuSubItem(
           text = "Summary by year",
           tabName = "tab_phl"
         ),
         bs4Dash::menuSubItem(
           text = "Activity in detail",
           tabName = "tab_pd"
-        ),
-        bs4Dash::menuSubItem(
-          text = "Impact of changes",
-          tabName = "tab_pcf"
         )
       ),
       bs4Dash::menuItem(
@@ -71,16 +71,16 @@ app_ui <- function(request) {
         mod_principal_summary_ui("principal_summary")
       ),
       bs4Dash::tabItem(
+        tabName = "tab_pcf",
+        mod_principal_change_factor_effects_ui("principal_change_factor_effects")
+      ),
+      bs4Dash::tabItem(
         tabName = "tab_phl",
         mod_principal_high_level_ui("principal_high_level")
       ),
       bs4Dash::tabItem(
         tabName = "tab_pd",
         mod_principal_detailed_ui("principal_detailed")
-      ),
-      bs4Dash::tabItem(
-        tabName = "tab_pcf",
-        mod_principal_change_factor_effects_ui("principal_change_factor_effects")
       ),
       bs4Dash::tabItem(
         tabName = "tab_mc",
