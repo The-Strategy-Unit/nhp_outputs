@@ -5155,10 +5155,10 @@
       "checksum": "836c75cd501b8c1ab3538ddf36358b7f"
     },
     "R/app_server.R": {
-      "checksum": "5ae2987c702e1bc442d9485f1fa30d11"
+      "checksum": "a0742b81dd0e002ae719075ec2fcd68d"
     },
     "R/app_ui.R": {
-      "checksum": "fc67909a05e9a4c533fda8fa8ef054cd"
+      "checksum": "df3740c18210d7cb8ac9a6fc5046747f"
     },
     "R/fct_create_data_cache.R": {
       "checksum": "114ac8eac09fa400476fd982d85ec034"
@@ -5190,23 +5190,14 @@
     "R/mod_model_core_activity.R": {
       "checksum": "90eb91ff9c4fe862da10e86e14e28742"
     },
-    "R/mod_model_results_capacity.R": {
-      "checksum": "6c1022c7e76b78a3be068ab8d65df882"
-    },
     "R/mod_model_results_distribution.R": {
-      "checksum": "c06ae6c03bdc3016999fb4b5c4381daf"
-    },
-    "R/mod_principal_capacity_requirements.R": {
-      "checksum": "38098ce5cd602e7bc739ab95fc83ce39"
+      "checksum": "56b0e4ac25541ea1267840b12cf64b0e"
     },
     "R/mod_principal_change_factor_effects.R": {
       "checksum": "e06f33cf0ad7c585a8647975ca577d67"
     },
     "R/mod_principal_detailed.R": {
       "checksum": "2bae6826d73c356e04c016990cee6c06"
-    },
-    "R/mod_principal_grouped.R": {
-      "checksum": "408ef1c4613d61dee2daee859465d527"
     },
     "R/mod_principal_high_level.R": {
       "checksum": "68cddef512ec1f98f29d6e9e55801964"

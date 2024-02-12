@@ -53,12 +53,6 @@
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_pg" href="#" data-target="#shiny-tab-tab_pg" data-toggle="tab" data-value="tab_pg">
-                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
-                          <p>Activity grouped</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_pd" href="#" data-target="#shiny-tab-tab_pd" data-toggle="tab" data-value="tab_pd">
                           <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
                           <p>Activity in detail</p>
@@ -68,12 +62,6 @@
                         <a class="nav-link treeview-link" id="tab-tab_pcf" href="#" data-target="#shiny-tab-tab_pcf" data-toggle="tab" data-value="tab_pcf">
                           <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
                           <p>Impact of changes</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_pcr" href="#" data-target="#shiny-tab-tab_pcr" data-toggle="tab" data-value="tab_pcr">
-                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
-                          <p>Capacity requirements</p>
                         </a>
                       </li>
                     </ul>
@@ -96,12 +84,6 @@
                         <a class="nav-link treeview-link" id="tab-tab_md" href="#" data-target="#shiny-tab-tab_md" data-toggle="tab" data-value="tab_md">
                           <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
                           <p>Activity distribution</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_mcap" href="#" data-target="#shiny-tab-tab_mcap" data-toggle="tab" data-value="tab_mcap">
-                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
-                          <p>Capacity requirements</p>
                         </a>
                       </li>
                     </ul>
@@ -133,88 +115,10 @@
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_home">result_selection</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">params_upload</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">running_models</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pg">
-                  <h1>Principal projection: activity grouped</h1>
-                  <div class="col-sm-12">
-                    <div class="card bs4Dash">
-                      <div class="card-header">
-                        <h3 class="card-title">Notes</h3>
-                      </div>
-                      <div class="card-body">
-                        <p>
-                          Data is shown at trust level unless sites are selected from the 'Home' tab.
-                          A&amp;E results are not available at site level.
-                          See the
-                          <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>
-                          for definitions of terms.
-                        </p>
-                      </div>
-                    </div>
-                    <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
-                  </div>
-                  <div class="col-sm-12">
-                    <div class="card bs4Dash">
-                      <div class="card-header">
-                        <h3 class="card-title">Make Selections</h3>
-                      </div>
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-sm-3">
-                            <div class="form-group shiny-input-container">
-                              <label class="control-label" id="principal_grouped-measure_selection-activity_type-label" for="principal_grouped-measure_selection-activity_type">Activity Type</label>
-                              <div>
-                                <select id="principal_grouped-measure_selection-activity_type" class="shiny-input-select"></select>
-                                <script type="application/json" data-for="principal_grouped-measure_selection-activity_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group shiny-input-container">
-                              <label class="control-label" id="principal_grouped-measure_selection-pod-label" for="principal_grouped-measure_selection-pod">Point of Delivery</label>
-                              <div>
-                                <select id="principal_grouped-measure_selection-pod" class="shiny-input-select"></select>
-                                <script type="application/json" data-for="principal_grouped-measure_selection-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-3">
-                            <div class="form-group shiny-input-container">
-                              <label class="control-label" id="principal_grouped-measure_selection-measure-label" for="principal_grouped-measure_selection-measure">Measure</label>
-                              <div>
-                                <select id="principal_grouped-measure_selection-measure" class="shiny-input-select"></select>
-                                <script type="application/json" data-for="principal_grouped-measure_selection-measure" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <script type="application/json">{"title":"Make Selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
-                  </div>
-                  <div class="col-sm-12">
-                    <div class="card bs4Dash">
-                      <div class="card-header">
-                        <h3 class="card-title">Activity by Treatment Code Group</h3>
-                      </div>
-                      <div class="card-body">
-                        <div class="shiny-spinner-output-container shiny-spinner-hideui ">
-                          <div class="load-container shiny-spinner-hidden load1">
-                            <div id="spinner-69c720310a602848aeff5d920323ca13" class="loader">Loading...</div>
-                          </div>
-                          <div style="height:400px" class="shiny-spinner-placeholder"></div>
-                          <div id="principal_grouped-results" class="shiny-html-output"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <script type="application/json">{"title":"Activity by Treatment Code Group","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
-                  </div>
-                </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_summary</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_high_level</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcr">principal_detailed</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_change_factor_effects</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">principal_capacity_requirements</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mcap">model_core_activity</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_detailed</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">principal_change_factor_effects</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_params">
                   <h1>Information: input parameters</h1>
                   <div class="col-sm-12">
