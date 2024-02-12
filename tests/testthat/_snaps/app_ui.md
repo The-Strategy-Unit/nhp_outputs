@@ -47,6 +47,12 @@
                         </a>
                       </li>
                       <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_pcf" href="#" data-target="#shiny-tab-tab_pcf" data-toggle="tab" data-value="tab_pcf">
+                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
+                          <p>Impact of changes</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_phl" href="#" data-target="#shiny-tab-tab_phl" data-toggle="tab" data-value="tab_phl">
                           <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
                           <p>Summary by year</p>
@@ -56,12 +62,6 @@
                         <a class="nav-link treeview-link" id="tab-tab_pd" href="#" data-target="#shiny-tab-tab_pd" data-toggle="tab" data-value="tab_pd">
                           <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
                           <p>Activity in detail</p>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_pcf" href="#" data-target="#shiny-tab-tab_pcf" data-toggle="tab" data-value="tab_pcf">
-                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
-                          <p>Impact of changes</p>
                         </a>
                       </li>
                     </ul>
@@ -114,11 +114,11 @@
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_home">result_selection</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">params_upload</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">running_models</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_summary</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_high_level</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_detailed</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">principal_change_factor_effects</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">running_models</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_summary</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_change_factor_effects</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">principal_high_level</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">principal_detailed</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_params">
                   <h1>Information: input parameters</h1>
                   <div class="col-sm-12">
