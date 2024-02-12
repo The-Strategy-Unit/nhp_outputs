@@ -151,10 +151,9 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
   data |>
     dplyr::filter(.data$change_factor == .env$change_factor) |>
     require_rows() |>
-    ggplot2::ggplot(ggplot2::aes(.data$value, .data$strategy)) +
+    ggplot2::ggplot(ggplot2::aes(.data$value, .data$mitigator_name)) +
     ggplot2::geom_col(fill = "#f9bf07") +
     ggplot2::scale_x_continuous(labels = scales::comma) +
-    ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
     ggplot2::labs(title = title, x = x_axis_label, y = "")
 }
 
@@ -178,6 +177,11 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
     principal_change_factors <- shiny::reactive({
       at <- shiny::req(input$activity_type)
 
+      mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
+        jsonlite::read_json(simplifyVector = TRUE) |>
+        purrr::simplify() |>
+        tibble::enframe("strategy", "mitigator_name")
+
       selected_data() |>
         get_principal_change_factors(at) |>
         dplyr::mutate(
@@ -186,7 +190,12 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
             "change_factor",
             \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
           )
-        )
+        ) |>
+        dplyr::left_join(
+          mitigator_lookup,
+          by = dplyr::join_by("strategy")
+        ) |>
+        tidyr::replace_na(list("mitigator_name" = "-"))
     })
 
     shiny::observe({
@@ -212,9 +221,9 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         )
 
       if (input$sort_type == "descending value") {
-        dplyr::mutate(d, dplyr::across("strategy", \(.x) forcats::fct_reorder(.x, -.data$value)))
+        dplyr::mutate(d, dplyr::across("mitigator_name", \(.x) forcats::fct_reorder(.x, -.data$value)))
       } else {
-        dplyr::mutate(d, dplyr::across("strategy", \(.x) forcats::fct_reorder(.x, .data$strategy)))
+        dplyr::mutate(d, dplyr::across("mitigator_name", \(.x) forcats::fct_reorder(.x, .data$strategy)))
       }
     })
 
