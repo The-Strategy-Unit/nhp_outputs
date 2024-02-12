@@ -39,6 +39,10 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Beeswarm Distribution",
       collapsible = FALSE,
       width = 12,
+      htmltools::HTML(
+        "The <span style='color:darkgrey'>grey continuous line</span> is the baseline,",
+        "<span style='color:red'>red-dashed</span> is the principal."
+      ),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("beeswarm"), height = "400px")
       )
@@ -47,6 +51,11 @@ mod_model_results_distribution_ui <- function(id) {
       title = "S-curve (Empirical Cumulative Distribution Function)",
       collapsible = FALSE,
       width = 12,
+      htmltools::HTML(
+        "The <span style='color:darkgrey'>grey continuous line</span> is the baseline,",
+        "<span style='color:red'>red-dashed</span> is the principal,",
+        "<span style='color:darkgrey'>grey-dashed</span> are the 10th and 90th percentiles."
+      ),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("ecdf"), height = "400px")
       )
@@ -64,26 +73,27 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
 
+  x_placeholder <- "1.00"  # label will help line up beeswarm and ECDF plots
+
   beeswarm_plot <- data |>
     require_rows() |>
-    ggplot2::ggplot(ggplot2::aes("1.00", .data$value, colour = .data$variant)) +
+    ggplot2::ggplot(
+      ggplot2::aes(x_placeholder, .data$value, colour = .data$variant)
+    ) +
     ggbeeswarm::geom_quasirandom(alpha = 0.5) +
-    ggplot2::geom_hline(yintercept = b) +
-    ggplot2::geom_hline(yintercept = p, linetype = "dashed") +
+    ggplot2::geom_hline(yintercept = b, colour = "darkgrey") +
+    ggplot2::geom_hline(yintercept = p, linetype = "dashed", colour = "red") +
     ggplot2::expand_limits(y = ifelse(show_origin, 0, b)) +
     ggplot2::scale_fill_manual(values = c(
       "principal" = "#f9bf07",
       "high_migration" = "#5881c1"
     )) +
     ggplot2::coord_flip() +
-    ggplot2::scale_y_continuous(
-      labels = scales::comma,
-      expand = c(0, 0)
-    ) +
+    ggplot2::scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
       axis.ticks.y = ggplot2::element_blank(),
-      # make y axes 'invisible' to help line up beeswarm and ECDF plots
+      # keep y-axis labels to help line up beeswarm/ECDF, but make 'invisible'
       axis.text.y = ggplot2::element_text(colour = "white"),
       axis.title.y = ggplot2::element_text(colour = "white")
     )
@@ -97,17 +107,31 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
 
-  values_ecdf <- stats::ecdf(data[["value"]])
-  pcnt <- c(0.25, 0.5, 0.75)
-  quantiles_ecdf <- stats::quantile(values_ecdf, pcnt)
-  min_value <- dplyr::if_else(show_origin, 0, min(data[["value"]]))
+  ecdf_fn <- stats::ecdf(data[["value"]])
 
-  quantile_guides <- tibble::tibble(
-    x_start = c(rep(min_value, 3), quantiles_ecdf),
-    y_start = c(pcnt, rep(0, 3)),
-    x_end = rep(quantiles_ecdf, 2),
-    y_end = rep(pcnt, 2)
+  # Calculate x values for y-axis quantiles
+  probs_pcnts <- c(0.1, 0.9)
+  x_quantiles <- stats::quantile(ecdf_fn, probs = probs_pcnts)
+
+  # Calculate y value for principal x value (find nearest % for the principal)
+  x_vals <- sort(data[["value"]])
+  y_vals <- sort(ecdf_fn(data[["value"]]))
+  principal_diffs <- abs(p - x_vals)  # nearest x in ECDF to the principal
+  min_principal_diff_i <- which(principal_diffs == min(principal_diffs))[1]
+  p_pcnt <- y_vals[min_principal_diff_i]
+
+  min_x <- dplyr::if_else(show_origin, 0, min(data[["value"]]))
+
+  line_guides <- tibble::tibble(
+    x_start = c(rep(min_x, 3), x_quantiles, p),
+    x_end   = rep(c(x_quantiles, p), 2),
+    y_start = c(probs_pcnts, p_pcnt, rep(0, 3)),
+    y_end   = rep(c(probs_pcnts, p_pcnt), 2),
+    colour  = "darkgrey"
   )
+
+  lines_n <- nrow(line_guides)
+  line_guides[c(lines_n, lines_n / 2), "colour"] <- "red"
 
   data |>
     require_rows() |>
@@ -120,16 +144,17 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
         xend = .data$x_end,
         yend = .data$y_end
       ),
-      data = quantile_guides,
+      data = line_guides,
       linetype = "dashed",
-      colour = "red"
+      colour = line_guides[["colour"]]
     ) +
+    ggplot2::geom_vline(xintercept = b, colour = "darkgrey") +
     ggplot2::ylab("Fraction of model runs") +
     ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::scale_x_continuous(
       labels = scales::comma,
       expand = c(0, 0),
-      limits = c(min_value, NA)
+      limits = c(min_x, NA)
     ) +
     ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
