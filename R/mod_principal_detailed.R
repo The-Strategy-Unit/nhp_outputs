@@ -46,7 +46,8 @@ mod_principal_detailed_ui <- function(id) {
   )
 }
 
-mod_principal_detailed_table <- function(data, aggregation) {
+mod_principal_detailed_table <- function(data, aggregation, final_year) {
+
   data |>
     dplyr::mutate(
       dplyr::across("sex", \(.x) ifelse(.x == 1, "Male", "Female")),
@@ -58,7 +59,7 @@ mod_principal_detailed_table <- function(data, aggregation) {
     gt::cols_label(
       agg = aggregation,
       baseline = "Baseline",
-      final = "Final",
+      final = paste0("Final (", final_year, ")"),
       change = "Change",
       change_pcnt = "Percent Change",
     ) |>
@@ -126,7 +127,13 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       # data which causes a bunch of warning messages
       shiny::req(nrow(d) > 0)
 
-      mod_principal_detailed_table(d, shiny::req(input$aggregation))
+      end_year  <- selected_data()[["params"]][["end_year"]]
+      end_fyear <- paste0(
+        end_year, "/",
+        as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
+      )
+
+      mod_principal_detailed_table(d, shiny::req(input$aggregation), end_fyear)
     })
   })
 }
