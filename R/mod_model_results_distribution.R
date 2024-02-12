@@ -120,7 +120,8 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
   min_principal_diff_i <- which(principal_diffs == min(principal_diffs))[1]
   p_pcnt <- y_vals[min_principal_diff_i]
 
-  min_x <- dplyr::if_else(show_origin, 0, min(data[["value"]]))
+  min_x <- min(b, min(data[["value"]]))
+  min_x <- dplyr::if_else(show_origin, 0, min_x)
 
   line_guides <- tibble::tibble(
     x_start = c(rep(min_x, 3), x_quantiles, p),
