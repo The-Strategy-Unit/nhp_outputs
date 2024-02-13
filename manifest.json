@@ -5172,7 +5172,7 @@
       "checksum": "6312f9d1625443a78b9229967946dc9d"
     },
     "R/fct_get_data.R": {
-      "checksum": "8ebbb74893008948b7e763ac2f59a4fc"
+      "checksum": "3de1da6bf4388c077796207f1b6db06f"
     },
     "R/fct_gt_bar.R": {
       "checksum": "1ad350f9e771572f3ef58ef813bed579"
@@ -5190,7 +5190,7 @@
       "checksum": "577504ff53fdf82063b799742ce4068a"
     },
     "R/mod_info_params.R": {
-      "checksum": "cb8a0c1ffbdffb4f303b057b234c996a"
+      "checksum": "26a540722a3c072041106a998b6c8c89"
     },
     "R/mod_measure_selection.R": {
       "checksum": "9ffdc35244ede4d0e9aea4f3f429c271"

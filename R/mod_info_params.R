@@ -160,12 +160,8 @@ mod_info_params_ui <- function(id) {
 #' @noRd
 mod_info_params_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
-    ns <- session$ns
-
     params_data <- shiny::reactive({
-      selected_data() |>
-        get_params() |>
-        tidy_params()
+      get_params(selected_data())
     })
 
     output$params_years <- shiny::renderTable({

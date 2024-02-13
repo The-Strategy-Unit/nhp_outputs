@@ -14,7 +14,19 @@ get_container <- function() {
 }
 
 get_params <- function(r) {
-  r$params
+  recursive_discard <- function(x) {
+    if (!is.list(x)) {
+      return(x)
+    }
+
+    x |>
+      purrr::map(recursive_discard) |>
+      purrr::discard(\(.y) length(.y) == 0)
+  }
+
+  r$params |>
+    recursive_discard() |>
+    tidy_params()
 }
 
 get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL),
