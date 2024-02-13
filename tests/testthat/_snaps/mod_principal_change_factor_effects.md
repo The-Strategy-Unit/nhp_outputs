@@ -28,7 +28,7 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-activity_type-label" for="id-activity_type">Activity Type</label>
                   <div>
@@ -37,7 +37,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-4">
+              <div class="col-sm-6">
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure-label" for="id-measure">Measure</label>
                   <div>
@@ -54,7 +54,7 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Impact of Changes</h3>
+            <h3 class="card-title">Impact of Changes (Trust Level Only)</h3>
           </div>
           <div class="card-body">
             <div class="form-group shiny-input-container">
@@ -73,12 +73,12 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Impact of Changes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Impact of Changes (Trust Level Only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Individual Change Factors</h3>
+            <h3 class="card-title">Individual Change Factors (Trust Level Only)</h3>
           </div>
           <div class="card-body">
             <div class="form-group shiny-input-container">
@@ -91,19 +91,15 @@
             </div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-d2d6da84c1d4683fcf9a1d949270ea60" class="loader">Loading...</div>
+                <div id="spinner-79e8af59eb00d2cbdf5dca757129c9c4" class="loader">Loading...</div>
               </div>
               <div class="row">
-                <div class="col-sm-6">
-                  <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-efficiencies" style="width:100%;height:600px;"></div>
-                </div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>
+                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-efficiencies" style="width:100%;height:600px;"></div>
               </div>
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Individual Change Factors","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Individual Change Factors (Trust Level Only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 
