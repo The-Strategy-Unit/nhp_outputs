@@ -31,12 +31,12 @@ mod_principal_change_factor_effects_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
-        col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-        col_4(shiny::selectInput(ns("measure"), "Measure", NULL))
+        col_6(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
+        col_6(shiny::selectInput(ns("measure"), "Measure", NULL))
       )
     ),
     bs4Dash::box(
-      title = "Impact of Changes",
+      title = "Impact of Changes (Trust Level Only)",
       collapsible = FALSE,
       width = 12,
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
@@ -45,14 +45,14 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Individual Change Factors",
+      title = "Individual Change Factors (Trust Level Only)",
       collapsible = FALSE,
       width = 12,
       shiny::selectInput(ns("sort_type"), "Sort By", c("alphabetical", "descending value")),
       shinycssloaders::withSpinner(
         shiny::fluidRow(
-          col_6(plotly::plotlyOutput(ns("activity_avoidance"), height = "600px")),
-          col_6(plotly::plotlyOutput(ns("efficiencies"), height = "600px"))
+          plotly::plotlyOutput(ns("activity_avoidance"), height = "600px"),
+          plotly::plotlyOutput(ns("efficiencies"), height = "600px")
         )
       )
     )
@@ -152,7 +152,7 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
     dplyr::filter(.data$change_factor == .env$change_factor) |>
     require_rows() |>
     ggplot2::ggplot(ggplot2::aes(.data$value, .data$mitigator_name)) +
-    ggplot2::geom_col(fill = "#f9bf07") +
+    ggplot2::geom_col(fill = "#2c2825") +
     ggplot2::scale_x_continuous(labels = scales::comma) +
     ggplot2::labs(title = title, x = x_axis_label, y = "")
 }
@@ -223,7 +223,11 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
       if (input$sort_type == "descending value") {
         dplyr::mutate(d, dplyr::across("mitigator_name", \(.x) forcats::fct_reorder(.x, -.data$value)))
       } else {
-        dplyr::mutate(d, dplyr::across("mitigator_name", \(.x) forcats::fct_reorder(.x, .data$strategy)))
+        d |>
+          dplyr::mutate(
+            dplyr::across("mitigator_name", \(.x) forcats::fct_rev(forcats::fct_reorder(.x, .data$mitigator_name)))
+            # dplyr::across("mitigator_name", \(.x) forcats::fct_rev(.x))
+          )
       }
     })
 
