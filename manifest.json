@@ -5127,7 +5127,7 @@
       "checksum": "9f8977b7ecbb14d69904617a73858067"
     },
     "inst/app/data/mitigators.json": {
-      "checksum": "d3b7cd4d30dfd2e4e74ea676954bbff9"
+      "checksum": "599ba595813b68d4f076f2808074bce3"
     },
     "inst/app/data/providers.json": {
       "checksum": "274b5f77406a4e496aeb0a52a7df4c5c"
@@ -5142,7 +5142,7 @@
       "checksum": "474983db20cc6b01d7ee33d19027b51a"
     },
     "inst/app/data/tx-lookup.json": {
-      "checksum": "7cdb866926def922fe646e34056cbe3c"
+      "checksum": "d96f2196c058efa6d6b92e987b3eaa43"
     },
     "inst/golem-config.yml": {
       "checksum": "09c0c98bbf2c77819fd7e02027d19fed"
@@ -5172,16 +5172,13 @@
       "checksum": "6312f9d1625443a78b9229967946dc9d"
     },
     "R/fct_get_data.R": {
-      "checksum": "3de1da6bf4388c077796207f1b6db06f"
+      "checksum": "81ce07a2574f4981826bc34a12a25782"
     },
     "R/fct_gt_bar.R": {
       "checksum": "1ad350f9e771572f3ef58ef813bed579"
     },
     "R/fct_gt_theme.R": {
       "checksum": "d58018d302bd8ac0ee27fd45c20a7798"
-    },
-    "R/fct_prepare_params.R": {
-      "checksum": "ff4dc82320f91f8ebf99d446b67aab1e"
     },
     "R/golem_utils_server.R": {
       "checksum": "acd35fac560b3227a8189c1c18c040e4"
@@ -5190,7 +5187,7 @@
       "checksum": "577504ff53fdf82063b799742ce4068a"
     },
     "R/mod_info_params.R": {
-      "checksum": "26a540722a3c072041106a998b6c8c89"
+      "checksum": "f2acd786641fbaddeacb962b7991d214"
     },
     "R/mod_measure_selection.R": {
       "checksum": "9ffdc35244ede4d0e9aea4f3f429c271"
