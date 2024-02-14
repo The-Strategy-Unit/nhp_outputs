@@ -5144,6 +5144,12 @@
     "inst/app/data/tx-lookup.json": {
       "checksum": "d96f2196c058efa6d6b92e987b3eaa43"
     },
+    "inst/app/www/app.css": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "inst/app/www/favicon.ico": {
+      "checksum": "6e637acbaee9a91b5ea921c7fa2baf41"
+    },
     "inst/golem-config.yml": {
       "checksum": "09c0c98bbf2c77819fd7e02027d19fed"
     },
@@ -5163,7 +5169,7 @@
       "checksum": "a0742b81dd0e002ae719075ec2fcd68d"
     },
     "R/app_ui.R": {
-      "checksum": "9ea1af6fe5a5bc3dc788ac29af1dcee5"
+      "checksum": "967732b364d424819660ac6d85d99761"
     },
     "R/fct_create_data_cache.R": {
       "checksum": "114ac8eac09fa400476fd982d85ec034"
@@ -5214,7 +5220,7 @@
       "checksum": "ef640e856078e84312e4a153c3fb4194"
     },
     "R/run_app.R": {
-      "checksum": "5b308bd882975a5546f75dd5905089c6"
+      "checksum": "69bfaae3dd0360d4f5afddcead849ef5"
     },
     "R/ZZZ.R": {
       "checksum": "d35800541ffef0b20667fcd1fbf4c985"
