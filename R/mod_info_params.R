@@ -77,7 +77,7 @@ mod_info_params_ui <- function(id) {
         "Time Profile:",
         shiny::textOutput(ns("time_profile_repat_local"), inline = TRUE)
       ),
-      gt::gt_output(ns("params_repat"))
+      gt::gt_output(ns("params_repat_local"))
     ),
     bs4Dash::box(
       title = "Repatriation (non-local)",
@@ -227,8 +227,13 @@ mod_info_params_server <- function(id, selected_data) {
     output$params_demographic_factors <- gt::render_gt({
       p <- params_data()
 
-      p[["demographic_factors"]] |>
-        shiny::req() |>
+      demographic_adjustment <- p[["demographic_factors"]]
+
+      shiny::validate(
+        shiny::need(demographic_adjustment, "No parameters provided")
+      )
+
+      demographic_adjustment |>
         purrr::pluck("variant_probabilities") |>
         unlist() |>
         tibble::enframe("variant", "value") |>
@@ -242,12 +247,17 @@ mod_info_params_server <- function(id, selected_data) {
 
       baseline_adjustment <- local({
         x <- p[["baseline_adjustment"]]
-        x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        if (!is.null(x[["aae"]])) {
+          x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        }
         return(x)
       })
 
+      shiny::validate(
+        shiny::need(baseline_adjustment, "No parameters provided")
+      )
+
       baseline_adjustment |>
-        shiny::req() |>
         purrr::map_depth(2, tibble::enframe, "specialty") |>
         purrr::map(dplyr::bind_rows, .id = "pod") |>
         dplyr::bind_rows(.id = "activity_type") |>
@@ -261,8 +271,13 @@ mod_info_params_server <- function(id, selected_data) {
     output$params_covid_adjustment <- gt::render_gt({
       p <- params_data()
 
-      p[["covid_adjustment"]] |>
-        shiny::req() |>
+      covid_adjustment <- p[["covid_adjustment"]]
+
+      shiny::validate(
+        shiny::need(covid_adjustment, "No parameters provided")
+      )
+
+      covid_adjustment |>
         purrr::map(tibble::enframe, "pod") |>
         dplyr::bind_rows(.id = "activity_type") |>
         tidyr::unnest_wider("value") |>
@@ -274,14 +289,20 @@ mod_info_params_server <- function(id, selected_data) {
     output$params_waiting_list_adjustment <- gt::render_gt({
       p <- params_data()
 
-      p[["waiting_list_adjustment"]] |>
-        shiny::req() |>
+      waiting_list_adjustment <- p[["waiting_list_adjustment"]]
+
+      shiny::validate(
+        shiny::need(waiting_list_adjustment, "No parameters provided")
+      )
+
+      waiting_list_adjustment |>
         purrr::map(tibble::enframe, "specialty", "value") |>
         dplyr::bind_rows(.id = "activity_type") |>
         tidyr::unnest("value") |>
         fix_data() |>
         tidyr::pivot_wider(names_from = "activity_type_name") |>
         gt::gt("specialty_name") |>
+        gt::sub_missing(missing_text = "") |>
         gt_theme()
     })
 
@@ -290,13 +311,20 @@ mod_info_params_server <- function(id, selected_data) {
 
       expat <- local({
         x <- p[["expat"]]
-        x[["op"]] <- list("-" = x[["op"]])
-        x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        if (!is.null(x[["op"]])) {
+          x[["op"]] <- list("-" = x[["op"]])
+        }
+        if (!is.null(x[["aae"]])) {
+          x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        }
         return(x)
       })
 
+      shiny::validate(
+        shiny::need(expat, "No parameters provided")
+      )
+
       expat |>
-        shiny::req() |>
         purrr::map_depth(2, tibble::enframe, "specialty") |>
         purrr::map(dplyr::bind_rows, .id = "pod") |>
         dplyr::bind_rows(.id = "activity_type") |>
@@ -312,13 +340,20 @@ mod_info_params_server <- function(id, selected_data) {
 
       repat <- local({
         x <- p[["repat_local"]]
-        x[["op"]] <- list("-" = x[["op"]])
-        x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        if (!is.null(x[["op"]])) {
+          x[["op"]] <- list("-" = x[["op"]])
+        }
+        if (!is.null(x[["aae"]])) {
+          x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        }
         return(x)
       })
 
+      shiny::validate(
+        shiny::need(repat, "No parameters provided")
+      )
+
       repat |>
-        shiny::req() |>
         purrr::map_depth(2, tibble::enframe, "specialty") |>
         purrr::map(dplyr::bind_rows, .id = "pod") |>
         dplyr::bind_rows(.id = "activity_type") |>
@@ -334,13 +369,20 @@ mod_info_params_server <- function(id, selected_data) {
 
       repat <- local({
         x <- p[["repat_nonlocal"]]
-        x[["op"]] <- list("-" = x[["op"]])
-        x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        if (!is.null(x[["op"]])) {
+          x[["op"]] <- list("-" = x[["op"]])
+        }
+        if (!is.null(x[["aae"]])) {
+          x[["aae"]] <- purrr::map(x[["aae"]], \(.x) list(Other = .x))
+        }
         return(x)
       })
 
+      shiny::validate(
+        shiny::need(repat, "No parameters provided")
+      )
+
       repat |>
-        shiny::req() |>
         purrr::map_depth(2, tibble::enframe, "specialty") |>
         purrr::map(dplyr::bind_rows, .id = "pod") |>
         dplyr::bind_rows(.id = "activity_type") |>
@@ -354,8 +396,13 @@ mod_info_params_server <- function(id, selected_data) {
     output$params_non_demographic_adjustment <- gt::render_gt({
       p <- params_data()
 
-      p[["non-demographic_adjustment"]] |>
-        shiny::req() |>
+      non_demographic_adjustment <- p[["non-demographic_adjustment"]]
+
+      shiny::validate(
+        shiny::need(non_demographic_adjustment, "No parameters provided")
+      )
+
+      non_demographic_adjustment |>
         purrr::map(tibble::enframe, "pod") |>
         dplyr::bind_rows(.id = "activity_type") |>
         fix_data() |>
@@ -367,13 +414,18 @@ mod_info_params_server <- function(id, selected_data) {
     output$params_activity_avoidance <- gt::render_gt({
       p <- params_data()
 
+      actitvity_avoidance <- p[["activity_avoidance"]]
+
+      shiny::validate(
+        shiny::need(actitvity_avoidance, "No parameters provided")
+      )
+
       time_profiles <- p[["time_profile_mappings"]][["activity_avoidance"]] |>
         purrr::map(unlist) |>
         purrr::map(tibble::enframe, "strategy", "time_profile") |>
         dplyr::bind_rows(.id = "activity_type")
 
-      p[["activity_avoidance"]] |>
-        shiny::req() |>
+      actitvity_avoidance |>
         purrr::map_depth(2, "interval") |>
         purrr::map(tibble::enframe, "strategy") |>
         dplyr::bind_rows(.id = "activity_type") |>
@@ -391,13 +443,19 @@ mod_info_params_server <- function(id, selected_data) {
     output$params_efficiencies <- gt::render_gt({
       p <- params_data()
 
+
+      efficiencies <- p[["efficiencies"]]
+
+      shiny::validate(
+        shiny::need(efficiencies, "No parameters provided")
+      )
+
       time_profiles <- p[["time_profile_mappings"]][["efficiencies"]] |>
         purrr::map(unlist) |>
         purrr::map(tibble::enframe, "strategy", "time_profile") |>
         dplyr::bind_rows(.id = "activity_type")
 
-      p[["efficiencies"]] |>
-        shiny::req() |>
+      efficiencies |>
         purrr::map_depth(2, "interval") |>
         purrr::map(tibble::enframe, "strategy") |>
         dplyr::bind_rows(.id = "activity_type") |>
