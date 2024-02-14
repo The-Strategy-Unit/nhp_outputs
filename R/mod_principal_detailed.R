@@ -141,7 +141,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
               \(x) dplyr::if_else(is.na(x), .data$agg, .data$Description)
             ),
           ) |>
-          dplyr::select("Description", dplyr::everything(), -"agg") |>
+          dplyr::select("sex", "Description", dplyr::everything(), -"agg") |>
           dplyr::rename("agg" = "Description")
       }
 

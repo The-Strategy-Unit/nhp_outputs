@@ -21,8 +21,8 @@ aggregations_age_group_expected <- tibble::tribble(
 
 aggregations_tretspef_expected <- tibble::tribble(
   ~sex, ~tretspef, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci,
-  1, "100", 900, 800, 850, 825, 875,
-  1, "300", 650, 550, 600, 625, 650
+  1, "100: General Surgery", 900, 800, 850, 825, 875,
+  1, "300: General Internal Medicine", 650, 550, 600, 625, 650
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
