@@ -795,6 +795,11 @@
     "Group": "Other Services"
   },
   {
+    "Code": "810",
+    "Description": "Radiology Service",
+    "Group": "Other Services"
+  },
+  {
     "Code": "811",
     "Description": "Interventional Radiology Service",
     "Group": "Other Services"
@@ -810,9 +815,24 @@
     "Group": "Other Services"
   },
   {
-    "Code": "832",
-    "Description": "Retired but retained for historical purposes",
+    "Code": "823",
+    "Description": "Haematology Service",
     "Group": "Other Services"
+  },
+  {
+    "Code": "831",
+    "Description": "Medical Microbiology and Virology Service",
+    "Group": "Medical Specialties"
+  },
+  {
+    "Code": "832",
+    "Description": "Neuropathology Service",
+    "Group": "Other Services"
+  },
+  {
+    "Code": "833",
+    "Description": "Medical Microbiology Service",
+    "Group": "Medical Specialties"
   },
   {
     "Code": "834",
@@ -910,13 +930,18 @@
     "Group": "Other Services"
   },
   {
+    "Code": "900",
+    "Description": "Community Medicine Service",
+    "Group": "Other Services"
+  },
+  {
     "Code": "920",
     "Description": "Diabetic Education Service",
     "Group": "Other Services"
   },
   {
     "Code": "990",
-    "Description": "Retired but retained for historical purposes",
+    "Description": "Joint Consultant Clinics Service",
     "Group": "Other Services"
   }
 ]

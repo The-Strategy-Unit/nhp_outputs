@@ -14,7 +14,28 @@ get_container <- function() {
 }
 
 get_params <- function(r) {
-  r$params
+  to_interval <- function(x) {
+    if (length(x) == 2 && purrr::every(x, rlang::is_scalar_atomic) && purrr::every(x, is.numeric)) {
+      x |>
+        purrr::flatten_dbl() |>
+        purrr::set_names(c("lo", "hi"))
+    } else {
+      x
+    }
+  }
+
+  recursive_discard <- function(x) {
+    if (!is.list(x)) {
+      return(x)
+    }
+
+    x |>
+      purrr::map(recursive_discard) |>
+      purrr::discard(\(.y) length(.y) == 0) |>
+      to_interval()
+  }
+
+  recursive_discard(r$params)
 }
 
 get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL),

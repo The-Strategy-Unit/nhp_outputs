@@ -83,6 +83,7 @@
   "left_before_seen_adult_ambulance": "A&E Patients Left Before Being Treated (Adult, Ambulance Conveyed)",
   "left_before_seen_adult_walk-in": "A&E Patients Left Before Being Treated (Adult, Walk-in)",
   "left_before_seen_child_ambulance": "A&E Patients Left Before Being Treated (Children, Ambulance Conveyed)",
+  "left_before_seen_child_walk-in": "A&E Patients Left Before Being Treated (Children, Walk-in)",
   "left_before_seen": "A&E Patients Left Before Being Treated",
   "discharged_no_treatment_adult_ambulance": "A&E Discharged No Investigation or Treatment (Adult, Ambulance Conveyed)",
   "discharged_no_treatment_adult_walk-in": "A&E Discharged No Investigation or Treatment (Adult, Walk-in)",

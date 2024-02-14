@@ -19,3 +19,5 @@ $run_dev.*
 ^R/_disable_autoload.R$
 ^\.rscignore$
 ^\.renvignore$
+^hooks$
+^manifest.json$
