@@ -79,6 +79,16 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
+    tretspef_lookup <- jsonlite::read_json(
+      app_sys("app", "data", "tx-lookup.json"),
+      simplifyVector = TRUE
+    ) |>
+      dplyr::mutate(
+        dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
+        dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
+      ) |>
+      dplyr::select(-"Group")
+
     available_aggregations <- shiny::reactive({
       selected_data() |>
         get_available_aggregations()
@@ -107,7 +117,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
                         "Treatment Specialty" = "tretspef"
       )
 
-      selected_data() |>
+      dat <- selected_data() |>
         get_aggregation(pod, measure, agg_col, selected_site()) |>
         shiny::req() |>
         dplyr::transmute(
@@ -118,6 +128,25 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
           change = .data$final - .data$baseline,
           change_pcnt = .data$change / .data$baseline
         )
+
+      if (agg_col == "tretspef") {
+        dat <- dat |>
+          dplyr::left_join(
+            tretspef_lookup,
+            by = dplyr::join_by("agg" == "Code")
+          ) |>
+          dplyr::mutate(
+            dplyr::across(
+              "Description",
+              \(x) dplyr::if_else(is.na(x), .data$agg, .data$Description)
+            ),
+          ) |>
+          dplyr::select("Description", dplyr::everything(), -"agg") |>
+          dplyr::rename("agg" = "Description")
+      }
+
+      dat
+
     })
 
     output$results <- gt::render_gt({
