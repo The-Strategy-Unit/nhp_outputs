@@ -60,7 +60,13 @@ mod_measure_selection_server <- function(id) {
         dplyr::filter(.data$activity_type == at, .data$pod == p) |>
         purrr::pluck("measures")
 
-      shiny::updateSelectInput(session, "measure", choices = measures)
+      default_measure <- if (at == "ip") "beddays" else NULL
+
+      shiny::updateSelectInput(
+        session, "measure",
+        choices = measures,
+        selected = default_measure
+      )
     })
 
     selected_measure <- shiny::reactive({
