@@ -29,7 +29,13 @@
 			"group": "none",
 			"isBackground": true,
 			"problemMatcher": [],
-			"label": "R: Run App"
+			"label": "R: Run App",
+			"presentation": {
+				"reveal": "silent",
+				"focus": false,
+				"panel": "dedicated",
+				"clear": true
+			}
 		},
 		{
 			"type": "R",
