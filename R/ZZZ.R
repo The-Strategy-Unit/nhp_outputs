@@ -35,3 +35,11 @@ lookup_ods_org_code_name <- function(org_code) {
 
   httr::content(req)$Organisation$Name %||% "Unknown"
 }
+
+get_selected_file_from_url <- function(session) {
+  session$clientData$url_search |>
+    shiny::parseQueryString() |>
+    _$file |>
+    base64enc::base64decode() |>
+    rawToChar()
+}

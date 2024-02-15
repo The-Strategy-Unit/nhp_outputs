@@ -17,7 +17,6 @@ mod_model_results_distribution_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       htmltools::p(
-        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
         "A&E results are not available at site level.",
         "See the",
         htmltools::a(
@@ -65,7 +64,7 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
 
-  x_placeholder <- "100%"  # dummy label to help line up beeswarm and ECDF plots
+  x_placeholder <- "100%" # dummy label to help line up beeswarm and ECDF plots
 
   data |>
     require_rows() |>
@@ -101,7 +100,6 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
       axis.text.y = ggplot2::element_text(colour = "white"),
       axis.title.y = ggplot2::element_text(colour = "white")
     )
-
 }
 
 mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
@@ -117,7 +115,7 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
   # Calculate y value for principal x value (find nearest % for the principal)
   x_vals <- sort(data[["value"]])
   y_vals <- sort(ecdf_fn(data[["value"]]))
-  principal_diffs <- abs(p - x_vals)  # nearest x in ECDF to the principal
+  principal_diffs <- abs(p - x_vals) # nearest x in ECDF to the principal
   min_principal_diff_i <- which(principal_diffs == min(principal_diffs))[1]
   p_pcnt <- y_vals[min_principal_diff_i]
 
@@ -179,7 +177,6 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
       expand = c(0, 0)
     ) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
-
 }
 
 #' model_results_distribution Server Functions
@@ -198,7 +195,6 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
     # Dynamic text to go above plots ----
 
     output$beeswarm_text <- shiny::renderText({
-
       data <- shiny::req(aggregated_data())
 
       b <- data$baseline[[1]] |> scales::comma()
@@ -215,11 +211,9 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         b,
         ")."
       )
-
     })
 
     output$ecdf_text <- shiny::renderText({
-
       data <- shiny::req(aggregated_data())
 
       b_val <- data$principal[[1]] |> scales::comma()
@@ -231,7 +225,7 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
       # Calculate y value for principal x value (find nearest % for the principal)
       x_vals <- sort(data[["value"]])
       y_vals <- sort(ecdf_fn(data[["value"]]))
-      principal_diffs <- abs(p - x_vals)  # nearest x in ECDF to the principal
+      principal_diffs <- abs(p - x_vals) # nearest x in ECDF to the principal
       min_principal_diff_i <- which(principal_diffs == min(principal_diffs))[1]
       p_pcnt <- y_vals[min_principal_diff_i] |> scales::percent(accuracy = 1)
 
@@ -257,7 +251,6 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         b_val,
         ")."
       )
-
     })
 
 

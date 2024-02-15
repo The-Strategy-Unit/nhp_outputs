@@ -5124,7 +5124,7 @@
       "checksum": "aeb1c75bf60737b28ec65e4df8131fcc"
     },
     "DESCRIPTION": {
-      "checksum": "5fb08f9f3da1690a96c328eac2e27255"
+      "checksum": "f237c7be66f060fd8812ec1fbb73d89b"
     },
     "inst/app/data/mitigators.json": {
       "checksum": "599ba595813b68d4f076f2808074bce3"
@@ -5166,10 +5166,10 @@
       "checksum": "836c75cd501b8c1ab3538ddf36358b7f"
     },
     "R/app_server.R": {
-      "checksum": "a0742b81dd0e002ae719075ec2fcd68d"
+      "checksum": "626e015263373b9e0807578739bbfae1"
     },
     "R/app_ui.R": {
-      "checksum": "967732b364d424819660ac6d85d99761"
+      "checksum": "65c8d35e36856d8fc507dff6274aac0e"
     },
     "R/fct_create_data_cache.R": {
       "checksum": "114ac8eac09fa400476fd982d85ec034"
@@ -5192,6 +5192,9 @@
     "R/golem_utils_ui.R": {
       "checksum": "577504ff53fdf82063b799742ce4068a"
     },
+    "R/mod_info_home.R": {
+      "checksum": "0a2d7dbd24c1f2726f845c964a650190"
+    },
     "R/mod_info_params.R": {
       "checksum": "b8c7019820f0e4d02bd97fa51b1366b6"
     },
@@ -5199,7 +5202,7 @@
       "checksum": "9e687cddb38dde7e997a52beb3280ef6"
     },
     "R/mod_model_core_activity.R": {
-      "checksum": "8313ba858e1b8301a7545d8804552306"
+      "checksum": "04dad62143b70ca048cbac90df7ea37c"
     },
     "R/mod_model_results_distribution.R": {
       "checksum": "70e219bd092e662dbb5785472c9d12e7"
@@ -5211,10 +5214,10 @@
       "checksum": "ac1bd1aaf06d400ca9dd85d44bf44913"
     },
     "R/mod_principal_high_level.R": {
-      "checksum": "810703fccd1a78f6dafd6a2f78045d92"
+      "checksum": "6603675a833bd3766efc0e504bbd5f87"
     },
     "R/mod_principal_summary.R": {
-      "checksum": "8bea08cdab957cdc6a62b3d27add97be"
+      "checksum": "56092dc59fad79cf85e43b652f12be5d"
     },
     "R/mod_result_selection.R": {
       "checksum": "9f5b51d65f8031c8432425cdbe88715f"
@@ -5223,7 +5226,7 @@
       "checksum": "69bfaae3dd0360d4f5afddcead849ef5"
     },
     "R/ZZZ.R": {
-      "checksum": "d35800541ffef0b20667fcd1fbf4c985"
+      "checksum": "85120251b1345518ee4db79667316004"
     }
   },
   "users": null

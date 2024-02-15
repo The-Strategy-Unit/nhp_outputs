@@ -7,6 +7,7 @@ License: MIT + file LICENSE
 Imports: 
     AzureAuth,
     AzureStor,
+    base64enc,
     bs4Dash,
     cachem,
     config (>= 0.3.1),
