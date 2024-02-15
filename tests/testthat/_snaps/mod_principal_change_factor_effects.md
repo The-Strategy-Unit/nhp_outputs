@@ -84,8 +84,8 @@
             <div class="form-group shiny-input-container">
               <label class="control-label" id="id-sort_type-label" for="id-sort_type">Sort By</label>
               <div>
-                <select id="id-sort_type" class="shiny-input-select"><option value="descending value" selected>descending value</option>
-      <option value="alphabetical">alphabetical</option></select>
+                <select id="id-sort_type" class="shiny-input-select"><option value="Descending value" selected>Descending value</option>
+      <option value="Alphabetical">Alphabetical</option></select>
                 <script type="application/json" data-for="id-sort_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
               </div>
             </div>

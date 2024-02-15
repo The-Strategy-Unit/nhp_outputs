@@ -48,7 +48,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Individual Change Factors (Trust Level Only)",
       collapsible = FALSE,
       width = 12,
-      shiny::selectInput(ns("sort_type"), "Sort By", c("descending value", "alphabetical")),
+      shiny::selectInput(ns("sort_type"), "Sort By", c("Descending value", "Alphabetical")),
       shinycssloaders::withSpinner(
         shiny::fluidRow(
           plotly::plotlyOutput(ns("activity_avoidance"), height = "600px"),
@@ -227,7 +227,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
           .data$value < 0
         )
 
-      if (input$sort_type == "descending value") {
+      if (input$sort_type == "Descending value") {
         d |>
           dplyr::mutate(
             dplyr::across(
