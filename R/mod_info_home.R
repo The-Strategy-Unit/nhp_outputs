@@ -27,6 +27,7 @@ mod_info_home_ui <- function(id) {
           "Note that some data is presented at trust level even if you make a site selection.",
           "Check the notes in each tab for details."
         ),
+        # TODO: hide these until data is loaded
         shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
         shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
       ),
@@ -42,12 +43,30 @@ mod_info_home_ui <- function(id) {
   )
 }
 
+mod_info_home_download_excel <- function(data) {
+  function(file) {
+    data() |>
+      purrr::pluck("results") |>
+      purrr::map(
+        dplyr::select,
+        -tidyselect::where(is.list)
+      ) |>
+      writexl::write_xlsx(file)
+  }
+}
+
+mod_info_home_download_json <- function(data) {
+  function(file) {
+    jsonlite::write_json(data(), file, pretty = TRUE, auto_unbox = TRUE)
+  }
+}
+
 #' info_home Server Functions
 #'
 #' @noRd
 mod_info_home_server <- function(id, selected_data) {
   shiny::moduleServer(id, function(input, output, session) {
-    output$params_model_run <- gt::render_gt({
+    params_model_run <- shiny::reactive({
       p <- get_params(selected_data())
 
       p_model_run <- purrr::keep(p, rlang::is_atomic)
@@ -70,7 +89,11 @@ mod_info_home_server <- function(id, selected_data) {
 
       p_model_run |>
         unlist() |>
-        tibble::enframe() |>
+        tibble::enframe()
+    })
+
+    output$params_model_run <- gt::render_gt({
+      params_model_run() |>
         gt::gt("name") |>
         gt_theme()
     })
@@ -79,28 +102,13 @@ mod_info_home_server <- function(id, selected_data) {
     # download buttons ----
 
     output$download_results_xlsx <- shiny::downloadHandler(
-      filename = function() {
-        paste0(selected_data()$params$id, ".xlsx")
-      },
-      content = function(file) {
-        selected_data() |>
-          purrr::pluck("results") |>
-          purrr::map(
-            dplyr::select,
-            -tidyselect::where(is.list)
-          ) |>
-          writexl::write_xlsx(file)
-      }
+      filename = \() paste0(selected_data()$params$id, ".xlsx"),
+      content = mod_info_home_download_excel(selected_data)
     )
 
     output$download_results_json <- shiny::downloadHandler(
-      filename = function() {
-        paste0(selected_data()$params$id, ".json")
-      },
-      content = function(file) {
-        selected_data() |>
-          jsonlite::write_json(file, pretty = TRUE, auto_unbox = TRUE)
-      }
+      filename = \() paste0(selected_data()$params$id, ".json"),
+      content = mod_info_home_download_json(selected_data)
     )
   })
 }
