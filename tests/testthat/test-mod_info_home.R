@@ -145,3 +145,34 @@ test_that("it generates a gt table", {
     }
   )
 })
+
+test_that("it sets up download handlers", {
+  selected_data <- reactive({
+    list(
+      params = list(
+        id = "test-synthetic",
+        scenario = "test",
+        dataset = "synthetic",
+        start_year = 2020,
+        end_year = 2040,
+        create_datetime = "20240123_012345",
+        stuff = list(1, 2, 3)
+      )
+    )
+  })
+
+  m <- mock()
+  stub(mod_info_home_server, "mod_info_home_download_excel", m)
+  stub(mod_info_home_server, "mod_info_home_download_json", m)
+
+  testServer(
+    mod_info_home_server,
+    args = list(selected_data = selected_data),
+    {
+      session$private$flush()
+      expect_called(m, 2)
+      expect_args(m, 1, selected_data)
+      expect_args(m, 2, selected_data)
+    }
+  )
+})
