@@ -122,10 +122,18 @@ mod_principal_high_level_table <- function(data, summary_type = c("value", "chan
       dplyr::select(
         "fyear", "pod_name",
         tidyselect::matches(fyear_rx),
-        tidyselect::all_of(summary_type)
+        tidyselect::all_of(summary_type),
+        "activity_type"
+      ) |>
+      dplyr::mutate(
+        activity_type = dplyr::case_when(
+          activity_type == "ip" ~ "Inpatient",
+          activity_type == "op" ~ "Outpatient",
+          activity_type == "aae" ~ "A&E"
+        )
       ) |>
       tidyr::pivot_wider(names_from = "fyear", values_from = summary_type) |>
-      gt::gt() |>
+      gt::gt(groupname_col = "activity_type") |>
       gt::sub_missing() |>
       gt::cols_align(
         align = "left",

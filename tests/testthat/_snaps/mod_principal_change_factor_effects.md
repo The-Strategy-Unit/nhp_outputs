@@ -24,7 +24,7 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Make Selections</h3>
+            <h3 class="card-title">Make selections</h3>
           </div>
           <div class="card-body">
             <div class="row">
@@ -49,12 +49,12 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Make Selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Make selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Impact of Changes (Trust Level Only)</h3>
+            <h3 class="card-title">Impact of changes (trust-level only)</h3>
           </div>
           <div class="card-body">
             <div class="form-group shiny-input-container">
@@ -73,12 +73,12 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Impact of Changes (Trust Level Only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Impact of changes (trust-level only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Individual Change Factors (Trust Level Only)</h3>
+            <h3 class="card-title">Individual change factors (trust-level only)</h3>
           </div>
           <div class="card-body">
             <div class="form-group shiny-input-container">
@@ -100,6 +100,6 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Individual Change Factors (Trust Level Only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Individual change factors (trust-level only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 
