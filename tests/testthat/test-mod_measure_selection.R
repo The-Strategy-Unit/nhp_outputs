@@ -120,8 +120,14 @@ test_that("it updates the measure dropdown when pod changes", {
   shiny::testServer(mod_measure_selection_server, {
     session$setInputs(activity_type = at, pod = p)
 
+    if (at == "ip") {
+      default_measure <- "beddays"
+    } else {
+      default_measure <- NULL
+    }
+
     expect_called(m, 3)
-    expect_args(m, 3, session, "measure", choices = measures)
+    expect_args(m, 3, session, "measure", choices = measures, selected = default_measure)
   })
 })
 

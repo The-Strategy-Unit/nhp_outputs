@@ -48,7 +48,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Individual Change Factors (Trust Level Only)",
       collapsible = FALSE,
       width = 12,
-      shiny::selectInput(ns("sort_type"), "Sort By", c("alphabetical", "descending value")),
+      shiny::selectInput(ns("sort_type"), "Sort By", c("descending value", "alphabetical")),
       shinycssloaders::withSpinner(
         shiny::fluidRow(
           plotly::plotlyOutput(ns("activity_avoidance"), height = "600px"),
@@ -206,7 +206,14 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
 
       shiny::req(length(measures) > 0)
 
-      shiny::updateSelectInput(session, "measure", choices = measures)
+      default_measure <- if (at == "ip") "beddays" else NULL
+
+      shiny::updateSelectInput(
+        session,
+        "measure",
+        choices = measures,
+        selected = default_measure
+      )
     }) |>
       shiny::bindEvent(principal_change_factors())
 
@@ -221,12 +228,19 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         )
 
       if (input$sort_type == "descending value") {
-        dplyr::mutate(d, dplyr::across("mitigator_name", \(.x) forcats::fct_reorder(.x, -.data$value)))
+        d |>
+          dplyr::mutate(
+            dplyr::across(
+              "mitigator_name",
+              \(.x) forcats::fct_reorder(.x, -.data$value))
+          )
       } else {
         d |>
           dplyr::mutate(
-            dplyr::across("mitigator_name", \(.x) forcats::fct_rev(forcats::fct_reorder(.x, .data$mitigator_name)))
-            # dplyr::across("mitigator_name", \(.x) forcats::fct_rev(.x))
+            dplyr::across(
+              "mitigator_name",
+              \(.x) forcats::fct_rev(forcats::fct_reorder(.x, .data$mitigator_name))
+            )
           )
       }
     })
