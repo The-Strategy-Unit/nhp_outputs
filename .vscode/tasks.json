@@ -68,7 +68,7 @@
 		{
 			"type": "R",
 			"code": [
-				"covr::package_coverage() |> covr::to_cobetura('coverage.xml')"
+				"covr::package_coverage() |> covr::to_cobertura('coverage.xml')"
 			],
 			"group": "none",
 			"isBackground": "true",
