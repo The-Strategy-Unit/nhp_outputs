@@ -151,7 +151,7 @@ test_that("mod_principal_summary_table creates a gt object", {
 
   table <- mod_principal_summary_table(data)
 
-  expect_snapshot(table)
+  expect_snapshot(gt::as_raw_html(table))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
