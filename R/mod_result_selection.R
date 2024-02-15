@@ -40,8 +40,8 @@ mod_result_selection_ui <- function(id) {
       collapsible = FALSE,
       width = 6,
       htmltools::p(
-        "Download a file containing results for the selected trust.",
-        "The data are presented at site and overall trust level."
+        "Download a file containing results for the selected model run.",
+        "The data is provided for each site and for the overall trust level."
       ),
       shinyjs::hidden(
         shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),

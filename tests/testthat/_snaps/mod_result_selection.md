@@ -49,8 +49,8 @@
           </div>
           <div class="card-body">
             <p>
-              Download a file containing results for the selected trust.
-              The data are presented at site and overall trust level.
+              Download a file containing results for the selected model run.
+              The data is provided for each site and for the overall trust level.
             </p>
             <a class="btn btn-default shiny-download-link  shinyjs-hide" download href="" id="id-download_results_xlsx" target="_blank">
               <i class="fas fa-download" role="presentation" aria-label="download icon"></i>

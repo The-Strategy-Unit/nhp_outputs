@@ -24,7 +24,7 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Make Selections</h3>
+            <h3 class="card-title">Make Sselections</h3>
           </div>
           <div class="card-body">
             <div class="row">
@@ -67,12 +67,12 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Make Selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Make Sselections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Activity by Sex and Age or Treatment Specialty</h3>
+            <h3 class="card-title">Activity by sex and age or treatment specialty</h3>
           </div>
           <div class="card-body">
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
@@ -84,7 +84,7 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Activity by Sex and Age or Treatment Specialty","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Activity by sex and age or treatment specialty","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 
 # table returns a gt

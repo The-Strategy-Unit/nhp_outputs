@@ -55,7 +55,7 @@ mod_principal_high_level_ui <- function(id) {
     ),
     shiny::fluidRow(
       bs4Dash::box(
-        title = "Inpatient Admissions",
+        title = "Inpatient admissions",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("ip"))
@@ -63,7 +63,7 @@ mod_principal_high_level_ui <- function(id) {
         width = 4
       ),
       bs4Dash::box(
-        title = "Outpatient Attendances",
+        title = "Outpatient attendances",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("op"))
@@ -71,7 +71,7 @@ mod_principal_high_level_ui <- function(id) {
         width = 4
       ),
       bs4Dash::box(
-        title = "A&E Attendances (trust-level only)",
+        title = "A&E attendances (trust-level only)",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("aae"))

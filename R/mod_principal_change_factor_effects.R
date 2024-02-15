@@ -27,7 +27,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Make Selections",
+      title = "Make selections",
       collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
@@ -36,7 +36,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Impact of Changes (Trust Level Only)",
+      title = "Impact of changes (trust-level only)",
       collapsible = FALSE,
       width = 12,
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
@@ -45,7 +45,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Individual Change Factors (Trust Level Only)",
+      title = "Individual change factors (trust-level only)",
       collapsible = FALSE,
       width = 12,
       shiny::selectInput(ns("sort_type"), "Sort By", c("Descending value", "Alphabetical")),
