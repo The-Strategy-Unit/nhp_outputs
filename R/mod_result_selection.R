@@ -32,13 +32,17 @@ mod_result_selection_ui <- function(id) {
       width = 6,
       shiny::selectInput(ns("dataset"), "Dataset", NULL),
       shiny::selectInput(ns("scenario"), "Scenario", NULL),
-      shiny::selectInput(ns("create_datetime"), "Model Run Time", NULL),
-      shiny::selectInput(ns("site_selection"), "Site (leave empty for all sites)", NULL, multiple = TRUE)
+      shiny::selectInput(ns("create_datetime"), "Model run time", NULL),
+      shiny::selectInput(ns("site_selection"), "Site (all sites selected if left empty)", NULL, multiple = TRUE)
     ),
     bs4Dash::box(
-      title = "Download results",
+      title = "Download results data",
       collapsible = FALSE,
       width = 6,
+      htmltools::p(
+        "Download a file containing results for the selected trust.",
+        "The data are presented at site and overall trust level."
+      ),
       shinyjs::hidden(
         shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
         shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
@@ -56,8 +60,9 @@ mod_result_selection_ui <- function(id) {
         )
       ),
       htmltools::p(
-        "Note that some data is presented at trust level even if you make a site selection.",
-        "Check the notes in each tab for details."
+        "Note that some data is not available at site level.",
+        "A&E data will be hidden and the 'Impact of Changes' tab is at trust level only.",
+        "Check the notes box in each tab for details."
       )
     )
   )
