@@ -5194,7 +5194,7 @@
       "checksum": "7826d3b4a5bfed55d7894c2c450e76aa"
     },
     "R/mod_measure_selection.R": {
-      "checksum": "499ed203d2d84cdc6b176952343341c7"
+      "checksum": "8642ce00314dabed99cc7b9ea54ce65b"
     },
     "R/mod_model_core_activity.R": {
       "checksum": "90eb91ff9c4fe862da10e86e14e28742"
@@ -5203,7 +5203,7 @@
       "checksum": "56b0e4ac25541ea1267840b12cf64b0e"
     },
     "R/mod_principal_change_factor_effects.R": {
-      "checksum": "be0e187647d40bc028db71dec2352229"
+      "checksum": "5de243c19dd1d35c1c3b763ad6ea0745"
     },
     "R/mod_principal_detailed.R": {
       "checksum": "63a824c24906c8e1c9c6498ad0a5cb7e"

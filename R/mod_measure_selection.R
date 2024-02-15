@@ -58,7 +58,8 @@ mod_measure_selection_server <- function(id) {
 
       measures <- atpmo |>
         dplyr::filter(.data$activity_type == at, .data$pod == p) |>
-        purrr::pluck("measures")
+        purrr::pluck("measures") |>
+        purrr::set_names("Admissions", "Bed Days")
 
       default_measure <- if (at == "ip") "beddays" else NULL
 

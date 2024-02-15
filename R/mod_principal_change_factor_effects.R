@@ -202,7 +202,15 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
       at <- shiny::req(input$activity_type)
       pcf <- shiny::req(principal_change_factors())
 
-      measures <- unique(pcf$measure)
+      measures_unnamed <- unique(pcf$measure)
+
+      measure_labels <- dplyr::if_else(
+        measures_unnamed == "beddays",
+        "Bed Days",
+        snakecase::to_title_case(measures_unnamed)
+      )
+
+      measures <- purrr::set_names(measures_unnamed, measure_labels)
 
       shiny::req(length(measures) > 0)
 
