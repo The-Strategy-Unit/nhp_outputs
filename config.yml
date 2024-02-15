@@ -1,0 +1,7 @@
+default:
+  folder: "dev"
+  app_url: "http://localhost:8081/"
+
+production:
+  folder: "prod"
+  app_url: "/nhp/{version}/outputs/"
