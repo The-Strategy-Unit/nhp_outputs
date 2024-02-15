@@ -28,3 +28,25 @@ test_that("lookup_ods_org_code_name returns correct names", {
   expect_equal(lookup_ods_org_code_name("RL403"), "NEW CROSS HOSPITAL")
   expect_equal(lookup_ods_org_code_name("RL400"), "Unknown")
 })
+
+test_that("get_selected_file_from_url decodes the filename correctly", {
+  # act
+  expected <- "test/file.json.gz"
+
+  session <- list(
+    clientData = list(
+      url_search = paste0(
+        "file=",
+        expected |>
+          charToRaw() |>
+          base64enc::base64encode()
+      )
+    )
+  )
+
+  # act
+  actual <- get_selected_file_from_url(session)
+
+  # assert
+  expect_equal(actual, expected)
+})
