@@ -50,3 +50,28 @@ test_that("get_selected_file_from_url decodes the filename correctly", {
   # assert
   expect_equal(actual, expected)
 })
+
+test_that("dev user can request cache reset", {
+  session <- list(
+    groups = "nhp_devs",
+    clientData = list(
+      url_search = "?reset_cache"
+    )
+  )
+
+  expect_true(user_requested_cache_reset(session))
+
+  session$clientData$url_search <- ""
+  expect_false(user_requested_cache_reset(session))
+})
+
+test_that("normal user cannot request cache reset", {
+  session <- list(
+    groups = "",
+    clientData = list(
+      url_search = "?reset_cache"
+    )
+  )
+
+  expect_false(user_requested_cache_reset(session))
+})

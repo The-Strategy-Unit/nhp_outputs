@@ -171,3 +171,29 @@ test_that("it updates the site selection drop down", {
     )
   })
 })
+
+test_that("it can reset the cache", {
+  stub(app_server, "get_selected_file_from_url", "file")
+  stub(app_server, "get_results", "results")
+  stub(app_server, "get_trust_sites", c("a", "b", "c"))
+
+  stub(app_server, "mod_info_home_server", "mod_info_home_server")
+  stub(app_server, "mod_info_params_server", "mod_info_params_server")
+
+  stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
+  stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
+  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
+
+  stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
+  stub(app_server, "mod_model_results_distribution_server", "mod_model_results_distribution_server")
+
+  m <- mock()
+  stub(app_server, "user_requested_cache_reset", TRUE)
+  stub(app_server, "shiny::shinyOptions", \() list(cache = list(reset = m)))
+
+  testServer(app_server, {
+    session$private$flush()
+    expect_called(m, 1)
+  })
+})

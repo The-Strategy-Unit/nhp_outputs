@@ -82,12 +82,7 @@ app_server <- function(input, output, session) {
   # other stuff ----
 
   shiny::observe({
-    shiny::req("nhp_devs" %in% session$groups)
-
-    u <- shiny::parseQueryString(session$clientData$url_search)
-
-    shiny::req(!is.null(u$reset_cache))
-    cat("reset cache\n")
+    shiny::req(user_requested_cache_reset(session))
 
     dc <- shiny::shinyOptions()$cache
 

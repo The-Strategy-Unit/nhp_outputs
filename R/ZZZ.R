@@ -43,3 +43,12 @@ get_selected_file_from_url <- function(session) {
     base64enc::base64decode() |>
     rawToChar()
 }
+
+user_requested_cache_reset <- function(session) {
+  if (!"nhp_devs" %in% session$groups) {
+    return(FALSE)
+  }
+  u <- shiny::parseQueryString(session$clientData$url_search)
+
+  !is.null(u$reset_cache)
+}
