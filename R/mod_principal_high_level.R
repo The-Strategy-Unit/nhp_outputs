@@ -126,12 +126,18 @@ mod_principal_high_level_table <- function(data, summary_type = c("value", "chan
         "activity_type"
       ) |>
       dplyr::mutate(
-        activity_type = dplyr::case_when(
-          activity_type == "ip" ~ "Inpatient",
-          activity_type == "op" ~ "Outpatient",
-          activity_type == "aae" ~ "A&E"
+        activity_type = dplyr::case_match(
+          .data$activity_type,
+          "ip"  ~ "Inpatient",
+          "op"  ~ "Outpatient",
+          "aae" ~ "A&E"
+        ),
+        dplyr::across(
+          "activity_type",
+          \(x) forcats::fct_relevel(x, "Inpatient", "Outpatient", "A&E")
         )
       ) |>
+      dplyr::arrange(.data$activity_type) |>
       tidyr::pivot_wider(names_from = "fyear", values_from = summary_type) |>
       gt::gt(groupname_col = "activity_type") |>
       gt::sub_missing() |>
