@@ -37,11 +37,18 @@ lookup_ods_org_code_name <- function(org_code) {
 }
 
 get_selected_file_from_url <- function(session) {
-  session$clientData$url_search |>
+  file <- session$clientData$url_search |>
     shiny::parseQueryString() |>
-    _$file |>
-    base64enc::base64decode() |>
-    rawToChar()
+    _$file
+
+  tryCatch(
+    {
+      file |>
+        base64enc::base64decode() |>
+        rawToChar()
+    },
+    error = \(e) NULL
+  )
 }
 
 user_requested_cache_reset <- function(session) {

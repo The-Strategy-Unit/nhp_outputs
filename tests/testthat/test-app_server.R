@@ -60,6 +60,37 @@ test_that("it gets the selected file from the url", {
   })
 })
 
+test_that("if file isn't entered/valid it exits the app", {
+  m <- mock()
+
+  stub(app_server, "get_selected_file_from_url", NULL)
+  stub(app_server, "get_results", "results")
+  stub(app_server, "get_trust_sites", "trust_sites")
+
+  stub(app_server, "mod_info_home_server", "mod_info_home_server")
+  stub(app_server, "mod_info_params_server", "mod_info_params_server")
+
+  stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
+  stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
+  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
+
+  stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
+  stub(app_server, "mod_model_results_distribution_server", "mod_model_results_distribution_server")
+
+  stub(app_server, "shiny::showModal", m)
+
+  testServer(app_server, {
+    expect_error(selected_file())
+
+    session$private$flush()
+    expect_called(m, 1)
+
+    expect_snapshot(mock_args(m)[[1]][[1]])
+    expect_true(session$isClosed())
+  })
+})
+
 test_that("it gets the results from the selected file", {
   m <- mock("results")
 
@@ -83,6 +114,38 @@ test_that("it gets the results from the selected file", {
 
     expect_called(m, 1)
     expect_args(m, 1, "file")
+  })
+})
+
+
+test_that("it file can't be loaded from azure it exits the app", {
+  m <- mock()
+
+  stub(app_server, "get_selected_file_from_url", "file")
+  stub(app_server, "get_results", stop)
+  stub(app_server, "get_trust_sites", "trust_sites")
+
+  stub(app_server, "mod_info_home_server", "mod_info_home_server")
+  stub(app_server, "mod_info_params_server", "mod_info_params_server")
+
+  stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
+  stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
+  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
+
+  stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
+  stub(app_server, "mod_model_results_distribution_server", "mod_model_results_distribution_server")
+
+  stub(app_server, "shiny::showModal", m)
+
+  testServer(app_server, {
+    expect_error(selected_data())
+
+    session$private$flush()
+    expect_called(m, 1)
+
+    expect_snapshot(mock_args(m)[[1]][[1]])
+    expect_true(session$isClosed())
   })
 })
 

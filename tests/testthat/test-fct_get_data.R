@@ -515,6 +515,11 @@ test_that("trust_site_aggregation adds in a trust level aggregatrion", {
     trust_site_aggregation(df, c("x", "y")),
     tibble::tibble(x = c("a", "b", "c"), v = c(1, 5, 9))
   )
+
+  expect_equal(
+    trust_site_aggregation(df, character(0)),
+    tibble::tibble(x = c("a", "b", "c"), v = c(1, 5, 9))
+  )
 })
 
 test_that("get_time_profiles extracts the time profiles correctly", {

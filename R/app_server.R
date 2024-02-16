@@ -4,22 +4,49 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  # this module returns a reactive which contains the data path
+  error_loading_data <- shiny::reactiveVal(FALSE)
+
   selected_file <- shiny::reactive({
     file <- get_selected_file_from_url(session)
 
-    # TODO: this should kill the app
-    shiny::validate(
-      shiny::need(file, "file url argument not present")
-    )
+    if (is.null(file)) {
+      error_loading_data("No/Invalid file was requested.")
+      shiny::req(FALSE)
+    }
 
     file
   })
 
   selected_data <- shiny::reactive({
-    selected_file() |>
-      shiny::req() |>
-      get_results()
+    file <- shiny::req(selected_file())
+
+    tryCatch(
+      {
+        get_results(file)
+      },
+      error = \(e) {
+        error_loading_data("Results not found.")
+        shiny::req(FALSE)
+      }
+    )
+  })
+
+  shiny::observe({
+    error_message <- shiny::req(error_loading_data())
+    session$allowReconnect(FALSE)
+
+    shiny::showModal(
+      shiny::modalDialog(
+        title = "Error",
+        footer = NULL,
+        shiny::tagList(
+          error_message,
+          "Please return to",
+          shiny::tags$a("result selection", href = "/nhp/outputs")
+        )
+      )
+    )
+    session$close()
   })
 
   # handle site selection ----
