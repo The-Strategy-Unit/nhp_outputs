@@ -68,6 +68,14 @@ default:
             - walk-in
             - ambulance
 
+  measures:
+    admissions: Admissions
+    beddays: Beddays
+    attendances: Attendances
+    tele_attendances: Tele-Attendances
+    walk-in: Walk-in Arrivals
+    ambulance: Ambulance Arrivals
+
 production:
   app_prod: yes
 dev:
