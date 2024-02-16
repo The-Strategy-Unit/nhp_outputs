@@ -2,6 +2,10 @@ default:
   folder: "dev"
   app_url: "http://localhost:8081/"
 
+development:
+  folder: "dev"
+  app_url: "/nhp/dev/outputs/"
+
 production:
   folder: "prod"
   app_url: "/nhp/{version}/outputs/"
