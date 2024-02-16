@@ -27,7 +27,7 @@ mod_principal_detailed_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Make Selections",
+      title = "Make Sselections",
       collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
@@ -36,7 +36,7 @@ mod_principal_detailed_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Activity by Sex and Age or Treatment Specialty",
+      title = "Activity by sex and age or treatment specialty",
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(

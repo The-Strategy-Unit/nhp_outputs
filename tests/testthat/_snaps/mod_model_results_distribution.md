@@ -71,7 +71,7 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Beeswarm Distribution</h3>
+            <h3 class="card-title">Beeswarm (model-run distribution)</h3>
           </div>
           <div class="card-body">
             The <span style='color:darkgrey'>grey continuous line</span> is the baseline, <span style='color:red'>red-dashed</span> is the principal.
@@ -83,12 +83,12 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Beeswarm Distribution","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Beeswarm (model-run distribution)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">S-curve (Empirical Cumulative Distribution Function)</h3>
+            <h3 class="card-title">S-curve (empirical cumulative distribution function)</h3>
           </div>
           <div class="card-body">
             The <span style='color:darkgrey'>grey continuous line</span> is the baseline, <span style='color:red'>red-dashed</span> is the principal, <span style='color:darkgrey'>grey-dashed</span> are the 10th and 90th percentiles.
@@ -100,6 +100,6 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"S-curve (Empirical Cumulative Distribution Function)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"S-curve (empirical cumulative distribution function)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 

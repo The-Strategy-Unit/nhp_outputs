@@ -27,7 +27,7 @@ mod_principal_summary_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Summary by Point of Delivery",
+      title = "Summary by point of delivery",
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(

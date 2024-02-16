@@ -55,7 +55,7 @@ mod_principal_high_level_ui <- function(id) {
     ),
     shiny::fluidRow(
       bs4Dash::box(
-        title = "Inpatient Admissions",
+        title = "Inpatient admissions",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("ip"))
@@ -63,7 +63,7 @@ mod_principal_high_level_ui <- function(id) {
         width = 4
       ),
       bs4Dash::box(
-        title = "Outpatient Attendances",
+        title = "Outpatient attendances",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("op"))
@@ -71,7 +71,7 @@ mod_principal_high_level_ui <- function(id) {
         width = 4
       ),
       bs4Dash::box(
-        title = "A&E Attendances (trust-level only)",
+        title = "A&E attendances (trust-level only)",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("aae"))
@@ -122,10 +122,24 @@ mod_principal_high_level_table <- function(data, summary_type = c("value", "chan
       dplyr::select(
         "fyear", "pod_name",
         tidyselect::matches(fyear_rx),
-        tidyselect::all_of(summary_type)
+        tidyselect::all_of(summary_type),
+        "activity_type"
       ) |>
+      dplyr::mutate(
+        activity_type = dplyr::case_match(
+          .data$activity_type,
+          "ip"  ~ "Inpatient",
+          "op"  ~ "Outpatient",
+          "aae" ~ "A&E"
+        ),
+        dplyr::across(
+          "activity_type",
+          \(x) forcats::fct_relevel(x, "Inpatient", "Outpatient", "A&E")
+        )
+      ) |>
+      dplyr::arrange(.data$activity_type) |>
       tidyr::pivot_wider(names_from = "fyear", values_from = summary_type) |>
-      gt::gt() |>
+      gt::gt(groupname_col = "activity_type") |>
       gt::sub_missing() |>
       gt::cols_align(
         align = "left",

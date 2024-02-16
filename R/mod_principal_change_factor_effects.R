@@ -27,7 +27,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Make Selections",
+      title = "Make selections",
       collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
@@ -36,7 +36,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Impact of Changes (Trust Level Only)",
+      title = "Impact of changes (trust-level only)",
       collapsible = FALSE,
       width = 12,
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
@@ -45,10 +45,10 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Individual Change Factors (Trust Level Only)",
+      title = "Individual change factors (trust-level only)",
       collapsible = FALSE,
       width = 12,
-      shiny::selectInput(ns("sort_type"), "Sort By", c("descending value", "alphabetical")),
+      shiny::selectInput(ns("sort_type"), "Sort By", c("Descending value", "Alphabetical")),
       shinycssloaders::withSpinner(
         shiny::fluidRow(
           plotly::plotlyOutput(ns("activity_avoidance"), height = "600px"),
@@ -202,7 +202,15 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
       at <- shiny::req(input$activity_type)
       pcf <- shiny::req(principal_change_factors())
 
-      measures <- unique(pcf$measure)
+      measures_unnamed <- unique(pcf$measure)
+
+      measure_labels <- dplyr::if_else(
+        measures_unnamed == "beddays",
+        "Bed Days",
+        snakecase::to_title_case(measures_unnamed)
+      )
+
+      measures <- purrr::set_names(measures_unnamed, measure_labels)
 
       shiny::req(length(measures) > 0)
 
@@ -227,7 +235,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
           .data$value < 0
         )
 
-      if (input$sort_type == "descending value") {
+      if (input$sort_type == "Descending value") {
         d |>
           dplyr::mutate(
             dplyr::across(

@@ -26,7 +26,7 @@
         <div class="col-sm-12">
           <div class="card bs4Dash">
             <div class="card-header">
-              <h3 class="card-title">Summary by Activity Type and Measure</h3>
+              <h3 class="card-title">Summary by activity type and measure</h3>
             </div>
             <div class="card-body">
               <div class="shiny-spinner-output-container shiny-spinner-hideui ">
@@ -38,7 +38,7 @@
               </div>
             </div>
           </div>
-          <script type="application/json">{"title":"Summary by Activity Type and Measure","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"title":"Summary by activity type and measure","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
         <div class="col-sm-3"></div>
       </div>

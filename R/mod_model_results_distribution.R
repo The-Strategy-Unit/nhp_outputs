@@ -36,7 +36,7 @@ mod_model_results_distribution_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Beeswarm Distribution",
+      title = "Beeswarm (model-run distribution)",
       collapsible = FALSE,
       width = 12,
       htmltools::HTML(
@@ -48,7 +48,7 @@ mod_model_results_distribution_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "S-curve (Empirical Cumulative Distribution Function)",
+      title = "S-curve (empirical cumulative distribution function)",
       collapsible = FALSE,
       width = 12,
       htmltools::HTML(
