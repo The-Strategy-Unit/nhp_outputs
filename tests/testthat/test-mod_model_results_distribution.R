@@ -43,7 +43,7 @@ test_that("beeswarm returns a ggplot", {
     model_run_distribution_expected,
     FALSE
   )
-  expect_s3_class(p, "plotly")
+  expect_s3_class(p, "ggplot")
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
