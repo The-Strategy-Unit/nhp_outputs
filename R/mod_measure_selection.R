@@ -56,17 +56,17 @@ mod_measure_selection_server <- function(id) {
       at <- shiny::req(input$activity_type)
       p <- shiny::req(input$pod)
 
+      measure_names <- get_golem_config("measures")
+
       measures <- atpmo |>
         dplyr::filter(.data$activity_type == at, .data$pod == p) |>
-        purrr::pluck("measures") |>
-        purrr::set_names("Admissions", "Bed Days")
-
-      default_measure <- if (at == "ip") "beddays" else NULL
+        purrr::pluck("measures")
 
       shiny::updateSelectInput(
-        session, "measure",
-        choices = measures,
-        selected = default_measure
+        session,
+        "measure",
+        choices = purrr::set_names(measures, measure_names[measures]),
+        selected = ifelse(at == "ip", "beddays", measures[[1]])
       )
     })
 

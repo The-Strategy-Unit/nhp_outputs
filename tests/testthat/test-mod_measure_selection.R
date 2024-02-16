@@ -110,21 +110,18 @@ test_that("it updates the measure dropdown when pod changes", {
     2
   )
 
-  at <- "aae"
-  p <- "aae_type-01"
-
-  measures <- atpmo_expected |>
-    dplyr::filter(.data$activity_type == at, .data$pod == p) |>
-    purrr::pluck("measures")
-
   shiny::testServer(mod_measure_selection_server, {
-    session$setInputs(activity_type = at, pod = p)
+    session$setInputs(activity_type = "aae", pod = "aae_type-01")
 
-    default_measure <- if (at == "ip") "beddays" else NULL
-
-    # TODO: reinstate failing tests
-    # expect_called(m, 3)
-    # expect_args(m, 3, session, "measure", choices = measures, selected = default_measure)
+    expect_called(m, 3)
+    expect_args(
+      m,
+      3,
+      session,
+      "measure",
+      choices = c(`Ambulance Arrivals` = "ambulance"),
+      selected = "ambulance"
+    )
   })
 })
 
