@@ -50,14 +50,14 @@ mod_model_results_distribution_ui <- function(id) {
       width = 12,
       htmltools::HTML(paste0(
         "The ",
-        htmltools::span("red dashed line", style = "color:red"),
+        htmltools::span("red vertical dashed line", style = "color:red"),
         " is the principal value (",
         htmltools::htmlPreserve(principal_bee),
         ") and the ",
-        htmltools::span("grey continuous line", style = "color:darkgrey"),
+        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
         " is the baseline value (",
         htmltools::htmlPreserve(baseline_bee),
-        ")"
+        ")."
       )),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("beeswarm"), height = "400px")
@@ -72,19 +72,19 @@ mod_model_results_distribution_ui <- function(id) {
         htmltools::span("red dashed line", style = "color:red"),
         " is the principal value (",
         htmltools::htmlPreserve(principal_ecdf),
-        " at ",
+        ", which covers ",
         htmltools::htmlPreserve(principal_ecdf_pcnt),
-        "), the ",
-        htmltools::span("grey dashed lines", style = "color:darkgrey"),
-        " are the 10th (",
+        " of model runs), the ",
+        htmltools::span("blue dashed lines", style = "color:cornflowerblue"),
+        " are the 10th and 90th percentiles (",
         htmltools::htmlPreserve(p10_ecdf),
-        ") and the 90th (",
+        " and ",
         htmltools::htmlPreserve(p90_ecdf),
-        ") percentiles and the ",
-        htmltools::span("grey continuous line", style = "color:darkgrey"),
+        ") and the ",
+        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
         " is the baseline value (",
         htmltools::htmlPreserve(baseline_ecdf),
-        ")"
+        ")."
       )),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("ecdf"), height = "400px")
@@ -119,7 +119,7 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
         alpha = 0.5
       )
     ) +
-    ggplot2::geom_hline(yintercept = b, colour = "darkgrey") +
+    ggplot2::geom_hline(yintercept = b, colour = "dimgrey") +
     ggplot2::geom_hline(yintercept = p, linetype = "dashed", colour = "red") +
     ggplot2::expand_limits(y = ifelse(show_origin, 0, b)) +
     ggplot2::scale_fill_manual(values = c(
@@ -128,9 +128,9 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
     )) +
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(
-      breaks = scales::pretty_breaks(5),
+      breaks = scales::pretty_breaks(10),
       labels = scales::comma,
-      expand = c(0, 0)
+      expand = c(0.002, 0)
     ) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
@@ -167,7 +167,7 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
     x_end   = rep(c(x_quantiles, p), 2),
     y_start = c(probs_pcnts, p_pcnt, rep(0, 3)),
     y_end   = rep(c(probs_pcnts, p_pcnt), 2),
-    colour  = "darkgrey"
+    colour  = "cornflowerblue"
   )
 
   lines_n <- nrow(line_guides)
@@ -175,8 +175,22 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
 
   data |>
     require_rows() |>
-    ggplot2::ggplot(ggplot2::aes(.data$value)) +
-    ggplot2::stat_ecdf(geom = "step", pad = FALSE) +
+    ggplot2::ggplot() +
+    suppressWarnings(  # TODO: works, but 'Ignoring unknown aesthetics: text' warning
+      ggplot2::geom_point(
+        ggplot2::aes(
+          x_vals,
+          y_vals,
+          text = glue::glue(
+            "Percentage: {scales::percent(y_vals, accuracy = 1)}\n",
+            "Value: {scales::comma(x_vals, accuracy = 1)}"
+          )
+        ),
+        alpha = 0.01,
+        size = 0.01
+      )
+    ) +
+    ggplot2::geom_step(ggplot2::aes(x_vals, y_vals)) +
     ggplot2::geom_segment(
       ggplot2::aes(
         x = .data$x_start,
@@ -188,17 +202,17 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
       linetype = "dashed",
       colour = line_guides[["colour"]]
     ) +
-    ggplot2::geom_vline(xintercept = b, colour = "darkgrey") +
+    ggplot2::geom_vline(xintercept = b, colour = "dimgrey") +
     ggplot2::ylab("Percentage of model runs") +
     ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::scale_x_continuous(
-      breaks = scales::pretty_breaks(5),
+      breaks = scales::pretty_breaks(10),
       labels = scales::comma,
-      expand = c(0, 0),
+      expand = c(0.002, 0),
       limits = c(min_x, NA)
     ) +
     ggplot2::scale_y_continuous(
-      breaks = c(0, 0.1, 0.25, 0.5, 0.75, 0.9, 1),
+      breaks = c(seq(0, 1, 0.1)),
       labels = scales::percent,
       expand = c(0, 0)
     ) +
@@ -279,7 +293,7 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
       data <- shiny::req(aggregated_data())
 
       mod_model_results_distribution_ecdf_plot(data, input$show_origin) |>
-        plotly::ggplotly()
+        plotly::ggplotly(tooltip = "text")
     })
   })
 }

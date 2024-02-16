@@ -74,7 +74,7 @@
             <h3 class="card-title">Beeswarm (model-run distribution)</h3>
           </div>
           <div class="card-body">
-            The <span style="color:red">red dashed line</span> is the principal value (<!--html_preserve--><span id="id-p_bee" class="shiny-text-output"></span><!--/html_preserve-->) and the <span style="color:darkgrey">grey continuous line</span> is the baseline value (<!--html_preserve--><span id="id-b_bee" class="shiny-text-output"></span><!--/html_preserve-->)
+            The <span style="color:red">red vertical dashed line</span> is the principal value (<!--html_preserve--><span id="id-p_bee" class="shiny-text-output"></span><!--/html_preserve-->) and the <span style="color:dimgrey">grey vertical continuous line</span> is the baseline value (<!--html_preserve--><span id="id-b_bee" class="shiny-text-output"></span><!--/html_preserve-->).
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-b48ec1189daabe57db8f00bbc7a75abd" class="loader">Loading...</div>
@@ -91,7 +91,7 @@
             <h3 class="card-title">S-curve (empirical cumulative distribution function)</h3>
           </div>
           <div class="card-body">
-            The <span style="color:red">red dashed line</span> is the principal value (<!--html_preserve--><span id="id-p_ecdf" class="shiny-text-output"></span><!--/html_preserve--> at <!--html_preserve--><span id="id-p_ecdf_pcnt" class="shiny-text-output"></span><!--/html_preserve-->), the <span style="color:darkgrey">grey dashed lines</span> are the 10th (<!--html_preserve--><span id="id-p10_ecdf" class="shiny-text-output"></span><!--/html_preserve-->) and the 90th (<!--html_preserve--><span id="id-p90_ecdf" class="shiny-text-output"></span><!--/html_preserve-->) percentiles and the <span style="color:darkgrey">grey continuous line</span> is the baseline value (<!--html_preserve--><span id="id-b_ecdf" class="shiny-text-output"></span><!--/html_preserve-->)
+            The <span style="color:red">red dashed line</span> is the principal value (<!--html_preserve--><span id="id-p_ecdf" class="shiny-text-output"></span><!--/html_preserve-->, which covers <!--html_preserve--><span id="id-p_ecdf_pcnt" class="shiny-text-output"></span><!--/html_preserve--> of model runs), the <span style="color:cornflowerblue">blue dashed lines</span> are the 10th and 90th percentiles (<!--html_preserve--><span id="id-p10_ecdf" class="shiny-text-output"></span><!--/html_preserve--> and <!--html_preserve--><span id="id-p90_ecdf" class="shiny-text-output"></span><!--/html_preserve-->) and the <span style="color:dimgrey">grey vertical continuous line</span> is the baseline value (<!--html_preserve--><span id="id-b_ecdf" class="shiny-text-output"></span><!--/html_preserve-->).
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-12f18e766a1116015fed39b1b08fb463" class="loader">Loading...</div>
