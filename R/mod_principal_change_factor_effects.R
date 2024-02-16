@@ -124,7 +124,10 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
         0,
         .data[["value"]]
       ),
-      tooltip = glue::glue("{change_factor}: {scales::comma(sum(tooltip), accuracy = 1)}"),
+      tooltip = glue::glue(
+        "{snakecase::to_title_case(as.character(change_factor))}: ",
+        "{scales::comma(sum(tooltip), accuracy = 1)}"
+      ),
       .by = "change_factor"
     ) |>
     ggplot2::ggplot(
@@ -150,8 +153,13 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
 mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour, title, x_axis_label) {
   data |>
     dplyr::filter(.data$change_factor == .env$change_factor) |>
+    dplyr::mutate(
+      tooltip = glue::glue("{mitigator_name}: {scales::comma(value, accuracy = 1)}")
+    ) |>
     require_rows() |>
-    ggplot2::ggplot(ggplot2::aes(.data$value, .data$mitigator_name)) +
+    ggplot2::ggplot(
+      ggplot2::aes(.data$value, .data$mitigator_name, text = .data[["tooltip"]])
+    ) +
     ggplot2::geom_col(fill = "#2c2825") +
     ggplot2::scale_x_continuous(labels = scales::comma) +
     ggplot2::labs(title = title, x = x_axis_label, y = "")
@@ -272,7 +280,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         "Activity Avoidance",
         snakecase::to_title_case(input$measure)
       ) |>
-        plotly::ggplotly() |>
+        plotly::ggplotly(tooltip = "text") |>
         plotly::layout(showlegend = FALSE)
     })
 
@@ -284,7 +292,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         "Efficiencies",
         snakecase::to_title_case(input$measure)
       ) |>
-        plotly::ggplotly() |>
+        plotly::ggplotly(tooltip = "text") |>
         plotly::layout(showlegend = FALSE)
     })
   })
