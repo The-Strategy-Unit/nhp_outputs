@@ -145,7 +145,10 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
       position = "stack"
     ) +
     ggplot2::scale_fill_identity() +
-    ggplot2::scale_x_continuous(labels = scales::comma) +
+    ggplot2::scale_x_continuous(
+      breaks = scales::pretty_breaks(5),
+      labels = scales::comma
+    ) +
     ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
     ggplot2::labs(x = "", y = "")
 }
@@ -161,7 +164,10 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
       ggplot2::aes(.data$value, .data$mitigator_name, text = .data[["tooltip"]])
     ) +
     ggplot2::geom_col(fill = "#2c2825") +
-    ggplot2::scale_x_continuous(labels = scales::comma) +
+    ggplot2::scale_x_continuous(
+      breaks = scales::pretty_breaks(5),
+      labels = scales::comma
+    ) +
     ggplot2::labs(title = title, x = x_axis_label, y = "")
 }
 

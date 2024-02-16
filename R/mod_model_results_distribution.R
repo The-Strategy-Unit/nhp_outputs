@@ -127,7 +127,11 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
       "high_migration" = "#5881c1"
     )) +
     ggplot2::coord_flip() +
-    ggplot2::scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(
+      breaks = scales::pretty_breaks(5),
+      labels = scales::comma,
+      expand = c(0, 0)
+    ) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
       axis.ticks.y = ggplot2::element_blank(),
@@ -188,6 +192,7 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
     ggplot2::ylab("Percentage of model runs") +
     ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::scale_x_continuous(
+      breaks = scales::pretty_breaks(5),
       labels = scales::comma,
       expand = c(0, 0),
       limits = c(min_x, NA)
