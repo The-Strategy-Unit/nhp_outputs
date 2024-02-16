@@ -2,6 +2,50 @@ p <- app_sys("sample_results.Rds") |>
   readRDS() |>
   get_params()
 
+test_that("info_params_tables generated validation errors if no params provided", {
+  p <- list()
+
+  expect_error(
+    info_params_table_demographic_adjustment(p)
+  )
+
+  expect_error(
+    info_params_table_baseline_adjustment(p)
+  )
+
+  expect_error(
+    info_params_table_covid_adjustment(p)
+  )
+
+  expect_error(
+    info_params_table_waiting_list_adjustment(p)
+  )
+
+  expect_error(
+    info_params_table_expat_repat_adjustment(p, "expat")
+  )
+
+  expect_error(
+    info_params_table_non_demographic_adjustment(p)
+  )
+
+  expect_error(
+    info_params_table_activity_avoidance(p)
+  )
+
+  expect_error(
+    info_params_table_efficiencies(p)
+  )
+
+  expect_error(
+    info_params_table_bed_occupancy_day_night(p)
+  )
+
+  expect_error(
+    info_params_table_bed_occupancy_specialty_mapping(p)
+  )
+})
+
 test_that("info_params_table_demographic_adjustment creates table correctly", {
   set.seed(1)
   expect_snapshot(
