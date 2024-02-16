@@ -103,7 +103,7 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
 
-  x_placeholder <- "1.00"  # label will help line up beeswarm and ECDF plots
+  x_placeholder <- "100%"  # dummy label to help line up beeswarm and ECDF plots
 
   data |>
     require_rows() |>
@@ -185,14 +185,18 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
       colour = line_guides[["colour"]]
     ) +
     ggplot2::geom_vline(xintercept = b, colour = "darkgrey") +
-    ggplot2::ylab("Fraction of model runs") +
+    ggplot2::ylab("Percentage of model runs") +
     ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::scale_x_continuous(
       labels = scales::comma,
       expand = c(0, 0),
       limits = c(min_x, NA)
     ) +
-    ggplot2::scale_y_continuous(expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(
+      breaks = c(0, 0.1, 0.25, 0.5, 0.75, 0.9, 1),
+      labels = scales::percent,
+      expand = c(0, 0)
+    ) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
 
 }
@@ -209,6 +213,8 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         mod_model_results_distribution_get_data(selected_measure(), selected_site()) |>
         require_rows()
     })
+
+    # Dynamic values to go above plots ----
 
     output$b_bee <- output$b_ecdf <- shiny::renderText({
       data <- shiny::req(aggregated_data())
@@ -251,6 +257,8 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
       p90_val <- stats::quantile(ecdf_fn, probs = 0.9)
       scales::comma(p90_val)
     })
+
+    # Plots ----
 
     output$beeswarm <- plotly::renderPlotly({
       data <- shiny::req(aggregated_data())
