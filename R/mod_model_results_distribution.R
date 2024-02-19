@@ -108,7 +108,7 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   data |>
     require_rows() |>
     ggplot2::ggplot() +
-    suppressWarnings(  # TODO: works, but 'Ignoring unknown aesthetics: text' warning
+    suppressWarnings(
       ggbeeswarm::geom_quasirandom(
         ggplot2::aes(
           x = x_placeholder,
@@ -176,7 +176,7 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
   data |>
     require_rows() |>
     ggplot2::ggplot() +
-    suppressWarnings(  # TODO: works, but 'Ignoring unknown aesthetics: text' warning
+    suppressWarnings(
       ggplot2::geom_point(
         ggplot2::aes(
           x_vals,
