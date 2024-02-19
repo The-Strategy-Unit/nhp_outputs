@@ -10,8 +10,8 @@
 mod_model_results_distribution_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  principal_bee <- shiny::textOutput(ns("p_bee"), inline = TRUE)
-  baseline_bee <- shiny::textOutput(ns("b_bee"), inline = TRUE)
+  # principal_bee <- shiny::textOutput(ns("p_bee"), inline = TRUE)
+  # baseline_bee <- shiny::textOutput(ns("b_bee"), inline = TRUE)
   principal_ecdf <- shiny::textOutput(ns("p_ecdf"), inline = TRUE)
   baseline_ecdf  <- shiny::textOutput(ns("b_ecdf"), inline = TRUE)
   principal_ecdf_pcnt <- shiny::textOutput(ns("p_ecdf_pcnt"), inline = TRUE)
@@ -48,17 +48,7 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Beeswarm (model-run distribution)",
       collapsible = FALSE,
       width = 12,
-      htmltools::HTML(paste0(
-        "The ",
-        htmltools::span("red vertical dashed line", style = "color:red"),
-        " is the principal value (",
-        htmltools::htmlPreserve(principal_bee),
-        ") and the ",
-        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
-        " is the baseline value (",
-        htmltools::htmlPreserve(baseline_bee),
-        ")."
-      )),
+      shiny::htmlOutput(ns("beeswarm_text")),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("beeswarm"), height = "400px")
       )
@@ -67,25 +57,7 @@ mod_model_results_distribution_ui <- function(id) {
       title = "S-curve (empirical cumulative distribution function)",
       collapsible = FALSE,
       width = 12,
-      htmltools::HTML(paste0(
-        "The ",
-        htmltools::span("red dashed line", style = "color:red"),
-        " is the principal value (",
-        htmltools::htmlPreserve(principal_ecdf),
-        ", which covers ",
-        htmltools::htmlPreserve(principal_ecdf_pcnt),
-        " of model runs), the ",
-        htmltools::span("blue dashed lines", style = "color:cornflowerblue"),
-        " are the 10th and 90th percentiles (",
-        htmltools::htmlPreserve(p10_ecdf),
-        " and ",
-        htmltools::htmlPreserve(p90_ecdf),
-        ") and the ",
-        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
-        " is the baseline value (",
-        htmltools::htmlPreserve(baseline_ecdf),
-        ")."
-      )),
+      shiny::htmlOutput(ns("ecdf_text")),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("ecdf"), height = "400px")
       )
@@ -233,24 +205,37 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         require_rows()
     })
 
-    # Dynamic values to go above plots ----
+    # Dynamic text to go above plots ----
 
-    output$b_bee <- output$b_ecdf <- shiny::renderText({
+    output$beeswarm_text <- shiny::renderText({
+
       data <- shiny::req(aggregated_data())
-      b <- data$baseline[[1]]
-      scales::comma(b)
+
+      b <- data$baseline[[1]] |> scales::comma()
+      p <- data$principal[[1]] |> scales::comma()
+
+      paste0(
+        "The ",
+        htmltools::span("red vertical dashed line", style = "color:red"),
+        " is the principal value (",
+        p,
+        ") and the ",
+        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
+        " is the baseline value (",
+        b,
+        ")."
+      )
+
     })
 
-    output$p_bee <- output$p_ecdf <- shiny::renderText({
-      data <- shiny::req(aggregated_data())
-      p <- data$principal[[1]]
-      scales::comma(p)
-    })
+    output$ecdf_text <- shiny::renderText({
 
-    output$p_ecdf_pcnt <- shiny::renderText({
       data <- shiny::req(aggregated_data())
 
+      b_val <- data$principal[[1]] |> scales::comma()
       p <- data$principal[[1]]
+      p_val <- scales::comma(p)
+
       ecdf_fn <- stats::ecdf(data[["value"]])
 
       # Calculate y value for principal x value (find nearest % for the principal)
@@ -258,24 +243,33 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
       y_vals <- sort(ecdf_fn(data[["value"]]))
       principal_diffs <- abs(p - x_vals)  # nearest x in ECDF to the principal
       min_principal_diff_i <- which(principal_diffs == min(principal_diffs))[1]
-      p_pcnt <- y_vals[min_principal_diff_i]
+      p_pcnt <- y_vals[min_principal_diff_i] |> scales::percent(accuracy = 1)
 
-      scales::percent(p_pcnt, accuracy = 1)
+      p10_val <- stats::quantile(ecdf_fn, probs = 0.1) |> scales::comma()
+      p90_val <- stats::quantile(ecdf_fn, probs = 0.9) |> scales::comma()
+
+      paste0(
+        "The ",
+        htmltools::span("red dashed line", style = "color:red"),
+        " is the principal value (",
+        p_val,
+        ", which covers ",
+        p_pcnt,
+        " of model runs), the ",
+        htmltools::span("blue dashed lines", style = "color:cornflowerblue"),
+        " are the 10th and 90th percentiles (",
+        p10_val,
+        " and ",
+        p90_val,
+        ") and the ",
+        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
+        " is the baseline value (",
+        b_val,
+        ")."
+      )
+
     })
 
-    output$p10_ecdf <- shiny::renderText({
-      data <- shiny::req(aggregated_data())
-      ecdf_fn <- stats::ecdf(data[["value"]])
-      p10_val <- stats::quantile(ecdf_fn, probs = 0.1)
-      scales::comma(p10_val)
-    })
-
-    output$p90_ecdf <- shiny::renderText({
-      data <- shiny::req(aggregated_data())
-      ecdf_fn <- stats::ecdf(data[["value"]])
-      p90_val <- stats::quantile(ecdf_fn, probs = 0.9)
-      scales::comma(p90_val)
-    })
 
     # Plots ----
 
