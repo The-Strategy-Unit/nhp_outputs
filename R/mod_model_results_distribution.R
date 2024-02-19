@@ -10,14 +10,6 @@
 mod_model_results_distribution_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  # principal_bee <- shiny::textOutput(ns("p_bee"), inline = TRUE)
-  # baseline_bee <- shiny::textOutput(ns("b_bee"), inline = TRUE)
-  principal_ecdf <- shiny::textOutput(ns("p_ecdf"), inline = TRUE)
-  baseline_ecdf  <- shiny::textOutput(ns("b_ecdf"), inline = TRUE)
-  principal_ecdf_pcnt <- shiny::textOutput(ns("p_ecdf_pcnt"), inline = TRUE)
-  p10_ecdf <- shiny::textOutput(ns("p10_ecdf"), inline = TRUE)
-  p90_ecdf <- shiny::textOutput(ns("p90_ecdf"), inline = TRUE)
-
   shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution"),
     bs4Dash::box(
