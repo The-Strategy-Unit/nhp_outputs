@@ -178,7 +178,7 @@ mod_principal_high_level_plot <- function(data, activity_type) {
     ggplot2::geom_line() +
     suppressWarnings(  # TODO: works, but 'Ignoring unknown aesthetics: text' warning
       ggplot2::geom_point(ggplot2::aes(text = glue::glue(
-        "{pod_name}\n{year}/{(year + 1) - 2000}: ",
+        "{pod_name}\n{year}/{(year + 1) %% 100}: ",
         "{scales::comma(value, accuracy = 1)}"
       )))
     ) +
