@@ -166,13 +166,22 @@ mod_principal_high_level_plot <- function(data, activity_type) {
   c(start_year, end_year) %<-% range(data$year)
 
   data |>
-    dplyr::filter(
-      .data$activity_type == .env$activity_type
-    ) |>
+    dplyr::filter(.data$activity_type == .env$activity_type) |>
     require_rows() |>
-    ggplot2::ggplot(ggplot2::aes(.data$year, .data$value, colour = .data$pod_name)) +
+    ggplot2::ggplot(
+      ggplot2::aes(
+        .data$year,
+        .data$value,
+        colour = .data$pod_name
+      )
+    ) +
     ggplot2::geom_line() +
-    ggplot2::geom_point() +
+    suppressWarnings(  # TODO: works, but 'Ignoring unknown aesthetics: text' warning
+      ggplot2::geom_point(ggplot2::aes(text = glue::glue(
+        "{pod_name}\n{year}/{(year + 1) %% 100}: ",
+        "{scales::comma(value, accuracy = 1)}"
+      )))
+    ) +
     ggplot2::scale_x_continuous(
       labels = fyear_str,
       breaks = c(start_year, end_year)
@@ -214,7 +223,7 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
     output$aae <- plotly::renderPlotly({
       summary_data() |>
         mod_principal_high_level_plot("aae") |>
-        plotly::ggplotly() |>
+        plotly::ggplotly(tooltip = "text") |>
         plotly::layout(legend = list(
           orientation = "h"
         ))
@@ -223,7 +232,7 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
     output$ip <- plotly::renderPlotly({
       summary_data() |>
         mod_principal_high_level_plot("ip") |>
-        plotly::ggplotly() |>
+        plotly::ggplotly(tooltip = "text") |>
         plotly::layout(legend = list(
           orientation = "h"
         ))
@@ -232,7 +241,7 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
     output$op <- plotly::renderPlotly({
       summary_data() |>
         mod_principal_high_level_plot("op") |>
-        plotly::ggplotly() |>
+        plotly::ggplotly(tooltip = "text") |>
         plotly::layout(legend = list(
           orientation = "h"
         ))

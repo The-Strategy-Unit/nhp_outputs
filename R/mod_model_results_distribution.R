@@ -9,6 +9,15 @@
 #' @importFrom shiny NS tagList
 mod_model_results_distribution_ui <- function(id) {
   ns <- shiny::NS(id)
+
+  principal_bee <- shiny::textOutput(ns("p_bee"), inline = TRUE)
+  baseline_bee <- shiny::textOutput(ns("b_bee"), inline = TRUE)
+  principal_ecdf <- shiny::textOutput(ns("p_ecdf"), inline = TRUE)
+  baseline_ecdf  <- shiny::textOutput(ns("b_ecdf"), inline = TRUE)
+  principal_ecdf_pcnt <- shiny::textOutput(ns("p_ecdf_pcnt"), inline = TRUE)
+  p10_ecdf <- shiny::textOutput(ns("p10_ecdf"), inline = TRUE)
+  p90_ecdf <- shiny::textOutput(ns("p90_ecdf"), inline = TRUE)
+
   shiny::tagList(
     shiny::h1("Distribution of projections: activity distribution"),
     bs4Dash::box(
@@ -39,10 +48,17 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Beeswarm (model-run distribution)",
       collapsible = FALSE,
       width = 12,
-      htmltools::HTML(
-        "The <span style='color:darkgrey'>grey continuous line</span> is the baseline,",
-        "<span style='color:red'>red-dashed</span> is the principal."
-      ),
+      htmltools::HTML(paste0(
+        "The ",
+        htmltools::span("red vertical dashed line", style = "color:red"),
+        " is the principal value (",
+        htmltools::htmlPreserve(principal_bee),
+        ") and the ",
+        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
+        " is the baseline value (",
+        htmltools::htmlPreserve(baseline_bee),
+        ")."
+      )),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("beeswarm"), height = "400px")
       )
@@ -51,11 +67,25 @@ mod_model_results_distribution_ui <- function(id) {
       title = "S-curve (empirical cumulative distribution function)",
       collapsible = FALSE,
       width = 12,
-      htmltools::HTML(
-        "The <span style='color:darkgrey'>grey continuous line</span> is the baseline,",
-        "<span style='color:red'>red-dashed</span> is the principal,",
-        "<span style='color:darkgrey'>grey-dashed</span> are the 10th and 90th percentiles."
-      ),
+      htmltools::HTML(paste0(
+        "The ",
+        htmltools::span("red dashed line", style = "color:red"),
+        " is the principal value (",
+        htmltools::htmlPreserve(principal_ecdf),
+        ", which covers ",
+        htmltools::htmlPreserve(principal_ecdf_pcnt),
+        " of model runs), the ",
+        htmltools::span("blue dashed lines", style = "color:cornflowerblue"),
+        " are the 10th and 90th percentiles (",
+        htmltools::htmlPreserve(p10_ecdf),
+        " and ",
+        htmltools::htmlPreserve(p90_ecdf),
+        ") and the ",
+        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
+        " is the baseline value (",
+        htmltools::htmlPreserve(baseline_ecdf),
+        ")."
+      )),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("ecdf"), height = "400px")
       )
@@ -73,15 +103,23 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
 
-  x_placeholder <- "1.00"  # label will help line up beeswarm and ECDF plots
+  x_placeholder <- "100%"  # dummy label to help line up beeswarm and ECDF plots
 
-  beeswarm_plot <- data |>
+  data |>
     require_rows() |>
-    ggplot2::ggplot(
-      ggplot2::aes(x_placeholder, .data$value, colour = .data$variant)
+    ggplot2::ggplot() +
+    suppressWarnings(
+      ggbeeswarm::geom_quasirandom(
+        ggplot2::aes(
+          x = x_placeholder,
+          y = .data$value,
+          colour = .data$variant,
+          text = glue::glue("Value: {scales::comma(value, accuracy = 1)}\nVariant: {variant}")
+        ),
+        alpha = 0.5
+      )
     ) +
-    ggbeeswarm::geom_quasirandom(alpha = 0.5) +
-    ggplot2::geom_hline(yintercept = b, colour = "darkgrey") +
+    ggplot2::geom_hline(yintercept = b, colour = "dimgrey") +
     ggplot2::geom_hline(yintercept = p, linetype = "dashed", colour = "red") +
     ggplot2::expand_limits(y = ifelse(show_origin, 0, b)) +
     ggplot2::scale_fill_manual(values = c(
@@ -89,7 +127,11 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
       "high_migration" = "#5881c1"
     )) +
     ggplot2::coord_flip() +
-    ggplot2::scale_y_continuous(labels = scales::comma, expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(
+      breaks = scales::pretty_breaks(10),
+      labels = scales::comma,
+      expand = c(0.002, 0)
+    ) +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
       axis.ticks.y = ggplot2::element_blank(),
@@ -98,9 +140,6 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
       axis.title.y = ggplot2::element_text(colour = "white")
     )
 
-  beeswarm_plot |>
-    plotly::ggplotly() |>
-    plotly::layout(legend = list(orientation = "h"))
 }
 
 mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
@@ -128,7 +167,7 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
     x_end   = rep(c(x_quantiles, p), 2),
     y_start = c(probs_pcnts, p_pcnt, rep(0, 3)),
     y_end   = rep(c(probs_pcnts, p_pcnt), 2),
-    colour  = "darkgrey"
+    colour  = "cornflowerblue"
   )
 
   lines_n <- nrow(line_guides)
@@ -136,8 +175,22 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
 
   data |>
     require_rows() |>
-    ggplot2::ggplot(ggplot2::aes(.data$value)) +
-    ggplot2::stat_ecdf(geom = "step", pad = FALSE) +
+    ggplot2::ggplot() +
+    suppressWarnings(
+      ggplot2::geom_point(
+        ggplot2::aes(
+          x_vals,
+          y_vals,
+          text = glue::glue(
+            "Percentage: {scales::percent(y_vals, accuracy = 1)}\n",
+            "Value: {scales::comma(x_vals, accuracy = 1)}"
+          )
+        ),
+        alpha = 0.01,
+        size = 0.01
+      )
+    ) +
+    ggplot2::geom_step(ggplot2::aes(x_vals, y_vals)) +
     ggplot2::geom_segment(
       ggplot2::aes(
         x = .data$x_start,
@@ -149,15 +202,20 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
       linetype = "dashed",
       colour = line_guides[["colour"]]
     ) +
-    ggplot2::geom_vline(xintercept = b, colour = "darkgrey") +
-    ggplot2::ylab("Fraction of model runs") +
+    ggplot2::geom_vline(xintercept = b, colour = "dimgrey") +
+    ggplot2::ylab("Percentage of model runs") +
     ggplot2::expand_limits(x = ifelse(show_origin, 0, b)) +
     ggplot2::scale_x_continuous(
+      breaks = scales::pretty_breaks(10),
       labels = scales::comma,
-      expand = c(0, 0),
+      expand = c(0.002, 0),
       limits = c(min_x, NA)
     ) +
-    ggplot2::scale_y_continuous(expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(
+      breaks = c(seq(0, 1, 0.1)),
+      labels = scales::percent,
+      expand = c(0, 0)
+    ) +
     ggplot2::theme(axis.title.x = ggplot2::element_blank())
 
 }
@@ -175,18 +233,67 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         require_rows()
     })
 
+    # Dynamic values to go above plots ----
+
+    output$b_bee <- output$b_ecdf <- shiny::renderText({
+      data <- shiny::req(aggregated_data())
+      b <- data$baseline[[1]]
+      scales::comma(b)
+    })
+
+    output$p_bee <- output$p_ecdf <- shiny::renderText({
+      data <- shiny::req(aggregated_data())
+      p <- data$principal[[1]]
+      scales::comma(p)
+    })
+
+    output$p_ecdf_pcnt <- shiny::renderText({
+      data <- shiny::req(aggregated_data())
+
+      p <- data$principal[[1]]
+      ecdf_fn <- stats::ecdf(data[["value"]])
+
+      # Calculate y value for principal x value (find nearest % for the principal)
+      x_vals <- sort(data[["value"]])
+      y_vals <- sort(ecdf_fn(data[["value"]]))
+      principal_diffs <- abs(p - x_vals)  # nearest x in ECDF to the principal
+      min_principal_diff_i <- which(principal_diffs == min(principal_diffs))[1]
+      p_pcnt <- y_vals[min_principal_diff_i]
+
+      scales::percent(p_pcnt, accuracy = 1)
+    })
+
+    output$p10_ecdf <- shiny::renderText({
+      data <- shiny::req(aggregated_data())
+      ecdf_fn <- stats::ecdf(data[["value"]])
+      p10_val <- stats::quantile(ecdf_fn, probs = 0.1)
+      scales::comma(p10_val)
+    })
+
+    output$p90_ecdf <- shiny::renderText({
+      data <- shiny::req(aggregated_data())
+      ecdf_fn <- stats::ecdf(data[["value"]])
+      p90_val <- stats::quantile(ecdf_fn, probs = 0.9)
+      scales::comma(p90_val)
+    })
+
+    # Plots ----
+
     output$beeswarm <- plotly::renderPlotly({
       data <- shiny::req(aggregated_data())
 
       shiny::req(is.logical(input$show_origin))
 
-      mod_model_results_distribution_beeswarm_plot(data, input$show_origin)
+      mod_model_results_distribution_beeswarm_plot(data, input$show_origin) |>
+        plotly::ggplotly(tooltip = "text") |>
+        plotly::layout(legend = list(orientation = "h"))
     })
 
     output$ecdf <- plotly::renderPlotly({
       data <- shiny::req(aggregated_data())
 
-      mod_model_results_distribution_ecdf_plot(data, input$show_origin)
+      mod_model_results_distribution_ecdf_plot(data, input$show_origin) |>
+        plotly::ggplotly(tooltip = "text")
     })
   })
 }
