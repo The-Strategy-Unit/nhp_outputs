@@ -55,13 +55,13 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group shiny-input-container">
-                <div class="checkbox">
-                  <label>
-                    <input id="id-show_origin" type="checkbox" class="shiny-input-checkbox"/>
-                    <span>Show Origin (zero)?</span>
-                  </label>
-                </div>
+            </div>
+            <div class="form-group shiny-input-container">
+              <div class="checkbox">
+                <label>
+                  <input id="id-show_origin" type="checkbox" class="shiny-input-checkbox"/>
+                  <span>Show Origin (zero)?</span>
+                </label>
               </div>
             </div>
           </div>

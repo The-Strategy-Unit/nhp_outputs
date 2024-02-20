@@ -24,7 +24,7 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Make Sselections</h3>
+            <h3 class="card-title">Make selections</h3>
           </div>
           <div class="card-body">
             <div class="row">
@@ -67,7 +67,7 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Make Sselections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Make selections","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
