@@ -27,7 +27,7 @@ mod_principal_detailed_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Make Sselections",
+      title = "Make selections",
       collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
