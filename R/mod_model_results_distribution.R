@@ -31,10 +31,8 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Make selections",
       collapsible = FALSE,
       width = 12,
-      shiny::fluidRow(
-        mod_measure_selection_ui(ns("measure_selection"), 4),
-        shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?")
-      )
+      shiny::fluidRow(mod_measure_selection_ui(ns("measure_selection"), 4)),
+      shiny::checkboxInput(ns("show_origin"), "Show Origin (zero)?")
     ),
     bs4Dash::box(
       title = "Beeswarm (model-run distribution)",
