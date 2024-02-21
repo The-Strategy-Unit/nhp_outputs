@@ -33,19 +33,22 @@ test_that("get_selected_file_from_url decodes the filename correctly", {
   # act
   expected <- "test/file.json.gz"
 
+  key <- openssl::aes_keygen()
+  key_b64 <- openssl::base64_encode(key)
+
+  ct <- openssl::aes_cbc_encrypt(charToRaw(expected), key)
+  hm <- openssl::sha256(ct, key)
+
+  us <- openssl::base64_encode(c(hm, attr(ct, "iv"), ct))
+
   session <- list(
     clientData = list(
-      url_search = paste0(
-        "file=",
-        expected |>
-          charToRaw() |>
-          base64enc::base64encode()
-      )
+      url_search = paste0("?", us)
     )
   )
 
   # act
-  actual <- get_selected_file_from_url(session)
+  actual <- get_selected_file_from_url(session, key_b64)
 
   # assert
   expect_equal(actual, expected)

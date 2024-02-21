@@ -56,7 +56,7 @@ test_that("it gets the selected file from the url", {
     expect_equal(selected_file(), "file")
 
     expect_called(m, 1)
-    expect_call(m, 1, get_selected_file_from_url(session))
+    expect_call(m, 1, get_selected_file_from_url(session, Sys.getenv("NHP_ENCRYPT_KEY")))
   })
 })
 

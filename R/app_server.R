@@ -7,7 +7,7 @@ app_server <- function(input, output, session) {
   error_loading_data <- shiny::reactiveVal(FALSE)
 
   selected_file <- shiny::reactive({
-    file <- get_selected_file_from_url(session)
+    file <- get_selected_file_from_url(session, Sys.getenv("NHP_ENCRYPT_KEY"))
 
     if (is.null(file)) {
       error_loading_data("No/Invalid file was requested.")
