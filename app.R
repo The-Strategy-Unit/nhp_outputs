@@ -1,3 +1,14 @@
+encrypt_filename <- function(filename, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) {
+  key <- openssl::base64_decode(key_b64)
+
+  f <- charToRaw(filename)
+
+  ct <- openssl::aes_cbc_encrypt(f, key)
+  hm <- as.raw(openssl::sha256(ct, key))
+
+  openssl::base64_encode(c(hm, attr(ct, "iv"), ct))
+}
+
 get_container <- function() {
   ep_uri <- Sys.getenv("AZ_STORAGE_EP")
   sa_key <- Sys.getenv("AZ_STORAGE_KEY")
@@ -194,11 +205,9 @@ server <- function(input, output, session) {
     f <- shiny::req(selected_file())
     version <- f$app_version # nolint
 
-    file <- f$file |>
-      charToRaw() |>
-      base64enc::base64encode()
+    file <- encrypt_filename(f$file) # nolint
 
-    url <- glue::glue(config::get("app_url"), "?file={file}")
+    url <- glue::glue(config::get("app_url"), "?{file}")
 
     shiny::tags$a(
       "View Results",
@@ -210,4 +219,12 @@ server <- function(input, output, session) {
   })
 }
 
-shiny::shinyApp(ui, server)
+shiny::shinyApp(
+  shiny::tagList(
+    shiny::tags$head(
+      shiny::tags$title("NHP: Outputs Selection")
+    ),
+    ui
+  ),
+  server
+)
