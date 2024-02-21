@@ -21,3 +21,4 @@ $run_dev.*
 ^\.renvignore$
 ^hooks$
 ^manifest.json$
+^update_manifest.js$
