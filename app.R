@@ -203,7 +203,7 @@ server <- function(input, output, session) {
 
   output$view_results <- shiny::renderUI({
     f <- shiny::req(selected_file())
-    version <- f$app_version # nolint
+    version <- stringr::str_replace(f$app_version, "\\.", "-") # nolint
 
     file <- encrypt_filename(f$file) # nolint
 
