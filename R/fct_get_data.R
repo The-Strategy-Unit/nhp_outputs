@@ -14,8 +14,10 @@ get_container <- function() {
 }
 
 get_params <- function(r) {
+  is_scalar_numeric <- \(x) rlang::is_scalar_atomic(x) && is.numeric(x)
+
   to_interval <- function(x) {
-    if (length(x) == 2 && purrr::every(x, rlang::is_scalar_atomic) && purrr::every(x, is.numeric)) {
+    if (length(x) == 2 && purrr::every(x, is_scalar_numeric) && is.null(names(x))) {
       x |>
         purrr::flatten_dbl() |>
         purrr::set_names(c("lo", "hi"))
