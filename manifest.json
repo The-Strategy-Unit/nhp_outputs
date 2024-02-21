@@ -5154,6 +5154,9 @@
     "inst/life_expectancy.rds": {
       "checksum": "79fee045c0be360b170324d3fb6c1a69"
     },
+    "inst/sample_results.Rds": {
+      "checksum": "b9437494e384df9a0562828e350a1611"
+    },
     "NAMESPACE": {
       "checksum": "3701a97ee0788c13447e6e447d946af8"
     },
@@ -5176,7 +5179,7 @@
       "checksum": "6312f9d1625443a78b9229967946dc9d"
     },
     "R/fct_get_data.R": {
-      "checksum": "81ce07a2574f4981826bc34a12a25782"
+      "checksum": "e2c8271911718f8d437646d2b77bd33a"
     },
     "R/fct_gt_bar.R": {
       "checksum": "1ad350f9e771572f3ef58ef813bed579"
@@ -5191,7 +5194,7 @@
       "checksum": "577504ff53fdf82063b799742ce4068a"
     },
     "R/mod_info_params.R": {
-      "checksum": "7826d3b4a5bfed55d7894c2c450e76aa"
+      "checksum": "b8c7019820f0e4d02bd97fa51b1366b6"
     },
     "R/mod_measure_selection.R": {
       "checksum": "9e687cddb38dde7e997a52beb3280ef6"

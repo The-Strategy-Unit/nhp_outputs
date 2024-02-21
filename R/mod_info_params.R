@@ -263,7 +263,7 @@ mod_info_params_server <- function(id, selected_data) {
         dplyr::bind_rows(.id = "activity_type") |>
         fix_data() |>
         dplyr::relocate("value", .after = tidyselect::everything()) |>
-        tidyr::unnest_wider("value") |>
+        tidyr::unnest("value") |>
         gt::gt("specialty_name", c("activity_type_name", "pod")) |>
         gt_theme()
     })
