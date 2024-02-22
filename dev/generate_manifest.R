@@ -14,3 +14,5 @@ assignInNamespace(
 )
 
 rsconnect::writeManifest(appFiles = files)
+
+system("node remove_files_from_manifest.js")

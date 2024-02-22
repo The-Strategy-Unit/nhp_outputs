@@ -11,7 +11,6 @@
           </div>
           <div class="card-body">
             <p>
-              Data is shown at trust level unless sites are selected from the 'Home' tab.
               A&amp;E and bed-availability data are not available at site level.
               See the
               <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>

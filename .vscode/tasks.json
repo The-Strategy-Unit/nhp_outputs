@@ -68,12 +68,22 @@
 		{
 			"type": "R",
 			"code": [
-				"covr::package_coverage() |> covr::to_cobetura('coverage.xml')"
+				"c <- covr::package_coverage()",
+				"covr::to_cobertura(c, 'coverage.xml')",
+				"print(c)"
 			],
 			"group": "none",
-			"isBackground": "true",
+			"isBackground": true,
 			"problemMatcher": [],
-			"label": "R: Generate Coverage"
+			"label": "R: Generate Coverage",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"clear": true
+			}
 		}
 	]
 }

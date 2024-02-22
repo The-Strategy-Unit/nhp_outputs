@@ -16,7 +16,6 @@ mod_principal_detailed_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       htmltools::p(
-        "Data is shown at trust level unless sites are selected from the 'Home' tab.",
         "A&E results are not available at site level.",
         "See the",
         htmltools::a(
@@ -47,7 +46,6 @@ mod_principal_detailed_ui <- function(id) {
 }
 
 mod_principal_detailed_table <- function(data, aggregation, final_year) {
-
   data |>
     dplyr::mutate(
       dplyr::across("sex", \(.x) ifelse(.x == 1, "Male", "Female")),
@@ -113,8 +111,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       c(activity_type, pod, measure) %<-% selected_measure()
 
       agg_col <- switch(shiny::req(input$aggregation),
-                        "Age Group" = "age_group",
-                        "Treatment Specialty" = "tretspef"
+        "Age Group" = "age_group",
+        "Treatment Specialty" = "tretspef"
       )
 
       dat <- selected_data() |>
@@ -146,7 +144,6 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       }
 
       dat
-
     })
 
     output$results <- gt::render_gt({
@@ -156,7 +153,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       # data which causes a bunch of warning messages
       shiny::req(nrow(d) > 0)
 
-      end_year  <- selected_data()[["params"]][["end_year"]]
+      end_year <- selected_data()[["params"]][["end_year"]]
       end_fyear <- paste0(
         end_year, "/",
         as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1

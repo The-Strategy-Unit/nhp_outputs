@@ -21,6 +21,7 @@ Imports:
     httr,
     jsonlite,
     lubridate,
+    openssl,
     plotly,
     purrr,
     rlang,

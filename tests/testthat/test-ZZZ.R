@@ -28,3 +28,53 @@ test_that("lookup_ods_org_code_name returns correct names", {
   expect_equal(lookup_ods_org_code_name("RL403"), "NEW CROSS HOSPITAL")
   expect_equal(lookup_ods_org_code_name("RL400"), "Unknown")
 })
+
+test_that("get_selected_file_from_url decodes the filename correctly", {
+  # act
+  expected <- "test/file.json.gz"
+
+  key <- openssl::aes_keygen()
+  key_b64 <- openssl::base64_encode(key)
+
+  ct <- openssl::aes_cbc_encrypt(charToRaw(expected), key)
+  hm <- openssl::sha256(ct, key)
+
+  us <- openssl::base64_encode(c(hm, attr(ct, "iv"), ct))
+
+  session <- list(
+    clientData = list(
+      url_search = paste0("?", us)
+    )
+  )
+
+  # act
+  actual <- get_selected_file_from_url(session, key_b64)
+
+  # assert
+  expect_equal(actual, expected)
+})
+
+test_that("dev user can request cache reset", {
+  session <- list(
+    groups = "nhp_devs",
+    clientData = list(
+      url_search = "?reset_cache"
+    )
+  )
+
+  expect_true(user_requested_cache_reset(session))
+
+  session$clientData$url_search <- ""
+  expect_false(user_requested_cache_reset(session))
+})
+
+test_that("normal user cannot request cache reset", {
+  session <- list(
+    groups = "",
+    clientData = list(
+      url_search = "?reset_cache"
+    )
+  )
+
+  expect_false(user_requested_cache_reset(session))
+})

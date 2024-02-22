@@ -12,11 +12,26 @@ app_ui <- function(request) {
     status = "primary",
     bs4Dash::sidebarMenu(
       id = "sidebarMenu",
-      bs4Dash::menuItem(
-        "Home",
-        tabName = "tab_home",
-        icon = shiny::icon("home")
+      bs4Dash::bs4SidebarHeader("Site Selection"),
+      shiny::selectInput(
+        "site_selection",
+        NULL,
+        NULL,
+        multiple = TRUE
       ),
+      bs4Dash::menuItem(
+        "Information",
+        startExpanded = TRUE,
+        bs4Dash::menuSubItem(
+          text = "Home",
+          tabName = "tab_home"
+        ),
+        bs4Dash::menuSubItem(
+          text = "Input parameters",
+          tabName = "tab_params"
+        )
+      ),
+      bs4Dash::bs4SidebarHeader("Results"),
       bs4Dash::menuItem(
         "Principal projection",
         startExpanded = FALSE,
@@ -48,14 +63,6 @@ app_ui <- function(request) {
           text = "Activity distribution",
           tabName = "tab_md"
         )
-      ),
-      bs4Dash::menuItem(
-        "Information",
-        startExpanded = FALSE,
-        bs4Dash::menuSubItem(
-          text = "Input parameters",
-          tabName = "tab_params"
-        )
       )
     )
   )
@@ -64,7 +71,11 @@ app_ui <- function(request) {
     bs4Dash::tabItems(
       bs4Dash::tabItem(
         tabName = "tab_home",
-        mod_result_selection_ui("result_selection")
+        mod_info_home_ui("home")
+      ),
+      bs4Dash::tabItem(
+        tabName = "tab_params",
+        mod_info_params_ui("info_params")
       ),
       bs4Dash::tabItem(
         tabName = "tab_ps",
@@ -89,10 +100,6 @@ app_ui <- function(request) {
       bs4Dash::tabItem(
         tabName = "tab_md",
         mod_model_results_distribution_ui("model_results_distribution")
-      ),
-      bs4Dash::tabItem(
-        tabName = "tab_params",
-        mod_info_params_ui("info_params")
       )
     )
   )

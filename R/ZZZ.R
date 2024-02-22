@@ -35,3 +35,32 @@ lookup_ods_org_code_name <- function(org_code) {
 
   httr::content(req)$Organisation$Name %||% "Unknown"
 }
+
+get_selected_file_from_url <- function(session, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) {
+  f <- stringr::str_sub(session$clientData$url_search, 2L)
+
+  key <- openssl::base64_decode(key_b64)
+
+  tryCatch(
+    {
+      fd <- openssl::base64_decode(f)
+
+      hm <- fd[1:32]
+      iv <- fd[33:48]
+      ct <- fd[-(1:48)]
+
+      stopifnot("invalid hmac" = all(openssl::sha256(ct, key) == hm))
+      rawToChar(openssl::aes_cbc_decrypt(ct, key, iv))
+    },
+    error = \(e) NULL
+  )
+}
+
+user_requested_cache_reset <- function(session) {
+  if (!"nhp_devs" %in% session$groups) {
+    return(FALSE)
+  }
+  u <- shiny::parseQueryString(session$clientData$url_search)
+
+  !is.null(u$reset_cache)
+}

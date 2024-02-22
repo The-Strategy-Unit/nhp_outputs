@@ -537,64 +537,6 @@
         "Built": "R 4.3.2; ; 2023-11-28 01:36:17 UTC; windows"
       }
     },
-    "bit": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "bit",
-        "Type": "Package",
-        "Title": "Classes and Methods for Fast Memory-Efficient Boolean Selections",
-        "Version": "4.0.5",
-        "Date": "2022-11-13",
-        "Author": "Jens Oehlschlägel [aut, cre], Brian Ripley [ctb]",
-        "Maintainer": "Jens Oehlschlägel <Jens.Oehlschlaegel@truecluster.com>",
-        "Depends": "R (>= 2.9.2)",
-        "Suggests": "testthat (>= 0.11.0), roxygen2, knitr, rmarkdown,\nmicrobenchmark, bit64 (>= 4.0.0), ff (>= 4.0.0)",
-        "Description": "Provided are classes for boolean and skewed boolean vectors,\n    fast boolean methods, fast unique and non-unique integer sorting,\n    fast set operations on sorted and unsorted sets of integers, and\n    foundations for ff (range index, compression, chunked processing).",
-        "License": "GPL-2 | GPL-3",
-        "LazyLoad": "yes",
-        "ByteCompile": "yes",
-        "Encoding": "UTF-8",
-        "URL": "https://github.com/truecluster/bit",
-        "VignetteBuilder": "knitr, rmarkdown",
-        "RoxygenNote": "7.2.0",
-        "NeedsCompilation": "yes",
-        "Packaged": "2022-11-13 21:22:09 UTC; jo",
-        "Repository": "CRAN",
-        "Date/Publication": "2022-11-15 21:20:16 UTC",
-        "Built": "R 4.3.2; x86_64-w64-mingw32; 2023-11-28 01:34:48 UTC; windows",
-        "Archs": "x64"
-      }
-    },
-    "bit64": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "bit64",
-        "Type": "Package",
-        "Title": "A S3 Class for Vectors of 64bit Integers",
-        "Version": "4.0.5",
-        "Date": "2020-08-29",
-        "Author": "Jens Oehlschlägel [aut, cre], Leonardo Silvestri [ctb]",
-        "Maintainer": "Jens Oehlschlägel <Jens.Oehlschlaegel@truecluster.com>",
-        "Depends": "R (>= 3.0.1), bit (>= 4.0.0), utils, methods, stats",
-        "Description": "\n Package 'bit64' provides serializable S3 atomic 64bit (signed) integers. \n These are useful for handling database keys and exact counting in +-2^63.\n WARNING: do not use them as replacement for 32bit integers, integer64 are not\n supported for subscripting by R-core and they have different semantics when \n combined with double, e.g. integer64 + double => integer64. \n Class integer64 can be used in vectors, matrices, arrays and data.frames. \n Methods are available for coercion from and to logicals, integers, doubles, \n characters and factors as well as many elementwise and summary functions. \n Many fast algorithmic operations such as 'match' and 'order' support inter-\n active data exploration and manipulation and optionally leverage caching.",
-        "License": "GPL-2 | GPL-3",
-        "LazyLoad": "yes",
-        "ByteCompile": "yes",
-        "URL": "https://github.com/truecluster/bit64",
-        "Encoding": "UTF-8",
-        "Repository": "CRAN",
-        "Repository/R-Forge/Project": "ff",
-        "Repository/R-Forge/Revision": "177",
-        "Repository/R-Forge/DateTimeStamp": "2018-08-17 17:45:18",
-        "Date/Publication": "2020-08-30 07:20:02 UTC",
-        "NeedsCompilation": "yes",
-        "Packaged": "2020-08-29 10:56:45 UTC; jo",
-        "Built": "R 4.3.2; x86_64-w64-mingw32; 2023-11-28 02:13:31 UTC; windows",
-        "Archs": "x64"
-      }
-    },
     "bitops": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -787,33 +729,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2022-11-02 16:40:11 UTC",
         "Built": "R 4.3.2; ; 2023-11-28 02:38:23 UTC; windows"
-      }
-    },
-    "cellranger": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "cellranger",
-        "Title": "Translate Spreadsheet Cell Ranges to Rows and Columns",
-        "Version": "1.1.0",
-        "Authors@R": "c(\n    person(\"Jennifer\", \"Bryan\", , \"jenny@stat.ubc.ca\", c(\"cre\", \"aut\")),\n    person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", \"ctb\")\n  )",
-        "Description": "Helper functions to work with spreadsheets and the \"A1:D10\" style\n    of cell range specification.",
-        "Depends": "R (>= 3.0.0)",
-        "License": "MIT + file LICENSE",
-        "LazyData": "true",
-        "URL": "https://github.com/rsheets/cellranger",
-        "BugReports": "https://github.com/rsheets/cellranger/issues",
-        "Suggests": "covr, testthat (>= 1.0.0), knitr, rmarkdown",
-        "RoxygenNote": "5.0.1.9000",
-        "VignetteBuilder": "knitr",
-        "Imports": "rematch, tibble",
-        "NeedsCompilation": "no",
-        "Packaged": "2016-07-26 06:50:00 UTC; jenny",
-        "Author": "Jennifer Bryan [cre, aut],\n  Hadley Wickham [ctb]",
-        "Maintainer": "Jennifer Bryan <jenny@stat.ubc.ca>",
-        "Repository": "CRAN",
-        "Date/Publication": "2016-07-27 03:17:48",
-        "Built": "R 4.3.2; ; 2023-11-28 03:11:00 UTC; windows"
       }
     },
     "cli": {
@@ -2016,36 +1931,6 @@
         "Built": "R 4.3.2; ; 2023-11-28 02:13:18 UTC; windows"
       }
     },
-    "hms": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "hms",
-        "Title": "Pretty Time of Day",
-        "Date": "2023-03-21",
-        "Version": "1.1.3",
-        "Authors@R": "c(\n    person(\"Kirill\", \"Müller\", role = c(\"aut\", \"cre\"), email = \"kirill@cynkra.com\", comment = c(ORCID = \"0000-0002-1416-3412\")),\n    person(\"R Consortium\", role = \"fnd\"),\n    person(\"RStudio\", role = \"fnd\")\n    )",
-        "Description": "Implements an S3 class for storing and formatting time-of-day\n    values, based on the 'difftime' class.",
-        "Imports": "lifecycle, methods, pkgconfig, rlang (>= 1.0.2), vctrs (>=\n0.3.8)",
-        "Suggests": "crayon, lubridate, pillar (>= 1.1.0), testthat (>= 3.0.0)",
-        "License": "MIT + file LICENSE",
-        "Encoding": "UTF-8",
-        "URL": "https://hms.tidyverse.org/, https://github.com/tidyverse/hms",
-        "BugReports": "https://github.com/tidyverse/hms/issues",
-        "RoxygenNote": "7.2.3",
-        "Config/testthat/edition": "3",
-        "Config/autostyle/scope": "line_breaks",
-        "Config/autostyle/strict": "false",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "NeedsCompilation": "no",
-        "Packaged": "2023-03-21 16:52:11 UTC; kirill",
-        "Author": "Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>),\n  R Consortium [fnd],\n  RStudio [fnd]",
-        "Maintainer": "Kirill Müller <kirill@cynkra.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2023-03-21 18:10:02 UTC",
-        "Built": "R 4.3.2; ; 2023-11-26 03:05:17 UTC; windows"
-      }
-    },
     "htmltools": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -3191,34 +3076,6 @@
         "Archs": "x64"
       }
     },
-    "progress": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "progress",
-        "Title": "Terminal Progress Bars",
-        "Version": "1.2.3",
-        "Authors@R": "c(\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Rich\", \"FitzJohn\", role = \"aut\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
-        "Description": "Configurable Progress bars, they may include percentage,\n    elapsed time, and/or the estimated completion time. They work in\n    terminals, in 'Emacs' 'ESS', 'RStudio', 'Windows' 'Rgui' and the\n    'macOS' 'R.app'. The package also provides a 'C++' 'API', that works\n    with or without 'Rcpp'.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://github.com/r-lib/progress#readme,\nhttp://r-lib.github.io/progress/",
-        "BugReports": "https://github.com/r-lib/progress/issues",
-        "Depends": "R (>= 3.6)",
-        "Imports": "crayon, hms, prettyunits, R6",
-        "Suggests": "Rcpp, testthat (>= 3.0.0), withr",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.2.3",
-        "NeedsCompilation": "no",
-        "Packaged": "2023-12-05 09:33:10 UTC; gaborcsardi",
-        "Author": "Gábor Csárdi [aut, cre],\n  Rich FitzJohn [aut],\n  Posit Software, PBC [cph, fnd]",
-        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
-        "Repository": "CRAN",
-        "Date/Publication": "2023-12-06 10:30:02 UTC",
-        "Built": "R 4.3.2; ; 2023-12-07 00:50:53 UTC; windows"
-      }
-    },
     "promises": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -3452,94 +3309,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2023-03-12 10:00:10 UTC",
         "Built": "R 4.3.2; ; 2023-11-28 03:41:21 UTC; windows"
-      }
-    },
-    "readr": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "readr",
-        "Title": "Read Rectangular Text Data",
-        "Version": "2.1.5",
-        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = \"aut\"),\n    person(\"Jim\", \"Hester\", role = \"aut\"),\n    person(\"Romain\", \"Francois\", role = \"ctb\"),\n    person(\"Jennifer\", \"Bryan\", , \"jenny@posit.co\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-6983-2759\")),\n    person(\"Shelby\", \"Bearrows\", role = \"ctb\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"https://github.com/mandreyel/\", role = \"cph\",\n           comment = \"mio library\"),\n    person(\"Jukka\", \"Jylänki\", role = c(\"ctb\", \"cph\"),\n           comment = \"grisu3 implementation\"),\n    person(\"Mikkel\", \"Jørgensen\", role = c(\"ctb\", \"cph\"),\n           comment = \"grisu3 implementation\")\n  )",
-        "Description": "The goal of 'readr' is to provide a fast and friendly way to\n    read rectangular data (like 'csv', 'tsv', and 'fwf').  It is designed\n    to flexibly parse many types of data found in the wild, while still\n    cleanly failing when data unexpectedly changes.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://readr.tidyverse.org, https://github.com/tidyverse/readr",
-        "BugReports": "https://github.com/tidyverse/readr/issues",
-        "Depends": "R (>= 3.6)",
-        "Imports": "cli (>= 3.2.0), clipr, crayon, hms (>= 0.4.1), lifecycle (>=\n0.2.0), methods, R6, rlang, tibble, utils, vroom (>= 1.6.0)",
-        "Suggests": "covr, curl, datasets, knitr, rmarkdown, spelling, stringi,\ntestthat (>= 3.2.0), tzdb (>= 0.1.1), waldo, withr, xml2",
-        "LinkingTo": "cpp11, tzdb (>= 0.1.1)",
-        "VignetteBuilder": "knitr",
-        "Config/Needs/website": "tidyverse, tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Config/testthat/parallel": "false",
-        "Encoding": "UTF-8",
-        "Language": "en-US",
-        "RoxygenNote": "7.2.3",
-        "NeedsCompilation": "yes",
-        "Packaged": "2024-01-10 21:03:49 UTC; jenny",
-        "Author": "Hadley Wickham [aut],\n  Jim Hester [aut],\n  Romain Francois [ctb],\n  Jennifer Bryan [aut, cre] (<https://orcid.org/0000-0002-6983-2759>),\n  Shelby Bearrows [ctb],\n  Posit Software, PBC [cph, fnd],\n  https://github.com/mandreyel/ [cph] (mio library),\n  Jukka Jylänki [ctb, cph] (grisu3 implementation),\n  Mikkel Jørgensen [ctb, cph] (grisu3 implementation)",
-        "Maintainer": "Jennifer Bryan <jenny@posit.co>",
-        "Repository": "CRAN",
-        "Date/Publication": "2024-01-10 23:20:02 UTC",
-        "Built": "R 4.3.2; x86_64-w64-mingw32; 2024-01-16 03:50:05 UTC; windows",
-        "Archs": "x64"
-      }
-    },
-    "readxl": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "readxl",
-        "Title": "Read Excel Files",
-        "Version": "1.4.3",
-        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = \"aut\",\n           comment = c(ORCID = \"0000-0003-4757-117X\")),\n    person(\"Jennifer\", \"Bryan\", , \"jenny@posit.co\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-6983-2759\")),\n    person(\"Posit, PBC\", role = c(\"cph\", \"fnd\"),\n           comment = \"Copyright holder of all R code and all C/C++ code without explicit copyright attribution\"),\n    person(\"Marcin\", \"Kalicinski\", role = c(\"ctb\", \"cph\"),\n           comment = \"Author of included RapidXML code\"),\n    person(\"Komarov Valery\", role = c(\"ctb\", \"cph\"),\n           comment = \"Author of included libxls code\"),\n    person(\"Christophe Leitienne\", role = c(\"ctb\", \"cph\"),\n           comment = \"Author of included libxls code\"),\n    person(\"Bob Colbert\", role = c(\"ctb\", \"cph\"),\n           comment = \"Author of included libxls code\"),\n    person(\"David Hoerl\", role = c(\"ctb\", \"cph\"),\n           comment = \"Author of included libxls code\"),\n    person(\"Evan Miller\", role = c(\"ctb\", \"cph\"),\n           comment = \"Author of included libxls code\")\n  )",
-        "Description": "Import excel files into R. Supports '.xls' via the embedded\n    'libxls' C library <https://github.com/libxls/libxls> and '.xlsx' via\n    the embedded 'RapidXML' C++ library <https://rapidxml.sourceforge.net/>.\n    Works on Windows, Mac and Linux without external dependencies.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://readxl.tidyverse.org, https://github.com/tidyverse/readxl",
-        "BugReports": "https://github.com/tidyverse/readxl/issues",
-        "Depends": "R (>= 3.6)",
-        "Imports": "cellranger, tibble (>= 2.0.1), utils",
-        "Suggests": "covr, knitr, rmarkdown, testthat (>= 3.1.6), withr",
-        "LinkingTo": "cpp11 (>= 0.4.0), progress",
-        "VignetteBuilder": "knitr",
-        "Config/Needs/website": "tidyverse/tidytemplate, tidyverse",
-        "Config/testthat/edition": "3",
-        "Encoding": "UTF-8",
-        "Note": "libxls v1.6.2 (patched) 45abe77",
-        "RoxygenNote": "7.2.3",
-        "NeedsCompilation": "yes",
-        "Packaged": "2023-07-05 19:59:43 UTC; jenny",
-        "Author": "Hadley Wickham [aut] (<https://orcid.org/0000-0003-4757-117X>),\n  Jennifer Bryan [aut, cre] (<https://orcid.org/0000-0002-6983-2759>),\n  Posit, PBC [cph, fnd] (Copyright holder of all R code and all C/C++\n    code without explicit copyright attribution),\n  Marcin Kalicinski [ctb, cph] (Author of included RapidXML code),\n  Komarov Valery [ctb, cph] (Author of included libxls code),\n  Christophe Leitienne [ctb, cph] (Author of included libxls code),\n  Bob Colbert [ctb, cph] (Author of included libxls code),\n  David Hoerl [ctb, cph] (Author of included libxls code),\n  Evan Miller [ctb, cph] (Author of included libxls code)",
-        "Maintainer": "Jennifer Bryan <jenny@posit.co>",
-        "Repository": "CRAN",
-        "Date/Publication": "2023-07-06 22:00:09 UTC",
-        "Built": "R 4.3.2; x86_64-w64-mingw32; 2023-11-28 03:17:16 UTC; windows",
-        "Archs": "x64"
-      }
-    },
-    "rematch": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "rematch",
-        "Title": "Match Regular Expressions with a Nicer 'API'",
-        "Version": "2.0.0",
-        "Author": "Gabor Csardi",
-        "Maintainer": "Gabor Csardi <csardi.gabor@gmail.com>",
-        "Description": "A small wrapper on 'regexpr' to extract the matches and\n    captured groups from the match of a regular expression to a character\n    vector.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://github.com/gaborcsardi/rematch",
-        "BugReports": "https://github.com/gaborcsardi/rematch/issues",
-        "RoxygenNote": "5.0.1.9000",
-        "Suggests": "covr, testthat",
-        "Encoding": "UTF-8",
-        "NeedsCompilation": "no",
-        "Packaged": "2023-08-30 12:10:51 UTC; gaborcsardi",
-        "Repository": "CRAN",
-        "Date/Publication": "2023-08-30 16:50:02 UTC",
-        "Built": "R 4.3.2; ; 2023-11-28 01:35:15 UTC; windows"
       }
     },
     "rematch2": {
@@ -4447,36 +4216,6 @@
         "Built": "R 4.3.2; ; 2023-11-28 02:13:24 UTC; windows"
       }
     },
-    "tzdb": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "tzdb",
-        "Title": "Time Zone Database Information",
-        "Version": "0.4.0",
-        "Authors@R": "c(\n    person(\"Davis\", \"Vaughan\", , \"davis@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Howard\", \"Hinnant\", role = \"cph\",\n           comment = \"Author of the included date library\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
-        "Description": "Provides an up-to-date copy of the Internet Assigned Numbers\n    Authority (IANA) Time Zone Database. It is updated periodically to\n    reflect changes made by political bodies to time zone boundaries, UTC\n    offsets, and daylight saving time rules. Additionally, this package\n    provides a C++ interface for working with the 'date' library. 'date'\n    provides comprehensive support for working with dates and date-times,\n    which this package exposes to make it easier for other R packages to\n    utilize. Headers are provided for calendar specific calculations,\n    along with a limited interface for time zone manipulations.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://tzdb.r-lib.org, https://github.com/r-lib/tzdb",
-        "BugReports": "https://github.com/r-lib/tzdb/issues",
-        "Depends": "R (>= 3.5.0)",
-        "Suggests": "covr, testthat (>= 3.0.0)",
-        "LinkingTo": "cpp11 (>= 0.4.2)",
-        "Biarch": "yes",
-        "Config/Needs/website": "tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Encoding": "UTF-8",
-        "RoxygenNote": "7.2.3",
-        "NeedsCompilation": "yes",
-        "Packaged": "2023-05-12 12:40:06 UTC; davis",
-        "Author": "Davis Vaughan [aut, cre],\n  Howard Hinnant [cph] (Author of the included date library),\n  Posit Software, PBC [cph, fnd]",
-        "Maintainer": "Davis Vaughan <davis@posit.co>",
-        "Repository": "CRAN",
-        "Date/Publication": "2023-05-12 23:00:02 UTC",
-        "Built": "R 4.3.2; x86_64-w64-mingw32; 2023-11-28 01:34:49 UTC; windows",
-        "Archs": "x64"
-      }
-    },
     "urlchecker": {
       "Source": "CRAN",
       "Repository": "https://cloud.r-project.org",
@@ -4663,40 +4402,6 @@
         "Repository": "CRAN",
         "Date/Publication": "2023-05-02 23:50:02 UTC",
         "Built": "R 4.3.2; ; 2023-11-28 01:34:31 UTC; windows"
-      }
-    },
-    "vroom": {
-      "Source": "CRAN",
-      "Repository": "https://cloud.r-project.org",
-      "description": {
-        "Package": "vroom",
-        "Title": "Read and Write Rectangular Text Data Quickly",
-        "Version": "1.6.5",
-        "Authors@R": "c(\n    person(\"Jim\", \"Hester\", role = \"aut\",\n           comment = c(ORCID = \"0000-0002-2739-7082\")),\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = \"aut\",\n           comment = c(ORCID = \"0000-0003-4757-117X\")),\n    person(\"Jennifer\", \"Bryan\", , \"jenny@posit.co\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-6983-2759\")),\n    person(\"Shelby\", \"Bearrows\", role = \"ctb\"),\n    person(\"https://github.com/mandreyel/\", role = \"cph\",\n           comment = \"mio library\"),\n    person(\"Jukka\", \"Jylänki\", role = \"cph\",\n           comment = \"grisu3 implementation\"),\n    person(\"Mikkel\", \"Jørgensen\", role = \"cph\",\n           comment = \"grisu3 implementation\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
-        "Description": "The goal of 'vroom' is to read and write data (like 'csv',\n    'tsv' and 'fwf') quickly. When reading it uses a quick initial\n    indexing step, then reads the values lazily , so only the data you\n    actually use needs to be read.  The writer formats the data in\n    parallel and writes to disk asynchronously from formatting.",
-        "License": "MIT + file LICENSE",
-        "URL": "https://vroom.r-lib.org, https://github.com/tidyverse/vroom",
-        "BugReports": "https://github.com/tidyverse/vroom/issues",
-        "Depends": "R (>= 3.6)",
-        "Imports": "bit64, cli (>= 3.2.0), crayon, glue, hms, lifecycle (>=\n1.0.3), methods, rlang (>= 0.4.2), stats, tibble (>= 2.0.0),\ntidyselect, tzdb (>= 0.1.1), vctrs (>= 0.2.0), withr",
-        "Suggests": "archive, bench (>= 1.1.0), covr, curl, dplyr, forcats, fs,\nggplot2, knitr, patchwork, prettyunits, purrr, rmarkdown,\nrstudioapi, scales, spelling, testthat (>= 2.1.0), tidyr,\nutils, waldo, xml2",
-        "LinkingTo": "cpp11 (>= 0.2.0), progress (>= 1.2.1), tzdb (>= 0.1.1)",
-        "VignetteBuilder": "knitr",
-        "Config/Needs/website": "nycflights13, tidyverse/tidytemplate",
-        "Config/testthat/edition": "3",
-        "Config/testthat/parallel": "false",
-        "Copyright": "file COPYRIGHTS",
-        "Encoding": "UTF-8",
-        "Language": "en-US",
-        "RoxygenNote": "7.2.3.9000",
-        "NeedsCompilation": "yes",
-        "Packaged": "2023-12-05 16:46:59 UTC; jenny",
-        "Author": "Jim Hester [aut] (<https://orcid.org/0000-0002-2739-7082>),\n  Hadley Wickham [aut] (<https://orcid.org/0000-0003-4757-117X>),\n  Jennifer Bryan [aut, cre] (<https://orcid.org/0000-0002-6983-2759>),\n  Shelby Bearrows [ctb],\n  https://github.com/mandreyel/ [cph] (mio library),\n  Jukka Jylänki [cph] (grisu3 implementation),\n  Mikkel Jørgensen [cph] (grisu3 implementation),\n  Posit Software, PBC [cph, fnd]",
-        "Maintainer": "Jennifer Bryan <jenny@posit.co>",
-        "Repository": "CRAN",
-        "Date/Publication": "2023-12-05 23:50:02 UTC",
-        "Built": "R 4.3.2; x86_64-w64-mingw32; 2023-12-07 00:51:07 UTC; windows",
-        "Archs": "x64"
       }
     },
     "vscDebugger": {
@@ -5119,112 +4824,6 @@
       }
     }
   },
-  "files": {
-    "app.R": {
-      "checksum": "aeb1c75bf60737b28ec65e4df8131fcc"
-    },
-    "DESCRIPTION": {
-      "checksum": "5fb08f9f3da1690a96c328eac2e27255"
-    },
-    "inst/app/data/mitigators.json": {
-      "checksum": "599ba595813b68d4f076f2808074bce3"
-    },
-    "inst/app/data/providers.json": {
-      "checksum": "274b5f77406a4e496aeb0a52a7df4c5c"
-    },
-    "inst/app/data/providers.Rds": {
-      "checksum": "d1e0a12ae6c284802807dbfd5b449261"
-    },
-    "inst/app/data/sites.json": {
-      "checksum": "ffc29ef7cf2858ed308df7503fe1eeb9"
-    },
-    "inst/app/data/tx-lookup-mike.json": {
-      "checksum": "474983db20cc6b01d7ee33d19027b51a"
-    },
-    "inst/app/data/tx-lookup.json": {
-      "checksum": "d96f2196c058efa6d6b92e987b3eaa43"
-    },
-    "inst/app/www/app.css": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
-    },
-    "inst/app/www/favicon.ico": {
-      "checksum": "6e637acbaee9a91b5ea921c7fa2baf41"
-    },
-    "inst/golem-config.yml": {
-      "checksum": "6542ec106adb68b108be2e9a90724987"
-    },
-    "inst/life_expectancy.rds": {
-      "checksum": "79fee045c0be360b170324d3fb6c1a69"
-    },
-    "NAMESPACE": {
-      "checksum": "3701a97ee0788c13447e6e447d946af8"
-    },
-    "R/_disable_autoload.R": {
-      "checksum": "9d8f7f20e88b559c046ec1f59fe82cba"
-    },
-    "R/app_config.R": {
-      "checksum": "836c75cd501b8c1ab3538ddf36358b7f"
-    },
-    "R/app_server.R": {
-      "checksum": "a0742b81dd0e002ae719075ec2fcd68d"
-    },
-    "R/app_ui.R": {
-      "checksum": "967732b364d424819660ac6d85d99761"
-    },
-    "R/fct_create_data_cache.R": {
-      "checksum": "114ac8eac09fa400476fd982d85ec034"
-    },
-    "R/fct_get_activity_type_pod_measure_options.R": {
-      "checksum": "6312f9d1625443a78b9229967946dc9d"
-    },
-    "R/fct_get_data.R": {
-      "checksum": "e2c8271911718f8d437646d2b77bd33a"
-    },
-    "R/fct_gt_bar.R": {
-      "checksum": "1ad350f9e771572f3ef58ef813bed579"
-    },
-    "R/fct_gt_theme.R": {
-      "checksum": "d58018d302bd8ac0ee27fd45c20a7798"
-    },
-    "R/golem_utils_server.R": {
-      "checksum": "acd35fac560b3227a8189c1c18c040e4"
-    },
-    "R/golem_utils_ui.R": {
-      "checksum": "577504ff53fdf82063b799742ce4068a"
-    },
-    "R/mod_info_params.R": {
-      "checksum": "b8c7019820f0e4d02bd97fa51b1366b6"
-    },
-    "R/mod_measure_selection.R": {
-      "checksum": "9e687cddb38dde7e997a52beb3280ef6"
-    },
-    "R/mod_model_core_activity.R": {
-      "checksum": "8313ba858e1b8301a7545d8804552306"
-    },
-    "R/mod_model_results_distribution.R": {
-      "checksum": "70e219bd092e662dbb5785472c9d12e7"
-    },
-    "R/mod_principal_change_factor_effects.R": {
-      "checksum": "a5169692f0f415695a607f1640ca3cba"
-    },
-    "R/mod_principal_detailed.R": {
-      "checksum": "ac1bd1aaf06d400ca9dd85d44bf44913"
-    },
-    "R/mod_principal_high_level.R": {
-      "checksum": "810703fccd1a78f6dafd6a2f78045d92"
-    },
-    "R/mod_principal_summary.R": {
-      "checksum": "8bea08cdab957cdc6a62b3d27add97be"
-    },
-    "R/mod_result_selection.R": {
-      "checksum": "9f5b51d65f8031c8432425cdbe88715f"
-    },
-    "R/run_app.R": {
-      "checksum": "69bfaae3dd0360d4f5afddcead849ef5"
-    },
-    "R/ZZZ.R": {
-      "checksum": "d35800541ffef0b20667fcd1fbf4c985"
-    }
-  },
+  "files": {},
   "users": null
 }

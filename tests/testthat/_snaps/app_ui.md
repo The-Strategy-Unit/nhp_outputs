@@ -26,12 +26,37 @@
             <div class="sidebar" id="sidebarItemExpanded">
               <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column sidebar-menu nav-child-indent" data-widget="treeview" role="menu" data-accordion="true">
-                  <li class="nav-item">
-                    <a class="nav-link" id="tab-tab_home" href="#" data-target="#shiny-tab-tab_home" data-toggle="tab" data-value="tab_home">
-                      <i class="fas fa-house nav-icon" role="presentation" aria-label="house icon" verify_fa="FALSE"></i>
-                      <p>Home</p>
+                  <li class="nav-header">Site Selection</li>
+                  <div class="form-group shiny-input-container">
+                    <label class="control-label shiny-label-null" for="site_selection" id="site_selection-label"></label>
+                    <div>
+                      <select id="site_selection" class="shiny-input-select" multiple="multiple"></select>
+                      <script type="application/json" data-for="site_selection">{"plugins":["selectize-plugin-a11y"]}</script>
+                    </div>
+                  </div>
+                  <li class="nav-item has-treeview menu-open">
+                    <a href="#" class="nav-link">
+                      <p>
+                        Information
+                        <i class="right fas fa-angle-left"></i>
+                      </p>
                     </a>
+                    <ul class="nav nav-treeview" data-expanded="Information">
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_home" href="#" data-target="#shiny-tab-tab_home" data-toggle="tab" data-value="tab_home">
+                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
+                          <p>Home</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_params" href="#" data-target="#shiny-tab-tab_params" data-toggle="tab" data-value="tab_params">
+                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
+                          <p>Input parameters</p>
+                        </a>
+                      </li>
+                    </ul>
                   </li>
+                  <li class="nav-header">Results</li>
                   <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                       <p>
@@ -88,22 +113,6 @@
                       </li>
                     </ul>
                   </li>
-                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                      <p>
-                        Information
-                        <i class="right fas fa-angle-left"></i>
-                      </p>
-                    </a>
-                    <ul class="nav nav-treeview" data-expanded="Information">
-                      <li class="nav-item">
-                        <a class="nav-link treeview-link" id="tab-tab_params" href="#" data-target="#shiny-tab-tab_params" data-toggle="tab" data-value="tab_params">
-                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
-                          <p>Input parameters</p>
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
                   <div id="sidebarMenu" class="sidebarMenuSelectedTabItem" data-value="null"></div>
                 </ul>
               </nav>
@@ -112,14 +121,14 @@
           <div class="content-wrapper">
             <section class="content">
               <div class="tab-content">
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_home">result_selection</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_home">home</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_params">info_params</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">principal_summary</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_change_factor_effects</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_high_level</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_detailed</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_mc">model_core_activity</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_md">model_results_distribution</div>
-                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_params">info_params</div>
               </div>
             </section>
           </div>
