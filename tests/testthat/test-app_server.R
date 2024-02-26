@@ -4,8 +4,7 @@ library(mockery)
 test_that("it loads the modules correctly", {
   m <- mock()
 
-  stub(app_server, "get_selected_file_from_url", "file")
-  stub(app_server, "get_results", "results")
+  stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
   stub(app_server, "mod_info_home_server", m)
@@ -34,68 +33,10 @@ test_that("it loads the modules correctly", {
   })
 })
 
-test_that("it gets the selected file from the url", {
-  m <- mock("file")
-
-  stub(app_server, "get_selected_file_from_url", m)
-  stub(app_server, "get_results", "results")
-  stub(app_server, "get_trust_sites", "trust_sites")
-
-  stub(app_server, "mod_info_home_server", "mod_info_home_server")
-  stub(app_server, "mod_info_params_server", "mod_info_params_server")
-
-  stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
-  stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
-  stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
-
-  stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
-  stub(app_server, "mod_model_results_distribution_server", "mod_model_results_distribution_server")
-
-  testServer(app_server, {
-    expect_equal(selected_file(), "file")
-
-    expect_called(m, 1)
-    expect_call(m, 1, get_selected_file_from_url(session, Sys.getenv("NHP_ENCRYPT_KEY")))
-  })
-})
-
-test_that("if file isn't entered/valid it exits the app", {
-  m <- mock()
-
-  stub(app_server, "get_selected_file_from_url", NULL)
-  stub(app_server, "get_results", "results")
-  stub(app_server, "get_trust_sites", "trust_sites")
-
-  stub(app_server, "mod_info_home_server", "mod_info_home_server")
-  stub(app_server, "mod_info_params_server", "mod_info_params_server")
-
-  stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
-  stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
-  stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
-
-  stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
-  stub(app_server, "mod_model_results_distribution_server", "mod_model_results_distribution_server")
-
-  stub(app_server, "shiny::showModal", m)
-
-  testServer(app_server, {
-    expect_error(selected_file())
-
-    session$private$flush()
-    expect_called(m, 1)
-
-    expect_snapshot(mock_args(m)[[1]][[1]])
-    expect_true(session$isClosed())
-  })
-})
-
-test_that("it gets the results from the selected file", {
+test_that("selected_data calls server_get_results", {
   m <- mock("results")
 
-  stub(app_server, "get_selected_file_from_url", "file")
-  stub(app_server, "get_results", m)
+  stub(app_server, "server_get_results", m)
   stub(app_server, "get_trust_sites", "trust_sites")
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -113,16 +54,14 @@ test_that("it gets the results from the selected file", {
     expect_equal(selected_data(), "results")
 
     expect_called(m, 1)
-    expect_args(m, 1, "file")
+    expect_call(m, 1, server_get_results(session))
   })
 })
 
-
-test_that("it file can't be loaded from azure it exits the app", {
+test_that("if server_get_results errors the app exits", {
   m <- mock()
 
-  stub(app_server, "get_selected_file_from_url", "file")
-  stub(app_server, "get_results", stop)
+  stub(app_server, "server_get_results", \(...) stop("error occured"))
   stub(app_server, "get_trust_sites", "trust_sites")
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -139,9 +78,8 @@ test_that("it file can't be loaded from azure it exits the app", {
   stub(app_server, "shiny::showModal", m)
 
   testServer(app_server, {
-    expect_error(selected_data())
+    selected_data()
 
-    session$private$flush()
     expect_called(m, 1)
 
     expect_snapshot(mock_args(m)[[1]][[1]])
@@ -150,8 +88,7 @@ test_that("it file can't be loaded from azure it exits the app", {
 })
 
 test_that("selected_site uses the inputs values", {
-  stub(app_server, "get_selected_file_from_url", "file")
-  stub(app_server, "get_results", "results")
+  stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -175,7 +112,7 @@ test_that("selected_site uses the inputs values", {
 test_that("it gets the trust sites from the results", {
   m <- mock("trust_sites")
 
-  stub(app_server, "get_selected_file_from_url", "file")
+  stub(app_server, "server_get_results", "results")
   stub(app_server, "get_results", "results")
   stub(app_server, "get_trust_sites", m)
 
@@ -201,8 +138,7 @@ test_that("it gets the trust sites from the results", {
 test_that("it updates the site selection drop down", {
   m <- mock()
 
-  stub(app_server, "get_selected_file_from_url", "file")
-  stub(app_server, "get_results", "results")
+  stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", c("a", "b", "c"))
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -236,8 +172,7 @@ test_that("it updates the site selection drop down", {
 })
 
 test_that("it can reset the cache", {
-  stub(app_server, "get_selected_file_from_url", "file")
-  stub(app_server, "get_results", "results")
+  stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", c("a", "b", "c"))
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")

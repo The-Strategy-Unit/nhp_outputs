@@ -4,49 +4,28 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  error_loading_data <- shiny::reactiveVal(FALSE)
-
-  selected_file <- shiny::reactive({
-    file <- get_selected_file_from_url(session, Sys.getenv("NHP_ENCRYPT_KEY"))
-
-    if (is.null(file)) {
-      error_loading_data("No/Invalid file was requested.")
-      shiny::req(FALSE)
-    }
-
-    file
-  })
-
   selected_data <- shiny::reactive({
-    file <- shiny::req(selected_file())
-
     tryCatch(
       {
-        get_results(file)
+        server_get_results(session)
       },
       error = \(e) {
-        error_loading_data("Results not found.")
-        shiny::req(FALSE)
+        session$allowReconnect(FALSE)
+
+        shiny::showModal(
+          shiny::modalDialog(
+            title = "Error",
+            footer = NULL,
+            shiny::tagList(
+              e$message,
+              "Please return to",
+              shiny::tags$a("result selection", href = "/nhp/outputs")
+            )
+          )
+        )
+        session$close()
       }
     )
-  })
-
-  shiny::observe({
-    error_message <- shiny::req(error_loading_data())
-    session$allowReconnect(FALSE)
-
-    shiny::showModal(
-      shiny::modalDialog(
-        title = "Error",
-        footer = NULL,
-        shiny::tagList(
-          error_message,
-          "Please return to",
-          shiny::tags$a("result selection", href = "/nhp/outputs")
-        )
-      )
-    )
-    session$close()
   })
 
   # handle site selection ----

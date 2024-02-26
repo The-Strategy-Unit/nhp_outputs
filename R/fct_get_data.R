@@ -56,14 +56,22 @@ get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL),
     dplyr::semi_join(ds, by = dplyr::join_by("dataset"))
 }
 
-get_results <- function(filename) {
+get_results_from_azure <- function(filename) {
   cont <- get_container()
   tf <- withr::local_tempfile()
   AzureStor::download_blob(cont, filename, tf)
 
-  r <- readBin(tf, raw(), n = file.size(tf)) |>
-    jsonlite::parse_gzjson_raw(simplifyVector = FALSE)
+  readBin(tf, raw(), n = file.size(tf)) |>
+    jsonlite::parse_gzjson_raw(simplifyVector = FALSE) |>
+    parse_results()
+}
 
+get_results_from_local <- function(filename) {
+  jsonlite::read_json(filename, simplifyVector = FALSE) |>
+    parse_results()
+}
+
+parse_results <- function(r) {
   r$population_variants <- as.character(r$population_variants)
 
   r$results <- purrr::map(
