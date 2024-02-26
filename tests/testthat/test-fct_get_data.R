@@ -434,10 +434,16 @@ test_that("get_aggregation returns NULL if filter returns no rows", {
 })
 
 test_that("get_principal_change_factors gets the results", {
+  m <- mock("trust_site_aggregation")
+
+  stub(get_principal_change_factors, "trust_site_aggregation", m)
+
   r <- list(
     results = list(
       "step_counts" = tibble::tibble(
         "activity_type" = c("aae", "aae", "ip", "ip"),
+        "sitetret" = c("a", "a", "a", "a"),
+        "pod" = c("a", "a", "a", "a"),
         "measure" = c("a", "a", "a", "a"),
         "change_factor" = c("a", "a", "b", "b"),
         "strategy" = c(NA, "x", NA, "x"),
@@ -447,15 +453,21 @@ test_that("get_principal_change_factors gets the results", {
   )
 
   expected <- tibble::tibble(
+    activity_type = c("aae", "aae"),
+    sitetret = c("a", "a"),
+    pod = c("a", "a"),
     measure = c("a", "a"),
     change_factor = c("a", "a"),
     strategy = c("-", "x"),
     value = 1:2
   )
 
-  actual <- get_principal_change_factors(r, "aae")
+  actual <- get_principal_change_factors(r, "aae", "a")
 
-  expect_equal(actual, expected)
+  expect_equal(actual, "trust_site_aggregation")
+
+  expect_called(m, 1)
+  expect_args(m, 1, expected, "a")
 })
 
 test_that("get_principal_change_factors validates the arguments", {
@@ -463,6 +475,8 @@ test_that("get_principal_change_factors validates the arguments", {
     results = list(
       "step_counts" = tibble::tibble(
         "activity_type" = c("aae", "aae", "ip", "ip"),
+        "sitetret" = c("a", "a", "a", "a"),
+        "pod" = c("a", "a", "a", "a"),
         "measure" = c("a", "a", "a", "a"),
         "change_factor" = c("a", "a", "b", "b"),
         "strategy" = c(NA, "x", NA, "x"),
@@ -471,9 +485,9 @@ test_that("get_principal_change_factors validates the arguments", {
     )
   )
 
-  get_principal_change_factors(r, "aae")
-  get_principal_change_factors(r, "ip")
-  get_principal_change_factors(r, "op")
+  get_principal_change_factors(r, "aae", "a")
+  get_principal_change_factors(r, "ip", "a")
+  get_principal_change_factors(r, "op", "a")
 
   expect_error(get_principal_change_factors(r, "x"), "Invalid activity_type")
 })

@@ -11,7 +11,6 @@
           </div>
           <div class="card-body">
             <p>
-              The data on this page is presented at trust level only.
               The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.
               See the
               <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>
@@ -28,7 +27,7 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-activity_type-label" for="id-activity_type">Activity Type</label>
                   <div>
@@ -37,7 +36,16 @@
                   </div>
                 </div>
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-4">
+                <div class="form-group shiny-input-container">
+                  <label class="control-label" id="id-pods-label" for="id-pods">POD</label>
+                  <div>
+                    <select id="id-pods" class="shiny-input-select" multiple="multiple"></select>
+                    <script type="application/json" data-for="id-pods">{"plugins":["selectize-plugin-a11y"]}</script>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4">
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure-label" for="id-measure">Measure</label>
                   <div>
@@ -54,7 +62,7 @@
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Impact of changes (trust-level only)</h3>
+            <h3 class="card-title">Impact of changes</h3>
           </div>
           <div class="card-body">
             <div class="form-group shiny-input-container">
@@ -73,12 +81,12 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Impact of changes (trust-level only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Impact of changes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
       <div class="col-sm-12">
         <div class="card bs4Dash">
           <div class="card-header">
-            <h3 class="card-title">Individual change factors (trust-level only)</h3>
+            <h3 class="card-title">Individual change factors</h3>
           </div>
           <div class="card-body">
             <div class="form-group shiny-input-container">
@@ -100,6 +108,6 @@
             </div>
           </div>
         </div>
-        <script type="application/json">{"title":"Individual change factors (trust-level only)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        <script type="application/json">{"title":"Individual change factors","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
 
