@@ -1,5 +1,5 @@
-p <- app_sys("sample_results.Rds") |>
-  readRDS() |>
+p <- app_sys("sample_results.json") |>
+  get_results_from_local() |>
   get_params()
 
 test_that("info_params_tables generated validation errors if no params provided", {
