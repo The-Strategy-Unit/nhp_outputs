@@ -64,3 +64,20 @@ user_requested_cache_reset <- function(session) {
 
   !is.null(u$reset_cache)
 }
+
+server_get_results <- function(session) {
+  file <- get_selected_file_from_url(session, Sys.getenv("NHP_ENCRYPT_KEY"))
+
+  if (is.null(file)) {
+    stop("No/Invalid file was requested.")
+  }
+
+  tryCatch(
+    {
+      get_results_from_azure(file)
+    },
+    error = \(e) {
+      stop("Results not found.")
+    }
+  )
+}

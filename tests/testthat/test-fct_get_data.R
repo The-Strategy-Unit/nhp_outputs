@@ -105,7 +105,60 @@ test_that("get_result_sets returns files", {
   expect_args(m2, 4, "container", "4")
 })
 
-test_that("get_results returns data from azure", {
+test_that("get_results_from_azure returns data from azure", {
+  # arrange
+  m1 <- mock()
+  m2 <- mock("binary_data")
+  m3 <- mock("json_data")
+  m4 <- mock("parsed_data")
+
+  stub(get_results_from_azure, "get_container", "container")
+  stub(get_results_from_azure, "withr::local_tempfile", "tf")
+  stub(get_results_from_azure, "AzureStor::download_blob", m1)
+  stub(get_results_from_azure, "readBin", m2)
+  stub(get_results_from_azure, "jsonlite::parse_gzjson_raw", m3)
+  stub(get_results_from_azure, "file.size", 10)
+  stub(get_results_from_azure, "parse_results", m4)
+
+  # act
+  actual <- get_results_from_azure("file")
+
+  # assert
+  expect_called(m1, 1)
+  expect_called(m2, 1)
+  expect_called(m3, 1)
+  expect_called(m4, 1)
+
+  expect_args(m1, 1, "container", "file", "tf")
+  expect_args(m2, 1, "tf", raw(), 10)
+  expect_args(m3, 1, "binary_data", simplifyVector = FALSE)
+  expect_args(m4, 1, "json_data")
+
+  expect_equal(actual, "parsed_data")
+})
+
+test_that("get_results_from_local returns data from local storage", {
+  # arrange
+  m1 <- mock("json_data")
+  m2 <- mock("parsed_data")
+
+  stub(get_results_from_local, "jsonlite::read_json", m1)
+  stub(get_results_from_local, "parse_results", m2)
+
+  # act
+  actual <- get_results_from_local("file")
+
+  # assert
+  expect_called(m1, 1)
+  expect_called(m2, 1)
+
+  expect_args(m1, 1, "file", simplifyVector = FALSE)
+  expect_args(m2, 1, "json_data")
+
+  expect_equal(actual, "parsed_data")
+})
+
+test_that("parse_results converts results correctly", {
   data <- list(
     population_variants = list("a", "b"),
     results = list(
@@ -146,28 +199,11 @@ test_that("get_results returns data from azure", {
     )
   )
 
-  m1 <- mock()
-  m2 <- mock("data")
-  m3 <- mock(data)
+  # act
+  actual <- parse_results(data)
 
-  stub(get_results, "get_container", "container")
-  stub(get_results, "withr::local_tempfile", "tf")
-  stub(get_results, "AzureStor::download_blob", m1)
-  stub(get_results, "readBin", m2)
-  stub(get_results, "jsonlite::parse_gzjson_raw", m3)
-  stub(get_results, "file.size", 10)
-
-  results <- get_results("file")
-
-  expect_called(m1, 1)
-  expect_called(m2, 1)
-  expect_called(m3, 1)
-
-  expect_args(m1, 1, "container", "file", "tf")
-  expect_args(m2, 1, "tf", raw(), 10)
-  expect_args(m3, 1, "data", simplifyVector = FALSE)
-
-  expect_equal(results, expected)
+  # assert
+  expect_equal(actual, expected)
 })
 
 test_that("user_allowed_datasets returns correct values", {
