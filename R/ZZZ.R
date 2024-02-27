@@ -46,11 +46,10 @@ get_selected_file_from_url <- function(session, key_b64 = Sys.getenv("NHP_ENCRYP
       fd <- openssl::base64_decode(f)
 
       hm <- fd[1:32]
-      iv <- fd[33:48]
-      ct <- fd[-(1:48)]
+      ct <- fd[-(1:32)]
 
       stopifnot("invalid hmac" = all(openssl::sha256(ct, key) == hm))
-      rawToChar(openssl::aes_cbc_decrypt(ct, key, iv))
+      rawToChar(openssl::aes_cbc_decrypt(ct, key, NULL))
     },
     error = \(e) NULL
   )
