@@ -81,12 +81,19 @@ mod_info_home_download_json <- function(data) {
   }
 }
 
-mod_info_home_download_report_html <- function(data) {
+mod_info_home_download_report_html <- function(data, sites) {
   function(file) {
     temp_report <- file.path(tempdir(), "report.Rmd")
     file.copy(app_sys("report.Rmd"), temp_report, overwrite = TRUE)
 
-    params <- list(r = data())
+    params <- list(r = data(), sites = sites())
+
+    id <- shiny::showNotification(
+      "Rendering report...",
+      duration = NULL,
+      closeButton = FALSE
+    )
+    on.exit(shiny::removeNotification(id), add = TRUE)
 
     rmarkdown::render(
       temp_report,
@@ -100,7 +107,7 @@ mod_info_home_download_report_html <- function(data) {
 #' info_home Server Functions
 #'
 #' @noRd
-mod_info_home_server <- function(id, selected_data) {
+mod_info_home_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     params_model_run <- shiny::reactive({
       p <- get_params(selected_data())
@@ -148,7 +155,7 @@ mod_info_home_server <- function(id, selected_data) {
 
     output$download_report_html <- shiny::downloadHandler(
       filename = \() paste0(selected_data()$params$id, "_report.html"),
-      content = mod_info_home_download_report_html(selected_data)
+      content = mod_info_home_download_report_html(selected_data, selected_site)
     )
 
   })

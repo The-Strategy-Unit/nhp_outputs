@@ -74,7 +74,7 @@ app_server <- function(input, output, session) {
 
   # set up modules ----
 
-  mod_info_home_server("home", selected_data)
+  mod_info_home_server("home", selected_data, selected_site)
   mod_info_params_server("info_params", selected_data)
 
   mod_principal_summary_server("principal_summary", selected_data, selected_site)
