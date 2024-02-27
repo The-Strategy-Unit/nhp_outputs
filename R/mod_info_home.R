@@ -26,10 +26,30 @@ mod_info_home_ui <- function(id) {
         htmltools::p(
           "Note that some data is presented at trust level even if you make a site selection.",
           "Check the notes in each tab for details."
+        )
+      ),
+      bs4Dash::box(
+        title = "Download results data",
+        collapsible = FALSE,
+        width = 6,
+        htmltools::p(
+          "Download a file containing results data for the selected model run.",
+          "The data is provided for each site and for the overall trust level."
         ),
         # TODO: hide these until data is loaded
         shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
         shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
+      ),
+      bs4Dash::box(
+        title = "Download outputs report",
+        collapsible = FALSE,
+        width = 6,
+        htmltools::p(
+          "Download a file containing the input parameters and",
+          "outputs (charts and tables) for the selected model run.",
+        ),
+        # TODO: hide until data is loaded
+        shiny::downloadButton(ns("download_report_html"), "Download report (.html)")
       ),
       bs4Dash::box(
         title = "Model Run",
@@ -58,6 +78,22 @@ mod_info_home_download_excel <- function(data) {
 mod_info_home_download_json <- function(data) {
   function(file) {
     jsonlite::write_json(data(), file, pretty = TRUE, auto_unbox = TRUE)
+  }
+}
+
+mod_info_home_download_report_html <- function(data) {
+  function(file) {
+    temp_report <- file.path(tempdir(), "report.Rmd")
+    file.copy(app_sys("report.Rmd"), temp_report, overwrite = TRUE)
+
+    params <- list(r = data())
+
+    rmarkdown::render(
+      temp_report,
+      output_file = file,
+      params = params,
+      envir = new.env(parent = globalenv())
+    )
   }
 }
 
@@ -98,7 +134,6 @@ mod_info_home_server <- function(id, selected_data) {
         gt_theme()
     })
 
-
     # download buttons ----
 
     output$download_results_xlsx <- shiny::downloadHandler(
@@ -110,5 +145,11 @@ mod_info_home_server <- function(id, selected_data) {
       filename = \() paste0(selected_data()$params$id, ".json"),
       content = mod_info_home_download_json(selected_data)
     )
+
+    output$download_report_html <- shiny::downloadHandler(
+      filename = \() paste0(selected_data()$params$id, "_report.html"),
+      content = mod_info_home_download_report_html(selected_data)
+    )
+
   })
 }

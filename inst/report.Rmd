@@ -1,0 +1,174 @@
+---
+title: NHP outputs report
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float:
+      collapsed: true
+params:
+  r: NA
+---
+
+```{r}
+#| label: params-model-run
+#| echo: FALSE
+
+knitr::opts_chunk$set(error = TRUE, echo = FALSE)
+
+r <- params$r
+p <- get_params(r)
+```
+
+This is model run `r params$r$params$id`.
+
+## Input parameters
+
+### Model run
+
+```{r}
+#| label: params-model-run
+
+```
+
+### Demographic adjusment
+
+```{r}
+#| label: params-demographic-adjustment
+
+info_params_table_demographic_adjustment(p)
+```
+
+### Baseline adjustment
+
+```{r}
+#| label: params-baseline-adjustment
+
+info_params_table_baseline_adjustment(p)
+```
+
+### Covid adjustment
+
+```{r}
+#| label: params-covid-adjustment
+
+info_params_table_covid_adjustment(p)
+```
+
+### Waiting list adjustment
+
+```{r}
+#| label: params-waiting-list-adjustment
+
+info_params_table_waiting_list_adjustment(p)
+```
+
+### Expat
+
+```{r}
+#| label: params-expat
+
+info_params_table_expat_repat_adjustment(p, "expat")
+```
+
+### Repat (local)
+
+```{r}
+#| label: params-repat-local
+
+info_params_table_expat_repat_adjustment(p, "repat_local")
+```
+
+### Repat (non-local)
+
+```{r}
+#| label: params-repat-non-local
+
+info_params_table_expat_repat_adjustment(p, "repat_nonlocal")
+```
+
+### Non-demographic adjustment
+
+```{r}
+#| label: params-non-demographic-adjustment
+
+info_params_table_non_demographic_adjustment(p)
+```
+
+### Activity avoidance
+
+```{r}
+#| label: params-activity-avoidance
+
+info_params_table_activity_avoidance(p)
+```
+
+### Efficiencies
+
+```{r}
+#| label: params-efficiencies
+
+info_params_table_efficiencies(p)
+```
+
+### Bed occupancy
+
+```{r}
+#| label: params-bed-occupancy-day-night
+
+info_params_table_bed_occupancy_day_night(p)
+```
+
+```{r}
+#| label: params-bed-occupancy-specialty-mapping
+
+info_params_table_bed_occupancy_specialty_mapping(p)
+```
+
+## Outputs
+
+### Principal projection
+
+#### Summary
+
+```{r}
+#| label: pp-summary
+
+```
+
+#### Impact of changes
+
+```{r}
+#| label: pp-impact-of-changes
+
+```
+
+#### Summary by year
+
+```{r}
+#| label: pp-summary-by-year
+
+```
+
+#### Activity in detail
+
+```{r}
+#| label: pp-activity-in-detail
+
+```
+
+### Distribution of projections
+
+#### Activity summary
+
+```{r}
+#| label: dop-activity-summary
+
+```
+
+#### Activity distribution
+
+```{r}
+#| label: dop-activity-distribution
+
+```
