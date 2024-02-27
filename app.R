@@ -3,10 +3,10 @@ encrypt_filename <- function(filename, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) 
 
   f <- charToRaw(filename)
 
-  ct <- openssl::aes_cbc_encrypt(f, key)
+  ct <- openssl::aes_cbc_encrypt(f, key, NULL)
   hm <- as.raw(openssl::sha256(ct, key))
 
-  openssl::base64_encode(c(hm, attr(ct, "iv"), ct))
+  openssl::base64_encode(c(hm, ct))
 }
 
 get_container <- function() {
