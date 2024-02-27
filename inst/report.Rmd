@@ -3,7 +3,7 @@ title: NHP outputs report
 output:
   html_document:
     toc: true
-    toc_depth: 4
+    toc_depth: 5
     toc_float:
       collapsed: true
 params:
@@ -164,17 +164,163 @@ mod_principal_summary_data(r, params$sites) |>
 
 #### Impact of changes
 
-```{r}
-#| label: pp-impact-of-changes
 
+```{r}
+#| label: pp-impact-of-changes-setup
+
+prep_principal_change_factors <- function(data, at, mitigator_lookup) {
+  
+  data |> 
+    get_principal_change_factors(at) |>
+    dplyr::mutate(
+      dplyr::across("change_factor", forcats::fct_inorder),
+      dplyr::across(
+        "change_factor",
+        \(.x) forcats::fct_relevel(
+          .x, 
+          "baseline", 
+          "demographic_adjustment", 
+          "health_status_adjustment"
+        )
+      )
+    ) |>
+    dplyr::left_join(
+      mitigator_lookup,
+      by = dplyr::join_by("strategy")
+    ) |>
+    tidyr::replace_na(list("mitigator_name" = "-"))
+  
+}
+
+mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
+  jsonlite::read_json(simplifyVector = TRUE) |>
+  purrr::simplify() |>
+  tibble::enframe("strategy", "mitigator_name")
+
+ip_pcf  <- prep_principal_change_factors(r, "ip",  mitigator_lookup) 
+op_pcf  <- prep_principal_change_factors(r, "op",  mitigator_lookup) 
+aae_pcf <- prep_principal_change_factors(r, "aae", mitigator_lookup) 
+```
+
+##### Inpatients
+
+###### Bed days
+
+```{r}
+#| label: pp-impact-of-changes-ip-bed-days
+
+ip_pcf |> 
+  mod_principal_change_factor_effects_summarised("beddays", TRUE) |>
+  mod_principal_change_factor_effects_cf_plot()
+```
+
+###### Admissions
+
+```{r}
+#| label: pp-impact-of-changes-ip-admissions
+
+ip_pcf |> 
+  mod_principal_change_factor_effects_summarised("admissions", TRUE) |>
+  mod_principal_change_factor_effects_cf_plot()
+```
+
+##### Outpatients
+
+###### Attendances
+
+```{r}
+#| label: pp-impact-of-changes-op-attendances
+
+op_pcf |> 
+  mod_principal_change_factor_effects_summarised("attendances", TRUE) |>
+  mod_principal_change_factor_effects_cf_plot()
+```
+
+###### Tele-attendances
+
+```{r}
+#| label: pp-impact-of-changes-op-tele-attendances
+
+op_pcf |> 
+  mod_principal_change_factor_effects_summarised("tele_attendances", TRUE) |>
+  mod_principal_change_factor_effects_cf_plot()
+```
+
+##### A&E
+
+###### Arrivals
+
+```{r}
+#| label: pp-impact-of-changes-aae-arrivals
+
+aae_pcf |> 
+  mod_principal_change_factor_effects_summarised("arrivals", TRUE) |>
+  mod_principal_change_factor_effects_cf_plot()
 ```
 
 #### Summary by year
 
+##### Values
+
 ```{r}
 #| label: pp-summary-by-year
 
+principal_high_level_summary_data <- 
+  mod_principal_high_level_pods() |> 
+  mod_principal_high_level_summary_data(r, pods = _, params$sites)
+
+principal_high_level_summary_data |> 
+  mod_principal_high_level_table(summary_type = "value")
 ```
+
+##### Change
+
+```{r}
+#| label: pp-summary-by-year-change
+
+principal_high_level_summary_data |> 
+  mod_principal_high_level_table(summary_type = "change")
+```
+
+##### Percent change
+
+```{r}
+#| label: pp-summary-by-year-percent-change
+
+principal_high_level_summary_data |> 
+  mod_principal_high_level_table(summary_type = "change_pcnt")
+```
+
+
+##### Inpatient admissions
+
+```{r}
+#| label: pp-summary-by-year-plot-ip
+
+principal_high_level_summary_data |> 
+  mod_principal_high_level_plot(activity_type = "ip")
+```
+
+##### Outpatient attendances
+
+```{r}
+#| label: pp-summary-by-year-plot-op
+
+principal_high_level_summary_data |> 
+  mod_principal_high_level_plot(activity_type = "op")
+```
+
+##### A&E attendances
+
+Available at trust level only.
+
+```{r}
+#| label: pp-summary-by-year-plot-aae
+
+principal_high_level_summary_data |> 
+  mod_principal_high_level_plot(activity_type = "aae")
+```
+
 
 #### Activity in detail
 
