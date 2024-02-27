@@ -185,6 +185,11 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
         ) |>
         set_names()
 
+      # TODO: when we switch to ECDS, throw away this code
+      if (!"trust" %in% selected_site() && length(selected_site()) > 0) {
+        activity_types <- activity_types[which(activity_types != "aae")]
+      }
+
       shiny::updateSelectInput(session, "activity_type", choices = activity_types)
     })
 
@@ -198,6 +203,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
 
       selected_data() |>
         get_principal_change_factors(at, selected_site()) |>
+        require_rows() |>
         dplyr::mutate(
           dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
@@ -216,6 +222,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
       pods <- shiny::req(input$pods)
 
       principal_change_factors_raw() |>
+        require_rows() |>
         dplyr::filter(.data[["pod"]] %in% pods) |>
         dplyr::select(-"pod") |>
         dplyr::count(
