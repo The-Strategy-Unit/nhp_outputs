@@ -64,3 +64,6 @@ __pycache__
 build/
 dist/
 coverage.xml
+
+# worktrees
+results_selection_app/

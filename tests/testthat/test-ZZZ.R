@@ -36,10 +36,10 @@ test_that("get_selected_file_from_url decodes the filename correctly", {
   key <- openssl::aes_keygen()
   key_b64 <- openssl::base64_encode(key)
 
-  ct <- openssl::aes_cbc_encrypt(charToRaw(expected), key)
+  ct <- openssl::aes_cbc_encrypt(charToRaw(expected), key, NULL)
   hm <- openssl::sha256(ct, key)
 
-  us <- openssl::base64_encode(c(hm, attr(ct, "iv"), ct))
+  us <- openssl::base64_encode(c(hm, ct))
 
   session <- list(
     clientData = list(
