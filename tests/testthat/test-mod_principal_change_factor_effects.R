@@ -159,12 +159,18 @@ test_that("it sets up the activity_type dropdown", {
   stub(mod_principal_change_factor_effects_server, "shiny::updateSelectInput", m)
 
   selected_data <- reactiveVal()
-  selected_sites <- reactiveVal("R00")
+  selected_sites <- reactiveVal()
 
   testServer(mod_principal_change_factor_effects_server, args = list(selected_data, selected_sites), {
     session$private$flush() # need to trigger an invalidation
-    expect_called(m, 1)
+    selected_sites("R00")
+    session$private$flush()
+    selected_sites("trust")
+    session$private$flush()
+    expect_called(m, 3)
     expect_args(m, 1, session, "activity_type", c("A&E" = "aae", "Inpatients" = "ip", "Outpatients" = "op"))
+    expect_args(m, 2, session, "activity_type", c("Inpatients" = "ip", "Outpatients" = "op"))
+    expect_args(m, 3, session, "activity_type", c("A&E" = "aae", "Inpatients" = "ip", "Outpatients" = "op"))
   })
 })
 
@@ -227,7 +233,7 @@ test_that("it updates the measures dropdown when the change factors updates", {
       1,
       session,
       "activity_type",
-      choices = c(`A&E` = "aae", Inpatients = "ip", Outpatients = "op")
+      choices = c(Inpatients = "ip", Outpatients = "op")
     )
     expect_args(
       m,
