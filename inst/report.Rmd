@@ -12,17 +12,13 @@ params:
 ---
 
 ```{r}
-#| label: setup-x
+#| label: setup
 #| echo: FALSE
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
 
 r <- params$r
 p <- get_params(r)
-
-atpmo <- get_activity_type_pod_measure_options()
-
-pmap_possibly <- purrr::possibly(purrr::pmap)
 ```
 
 ## Input parameters
@@ -337,34 +333,14 @@ tretspef_lookup <- jsonlite::read_json(
   ) |>
   dplyr::select(-"Group")
 
-
-
-
-
-
-
-activity_type = "aae"
-pod = "aae_type-01"
-measure = "ambulance"
-agg_col = "age_group"
-sites = "RXX01"
-
-activity_type = "inpatients"
-pod = "ip_elective_admission"
-measure = "admissions"
-agg_col = "age_group"
-sites = "RXX01"
-
-
-
-
+# Function to prepare data and table
 
 generate_activity_in_detail_table <- function(
-    r, activity_type, pod, measure, agg_col, sites
+    activity_type, pod, measure, agg_col
 ) {
   
   aggregated_data <- r |>
-    get_aggregation(pod, measure, agg_col, sites) |>
+    get_aggregation(pod, measure, agg_col, NULL) |>
     shiny::req() |>
     dplyr::transmute(
       .data$sex,
@@ -398,34 +374,32 @@ generate_activity_in_detail_table <- function(
   )
   
   aggregated_data |> 
-    mod_principal_detailed_table(aggregation = agg_col, final_year = end_fyear) |> 
+    mod_principal_detailed_table(
+      aggregation = agg_col,
+      final_year = end_fyear
+    ) |> 
     gt::tab_options(table.width = gt::pct(100))
   
 }
 
-# Prepare sets of inputs (activity, pods, measure, aggregation)
+possibly_generate_activity_in_detail_table <- 
+  purrr::possibly(generate_activity_in_detail_table)
 
-atpmo_simple <- atpmo |> 
-  dplyr::select("activity_type", "pod", "measure" = "measures")
+# Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
-agg_col = c("age_group", "tretspef")
-
-atpmo_agg_sites <- tidyr::crossing(
-  atpmo_simple,
-  agg_col
-) |> 
-  # dplyr::filter(activity_type %in% c("ip", "op")) |> 
+atpmo_agg <- get_activity_type_pod_measure_options() |> 
+  dplyr::select("activity_type", "pod", "measure" = "measures") |> 
+  tidyr::crossing(agg_col = c("age_group", "tretspef")) |> 
   dplyr::mutate(
     activity_type = dplyr::case_match(
-      activity_type,
+      activity_type, 
       "ip" ~ "inpatients",
       "op" ~ "outpatients",
       "aae" ~ "aae"
-    ),
-    sites = dplyr::if_else(activity_type == "aae", "trust", params$site)
+    )
   )
 
-activity_in_detail_table_names <- atpmo_agg_sites |> 
+activity_in_detail_table_names <- atpmo_agg |> 
   dplyr::mutate(
     table_name = paste(pod, measure, agg_col, sep = "_")
   ) |>
@@ -433,18 +407,9 @@ activity_in_detail_table_names <- atpmo_agg_sites |>
 
 # Prepare a list with each set of input combos
 
-activity_in_detail_tables <- pmap_possibly(
-  atpmo_agg_sites, 
-  \(activity_type, pod, measure, agg_col, sites) {
-    generate_activity_in_detail_table(
-      r = r,
-      activity_type,
-      pod,
-      measure,
-      agg_col,
-      sites
-    )
-  }
+activity_in_detail_tables <- purrr::pmap(
+  atpmo_agg, 
+  possibly_generate_activity_in_detail_table
 ) |> 
   purrr::set_names(activity_in_detail_table_names)
 ```
@@ -831,26 +796,84 @@ r |>
 
 #### Activity distribution
 
-
 ```{r}
 #| label: dop-activity-distribution-setup
 
+# Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
+atpmo_simplified <- get_activity_type_pod_measure_options() |> 
+  dplyr::select("activity_type", "pod", "measure" = "measures") |> 
+  dplyr::mutate(
+    activity_type = dplyr::case_match(
+      activity_type, "ip" ~ "inpatients", "op" ~ "outpatients", "aae" ~ "aae"
+    )
+  )
+
+activity_distribution_table_names <- atpmo_simplified |> 
+  dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>
+  dplyr::pull()
+
+# Functions to prepare data and plot 
+
+generate_activity_distribution_beeswarm <- function(
+    activity_type, pod, measure
+) {
+  
+  selected_measure <- c(activity_type, pod, measure)
+  
+  aggregated_data <- r |>
+    mod_model_results_distribution_get_data(selected_measure, params$sites) |>
+    require_rows()
+  
+  mod_model_results_distribution_beeswarm_plot(
+    aggregated_data,
+    show_origin = FALSE
+  )
+  
+}
+
+generate_activity_distribution_ecdf <- function(activity_type, pod, measure) {
+  
+  selected_measure <- c(activity_type, pod, measure)
+  
+  aggregated_data <- r |>
+    mod_model_results_distribution_get_data(selected_measure, params$sites) |>
+    require_rows()
+  
+  mod_model_results_distribution_ecdf_plot(
+    aggregated_data,
+    show_origin = FALSE
+  )
+  
+}
+
+possibly_generate_activity_distribution_beeswarm <- 
+  purrr::possibly(generate_activity_distribution_beeswarm)
+
+possibly_generate_activity_distribution_ecdf <- 
+  purrr::possibly(generate_activity_distribution_ecdf)
+
+# Prepare a list with each set of input combos
+
+activity_distribution_beeswarms <- atpmo_simplified |> 
+  purrr::pmap(possibly_generate_activity_distribution_beeswarm) |> 
+  purrr::set_names(activity_distribution_table_names)
+
+activity_distribution_ecdfs <- atpmo_simplified |> 
+  purrr::pmap(possibly_generate_activity_distribution_ecdf) |> 
+  purrr::set_names(activity_distribution_table_names)
 ```
 
 ##### Inpatients
 
+Test: non-elective admissions
+
 ```{r}
-#| label: dop-activity-distribution
+activity_distribution_beeswarms$`ip_non-elective_admission_admissions`
+```
 
-selected_measure <- c("inpatients", "ip_non-elective_admission", "admissions")
-
-aggregated_data <- r |>
-  mod_model_results_distribution_get_data(selected_measure, params$sites) |>
-  require_rows()
-
-mod_model_results_distribution_beeswarm_plot(aggregated_data, show_origin = TRUE)
-mod_model_results_distribution_ecdf_plot(aggregated_data, show_origin = TRUE)
+```{r}
+activity_distribution_ecdfs$`ip_non-elective_admission_admissions`
 ```
 
 ##### Outpatients

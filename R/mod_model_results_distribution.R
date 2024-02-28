@@ -94,6 +94,7 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
       expand = c(0.002, 0)
     ) +
     ggplot2::theme(
+      legend.position = "bottom",
       axis.title.x = ggplot2::element_blank(),
       axis.ticks.y = ggplot2::element_blank(),
       # keep y-axis labels to help line up beeswarm/ECDF, but make 'invisible'
