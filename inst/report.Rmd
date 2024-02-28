@@ -3,7 +3,7 @@ title: NHP outputs report
 output:
   html_document:
     toc: true
-    toc_depth: 5
+    toc_depth: 6
     toc_float:
       collapsed: true
 params:
@@ -12,16 +12,18 @@ params:
 ---
 
 ```{r}
-#| label: setup
+#| label: setup-x
 #| echo: FALSE
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
 
 r <- params$r
 p <- get_params(r)
-```
 
-This is model run `r params$r$params$id`.
+atpmo <- get_activity_type_pod_measure_options()
+
+pmap_possibly <- purrr::possibly(purrr::pmap)
+```
 
 ## Input parameters
 
@@ -163,7 +165,6 @@ mod_principal_summary_data(r, params$sites) |>
 ```
 
 #### Impact of changes
-
 
 ```{r}
 #| label: pp-impact-of-changes-setup
@@ -321,12 +322,495 @@ principal_high_level_summary_data |>
   mod_principal_high_level_plot(activity_type = "aae")
 ```
 
-
 #### Activity in detail
 
 ```{r}
-#| label: pp-activity-in-detail
+#| label: pp-activity-in-detail-setup
 
+tretspef_lookup <- jsonlite::read_json(
+  app_sys("app", "data", "tx-lookup.json"),
+  simplifyVector = TRUE
+) |>
+  dplyr::mutate(
+    dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
+    dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
+  ) |>
+  dplyr::select(-"Group")
+
+
+
+
+
+
+
+activity_type = "aae"
+pod = "aae_type-01"
+measure = "ambulance"
+agg_col = "age_group"
+sites = "RXX01"
+
+activity_type = "inpatients"
+pod = "ip_elective_admission"
+measure = "admissions"
+agg_col = "age_group"
+sites = "RXX01"
+
+
+
+
+
+generate_activity_in_detail_table <- function(
+    r, activity_type, pod, measure, agg_col, sites
+) {
+  
+  aggregated_data <- r |>
+    get_aggregation(pod, measure, agg_col, sites) |>
+    shiny::req() |>
+    dplyr::transmute(
+      .data$sex,
+      agg = .data[[agg_col]],
+      .data$baseline,
+      final = .data$principal,
+      change = .data$final - .data$baseline,
+      change_pcnt = .data$change / .data$baseline
+    )
+  
+  if (agg_col == "tretspef") {
+    aggregated_data <- aggregated_data |>
+      dplyr::left_join(
+        tretspef_lookup,
+        by = dplyr::join_by("agg" == "Code")
+      ) |>
+      dplyr::mutate(
+        dplyr::across(
+          "Description",
+          \(x) dplyr::if_else(is.na(x), .data$agg, .data$Description)
+        ),
+      ) |>
+      dplyr::select("sex", "Description", dplyr::everything(), -"agg") |>
+      dplyr::rename("agg" = "Description")
+  }
+  
+  end_year <- r[["params"]][["end_year"]]
+  end_fyear <- paste0(
+    end_year, "/",
+    as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
+  )
+  
+  aggregated_data |> 
+    mod_principal_detailed_table(aggregation = agg_col, final_year = end_fyear) |> 
+    gt::tab_options(table.width = gt::pct(100))
+  
+}
+
+# Prepare sets of inputs (activity, pods, measure, aggregation)
+
+atpmo_simple <- atpmo |> 
+  dplyr::select("activity_type", "pod", "measure" = "measures")
+
+agg_col = c("age_group", "tretspef")
+
+atpmo_agg_sites <- tidyr::crossing(
+  atpmo_simple,
+  agg_col
+) |> 
+  # dplyr::filter(activity_type %in% c("ip", "op")) |> 
+  dplyr::mutate(
+    activity_type = dplyr::case_match(
+      activity_type,
+      "ip" ~ "inpatients",
+      "op" ~ "outpatients",
+      "aae" ~ "aae"
+    ),
+    sites = dplyr::if_else(activity_type == "aae", "trust", params$site)
+  )
+
+activity_in_detail_table_names <- atpmo_agg_sites |> 
+  dplyr::mutate(
+    table_name = paste(pod, measure, agg_col, sep = "_")
+  ) |>
+  dplyr::pull()
+
+# Prepare a list with each set of input combos
+
+activity_in_detail_tables <- pmap_possibly(
+  atpmo_agg_sites, 
+  \(activity_type, pod, measure, agg_col, sites) {
+    generate_activity_in_detail_table(
+      r = r,
+      activity_type,
+      pod,
+      measure,
+      agg_col,
+      sites
+    )
+  }
+) |> 
+  purrr::set_names(activity_in_detail_table_names)
+```
+
+##### Inpatients
+
+###### Elective admissions
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-1
+
+activity_in_detail_tables$ip_elective_admission_admissions_age_group
+```
+
+Admissions by age group by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-2
+
+activity_in_detail_tables$ip_elective_admission_admissions_tretspef
+```
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-3
+
+activity_in_detail_tables$ip_elective_admission_beddays_age_group
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-4
+
+activity_in_detail_tables$ip_elective_admission_beddays_tretspef
+```
+
+###### Elective daycases
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-5
+
+activity_in_detail_tables$ip_elective_daycase_admissions_age_group
+```
+
+Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-6
+
+activity_in_detail_tables$ip_elective_daycase_admissions_tretspef
+```
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-7
+
+activity_in_detail_tables$ip_elective_daycase_beddays_age_group
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-8
+
+activity_in_detail_tables$ip_elective_daycase_beddays_tretspef
+```
+
+###### Maternity
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-9
+
+activity_in_detail_tables$ip_maternity_admission_admissions_age_group
+```
+
+Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-10
+
+activity_in_detail_tables$ip_maternity_admission_admissions_tretspef
+```
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-11
+
+activity_in_detail_tables$ip_maternity_admission_beddays_age_group
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-12
+
+activity_in_detail_tables$ip_maternity_admission_beddays_tretspef
+```
+
+###### Non-elective
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-13
+
+activity_in_detail_tables$`ip_non-elective_admission_admissions_age_group`
+```
+
+Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-14
+
+activity_in_detail_tables$`ip_non-elective_admission_admissions_tretspef`
+```
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-15 
+
+activity_in_detail_tables$`ip_non-elective_admission_beddays_age_group`
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-16 
+
+activity_in_detail_tables$`ip_non-elective_admission_beddays_tretspef`
+```
+
+##### Outpatients
+
+###### First
+
+Attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-1
+
+activity_in_detail_tables$op_first_attendances_age_group
+```
+
+Attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-2
+
+activity_in_detail_tables$op_first_attendances_tretspef
+```
+
+Tele-attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-3
+
+activity_in_detail_tables$op_first_tele_attendances_age_group
+```
+
+Tele-attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-4
+
+activity_in_detail_tables$op_first_tele_attendances_tretspef
+```
+
+###### Follow-up
+
+Attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-5
+
+activity_in_detail_tables$`op_follow-up_attendances_age_group`
+```
+
+Attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-6
+
+activity_in_detail_tables$`op_follow-up_attendances_tretspef`
+```
+
+Tele-attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-7
+
+activity_in_detail_tables$`op_follow-up_tele_attendances_age_group`
+```
+
+Tele-attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-8
+
+activity_in_detail_tables$`op_follow-up_tele_attendances_tretspef`
+```
+
+###### Procedure
+
+Attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-9
+
+activity_in_detail_tables$op_procedure_attendances_age_group
+```
+
+Attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-10
+
+activity_in_detail_tables$op_procedure_attendances_tretspef
+```
+
+##### A&E
+
+###### Type 1 department
+
+Ambulance by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-1
+
+activity_in_detail_tables$`aae_type-01_ambulance_age_group`
+```
+
+Ambulance by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-2
+
+activity_in_detail_tables$`aae_type-01_ambulance_tretspef`
+```
+
+Walk-in by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-3
+
+activity_in_detail_tables$`aae_type-01_walk-in_age_group`
+```
+
+Walk-in by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-4
+
+activity_in_detail_tables$`aae_type-01_walk-in_tretspef`
+```
+
+###### Type 2 department
+
+Ambulance by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-5
+
+activity_in_detail_tables$`aae_type-02_ambulance_age_group`
+```
+
+Ambulance by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-6
+
+activity_in_detail_tables$`aae_type-02_ambulance_tretspef`
+```
+
+Walk-in by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-7
+
+activity_in_detail_tables$`aae_type-02_walk-in_age_group`
+```
+
+Walk-in by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-8
+
+activity_in_detail_tables$`aae_type-02_walk-in_tretspef`
+```
+
+###### Type 3 department
+
+Ambulance by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-9
+
+activity_in_detail_tables$`aae_type-03_ambulance_age_group`
+```
+
+Ambulance by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-10
+
+activity_in_detail_tables$`aae_type-03_ambulance_tretspef`
+```
+
+Walk-in by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-11
+
+activity_in_detail_tables$`aae_type-03_walk-in_age_group`
+```
+
+Walk-in by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-12
+
+activity_in_detail_tables$`aae_type-03_walk-in_tretspef`
+```
+
+###### Type 4 department
+
+Ambulance by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-13
+
+activity_in_detail_tables$`aae_type-04_ambulance_age_group`
+```
+
+Ambulance by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-14
+
+activity_in_detail_tables$`aae_type-04_ambulance_tretspef`
+```
+
+Walk-in by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-15
+
+activity_in_detail_tables$`aae_type-04_walk-in_age_group`
+```
+
+Walk-in by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-aae-16
+
+activity_in_detail_tables$`aae_type-04_walk-in_tretspef`
 ```
 
 ### Distribution of projections
@@ -336,11 +820,39 @@ principal_high_level_summary_data |>
 ```{r}
 #| label: dop-activity-summary
 
+atpmo <- get_activity_type_pod_measure_options()
+
+r |>
+  get_model_core_activity(params$sites) |>
+  dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |> 
+  mod_model_core_activity_server_table() |> 
+  gt::tab_options(table.width = gt::pct(100))
 ```
 
 #### Activity distribution
 
+
+```{r}
+#| label: dop-activity-distribution-setup
+
+
+```
+
+##### Inpatients
+
 ```{r}
 #| label: dop-activity-distribution
 
+selected_measure <- c("inpatients", "ip_non-elective_admission", "admissions")
+
+aggregated_data <- r |>
+  mod_model_results_distribution_get_data(selected_measure, params$sites) |>
+  require_rows()
+
+mod_model_results_distribution_beeswarm_plot(aggregated_data, show_origin = TRUE)
+mod_model_results_distribution_ecdf_plot(aggregated_data, show_origin = TRUE)
 ```
+
+##### Outpatients
+
+##### A&E
