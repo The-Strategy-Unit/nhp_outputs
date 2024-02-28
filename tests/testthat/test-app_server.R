@@ -24,7 +24,7 @@ test_that("it loads the modules correctly", {
     expect_args(m, 2, "info_params", selected_data)
 
     expect_args(m, 3, "principal_summary", selected_data, selected_site)
-    expect_args(m, 4, "principal_change_factor_effects", selected_data)
+    expect_args(m, 4, "principal_change_factor_effects", selected_data, selected_site)
     expect_args(m, 5, "principal_high_level", selected_data, selected_site)
     expect_args(m, 6, "principal_detailed", selected_data, selected_site)
 
