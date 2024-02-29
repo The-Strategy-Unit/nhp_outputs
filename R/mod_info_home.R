@@ -46,15 +46,19 @@ mod_info_home_ui <- function(id) {
         width = 6,
         htmltools::p(
           "Download a file containing the input parameters and",
-          "outputs (charts and tables) for the selected model run.",
+          "outputs (charts and tables) for the selected model run and selected sites.",
+          "This may take a minute or two to render and download.",
         ),
         # TODO: hide until data is loaded
         shiny::downloadButton(ns("download_report_html"), "Download report (.html)")
       ),
       bs4Dash::box(
-        title = "Model Run",
+        title = "Model run information",
         collapsible = FALSE,
         width = 6,
+        htmltools::p(
+          "This is a reminder of the metadata for the model run you selected."
+        ),
         shinycssloaders::withSpinner(
           gt::gt_output(ns("params_model_run"))
         )

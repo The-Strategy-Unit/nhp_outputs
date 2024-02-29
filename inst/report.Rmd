@@ -1,5 +1,5 @@
 ---
-title: NHP outputs report
+title: NHP Outputs Report 
 output:
   html_document:
     toc: true
@@ -11,6 +11,36 @@ params:
   sites: NA
 ---
 
+```{css, echo=FALSE}
+h1 {
+font-size: 32px;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 26px;
+}
+
+h4 {
+  font-size: 24px;
+}
+
+h5 {
+  font-size: 22px;
+}
+
+h6 {
+  font-size: 20px;
+}
+
+p {
+  font-size: 16px;
+}
+```
+
 ```{r}
 #| label: setup
 #| echo: FALSE
@@ -20,6 +50,32 @@ knitr::opts_chunk$set(error = TRUE, echo = FALSE)
 r <- params$r
 p <- get_params(r)
 ```
+
+```{r}
+#| label: site-selections
+
+sites_were_selected <- if (is.null(params$sites)) FALSE else TRUE
+
+selected_sites <- if (sites_were_selected) {
+  paste(params$sites, collapse = ", ")
+} else {
+  "all"
+}
+```
+
+---
+subtitle: Model run `r p$id` with `r selected_sites` sites selected
+---
+
+## Notes
+
+Further information about the model and these results can be found on [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information).
+
+Some data is presented at trust level even if you made a site selection in the app. This is noted in the relevant sections below.
+
+Some sections will not contain charts and data if they weren't supplied or if there's insufficient data.
+
+This report reflects the site selections made in the app before the 'donwload report' button was clicked. The site selections for this report are: `r htmltools::strong(selected_sites)`.
 
 ## Input parameters
 
@@ -50,15 +106,17 @@ p_model_run |>
   unlist() |>
   tibble::enframe() |> 
   gt::gt("name") |> 
-  gt_theme()
+  gt_theme() |> 
+  gt::tab_options(table.align = "left")
 ```
 
-### Demographic adjusment
+### Demographic adjustment
 
 ```{r}
 #| label: params-demographic-adjustment
 
-info_params_table_demographic_adjustment(p)
+info_params_table_demographic_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Baseline adjustment
@@ -66,7 +124,8 @@ info_params_table_demographic_adjustment(p)
 ```{r}
 #| label: params-baseline-adjustment
 
-info_params_table_baseline_adjustment(p)
+info_params_table_baseline_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Covid adjustment
@@ -74,7 +133,8 @@ info_params_table_baseline_adjustment(p)
 ```{r}
 #| label: params-covid-adjustment
 
-info_params_table_covid_adjustment(p)
+info_params_table_covid_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Waiting list adjustment
@@ -82,7 +142,8 @@ info_params_table_covid_adjustment(p)
 ```{r}
 #| label: params-waiting-list-adjustment
 
-info_params_table_waiting_list_adjustment(p)
+info_params_table_waiting_list_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Expat
@@ -90,7 +151,8 @@ info_params_table_waiting_list_adjustment(p)
 ```{r}
 #| label: params-expat
 
-info_params_table_expat_repat_adjustment(p, "expat")
+info_params_table_expat_repat_adjustment(p, "expat") |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Repat (local)
@@ -98,7 +160,8 @@ info_params_table_expat_repat_adjustment(p, "expat")
 ```{r}
 #| label: params-repat-local
 
-info_params_table_expat_repat_adjustment(p, "repat_local")
+info_params_table_expat_repat_adjustment(p, "repat_local") |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Repat (non-local)
@@ -106,7 +169,8 @@ info_params_table_expat_repat_adjustment(p, "repat_local")
 ```{r}
 #| label: params-repat-non-local
 
-info_params_table_expat_repat_adjustment(p, "repat_nonlocal")
+info_params_table_expat_repat_adjustment(p, "repat_nonlocal") |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Non-demographic adjustment
@@ -114,7 +178,8 @@ info_params_table_expat_repat_adjustment(p, "repat_nonlocal")
 ```{r}
 #| label: params-non-demographic-adjustment
 
-info_params_table_non_demographic_adjustment(p)
+info_params_table_non_demographic_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Activity avoidance
@@ -122,7 +187,8 @@ info_params_table_non_demographic_adjustment(p)
 ```{r}
 #| label: params-activity-avoidance
 
-info_params_table_activity_avoidance(p)
+info_params_table_activity_avoidance(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Efficiencies
@@ -130,7 +196,8 @@ info_params_table_activity_avoidance(p)
 ```{r}
 #| label: params-efficiencies
 
-info_params_table_efficiencies(p)
+info_params_table_efficiencies(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ### Bed occupancy
@@ -138,13 +205,15 @@ info_params_table_efficiencies(p)
 ```{r}
 #| label: params-bed-occupancy-day-night
 
-info_params_table_bed_occupancy_day_night(p)
+info_params_table_bed_occupancy_day_night(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ```{r}
 #| label: params-bed-occupancy-specialty-mapping
 
-info_params_table_bed_occupancy_specialty_mapping(p)
+info_params_table_bed_occupancy_specialty_mapping(p) |> 
+  gt::tab_options(table.align = "left")
 ```
 
 ## Outputs
@@ -194,9 +263,9 @@ mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
   purrr::simplify() |>
   tibble::enframe("strategy", "mitigator_name")
 
-ip_pcf  <- prep_principal_change_factors(r, "ip",  mitigator_lookup) 
-op_pcf  <- prep_principal_change_factors(r, "op",  mitigator_lookup) 
-aae_pcf <- prep_principal_change_factors(r, "aae", mitigator_lookup) 
+ip_pcf  <- prep_principal_change_factors(params$r, "ip",  mitigator_lookup) 
+op_pcf  <- prep_principal_change_factors(params$r, "op",  mitigator_lookup) 
+aae_pcf <- prep_principal_change_factors(params$r, "aae", mitigator_lookup) 
 ```
 
 ##### Inpatients
@@ -339,7 +408,7 @@ generate_activity_in_detail_table <- function(
     activity_type, pod, measure, agg_col
 ) {
   
-  aggregated_data <- r |>
+  aggregated_data <- params$r |>
     get_aggregation(pod, measure, agg_col, NULL) |>
     shiny::req() |>
     dplyr::transmute(
@@ -367,7 +436,7 @@ generate_activity_in_detail_table <- function(
       dplyr::rename("agg" = "Description")
   }
   
-  end_year <- r[["params"]][["end_year"]]
+  end_year <- params$r[["params"]][["end_year"]]
   end_fyear <- paste0(
     end_year, "/",
     as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
@@ -382,8 +451,10 @@ generate_activity_in_detail_table <- function(
   
 }
 
-possibly_generate_activity_in_detail_table <- 
-  purrr::possibly(generate_activity_in_detail_table)
+possibly_generate_activity_in_detail_table <- purrr::possibly(
+  generate_activity_in_detail_table,
+  otherwise = "Insufficient information to produce this table"
+)
 
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
@@ -400,9 +471,7 @@ atpmo_agg <- get_activity_type_pod_measure_options() |>
   )
 
 activity_in_detail_table_names <- atpmo_agg |> 
-  dplyr::mutate(
-    table_name = paste(pod, measure, agg_col, sep = "_")
-  ) |>
+  dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
   dplyr::pull()
 
 # Prepare a list with each set of input combos
@@ -787,7 +856,7 @@ activity_in_detail_tables$`aae_type-04_walk-in_tretspef`
 
 atpmo <- get_activity_type_pod_measure_options()
 
-r |>
+params$r |>
   get_model_core_activity(params$sites) |>
   dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |> 
   mod_model_core_activity_server_table() |> 
@@ -821,7 +890,7 @@ generate_activity_distribution_beeswarm <- function(
   
   selected_measure <- c(activity_type, pod, measure)
   
-  aggregated_data <- r |>
+  aggregated_data <- params$r |>
     mod_model_results_distribution_get_data(selected_measure, params$sites) |>
     require_rows()
   
@@ -836,7 +905,7 @@ generate_activity_distribution_ecdf <- function(activity_type, pod, measure) {
   
   selected_measure <- c(activity_type, pod, measure)
   
-  aggregated_data <- r |>
+  aggregated_data <- params$r |>
     mod_model_results_distribution_get_data(selected_measure, params$sites) |>
     require_rows()
   
@@ -847,11 +916,15 @@ generate_activity_distribution_ecdf <- function(activity_type, pod, measure) {
   
 }
 
-possibly_generate_activity_distribution_beeswarm <- 
-  purrr::possibly(generate_activity_distribution_beeswarm)
+possibly_generate_activity_distribution_beeswarm <- purrr::possibly(
+  generate_activity_distribution_beeswarm,
+  otherwise = "Insufficient information to produce this chart"
+)
 
-possibly_generate_activity_distribution_ecdf <- 
-  purrr::possibly(generate_activity_distribution_ecdf)
+possibly_generate_activity_distribution_ecdf <- purrr::possibly(
+  generate_activity_distribution_ecdf,
+  otherwise = "Insufficient information to produce this chart"
+)
 
 # Prepare a list with each set of input combos
 
@@ -866,16 +939,183 @@ activity_distribution_ecdfs <- atpmo_simplified |>
 
 ##### Inpatients
 
-Test: non-elective admissions
+###### Non-elective admission
+
+Admissions
 
 ```{r}
+#| label: pp-activity-distribution-ip-1
+
 activity_distribution_beeswarms$`ip_non-elective_admission_admissions`
+activity_distribution_ecdfs$`ip_non-elective_admission_admissions`
 ```
 
+Bed days
+
 ```{r}
-activity_distribution_ecdfs$`ip_non-elective_admission_admissions`
+#| label: pp-activity-distribution-ip-2
+
+activity_distribution_beeswarms$`ip_non-elective_admission_beddays`
+activity_distribution_ecdfs$`ip_non-elective_admission_beddays`
+```
+
+###### Elective admission
+
+```{r}
+#| label: pp-activity-distribution-ip-3
+
+activity_distribution_beeswarms$`ip_elective_admission_admissions`
+activity_distribution_ecdfs$`ip_elective_admission_admissions`
+```
+
+Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-4
+
+activity_distribution_beeswarms$`ip_elective_admission_beddays`
+activity_distribution_ecdfs$`ip_elective_admission_beddays`
+```
+
+###### Maternity admission
+
+```{r}
+#| label: pp-activity-distribution-ip-5
+
+activity_distribution_beeswarms$`ip_maternity_admission_admissions`
+activity_distribution_ecdfs$`ip_maternity_admission_admissions`
+```
+
+Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-6
+
+activity_distribution_beeswarms$`ip_maternity_admission_beddays`
+activity_distribution_ecdfs$`ip_maternity_admission_beddays`
 ```
 
 ##### Outpatients
 
+###### First
+
+Attendances
+
+```{r}
+#| label: pp-activity-distribution-ip-7
+
+activity_distribution_beeswarms$`op_first_attendances`
+activity_distribution_ecdfs$`op_first_attendances`
+```
+
+Tele-attendances
+
+```{r}
+#| label: pp-activity-distribution-ip-8
+
+activity_distribution_beeswarms$`op_first_tele_attendances`
+activity_distribution_ecdfs$`op_first_tele_attendances`
+```
+
+###### Follow-up
+
+Attendances
+
+```{r}
+#| label: pp-activity-distribution-ip-9
+
+activity_distribution_beeswarms$`op_follow-up_attendances`
+activity_distribution_ecdfs$`op_follow-up_attendances`
+```
+
+Tele-attendances
+
+```{r}
+#| label: pp-activity-distribution-ip-10
+
+activity_distribution_beeswarms$`op_follow-up_tele_attendances`
+activity_distribution_ecdfs$`op_follow-up_tele_attendances`
+```
+
 ##### A&E
+
+###### Type 1
+
+Ambulance
+
+```{r}
+#| label: pp-activity-distribution-ip-11
+
+activity_distribution_beeswarms$`aae_type-01_ambulance`
+activity_distribution_ecdfs$`aae_type-01_ambulance`
+```
+
+Walk-in
+
+```{r}
+#| label: pp-activity-distribution-ip-12
+
+activity_distribution_beeswarms$`aae_type-01_walk-in`
+activity_distribution_ecdfs$`aae_type-01_walk-in`
+```
+
+###### Type 2
+
+Ambulance
+
+```{r}
+#| label: pp-activity-distribution-ip-13
+
+activity_distribution_beeswarms$`aae_type-02_ambulance`
+activity_distribution_ecdfs$`aae_type-02_ambulance`
+```
+
+Walk-in
+
+```{r}
+#| label: pp-activity-distribution-ip-14
+
+activity_distribution_beeswarms$`aae_type-02_walk-in`
+activity_distribution_ecdfs$`aae_type-02_walk-in`
+```
+
+###### Type 3
+
+Ambulance
+
+```{r}
+#| label: pp-activity-distribution-ip-15
+
+activity_distribution_beeswarms$`aae_type-03_ambulance`
+activity_distribution_ecdfs$`aae_type-03_ambulance`
+```
+
+Walk-in
+
+```{r}
+#| label: pp-activity-distribution-ip-16
+
+activity_distribution_beeswarms$`aae_type-03_walk-in`
+activity_distribution_ecdfs$`aae_type-03_walk-in`
+```
+
+###### Type 4
+
+Ambulance
+
+```{r}
+#| label: pp-activity-distribution-ip-17
+
+activity_distribution_beeswarms$`aae_type-04_ambulance`
+activity_distribution_ecdfs$`aae_type-04_ambulance`
+```
+
+Walk-in
+
+```{r}
+#| label: pp-activity-distribution-ip-18
+
+activity_distribution_beeswarms$`aae_type-04_walk-in`
+activity_distribution_ecdfs$`aae_type-04_walk-in`
+```
+
