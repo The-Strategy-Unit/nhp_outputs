@@ -12,55 +12,63 @@ mod_info_home_ui <- function(id) {
   shiny::tagList(
     shiny::h1("NHP Model Results"),
     shiny::fluidRow(
-      bs4Dash::box(
-        title = "Notes",
-        collapsible = FALSE,
+      bs4Dash::column(
         width = 6,
-        htmltools::p(
-          "Further information about the model and these results can be found on the",
-          htmltools::a(
-            href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
-            "model project information site."
+        bs4Dash::box(
+          title = "Notes",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "For details, the",
+            htmltools::a(
+              href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+              "model project information site"
+            ),
+            "contains an overview, user guide and methodology."
+          ),
+          htmltools::p(
+            "You can use the multi-choice site selection box (upper left) to filter results by sites.",
+            "Some data is presented at trust level even if you make a site selection.",
+            "Check the notes in each tab for details."
           )
         ),
-        htmltools::p(
-          "Note that some data is presented at trust level even if you make a site selection.",
-          "Check the notes in each tab for details."
+        bs4Dash::box(
+          title = "Download results data",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "Download a file containing results data for the selected model run.",
+            "The data is provided for each site and for the overall trust level."
+          ),
+          # TODO: hide these until data is loaded
+          shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
+          shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
+        ),
+        bs4Dash::box(
+          title = "Download outputs report",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "Download a file containing the input parameters and",
+            "outputs (charts and tables) for the selected model run and selected sites.",
+            "This may take a moment to render and download.",
+          ),
+          # TODO: hide until data is loaded
+          shiny::downloadButton(ns("download_report_html"), "Download report (.html)")
         )
       ),
-      bs4Dash::box(
-        title = "Download results data",
-        collapsible = FALSE,
+      bs4Dash::column(
         width = 6,
-        htmltools::p(
-          "Download a file containing results data for the selected model run.",
-          "The data is provided for each site and for the overall trust level."
-        ),
-        # TODO: hide these until data is loaded
-        shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
-        shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
-      ),
-      bs4Dash::box(
-        title = "Download outputs report",
-        collapsible = FALSE,
-        width = 6,
-        htmltools::p(
-          "Download a file containing the input parameters and",
-          "outputs (charts and tables) for the selected model run and selected sites.",
-          "This may take a minute or two to render and download.",
-        ),
-        # TODO: hide until data is loaded
-        shiny::downloadButton(ns("download_report_html"), "Download report (.html)")
-      ),
-      bs4Dash::box(
-        title = "Model run information",
-        collapsible = FALSE,
-        width = 6,
-        htmltools::p(
-          "This is a reminder of the metadata for the model run you selected."
-        ),
-        shinycssloaders::withSpinner(
-          gt::gt_output(ns("params_model_run"))
+        bs4Dash::box(
+          title = "Model run information",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "This is a reminder of the metadata for the model run you selected."
+          ),
+          shinycssloaders::withSpinner(
+            gt::gt_output(ns("params_model_run"))
+          )
         )
       )
     )

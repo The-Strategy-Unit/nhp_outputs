@@ -46,9 +46,7 @@ p {
 #| echo: FALSE
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-
-r <- params$r
-p <- get_params(r)
+p <- get_params(params$r)
 ```
 
 ```{r}
@@ -69,13 +67,13 @@ subtitle: Model run `r p$id` with `r selected_sites` sites selected
 
 ## Notes
 
-Further information about the model and these results can be found on [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information).
+For details, [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) contains an overview, user guide and methodology.
+
+This report reflects the site selections made in the app before the 'download report' button was clicked. The site selections for this report are: `r selected_sites`.
 
 Some data is presented at trust level even if you made a site selection in the app. This is noted in the relevant sections below.
 
 Some sections will not contain charts and data if they weren't supplied or if there's insufficient data.
-
-This report reflects the site selections made in the app before the 'donwload report' button was clicked. The site selections for this report are: `r htmltools::strong(selected_sites)`.
 
 ## Input parameters
 
@@ -222,14 +220,19 @@ info_params_table_bed_occupancy_specialty_mapping(p) |>
 
 #### Summary
 
+A&E and bed-availability data are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
 ```{r}
 #| label: pp-summary
 
-mod_principal_summary_data(r, params$sites) |> 
-  mod_principal_summary_table()
+mod_principal_summary_data(params$r, params$sites) |> 
+  mod_principal_summary_table() |> 
+  gt::tab_options(table.align = "left")
 ```
 
-#### Impact of changes
+#### Impact of changes (trust-level)
+
+The data in this section is presented at trust level only. The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: pp-impact-of-changes-setup
@@ -268,9 +271,9 @@ op_pcf  <- prep_principal_change_factors(params$r, "op",  mitigator_lookup)
 aae_pcf <- prep_principal_change_factors(params$r, "aae", mitigator_lookup) 
 ```
 
-##### Inpatients
+##### Inpatients (trust-level)
 
-###### Bed days
+###### Bed days (trust-level)
 
 ```{r}
 #| label: pp-impact-of-changes-ip-bed-days
@@ -280,7 +283,7 @@ ip_pcf |>
   mod_principal_change_factor_effects_cf_plot()
 ```
 
-###### Admissions
+###### Admissions (trust-level)
 
 ```{r}
 #| label: pp-impact-of-changes-ip-admissions
@@ -290,9 +293,9 @@ ip_pcf |>
   mod_principal_change_factor_effects_cf_plot()
 ```
 
-##### Outpatients
+##### Outpatients (trust-level)
 
-###### Attendances
+###### Attendances (trust-level)
 
 ```{r}
 #| label: pp-impact-of-changes-op-attendances
@@ -302,7 +305,7 @@ op_pcf |>
   mod_principal_change_factor_effects_cf_plot()
 ```
 
-###### Tele-attendances
+###### Tele-attendances (trust-level)
 
 ```{r}
 #| label: pp-impact-of-changes-op-tele-attendances
@@ -312,9 +315,9 @@ op_pcf |>
   mod_principal_change_factor_effects_cf_plot()
 ```
 
-##### A&E
+##### A&E (trust-level)
 
-###### Arrivals
+###### Arrivals (trust-level)
 
 ```{r}
 #| label: pp-impact-of-changes-aae-arrivals
@@ -326,6 +329,8 @@ aae_pcf |>
 
 #### Summary by year
 
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
 ##### Values
 
 ```{r}
@@ -333,7 +338,7 @@ aae_pcf |>
 
 principal_high_level_summary_data <- 
   mod_principal_high_level_pods() |> 
-  mod_principal_high_level_summary_data(r, pods = _, params$sites)
+  mod_principal_high_level_summary_data(params$r, pods = _, params$sites)
 
 principal_high_level_summary_data |> 
   mod_principal_high_level_table(summary_type = "value")
@@ -376,7 +381,7 @@ principal_high_level_summary_data |>
   mod_principal_high_level_plot(activity_type = "op")
 ```
 
-##### A&E attendances
+##### A&E attendances (trust-level)
 
 Available at trust level only.
 
@@ -388,6 +393,8 @@ principal_high_level_summary_data |>
 ```
 
 #### Activity in detail
+
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: pp-activity-in-detail-setup
@@ -447,7 +454,7 @@ generate_activity_in_detail_table <- function(
       aggregation = agg_col,
       final_year = end_fyear
     ) |> 
-    gt::tab_options(table.width = gt::pct(100))
+    gt::tab_options(table.align = "left")
   
 }
 
@@ -851,6 +858,8 @@ activity_in_detail_tables$`aae_type-04_walk-in_tretspef`
 
 #### Activity summary
 
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
 ```{r}
 #| label: dop-activity-summary
 
@@ -864,6 +873,8 @@ params$r |>
 ```
 
 #### Activity distribution
+
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: dop-activity-distribution-setup
