@@ -11,42 +11,42 @@ params:
   sites: NA
 ---
 
-```{css, echo=FALSE}
+```{r}
+#| label: setup
+#| echo: false
+
+knitr::opts_chunk$set(error = TRUE, echo = FALSE)
+source(here::here("R", "fct_report.R"), local = knitr::knit_global())
+```
+
+```{css}
 h1 {
 font-size: 32px;
 }
 
 h2 {
-  font-size: 28px;
+font-size: 28px;
 }
 
 h3 {
-  font-size: 26px;
+font-size: 26px;
 }
 
 h4 {
-  font-size: 24px;
+font-size: 24px;
 }
 
 h5 {
-  font-size: 22px;
+font-size: 22px;
 }
 
 h6 {
-  font-size: 20px;
+font-size: 20px;
 }
 
 p {
-  font-size: 16px;
+font-size: 16px;
 }
-```
-
-```{r}
-#| label: setup
-#| echo: FALSE
-
-knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-p <- get_params(params$r)
 ```
 
 ```{r}
@@ -62,20 +62,24 @@ selected_sites <- if (sites_were_selected) {
 ```
 
 ---
-subtitle: Model run `r p$id` with `r selected_sites` sites selected
+subtitle: Model run `r params$r$params$id` with `r selected_sites` sites selected
 ---
 
 ## Notes
 
-For details, [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) contains an overview, user guide and methodology.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide and methodology for the model and the outputs app.
 
 This report reflects the site selections made in the app before the 'download report' button was clicked. The site selections for this report are: `r selected_sites`.
 
-Some data is presented at trust level even if you made a site selection in the app. This is noted in the relevant sections below.
-
-Some sections will not contain charts and data if they weren't supplied or if there's insufficient data.
+Note that A&E results are not shown if you selected sites. Some sections will not contain charts and data if they weren't supplied or if there's insufficient data. 
 
 ## Input parameters
+
+```{r}
+#| label: setup-params
+
+p <- get_params(params$r)
+```
 
 ### Model run
 
@@ -230,101 +234,68 @@ mod_principal_summary_data(params$r, params$sites) |>
   gt::tab_options(table.align = "left")
 ```
 
-#### Impact of changes (trust-level)
+#### Impact of changes
 
-The data in this section is presented at trust level only. The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: pp-impact-of-changes-setup
-
-prep_principal_change_factors <- function(data, at, mitigator_lookup) {
-  
-  data |> 
-    get_principal_change_factors(at) |>
-    dplyr::mutate(
-      dplyr::across("change_factor", forcats::fct_inorder),
-      dplyr::across(
-        "change_factor",
-        \(.x) forcats::fct_relevel(
-          .x, 
-          "baseline", 
-          "demographic_adjustment", 
-          "health_status_adjustment"
-        )
-      )
-    ) |>
-    dplyr::left_join(
-      mitigator_lookup,
-      by = dplyr::join_by("strategy")
-    ) |>
-    tidyr::replace_na(list("mitigator_name" = "-"))
-  
-}
 
 mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
   jsonlite::read_json(simplifyVector = TRUE) |>
   purrr::simplify() |>
   tibble::enframe("strategy", "mitigator_name")
 
-ip_pcf  <- prep_principal_change_factors(params$r, "ip",  mitigator_lookup) 
-op_pcf  <- prep_principal_change_factors(params$r, "op",  mitigator_lookup) 
-aae_pcf <- prep_principal_change_factors(params$r, "aae", mitigator_lookup) 
+ip_pcf  <- prep_principal_change_factors(at = "ip") 
+op_pcf  <- prep_principal_change_factors(at = "op") 
+aae_pcf <- prep_principal_change_factors(at = "aae")
 ```
 
-##### Inpatients (trust-level)
+##### Inpatients
 
-###### Bed days (trust-level)
+###### Bed days
 
 ```{r}
 #| label: pp-impact-of-changes-ip-bed-days
 
-ip_pcf |> 
-  mod_principal_change_factor_effects_summarised("beddays", TRUE) |>
-  mod_principal_change_factor_effects_cf_plot()
+plot_impact_and_individual_change(ip_pcf, "beddays") |> purrr::walk(print)
 ```
 
-###### Admissions (trust-level)
+###### Admissions
 
 ```{r}
 #| label: pp-impact-of-changes-ip-admissions
 
-ip_pcf |> 
-  mod_principal_change_factor_effects_summarised("admissions", TRUE) |>
-  mod_principal_change_factor_effects_cf_plot()
+plot_impact_and_individual_change(ip_pcf, "admissions") |> purrr::walk(print)
 ```
 
-##### Outpatients (trust-level)
+##### Outpatients
 
-###### Attendances (trust-level)
+###### Attendances
 
 ```{r}
 #| label: pp-impact-of-changes-op-attendances
 
-op_pcf |> 
-  mod_principal_change_factor_effects_summarised("attendances", TRUE) |>
-  mod_principal_change_factor_effects_cf_plot()
+plot_impact_and_individual_change(op_pcf, "attendances") |> purrr::walk(print)
 ```
 
-###### Tele-attendances (trust-level)
+###### Tele-attendances
 
 ```{r}
 #| label: pp-impact-of-changes-op-tele-attendances
 
-op_pcf |> 
-  mod_principal_change_factor_effects_summarised("tele_attendances", TRUE) |>
-  mod_principal_change_factor_effects_cf_plot()
+plot_impact_and_individual_change(op_pcf, "tele_attendances") |>
+  purrr::walk(print)
 ```
 
-##### A&E (trust-level)
+##### A&E
 
-###### Arrivals (trust-level)
+###### Arrivals
 
 ```{r}
 #| label: pp-impact-of-changes-aae-arrivals
 
-aae_pcf |> 
-  mod_principal_change_factor_effects_summarised("arrivals", TRUE) |>
-  mod_principal_change_factor_effects_cf_plot()
+plot_impact_and_individual_change(aae_pcf, "arrivals") |> purrr::walk(print)
 ```
 
 #### Summary by year
@@ -410,53 +381,6 @@ tretspef_lookup <- jsonlite::read_json(
   dplyr::select(-"Group")
 
 # Function to prepare data and table
-
-generate_activity_in_detail_table <- function(
-    activity_type, pod, measure, agg_col
-) {
-  
-  aggregated_data <- params$r |>
-    get_aggregation(pod, measure, agg_col, NULL) |>
-    shiny::req() |>
-    dplyr::transmute(
-      .data$sex,
-      agg = .data[[agg_col]],
-      .data$baseline,
-      final = .data$principal,
-      change = .data$final - .data$baseline,
-      change_pcnt = .data$change / .data$baseline
-    )
-  
-  if (agg_col == "tretspef") {
-    aggregated_data <- aggregated_data |>
-      dplyr::left_join(
-        tretspef_lookup,
-        by = dplyr::join_by("agg" == "Code")
-      ) |>
-      dplyr::mutate(
-        dplyr::across(
-          "Description",
-          \(x) dplyr::if_else(is.na(x), .data$agg, .data$Description)
-        ),
-      ) |>
-      dplyr::select("sex", "Description", dplyr::everything(), -"agg") |>
-      dplyr::rename("agg" = "Description")
-  }
-  
-  end_year <- params$r[["params"]][["end_year"]]
-  end_fyear <- paste0(
-    end_year, "/",
-    as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
-  )
-  
-  aggregated_data |> 
-    mod_principal_detailed_table(
-      aggregation = agg_col,
-      final_year = end_fyear
-    ) |> 
-    gt::tab_options(table.align = "left")
-  
-}
 
 possibly_generate_activity_in_detail_table <- purrr::possibly(
   generate_activity_in_detail_table,
@@ -893,58 +817,15 @@ activity_distribution_table_names <- atpmo_simplified |>
   dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>
   dplyr::pull()
 
-# Functions to prepare data and plot 
+# Prepare a list of plots with each set of input combos
 
-generate_activity_distribution_beeswarm <- function(
-    activity_type, pod, measure
-) {
-  
-  selected_measure <- c(activity_type, pod, measure)
-  
-  aggregated_data <- params$r |>
-    mod_model_results_distribution_get_data(selected_measure, params$sites) |>
-    require_rows()
-  
-  mod_model_results_distribution_beeswarm_plot(
-    aggregated_data,
-    show_origin = FALSE
-  )
-  
-}
-
-generate_activity_distribution_ecdf <- function(activity_type, pod, measure) {
-  
-  selected_measure <- c(activity_type, pod, measure)
-  
-  aggregated_data <- params$r |>
-    mod_model_results_distribution_get_data(selected_measure, params$sites) |>
-    require_rows()
-  
-  mod_model_results_distribution_ecdf_plot(
-    aggregated_data,
-    show_origin = FALSE
-  )
-  
-}
-
-possibly_generate_activity_distribution_beeswarm <- purrr::possibly(
-  generate_activity_distribution_beeswarm,
+possibly_plot_activity_distributions <- purrr::possibly(
+  plot_activity_distributions,
   otherwise = "Insufficient information to produce this chart"
 )
 
-possibly_generate_activity_distribution_ecdf <- purrr::possibly(
-  generate_activity_distribution_ecdf,
-  otherwise = "Insufficient information to produce this chart"
-)
-
-# Prepare a list with each set of input combos
-
-activity_distribution_beeswarms <- atpmo_simplified |> 
-  purrr::pmap(possibly_generate_activity_distribution_beeswarm) |> 
-  purrr::set_names(activity_distribution_table_names)
-
-activity_distribution_ecdfs <- atpmo_simplified |> 
-  purrr::pmap(possibly_generate_activity_distribution_ecdf) |> 
+activity_distributions <- atpmo_simplified |>
+  purrr::pmap(possibly_plot_activity_distributions) |>
   purrr::set_names(activity_distribution_table_names)
 ```
 
@@ -957,8 +838,8 @@ Admissions
 ```{r}
 #| label: pp-activity-distribution-ip-1
 
-activity_distribution_beeswarms$`ip_non-elective_admission_admissions`
-activity_distribution_ecdfs$`ip_non-elective_admission_admissions`
+activity_distributions$`ip_non-elective_admission_admissions` |>
+  purrr::walk(print)
 ```
 
 Bed days
@@ -966,8 +847,7 @@ Bed days
 ```{r}
 #| label: pp-activity-distribution-ip-2
 
-activity_distribution_beeswarms$`ip_non-elective_admission_beddays`
-activity_distribution_ecdfs$`ip_non-elective_admission_beddays`
+activity_distributions$`ip_non-elective_admission_beddays` |> purrr::walk(print)
 ```
 
 ###### Elective admission
@@ -975,8 +855,7 @@ activity_distribution_ecdfs$`ip_non-elective_admission_beddays`
 ```{r}
 #| label: pp-activity-distribution-ip-3
 
-activity_distribution_beeswarms$`ip_elective_admission_admissions`
-activity_distribution_ecdfs$`ip_elective_admission_admissions`
+activity_distributions$`ip_elective_admission_admissions` |> purrr::walk(print)
 ```
 
 Bed days
@@ -984,8 +863,7 @@ Bed days
 ```{r}
 #| label: pp-activity-distribution-ip-4
 
-activity_distribution_beeswarms$`ip_elective_admission_beddays`
-activity_distribution_ecdfs$`ip_elective_admission_beddays`
+activity_distributions$`ip_elective_admission_beddays` |> purrr::walk(print)
 ```
 
 ###### Maternity admission
@@ -993,8 +871,7 @@ activity_distribution_ecdfs$`ip_elective_admission_beddays`
 ```{r}
 #| label: pp-activity-distribution-ip-5
 
-activity_distribution_beeswarms$`ip_maternity_admission_admissions`
-activity_distribution_ecdfs$`ip_maternity_admission_admissions`
+activity_distributions$`ip_maternity_admission_admissions` |> purrr::walk(print)
 ```
 
 Bed days
@@ -1002,8 +879,7 @@ Bed days
 ```{r}
 #| label: pp-activity-distribution-ip-6
 
-activity_distribution_beeswarms$`ip_maternity_admission_beddays`
-activity_distribution_ecdfs$`ip_maternity_admission_beddays`
+activity_distributions$`ip_maternity_admission_beddays` |> purrr::walk(print)
 ```
 
 ##### Outpatients
@@ -1013,19 +889,17 @@ activity_distribution_ecdfs$`ip_maternity_admission_beddays`
 Attendances
 
 ```{r}
-#| label: pp-activity-distribution-ip-7
+#| label: pp-activity-distribution-op-1
 
-activity_distribution_beeswarms$`op_first_attendances`
-activity_distribution_ecdfs$`op_first_attendances`
+activity_distributions$`op_first_attendances` |> purrr::walk(print)
 ```
 
 Tele-attendances
 
 ```{r}
-#| label: pp-activity-distribution-ip-8
+#| label: pp-activity-distribution-op-2
 
-activity_distribution_beeswarms$`op_first_tele_attendances`
-activity_distribution_ecdfs$`op_first_tele_attendances`
+activity_distributions$`op_first_tele_attendances` |> purrr::walk(print)
 ```
 
 ###### Follow-up
@@ -1033,19 +907,17 @@ activity_distribution_ecdfs$`op_first_tele_attendances`
 Attendances
 
 ```{r}
-#| label: pp-activity-distribution-ip-9
+#| label: pp-activity-distribution-op-3
 
-activity_distribution_beeswarms$`op_follow-up_attendances`
-activity_distribution_ecdfs$`op_follow-up_attendances`
+activity_distributions$`op_follow-up_attendances` |> purrr::walk(print)
 ```
 
 Tele-attendances
 
 ```{r}
-#| label: pp-activity-distribution-ip-10
+#| label: pp-activity-distribution-op-4
 
-activity_distribution_beeswarms$`op_follow-up_tele_attendances`
-activity_distribution_ecdfs$`op_follow-up_tele_attendances`
+activity_distributions$`op_follow-up_tele_attendances` |> purrr::walk(print)
 ```
 
 ##### A&E
@@ -1055,19 +927,17 @@ activity_distribution_ecdfs$`op_follow-up_tele_attendances`
 Ambulance
 
 ```{r}
-#| label: pp-activity-distribution-ip-11
+#| label: pp-activity-distribution-aae-1
 
-activity_distribution_beeswarms$`aae_type-01_ambulance`
-activity_distribution_ecdfs$`aae_type-01_ambulance`
+activity_distributions$`aae_type-01_ambulance` |> purrr::walk(print)
 ```
 
 Walk-in
 
 ```{r}
-#| label: pp-activity-distribution-ip-12
+#| label: pp-activity-distribution-aae-2
 
-activity_distribution_beeswarms$`aae_type-01_walk-in`
-activity_distribution_ecdfs$`aae_type-01_walk-in`
+activity_distributions$`aae_type-01_walk-in` |> purrr::walk(print)
 ```
 
 ###### Type 2
@@ -1075,19 +945,17 @@ activity_distribution_ecdfs$`aae_type-01_walk-in`
 Ambulance
 
 ```{r}
-#| label: pp-activity-distribution-ip-13
+#| label: pp-activity-distribution-aae-3
 
-activity_distribution_beeswarms$`aae_type-02_ambulance`
-activity_distribution_ecdfs$`aae_type-02_ambulance`
+activity_distributions$`aae_type-02_ambulance` |> purrr::walk(print)
 ```
 
 Walk-in
 
 ```{r}
-#| label: pp-activity-distribution-ip-14
+#| label: pp-activity-distribution-aae-4
 
-activity_distribution_beeswarms$`aae_type-02_walk-in`
-activity_distribution_ecdfs$`aae_type-02_walk-in`
+activity_distributions$`aae_type-02_walk-in` |> purrr::walk(print)
 ```
 
 ###### Type 3
@@ -1095,19 +963,17 @@ activity_distribution_ecdfs$`aae_type-02_walk-in`
 Ambulance
 
 ```{r}
-#| label: pp-activity-distribution-ip-15
+#| label: pp-activity-distribution-aae-5
 
-activity_distribution_beeswarms$`aae_type-03_ambulance`
-activity_distribution_ecdfs$`aae_type-03_ambulance`
+activity_distributions$`aae_type-03_ambulance` |> purrr::walk(print)
 ```
 
 Walk-in
 
 ```{r}
-#| label: pp-activity-distribution-ip-16
+#| label: pp-activity-distribution-aae-6
 
-activity_distribution_beeswarms$`aae_type-03_walk-in`
-activity_distribution_ecdfs$`aae_type-03_walk-in`
+activity_distributions$`aae_type-03_walk-in` |> purrr::walk(print)
 ```
 
 ###### Type 4
@@ -1115,18 +981,15 @@ activity_distribution_ecdfs$`aae_type-03_walk-in`
 Ambulance
 
 ```{r}
-#| label: pp-activity-distribution-ip-17
+#| label: pp-activity-distribution-aae-7
 
-activity_distribution_beeswarms$`aae_type-04_ambulance`
-activity_distribution_ecdfs$`aae_type-04_ambulance`
+activity_distributions$`aae_type-04_ambulance` |> purrr::walk(print)
 ```
 
 Walk-in
 
 ```{r}
-#| label: pp-activity-distribution-ip-18
+#| label: pp-activity-distribution-aae-8
 
-activity_distribution_beeswarms$`aae_type-04_walk-in`
-activity_distribution_ecdfs$`aae_type-04_walk-in`
+activity_distributions$`aae_type-04_walk-in` |> purrr::walk(print)
 ```
-

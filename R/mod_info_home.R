@@ -19,17 +19,16 @@ mod_info_home_ui <- function(id) {
           collapsible = FALSE,
           width = 12,
           htmltools::p(
-            "For details, the",
+            "See",
             htmltools::a(
               href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
-              "model project information site"
+              "the model project information site"
             ),
-            "contains an overview, user guide and methodology."
+            "for an overview, user guide and methodology for the model and this app."
           ),
           htmltools::p(
-            "You can use the multi-choice site selection box (upper left) to filter results by sites.",
-            "Some data is presented at trust level even if you make a site selection.",
-            "Check the notes in each tab for details."
+            "Use the multi-choice site selection box (upper left) to filter results by sites.",
+            "A&E results will not be shown if you select sites."
           )
         ),
         bs4Dash::box(
@@ -51,7 +50,7 @@ mod_info_home_ui <- function(id) {
           htmltools::p(
             "Download a file containing the input parameters and",
             "outputs (charts and tables) for the selected model run and selected sites.",
-            "This may take a moment to render and download.",
+            "This will take a moment.",
           ),
           # TODO: hide until data is loaded
           shiny::downloadButton(ns("download_report_html"), "Download report (.html)")
