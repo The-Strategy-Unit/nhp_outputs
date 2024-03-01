@@ -197,15 +197,16 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
     trust_site_aggregation(sites)
 }
 
-get_principal_change_factors <- function(r, activity_type) {
+get_principal_change_factors <- function(r, activity_type, sites) {
   stopifnot(
     "Invalid activity_type" = activity_type %in% c("aae", "ip", "op")
   )
 
   r$results$step_counts |>
     dplyr::filter(.data$activity_type == .env$activity_type) |>
-    dplyr::select("measure", "change_factor", "strategy", "value") |>
-    dplyr::mutate(dplyr::across("strategy", \(.x) tidyr::replace_na(.x, "-")))
+    dplyr::select(-where(is.list)) |>
+    dplyr::mutate(dplyr::across("strategy", \(.x) tidyr::replace_na(.x, "-"))) |>
+    trust_site_aggregation(sites)
 }
 
 get_bed_occupancy <- function(r) {

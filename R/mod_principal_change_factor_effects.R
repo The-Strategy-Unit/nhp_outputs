@@ -16,7 +16,6 @@ mod_principal_change_factor_effects_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       htmltools::p(
-        "The data on this page is presented at trust level only.",
         "The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.",
         "See the",
         htmltools::a(
@@ -31,12 +30,13 @@ mod_principal_change_factor_effects_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shiny::fluidRow(
-        col_6(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-        col_6(shiny::selectInput(ns("measure"), "Measure", NULL))
+        col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
+        col_4(shiny::selectInput(ns("pods"), "POD", NULL, multiple = TRUE)),
+        col_4(shiny::selectInput(ns("measure"), "Measure", NULL))
       )
     ),
     bs4Dash::box(
-      title = "Impact of changes (trust-level only)",
+      title = "Impact of changes",
       collapsible = FALSE,
       width = 12,
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
@@ -45,7 +45,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       )
     ),
     bs4Dash::box(
-      title = "Individual change factors (trust-level only)",
+      title = "Individual change factors",
       collapsible = FALSE,
       width = 12,
       shiny::selectInput(ns("sort_type"), "Sort By", c("Descending value", "Alphabetical")),
@@ -174,7 +174,7 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
-mod_principal_change_factor_effects_server <- function(id, selected_data) {
+mod_principal_change_factor_effects_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     shiny::observe({
       activity_types <- get_activity_type_pod_measure_options() |>
@@ -185,10 +185,15 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         ) |>
         set_names()
 
+      # TODO: when we switch to ECDS, throw away this code
+      if (!"trust" %in% selected_site() && length(selected_site()) > 0) {
+        activity_types <- activity_types[which(activity_types != "aae")]
+      }
+
       shiny::updateSelectInput(session, "activity_type", choices = activity_types)
     })
 
-    principal_change_factors <- shiny::reactive({
+    principal_change_factors_raw <- shiny::reactive({
       at <- shiny::req(input$activity_type)
 
       mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
@@ -197,7 +202,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         tibble::enframe("strategy", "mitigator_name")
 
       selected_data() |>
-        get_principal_change_factors(at) |>
+        get_principal_change_factors(at, selected_site()) |>
+        require_rows() |>
         dplyr::mutate(
           dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
@@ -212,32 +218,51 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
         tidyr::replace_na(list("mitigator_name" = "-"))
     })
 
+    principal_change_factors <- shiny::reactive({
+      pods <- shiny::req(input$pods)
+
+      principal_change_factors_raw() |>
+        require_rows() |>
+        dplyr::filter(.data[["pod"]] %in% pods) |>
+        dplyr::select(-"pod") |>
+        dplyr::count(
+          dplyr::across(-"value"),
+          wt = .data[["value"]],
+          name = "value"
+        )
+    })
+
     shiny::observe({
       at <- shiny::req(input$activity_type)
-      pcf <- shiny::req(principal_change_factors())
+      pcf <- shiny::req(principal_change_factors_raw())
 
-      measures_unnamed <- unique(pcf$measure)
+      pod_names <- get_activity_type_pod_measure_options() |>
+        dplyr::filter(.data[["activity_type"]] == at) |>
+        dplyr::distinct(.data[["pod_name"]], .data[["pod"]]) |>
+        tibble::deframe()
 
-      measure_labels <- dplyr::if_else(
-        measures_unnamed == "beddays",
-        "Bed Days",
-        snakecase::to_title_case(measures_unnamed)
-      )
+      measure_names <- get_golem_config("measures")
 
-      measures <- purrr::set_names(measures_unnamed, measure_labels)
+      pods <- unique(pcf$pod)
+      measures <- unique(pcf$measure)
 
       shiny::req(length(measures) > 0)
 
-      default_measure <- if (at == "ip") "beddays" else NULL
+      shiny::updateSelectInput(
+        session,
+        "pods",
+        choices = pod_names[pods %in% pod_names],
+        selected = pods
+      )
 
       shiny::updateSelectInput(
         session,
         "measure",
-        choices = measures,
-        selected = default_measure
+        choices = purrr::set_names(measures, measure_names[measures]),
+        selected = ifelse(at == "ip", "beddays", measures[[1]])
       )
     }) |>
-      shiny::bindEvent(principal_change_factors())
+      shiny::bindEvent(principal_change_factors_raw())
 
     individual_change_factors <- shiny::reactive({
       m <- shiny::req(input$measure)
@@ -254,7 +279,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_data) {
           dplyr::mutate(
             dplyr::across(
               "mitigator_name",
-              \(.x) forcats::fct_reorder(.x, -.data$value))
+              \(.x) forcats::fct_reorder(.x, -.data$value)
+            )
           )
       } else {
         d |>

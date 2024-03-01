@@ -75,6 +75,7 @@ default:
     tele_attendances: Tele-Attendances
     walk-in: Walk-in Arrivals
     ambulance: Ambulance Arrivals
+    arrivals: Arrivals
 
 production:
   app_prod: yes
