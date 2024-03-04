@@ -99,12 +99,12 @@ mod_info_home_download_report_html <- function(data, sites) {
 
     params <- list(r = data(), sites = sites())
 
-    id <- shiny::showNotification(
+    download_notification <- shiny::showNotification(
       "Rendering report...",
       duration = NULL,
       closeButton = FALSE
     )
-    on.exit(shiny::removeNotification(id), add = TRUE)
+    on.exit(shiny::removeNotification(download_notification), add = TRUE)
 
     rmarkdown::render(
       temp_report,
@@ -155,17 +155,32 @@ mod_info_home_server <- function(id, selected_data, selected_site) {
     # download buttons ----
 
     output$download_results_xlsx <- shiny::downloadHandler(
-      filename = \() paste0(selected_data()$params$id, ".xlsx"),
+      filename = \() {
+        paste0(
+          selected_data()$params$id,
+          "_results-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".xlsx"
+        )
+      },
       content = mod_info_home_download_excel(selected_data)
     )
 
     output$download_results_json <- shiny::downloadHandler(
-      filename = \() paste0(selected_data()$params$id, ".json"),
+      filename = \() {
+        paste0(
+          selected_data()$params$id,
+          "_results-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".json"
+        )
+      },
       content = mod_info_home_download_json(selected_data)
     )
 
     output$download_report_html <- shiny::downloadHandler(
-      filename = \() paste0(selected_data()$params$id, "_report.html"),
+      filename = \() {
+        paste0(
+          selected_data()$params$id,
+          "_report-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
+        )
+      },
       content = mod_info_home_download_report_html(selected_data, selected_site)
     )
 

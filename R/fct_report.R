@@ -2,27 +2,45 @@
 
 prep_principal_change_factors <- function(
     data = params$r,
-    at,
     sites = params$sites,
-    mitigators = mitigator_lookup
+    mitigators = mitigator_lookup,
+    at,
+    pods
 ) {
 
-  data |>
-    get_principal_change_factors(at, sites) |>
+  principal_change_factors_raw <- data |>
+    get_principal_change_factors(at, sites)
+
+  # if a site is selected then there are no rows for A&E
+  if (nrow(principal_change_factors_raw) == 0) stop("No data")
+
+  principal_change_factors_raw |>
     dplyr::mutate(
       dplyr::across("change_factor", forcats::fct_inorder),
       dplyr::across(
         "change_factor",
-        \(.x) forcats::fct_relevel(
-          .x,
-          "baseline",
-          "demographic_adjustment",
-          "health_status_adjustment"
-        )
+        \(.x) {
+          forcats::fct_relevel(
+            .x,
+            "baseline",
+            "demographic_adjustment",
+            "health_status_adjustment"
+          )
+        }
       )
     ) |>
-    dplyr::left_join(mitigators, by = dplyr::join_by("strategy")) |>
-    tidyr::replace_na(list("mitigator_name" = "-"))
+    dplyr::left_join(
+      mitigator_lookup,
+      by = dplyr::join_by("strategy")
+    ) |>
+    tidyr::replace_na(list("mitigator_name" = "-")) |>
+    dplyr::filter(.data[["pod"]] %in% pods) |>
+    dplyr::select(-"pod") |>
+    dplyr::count(
+      dplyr::across(-"value"),
+      wt = .data[["value"]],
+      name = "value"
+    )
 
 }
 
@@ -33,7 +51,7 @@ prep_individual_change_factors <- function(
 
   principal_change_factors |>
     dplyr::filter(
-      .data$measure == measure,
+      .data$measure == .env$measure,
       .data$strategy != "-",
       .data$value < 0
     ) |>
@@ -53,7 +71,8 @@ plot_individual_change_factors <- function(
 ) {
 
   individual_change_factors <-
-    prep_individual_change_factors(principal_change_factors, measure)
+    prep_individual_change_factors(principal_change_factors, measure) |>
+    dplyr::filter(change_factor == .env$change_factor)
 
   mod_principal_change_factor_effects_ind_plot(
     individual_change_factors,
@@ -86,7 +105,7 @@ plot_impact_and_individual_change <- function(
     mod_principal_change_factor_effects_summarised(measure, TRUE) |>
     possibly_mod_principal_change_factor_effects_cf_plot()
 
-  activity_avoidance_plot<- principal_change_factors |>
+  activity_avoidance_plot <- principal_change_factors |>
     possibly_plot_individual_change_factors(measure, "activity_avoidance")
 
   efficiencies_plot <- principal_change_factors |>
