@@ -1,0 +1,4 @@
+/* Prevent 'bouncing' caused by {shinycssloaders} */
+.loader {
+  min-height: 40px !important;
+}
