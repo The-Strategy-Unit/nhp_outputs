@@ -1,9 +1,9 @@
 # Impact of changes ----
 
 prep_principal_change_factors <- function(
-    data = params$r,
-    sites = params$sites,
-    mitigators = mitigator_lookup,
+    data,
+    sites,
+    mitigators,
     at,
     pods
 ) {
@@ -30,7 +30,7 @@ prep_principal_change_factors <- function(
       )
     ) |>
     dplyr::left_join(
-      mitigator_lookup,
+      mitigators,
       by = dplyr::join_by("strategy")
     ) |>
     tidyr::replace_na(list("mitigator_name" = "-")) |>
@@ -118,13 +118,15 @@ plot_impact_and_individual_change <- function(
 # Activity in detail ----
 
 generate_activity_in_detail_table <- function(
+    data,
+    tretspefs,
     activity_type,
     pod,
     measure,
     agg_col
 ) {
 
-  aggregated_data <- params$r |>
+  aggregated_data <- data |>
     get_aggregation(pod, measure, agg_col, NULL) |>
     shiny::req() |>
     dplyr::transmute(
@@ -139,7 +141,7 @@ generate_activity_in_detail_table <- function(
   if (agg_col == "tretspef") {
     aggregated_data <- aggregated_data |>
       dplyr::left_join(
-        tretspef_lookup,
+        tretspefs,
         by = dplyr::join_by("agg" == "Code")
       ) |>
       dplyr::mutate(
@@ -152,7 +154,7 @@ generate_activity_in_detail_table <- function(
       dplyr::rename("agg" = "Description")
   }
 
-  end_year <- params$r[["params"]][["end_year"]]
+  end_year <- data[["params"]][["end_year"]]
   end_fyear <- paste0(
     end_year, "/",
     as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
@@ -170,6 +172,8 @@ generate_activity_in_detail_table <- function(
 # Activity distribution----
 
 plot_activity_distributions <- function(
+    data,
+    sites,
     activity_type,
     pod,
     measure
@@ -177,8 +181,8 @@ plot_activity_distributions <- function(
 
   selected_measure <- c(activity_type, pod, measure)
 
-  aggregated_data <- params$r |>
-    mod_model_results_distribution_get_data(selected_measure, params$sites) |>
+  aggregated_data <- data |>
+    mod_model_results_distribution_get_data(selected_measure, sites) |>
     require_rows()
 
   beeswarm_plot <- mod_model_results_distribution_beeswarm_plot(
