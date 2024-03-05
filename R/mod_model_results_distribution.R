@@ -216,7 +216,7 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
     output$ecdf_text <- shiny::renderText({
       data <- shiny::req(aggregated_data())
 
-      b_val <- data$principal[[1]] |> scales::comma()
+      b_val <- data$baseline[[1]] |> scales::comma()
       p <- data$principal[[1]]
       p_val <- scales::comma(p)
 
