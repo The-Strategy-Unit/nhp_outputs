@@ -35,11 +35,11 @@
                   Download a file containing results data for the selected model run.
                   The data is provided for each site and for the overall trust level.
                 </p>
-                <a id="id-download_results_xlsx" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+                <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_results_xlsx" target="_blank">
                   <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
                   Download results (.xlsx)
                 </a>
-                <a id="id-download_results_json" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+                <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_results_json" target="_blank">
                   <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
                   Download results (.json)
                 </a>
@@ -58,7 +58,7 @@
                   outputs (charts and tables) for the selected model run and selected sites.
                   This will take a moment.
                 </p>
-                <a id="id-download_report_html" class="btn btn-default shiny-download-link " href="" target="_blank" download>
+                <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_report_html" target="_blank">
                   <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
                   Download report (.html)
                 </a>

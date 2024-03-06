@@ -39,9 +39,18 @@ mod_info_home_ui <- function(id) {
             "Download a file containing results data for the selected model run.",
             "The data is provided for each site and for the overall trust level."
           ),
-          # TODO: hide these until data is loaded
-          shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
-          shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
+          shinyjs::disabled(
+            shiny::downloadButton(
+              ns("download_results_xlsx"),
+              "Download results (.xlsx)"
+            )
+          ),
+          shinyjs::disabled(
+            shiny::downloadButton(
+              ns("download_results_json"),
+              "Download results (.json)"
+            )
+          )
         ),
         bs4Dash::box(
           title = "Download outputs report",
@@ -52,8 +61,12 @@ mod_info_home_ui <- function(id) {
             "outputs (charts and tables) for the selected model run and selected sites.",
             "This will take a moment.",
           ),
-          # TODO: hide until data is loaded
-          shiny::downloadButton(ns("download_report_html"), "Download report (.html)")
+          shinyjs::disabled(
+            shiny::downloadButton(
+              ns("download_report_html"),
+              "Download report (.html)"
+            )
+          )
         )
       ),
       bs4Dash::column(
@@ -146,6 +159,19 @@ mod_info_home_server <- function(id, selected_data, selected_site) {
         tibble::enframe()
     })
 
+    # observers ----
+    shiny::observe({
+      shiny::req(selected_data())
+
+      shinyjs::enable("download_results_xlsx")
+      shinyjs::enable("download_results_json")
+      shinyjs::enable("download_report_html")
+    }) |>
+      shiny::bindEvent(selected_data())
+
+
+    # renders ----
+
     output$params_model_run <- gt::render_gt({
       params_model_run() |>
         gt::gt("name") |>
@@ -183,6 +209,5 @@ mod_info_home_server <- function(id, selected_data, selected_site) {
       },
       content = mod_info_home_download_report_html(selected_data, selected_site)
     )
-
   })
 }
