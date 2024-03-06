@@ -12,6 +12,12 @@ app_ui <- function(request) {
     status = "primary",
     bs4Dash::sidebarMenu(
       id = "sidebarMenu",
+
+      bs4Dash::menuItem(
+        text = "Home",
+        tabName = "tab_home"
+      ),
+
       bs4Dash::bs4SidebarHeader("Site Selection"),
       shiny::selectInput(
         "site_selection",
@@ -19,18 +25,7 @@ app_ui <- function(request) {
         NULL,
         multiple = TRUE
       ),
-      bs4Dash::menuItem(
-        "Information",
-        startExpanded = TRUE,
-        bs4Dash::menuSubItem(
-          text = "Home",
-          tabName = "tab_home"
-        ),
-        bs4Dash::menuSubItem(
-          text = "Input parameters",
-          tabName = "tab_params"
-        )
-      ),
+
       bs4Dash::bs4SidebarHeader("Results"),
       bs4Dash::menuItem(
         "Principal projection",
@@ -63,6 +58,16 @@ app_ui <- function(request) {
           text = "Activity distribution",
           tabName = "tab_md"
         )
+      ),
+
+      bs4Dash::bs4SidebarHeader("Information"),
+      bs4Dash::menuItem(
+        text = "Downloads",
+        tabName = "tab_downloads"
+      ),
+      bs4Dash::menuItem(
+        text = "Input parameters",
+        tabName = "tab_params"
       )
     )
   )
@@ -73,10 +78,7 @@ app_ui <- function(request) {
         tabName = "tab_home",
         mod_info_home_ui("home")
       ),
-      bs4Dash::tabItem(
-        tabName = "tab_params",
-        mod_info_params_ui("info_params")
-      ),
+
       bs4Dash::tabItem(
         tabName = "tab_ps",
         mod_principal_summary_ui("principal_summary")
@@ -93,6 +95,7 @@ app_ui <- function(request) {
         tabName = "tab_pd",
         mod_principal_detailed_ui("principal_detailed")
       ),
+
       bs4Dash::tabItem(
         tabName = "tab_mc",
         mod_model_core_activity_ui("model_core_activity")
@@ -100,6 +103,15 @@ app_ui <- function(request) {
       bs4Dash::tabItem(
         tabName = "tab_md",
         mod_model_results_distribution_ui("model_results_distribution")
+      ),
+
+      bs4Dash::tabItem(
+        tabName = "tab_downloads",
+        mod_info_downloads_ui("info_downloads")
+      ),
+      bs4Dash::tabItem(
+        tabName = "tab_params",
+        mod_info_params_ui("info_params")
       )
     )
   )
@@ -109,6 +121,7 @@ app_ui <- function(request) {
     shinyjs::useShinyjs(),
     bs4Dash::dashboardPage(
       help = NULL,
+      dark = NULL,
       header,
       sidebar,
       body
