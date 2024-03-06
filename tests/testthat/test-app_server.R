@@ -20,7 +20,7 @@ test_that("it loads the modules correctly", {
 
   testServer(app_server, {
     expect_called(m, 8)
-    expect_args(m, 1, "home", selected_data)
+    expect_args(m, 1, "home", selected_data, selected_site)
     expect_args(m, 2, "info_params", selected_data)
 
     expect_args(m, 3, "principal_summary", selected_data, selected_site)

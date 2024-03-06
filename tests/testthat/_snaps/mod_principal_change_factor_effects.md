@@ -38,7 +38,7 @@
               </div>
               <div class="col-sm-4">
                 <div class="form-group shiny-input-container">
-                  <label class="control-label" id="id-pods-label" for="id-pods">POD</label>
+                  <label class="control-label" id="id-pods-label" for="id-pods">Point of Delivery</label>
                   <div>
                     <select id="id-pods" class="shiny-input-select" multiple="multiple"></select>
                     <script type="application/json" data-for="id-pods">{"plugins":["selectize-plugin-a11y"]}</script>

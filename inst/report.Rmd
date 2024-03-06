@@ -1,0 +1,1011 @@
+---
+title: NHP Outputs Report 
+output:
+  html_document:
+    toc: true
+    toc_depth: 6
+    toc_float:
+      collapsed: true
+params:
+  r: NA
+  sites: NA
+---
+
+```{r}
+#| label: setup
+#| echo: false
+
+knitr::opts_chunk$set(error = TRUE, echo = FALSE)
+source(here::here("R", "fct_report.R"), local = knitr::knit_global())
+```
+
+```{css}
+h1 {
+font-size: 32px;
+}
+
+h2 {
+font-size: 28px;
+}
+
+h3 {
+font-size: 26px;
+}
+
+h4 {
+font-size: 24px;
+}
+
+h5 {
+font-size: 22px;
+}
+
+h6 {
+font-size: 20px;
+}
+
+p {
+font-size: 16px;
+}
+```
+
+```{r}
+#| label: site-selections
+
+sites_were_selected <- if (is.null(params$sites)) FALSE else TRUE
+
+selected_sites <- if (sites_were_selected) {
+  paste(params$sites, collapse = ", ")
+} else {
+  "all sites"
+}
+```
+
+---
+subtitle: Model run `r params$r$params$id` with `r selected_sites` selected
+---
+
+## Notes
+
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide and methodology for the model and the outputs app.
+
+This report reflects the site selections made in the app before the 'download report' button was clicked. The site selections for this report are: `r selected_sites`. 
+
+A&E results are only available at trust level. Tables and charts won't be shown if there's insufficient data to produce them.
+
+## Input parameters
+
+```{r}
+#| label: setup-params
+
+p <- get_params(params$r)
+```
+
+### Model run
+
+```{r}
+#| label: params-model-run
+
+p_model_run <- purrr::keep(p, rlang::is_atomic)
+
+p_model_run[["start_year"]] <- scales::number(
+  p_model_run[["start_year"]] + ((p_model_run[["start_year"]] + 1) %% 100) / 100,
+  0.01,
+  big.mark = "", decimal.mark = "/"
+)
+p_model_run[["end_year"]] <- scales::number(
+  p_model_run[["end_year"]] + ((p_model_run[["end_year"]] + 1) %% 100) / 100,
+  0.01,
+  big.mark = "",
+  decimal.mark = "/"
+)
+
+p_model_run[["create_datetime"]] <- p_model_run[["create_datetime"]] |>
+  lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
+  format("%d-%b-%Y %H:%M:%S")
+
+p_model_run |>
+  unlist() |>
+  tibble::enframe() |> 
+  gt::gt("name") |> 
+  gt_theme() |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Demographic adjustment
+
+```{r}
+#| label: params-demographic-adjustment
+
+info_params_table_demographic_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Baseline adjustment
+
+```{r}
+#| label: params-baseline-adjustment
+
+info_params_table_baseline_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Covid adjustment
+
+```{r}
+#| label: params-covid-adjustment
+
+info_params_table_covid_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Waiting list adjustment
+
+```{r}
+#| label: params-waiting-list-adjustment
+
+info_params_table_waiting_list_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Expat
+
+```{r}
+#| label: params-expat
+
+info_params_table_expat_repat_adjustment(p, "expat") |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Repat (local)
+
+```{r}
+#| label: params-repat-local
+
+info_params_table_expat_repat_adjustment(p, "repat_local") |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Repat (non-local)
+
+```{r}
+#| label: params-repat-non-local
+
+info_params_table_expat_repat_adjustment(p, "repat_nonlocal") |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Non-demographic adjustment
+
+```{r}
+#| label: params-non-demographic-adjustment
+
+info_params_table_non_demographic_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Activity avoidance
+
+```{r}
+#| label: params-activity-avoidance
+
+info_params_table_activity_avoidance(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Efficiencies
+
+```{r}
+#| label: params-efficiencies
+
+info_params_table_efficiencies(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+### Bed occupancy
+
+```{r}
+#| label: params-bed-occupancy-day-night
+
+info_params_table_bed_occupancy_day_night(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+```{r}
+#| label: params-bed-occupancy-specialty-mapping
+
+info_params_table_bed_occupancy_specialty_mapping(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Outputs
+
+### Principal projection
+
+#### Summary
+
+A&E and bed-availability data are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+```{r}
+#| label: pp-summary
+
+mod_principal_summary_data(params$r, params$sites) |> 
+  mod_principal_summary_table() |> 
+  gt::tab_options(table.align = "left")
+```
+
+#### Impact of changes
+
+The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+```{r}
+#| label: pp-impact-of-changes-setup
+
+mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
+  jsonlite::read_json(simplifyVector = TRUE) |>
+  purrr::simplify() |>
+  tibble::enframe("strategy", "mitigator_name")
+
+possibly_prep_principal_change_factors <- 
+  purrr::possibly(
+    prep_principal_change_factors,
+    "Insufficient data"
+  )
+
+ip_pcf <- possibly_prep_principal_change_factors(
+  data = params$r,
+  sites = params$sites,
+  mitigators = mitigator_lookup,
+  at = "ip",
+  pods = c(
+    "ip_non-elective_admission", 
+    "ip_elective_admission",
+    "ip_elective_daycase",
+    "ip_maternity_admission"  
+  )
+) 
+
+op_pcf <- possibly_prep_principal_change_factors(
+  data = params$r,
+  sites = params$sites,
+  mitigators = mitigator_lookup,
+  at = "op",
+  pods = c(
+    "op_first",
+    "op_follow-up",
+    "op_procedure"
+  )
+) 
+
+aae_pcf <- possibly_prep_principal_change_factors(
+  data = params$r,
+  sites = params$sites,
+  mitigators = mitigator_lookup,
+  at = "aae",
+  pods = c(
+    "aae_type-01",
+    "aae_type-02",
+    "aae_type-03",
+    "aae_type-04" 
+  )
+)
+```
+
+##### Inpatients
+
+###### Bed days
+
+```{r}
+#| label: pp-impact-of-changes-ip-bed-days
+
+plot_impact_and_individual_change(ip_pcf, "beddays") |> purrr::walk(print)
+```
+
+###### Admissions
+
+```{r}
+#| label: pp-impact-of-changes-ip-admissions
+
+plot_impact_and_individual_change(ip_pcf, "admissions") |> purrr::walk(print)
+```
+
+##### Outpatients
+
+###### Attendances
+
+```{r}
+#| label: pp-impact-of-changes-op-attendances
+
+plot_impact_and_individual_change(op_pcf, "attendances") |> purrr::walk(print)
+```
+
+###### Tele-attendances
+
+```{r}
+#| label: pp-impact-of-changes-op-tele-attendances
+
+plot_impact_and_individual_change(op_pcf, "tele_attendances") |>
+  purrr::walk(print)
+```
+
+##### A&E (trust-level)
+
+A&E data is not available at site level. 
+
+###### Arrivals
+
+```{r}
+#| label: pp-impact-of-changes-aae-arrivals
+
+plot_impact_and_individual_change(aae_pcf, "arrivals") |> purrr::walk(print)
+```
+
+#### Summary by year
+
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+```{r}
+#| label: pp-summary-by-year-prep
+
+principal_high_level_summary_data <- 
+  mod_principal_high_level_pods() |> 
+  mod_principal_high_level_summary_data(params$r, pods = _, params$sites)
+
+
+possibly_mod_principal_high_level_table <- purrr::possibly(
+  mod_principal_high_level_table,
+  "Insufficient data for this table"
+)
+
+possibly_mod_principal_high_level_plot <- purrr::possibly(
+  mod_principal_high_level_plot,
+  "Insufficient data for this plot"
+)
+```
+
+##### Values
+
+```{r}
+#| label: pp-summary-by-year
+
+principal_high_level_summary_data |> 
+  possibly_mod_principal_high_level_table(summary_type = "value")
+```
+
+##### Change
+
+```{r}
+#| label: pp-summary-by-year-change
+
+principal_high_level_summary_data |> 
+  possibly_mod_principal_high_level_table(summary_type = "change")
+```
+
+##### Percent change
+
+```{r}
+#| label: pp-summary-by-year-percent-change
+
+principal_high_level_summary_data |> 
+  possibly_mod_principal_high_level_table(summary_type = "change_pcnt")
+```
+
+
+##### Inpatient admissions
+
+```{r}
+#| label: pp-summary-by-year-plot-ip
+
+principal_high_level_summary_data |> 
+  possibly_mod_principal_high_level_plot(activity_type = "ip")
+```
+
+##### Outpatient attendances
+
+```{r}
+#| label: pp-summary-by-year-plot-op
+
+principal_high_level_summary_data |> 
+  possibly_mod_principal_high_level_plot(activity_type = "op")
+```
+
+##### A&E attendances (trust-level only)
+
+A&E data is not available at site level. 
+
+```{r}
+#| label: pp-summary-by-year-plot-aae
+
+principal_high_level_summary_data |> 
+  possibly_mod_principal_high_level_plot(activity_type = "aae")
+```
+
+#### Activity in detail
+
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+```{r}
+#| label: pp-activity-in-detail-setup
+
+tretspef_lookup <- jsonlite::read_json(
+  app_sys("app", "data", "tx-lookup.json"),
+  simplifyVector = TRUE
+) |>
+  dplyr::mutate(
+    dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
+    dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
+  ) |>
+  dplyr::select(-"Group")
+
+# Function to prepare data and table
+
+possibly_generate_activity_in_detail_table <- purrr::possibly(
+  generate_activity_in_detail_table,
+  otherwise = "Insufficient information to produce this table"
+)
+
+# Prepare sets of inputs (activity, pods, measure, aggregation, sites)
+
+atpmo_agg <- get_activity_type_pod_measure_options() |> 
+  dplyr::select("activity_type", "pod", "measure" = "measures") |> 
+  tidyr::crossing(agg_col = c("age_group", "tretspef")) |> 
+  dplyr::mutate(
+    activity_type = dplyr::case_match(
+      activity_type, 
+      "ip" ~ "inpatients",
+      "op" ~ "outpatients",
+      "aae" ~ "aae"
+    )
+  )
+
+activity_in_detail_table_names <- atpmo_agg |> 
+  dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
+  dplyr::pull()
+
+# Prepare a list with each set of input combos
+
+activity_in_detail_tables <- purrr::pmap(
+  atpmo_agg, 
+  \(activity_type, pod, measure, agg_col) {
+    possibly_generate_activity_in_detail_table(
+      data = params$r,
+      tretspefs = tretspef_lookup,
+      activity_type,
+      pod,
+      measure,
+      agg_col
+    )
+  }
+) |> 
+  purrr::set_names(activity_in_detail_table_names)
+```
+
+##### Inpatients
+
+###### Non-elective admission
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-1
+
+activity_in_detail_tables$`ip_non-elective_admission_beddays_age_group`
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-2
+
+activity_in_detail_tables$`ip_non-elective_admission_beddays_tretspef`
+```
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-3
+
+activity_in_detail_tables$`ip_non-elective_admission_admissions_age_group`
+```
+
+Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-4
+
+activity_in_detail_tables$`ip_non-elective_admission_admissions_tretspef`
+```
+
+###### Elective admission
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-5
+
+activity_in_detail_tables$ip_elective_admission_beddays_age_group
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-6
+
+activity_in_detail_tables$ip_elective_admission_beddays_tretspef
+```
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-7
+
+activity_in_detail_tables$ip_elective_admission_admissions_age_group
+```
+
+Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-8
+
+activity_in_detail_tables$ip_elective_admission_admissions_tretspef
+```
+
+###### Daycase admission
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-9
+
+activity_in_detail_tables$ip_elective_daycase_beddays_age_group
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-10
+
+activity_in_detail_tables$ip_elective_daycase_beddays_tretspef
+```
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-11
+
+activity_in_detail_tables$ip_elective_daycase_admissions_age_group
+```
+
+Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-12
+
+activity_in_detail_tables$ip_elective_daycase_admissions_tretspef
+```
+
+###### Maternity admission
+
+Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-13
+
+activity_in_detail_tables$ip_maternity_admission_beddays_age_group
+```
+
+Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-14
+
+activity_in_detail_tables$ip_maternity_admission_beddays_tretspef
+```
+
+Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-15
+
+activity_in_detail_tables$ip_maternity_admission_admissions_age_group
+```
+
+Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-16
+
+activity_in_detail_tables$ip_maternity_admission_admissions_tretspef
+```
+
+##### Outpatients
+
+###### First oupatient attendance
+
+Attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-1
+
+activity_in_detail_tables$op_first_attendances_age_group
+```
+
+Attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-2
+
+activity_in_detail_tables$op_first_attendances_tretspef
+```
+
+Tele-attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-3
+
+activity_in_detail_tables$op_first_tele_attendances_age_group
+```
+
+Tele-attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-4
+
+activity_in_detail_tables$op_first_tele_attendances_tretspef
+```
+
+###### Follow-up outpatient attendance
+
+Attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-5
+
+activity_in_detail_tables$`op_follow-up_attendances_age_group`
+```
+
+Attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-6
+
+activity_in_detail_tables$`op_follow-up_attendances_tretspef`
+```
+
+Tele-attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-7
+
+activity_in_detail_tables$`op_follow-up_tele_attendances_age_group`
+```
+
+Tele-attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-8
+
+activity_in_detail_tables$`op_follow-up_tele_attendances_tretspef`
+```
+
+###### Outpatient procedure
+
+Attendances by age group
+
+```{r}
+#| label: pp-activity-in-detail-op-9
+
+activity_in_detail_tables$op_procedure_attendances_age_group
+```
+
+Attendances by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-op-10
+
+activity_in_detail_tables$op_procedure_attendances_tretspef
+```
+
+##### A&E (trust-level only)
+
+A&E data is not available at site level. 
+
+###### Type 1 department
+
+Ambulance arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-1
+
+activity_in_detail_tables$`aae_type-01_ambulance_age_group`
+```
+
+Walk-in arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-3
+
+activity_in_detail_tables$`aae_type-01_walk-in_age_group`
+```
+
+###### Type 2 department
+
+Ambulance arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-5
+
+activity_in_detail_tables$`aae_type-02_ambulance_age_group`
+```
+
+Walk-in arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-7
+
+activity_in_detail_tables$`aae_type-02_walk-in_age_group`
+```
+
+###### Type 3 department
+
+Ambulance arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-9
+
+activity_in_detail_tables$`aae_type-03_ambulance_age_group`
+```
+
+Walk-in arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-11
+
+activity_in_detail_tables$`aae_type-03_walk-in_age_group`
+```
+
+###### Type 4 department
+
+Ambulance arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-13
+
+activity_in_detail_tables$`aae_type-04_ambulance_age_group`
+```
+
+Walk-in arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-15
+
+activity_in_detail_tables$`aae_type-04_walk-in_age_group`
+```
+
+### Distribution of projections
+
+#### Activity summary
+
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+```{r}
+#| label: dop-activity-summary
+
+atpmo <- get_activity_type_pod_measure_options()
+
+params$r |>
+  get_model_core_activity(params$sites) |>
+  dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |> 
+  mod_model_core_activity_server_table() |> 
+  gt::tab_options(table.width = gt::pct(100))
+```
+
+#### Activity distribution
+
+A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+```{r}
+#| label: dop-activity-distribution-setup
+
+# Prepare sets of inputs (activity, pods, measure, aggregation, sites)
+
+atpmo_simplified <- get_activity_type_pod_measure_options() |> 
+  dplyr::select("activity_type", "pod", "measure" = "measures") |> 
+  dplyr::mutate(
+    activity_type = dplyr::case_match(
+      activity_type, "ip" ~ "inpatients", "op" ~ "outpatients", "aae" ~ "aae"
+    )
+  )
+
+activity_distribution_table_names <- atpmo_simplified |> 
+  dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>
+  dplyr::pull()
+
+# Prepare a list of plots with each set of input combos
+
+possibly_plot_activity_distributions <- purrr::possibly(
+  plot_activity_distributions,
+  otherwise = "Insufficient information to produce this chart"
+)
+
+activity_distributions <- atpmo_simplified |>
+  purrr::pmap(
+    \(activity_type, pod, measure) {
+      possibly_plot_activity_distributions(
+        data = params$r, sites = params$sites, activity_type, pod, measure
+      )
+    }
+  ) |>
+  purrr::set_names(activity_distribution_table_names)
+```
+
+##### Inpatients
+
+###### Non-elective admission
+
+Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-1
+
+activity_distributions$`ip_non-elective_admission_beddays` |> purrr::walk(print)
+```
+
+Admissions
+
+```{r}
+#| label: pp-activity-distribution-ip-2
+
+activity_distributions$`ip_non-elective_admission_admissions` |>
+  purrr::walk(print)
+```
+
+###### Elective admission
+
+Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-3
+
+activity_distributions$`ip_elective_admission_beddays` |> purrr::walk(print)
+```
+
+Admissions
+
+```{r}
+#| label: pp-activity-distribution-ip-4
+
+activity_distributions$`ip_elective_admission_admissions` |> purrr::walk(print)
+```
+
+###### Maternity admission
+
+Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-5
+
+activity_distributions$`ip_maternity_admission_beddays` |> purrr::walk(print)
+```
+
+Admissions
+
+```{r}
+#| label: pp-activity-distribution-ip-6
+
+activity_distributions$`ip_maternity_admission_admissions` |> purrr::walk(print)
+```
+
+##### Outpatients
+
+###### First outpatient attendance
+
+Attendances
+
+```{r}
+#| label: pp-activity-distribution-op-1
+
+activity_distributions$`op_first_attendances` |> purrr::walk(print)
+```
+
+Tele-attendances
+
+```{r}
+#| label: pp-activity-distribution-op-2
+
+activity_distributions$`op_first_tele_attendances` |> purrr::walk(print)
+```
+
+###### Follow-up outpatient attendances
+
+Attendances
+
+```{r}
+#| label: pp-activity-distribution-op-3
+
+activity_distributions$`op_follow-up_attendances` |> purrr::walk(print)
+```
+
+Tele-attendances
+
+```{r}
+#| label: pp-activity-distribution-op-4
+
+activity_distributions$`op_follow-up_tele_attendances` |> purrr::walk(print)
+```
+
+##### A&E (trust-level only)
+
+A&E data is not available at site level. 
+
+###### Type 1 department
+
+Walk-in arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-1
+
+activity_distributions$`aae_type-01_walk-in` |> purrr::walk(print)
+```
+
+Ambulance arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-2
+
+activity_distributions$`aae_type-01_ambulance` |> purrr::walk(print)
+```
+
+###### Type 2 department
+
+Walk-in arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-3
+
+activity_distributions$`aae_type-02_walk-in` |> purrr::walk(print)
+```
+
+Ambulance arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-4
+
+activity_distributions$`aae_type-02_ambulance` |> purrr::walk(print)
+```
+
+###### Type 3 department
+
+Walk-in arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-5
+
+activity_distributions$`aae_type-03_walk-in` |> purrr::walk(print)
+```
+
+Ambulance arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-6
+
+activity_distributions$`aae_type-03_ambulance` |> purrr::walk(print)
+```
+
+###### Type 4 department
+
+Walk-in arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-7
+
+activity_distributions$`aae_type-04_walk-in` |> purrr::walk(print)
+```
+
+Ambulance arrivals
+
+```{r}
+#| label: pp-activity-distribution-aae-8
+
+activity_distributions$`aae_type-04_ambulance` |> purrr::walk(print)
+```

@@ -31,7 +31,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       width = 12,
       shiny::fluidRow(
         col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-        col_4(shiny::selectInput(ns("pods"), "POD", NULL, multiple = TRUE)),
+        col_4(shiny::selectInput(ns("pods"), "Point of Delivery", NULL, multiple = TRUE)),
         col_4(shiny::selectInput(ns("measure"), "Measure", NULL))
       )
     ),

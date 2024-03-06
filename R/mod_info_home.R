@@ -12,31 +12,62 @@ mod_info_home_ui <- function(id) {
   shiny::tagList(
     shiny::h1("NHP Model Results"),
     shiny::fluidRow(
-      bs4Dash::box(
-        title = "Notes",
-        collapsible = FALSE,
+      bs4Dash::column(
         width = 6,
-        htmltools::p(
-          "Further information about the model and these results can be found on the",
-          htmltools::a(
-            href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
-            "model project information site."
+        bs4Dash::box(
+          title = "Notes",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "See",
+            htmltools::a(
+              href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
+              "the model project information site"
+            ),
+            "for an overview, user guide and methodology for the model and this app."
+          ),
+          htmltools::p(
+            "Use the multi-choice site selection box (upper left) to filter results by sites.",
+            "A&E results will not be shown if you select sites."
           )
         ),
-        htmltools::p(
-          "Note that some data is presented at trust level even if you make a site selection.",
-          "Check the notes in each tab for details."
+        bs4Dash::box(
+          title = "Download results data",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "Download a file containing results data for the selected model run.",
+            "The data is provided for each site and for the overall trust level."
+          ),
+          # TODO: hide these until data is loaded
+          shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
+          shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
         ),
-        # TODO: hide these until data is loaded
-        shiny::downloadButton(ns("download_results_xlsx"), "Download results (.xlsx)"),
-        shiny::downloadButton(ns("download_results_json"), "Download results (.json)")
+        bs4Dash::box(
+          title = "Download outputs report",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "Download a file containing the input parameters and",
+            "outputs (charts and tables) for the selected model run and selected sites.",
+            "This will take a moment.",
+          ),
+          # TODO: hide until data is loaded
+          shiny::downloadButton(ns("download_report_html"), "Download report (.html)")
+        )
       ),
-      bs4Dash::box(
-        title = "Model Run",
-        collapsible = FALSE,
+      bs4Dash::column(
         width = 6,
-        shinycssloaders::withSpinner(
-          gt::gt_output(ns("params_model_run"))
+        bs4Dash::box(
+          title = "Model run information",
+          collapsible = FALSE,
+          width = 12,
+          htmltools::p(
+            "This is a reminder of the metadata for the model run you selected."
+          ),
+          shinycssloaders::withSpinner(
+            gt::gt_output(ns("params_model_run"))
+          )
         )
       )
     )
@@ -61,10 +92,33 @@ mod_info_home_download_json <- function(data) {
   }
 }
 
+mod_info_home_download_report_html <- function(data, sites) {
+  function(file) {
+    temp_report <- file.path(tempdir(), "report.Rmd")
+    file.copy(app_sys("report.Rmd"), temp_report, overwrite = TRUE)
+
+    params <- list(r = data(), sites = sites())
+
+    download_notification <- shiny::showNotification(
+      "Rendering report...",
+      duration = NULL,
+      closeButton = FALSE
+    )
+    on.exit(shiny::removeNotification(download_notification), add = TRUE)
+
+    rmarkdown::render(
+      temp_report,
+      output_file = file,
+      params = params,
+      envir = new.env(parent = globalenv())
+    )
+  }
+}
+
 #' info_home Server Functions
 #'
 #' @noRd
-mod_info_home_server <- function(id, selected_data) {
+mod_info_home_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     params_model_run <- shiny::reactive({
       p <- get_params(selected_data())
@@ -98,17 +152,37 @@ mod_info_home_server <- function(id, selected_data) {
         gt_theme()
     })
 
-
     # download buttons ----
 
     output$download_results_xlsx <- shiny::downloadHandler(
-      filename = \() paste0(selected_data()$params$id, ".xlsx"),
+      filename = \() {
+        paste0(
+          selected_data()$params$id,
+          "_results-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".xlsx"
+        )
+      },
       content = mod_info_home_download_excel(selected_data)
     )
 
     output$download_results_json <- shiny::downloadHandler(
-      filename = \() paste0(selected_data()$params$id, ".json"),
+      filename = \() {
+        paste0(
+          selected_data()$params$id,
+          "_results-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".json"
+        )
+      },
       content = mod_info_home_download_json(selected_data)
     )
+
+    output$download_report_html <- shiny::downloadHandler(
+      filename = \() {
+        paste0(
+          selected_data()$params$id,
+          "_report-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
+        )
+      },
+      content = mod_info_home_download_report_html(selected_data, selected_site)
+    )
+
   })
 }
