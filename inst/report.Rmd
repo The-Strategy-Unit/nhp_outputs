@@ -148,7 +148,7 @@ info_params_table_waiting_list_adjustment(p) |>
   gt::tab_options(table.align = "left")
 ```
 
-### Expat
+### Expatriation
 
 ```{r}
 #| label: params-expat
@@ -157,7 +157,7 @@ info_params_table_expat_repat_adjustment(p, "expat") |>
   gt::tab_options(table.align = "left")
 ```
 
-### Repat (local)
+### Repatriation (local)
 
 ```{r}
 #| label: params-repat-local
@@ -166,7 +166,7 @@ info_params_table_expat_repat_adjustment(p, "repat_local") |>
   gt::tab_options(table.align = "left")
 ```
 
-### Repat (non-local)
+### Repatriation (non-local)
 
 ```{r}
 #| label: params-repat-non-local
@@ -236,7 +236,7 @@ mod_principal_summary_data(params$r, params$sites) |>
 
 #### Impact of changes
 
-The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. The plots here show results for all points of delivery combined. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: pp-impact-of-changes-setup
