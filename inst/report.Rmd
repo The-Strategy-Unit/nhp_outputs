@@ -141,6 +141,8 @@ info_params_table_covid_adjustment(p) |>
 
 ### Waiting list adjustment
 
+Time profile: `r params$r$params[["time_profile_mappings"]][["waiting_list_adjustment"]]`
+
 ```{r}
 #| label: params-waiting-list-adjustment
 
@@ -149,6 +151,8 @@ info_params_table_waiting_list_adjustment(p) |>
 ```
 
 ### Expatriation
+
+Time profile: `r params$r$params[["time_profile_mappings"]][["expat"]]`
 
 ```{r}
 #| label: params-expat
@@ -159,6 +163,8 @@ info_params_table_expat_repat_adjustment(p, "expat") |>
 
 ### Repatriation (local)
 
+Time profile: `r params$r$params[["time_profile_mappings"]][["repat_local"]]`
+
 ```{r}
 #| label: params-repat-local
 
@@ -167,6 +173,8 @@ info_params_table_expat_repat_adjustment(p, "repat_local") |>
 ```
 
 ### Repatriation (non-local)
+
+Time profile: `r params$r$params[["time_profile_mappings"]][["repat_nonlocal"]]`
 
 ```{r}
 #| label: params-repat-non-local
