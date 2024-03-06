@@ -119,6 +119,7 @@ plot_impact_and_individual_change <- function(
 
 generate_activity_in_detail_table <- function(
     data,
+    sites,
     tretspefs,
     activity_type,
     pod,
@@ -127,8 +128,12 @@ generate_activity_in_detail_table <- function(
 ) {
 
   aggregated_data <- data |>
-    get_aggregation(pod, measure, agg_col, NULL) |>
-    shiny::req() |>
+    get_aggregation(pod, measure, agg_col, sites)
+
+  # if a site is selected then there are no rows for A&E
+  if (nrow(aggregated_data) == 0) stop("No data")
+
+  aggregated_data <- aggregated_data |>
     dplyr::transmute(
       .data$sex,
       agg = .data[[agg_col]],
