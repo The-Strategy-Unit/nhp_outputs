@@ -16,7 +16,15 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-source(here::here("R", "fct_report.R"), local = knitr::knit_global())
+
+# Check if fct_report functions are loaded by seeing if one exists in the env
+# (allows for both local and remote rendering)
+if (!exists("mod_info_home_download_json")) {
+  source(
+    here::here("R", "fct_report.R"),
+    local = knitr::knit_global()
+  )
+}
 ```
 
 ```{css}
