@@ -469,6 +469,7 @@ activity_in_detail_tables <- purrr::pmap(
   \(activity_type, pod, measure, agg_col) {
     possibly_generate_activity_in_detail_table(
       data = params$r,
+      sites = params$sites,
       tretspefs = tretspef_lookup,
       activity_type,
       pod,
