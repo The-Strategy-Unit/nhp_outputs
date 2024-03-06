@@ -117,10 +117,16 @@ server <- function(input, output, session) {
   })
 
   result_sets <- shiny::reactive({
-    get_result_sets(
+    rs <- get_result_sets(
       allowed_datasets(),
       config::get("folder")
     )
+
+    if (!"nhp_devs" %in% session$groups) {
+      rs <- dplyr::filter(rs, .data[["app_version"]] != "dev")
+    }
+
+    rs
   })
 
   datasets <- shiny::reactive({
