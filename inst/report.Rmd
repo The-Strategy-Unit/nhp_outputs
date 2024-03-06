@@ -879,12 +879,30 @@ Admissions
 activity_distributions$`ip_elective_admission_admissions` |> purrr::walk(print)
 ```
 
-###### Maternity admission
+###### Daycase admission
 
 Bed days
 
 ```{r}
 #| label: pp-activity-distribution-ip-5
+
+activity_distributions$`ip_daycase_admission_beddays` |> purrr::walk(print)
+```
+
+Admissions
+
+```{r}
+#| label: pp-activity-distribution-ip-6
+
+activity_distributions$`ip_daycase_admission_admissions` |> purrr::walk(print)
+```
+
+###### Maternity admission
+
+Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-7
 
 activity_distributions$`ip_maternity_admission_beddays` |> purrr::walk(print)
 ```
@@ -892,7 +910,7 @@ activity_distributions$`ip_maternity_admission_beddays` |> purrr::walk(print)
 Admissions
 
 ```{r}
-#| label: pp-activity-distribution-ip-6
+#| label: pp-activity-distribution-ip-8
 
 activity_distributions$`ip_maternity_admission_admissions` |> purrr::walk(print)
 ```
@@ -933,6 +951,24 @@ Tele-attendances
 #| label: pp-activity-distribution-op-4
 
 activity_distributions$`op_follow-up_tele_attendances` |> purrr::walk(print)
+```
+
+###### Outpatient procedures
+
+Attendances
+
+```{r}
+#| label: pp-activity-distribution-op-5
+
+activity_distributions$`op_outpatient_attendances` |> purrr::walk(print)
+```
+
+Tele-attendances
+
+```{r}
+#| label: pp-activity-distribution-op-6
+
+activity_distributions$`op_outpatient_tele_attendances` |> purrr::walk(print)
 ```
 
 ##### A&E (trust-level only)
