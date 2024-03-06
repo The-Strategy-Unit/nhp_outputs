@@ -74,8 +74,7 @@ app_server <- function(input, output, session) {
 
   # set up modules ----
 
-  mod_info_home_server("home", selected_data, selected_site)
-  mod_info_params_server("info_params", selected_data)
+  mod_info_home_server("home", selected_data)
 
   mod_principal_summary_server("principal_summary", selected_data, selected_site)
   mod_principal_change_factor_effects_server("principal_change_factor_effects", selected_data, selected_site)
@@ -84,6 +83,9 @@ app_server <- function(input, output, session) {
 
   mod_model_core_activity_server("model_core_activity", selected_data, selected_site)
   mod_model_results_distribution_server("model_results_distribution", selected_data, selected_site)
+
+  mod_info_downloads_server("info_downloads", selected_data)
+  mod_info_params_server("info_params", selected_data)
 
   # other stuff ----
 

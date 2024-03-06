@@ -9,62 +9,39 @@
           <div class="col-sm-12">
             <div class="card bs4Dash">
               <div class="card-header">
-                <h3 class="card-title">Notes</h3>
+                <h3 class="card-title">About</h3>
               </div>
               <div class="card-body">
+                <p>Welcome to this NHP online tool.</p>
+                <p>This tool is designed to help facilitate a demand and capacity modelling process to support the development of robust, local NHP proposals.</p>
+                <p>The New Hospital Programme requires estimates of future activity levels to inform the design of a new hospital.</p>
+                <p>This tool is designed to help determine how hospital activity might change in the years to come (relative to a baseline year) and to provide a high-level view of the physical capacity required to meet that demand.</p>
                 <p>
-                  See
-                  <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">the model project information site</a>
-                  for an overview, user guide and methodology for the model and this app.
-                </p>
-                <p>
-                  Use the multi-choice site selection box (upper left) to filter results by sites.
-                  A&amp;E results will not be shown if you select sites.
+                  For more information or help, please visit the
+                  <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/">model information site</a>
+                  or contact the
+                  <a href="mailto:mlcsu.nhpanalytics@nhs.net">MLCSU NHP Analytics mailbox</a>
+                  .
                 </p>
               </div>
             </div>
-            <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+            <script type="application/json">{"title":"About","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
           </div>
           <div class="col-sm-12">
             <div class="card bs4Dash">
               <div class="card-header">
-                <h3 class="card-title">Download results data</h3>
+                <h3 class="card-title">App notes</h3>
               </div>
               <div class="card-body">
+                <p>Select the 'Results' section in the navbar (left) to view outputs from the selected model run.</p>
                 <p>
-                  Download a file containing results data for the selected model run.
-                  The data is provided for each site and for the overall trust level.
+                  Use the multi-choice 'Site selection' box in the navbar to filter results by sites.
+                  Note that A&amp;E results will not be shown at site level.
                 </p>
-                <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_results_xlsx" target="_blank">
-                  <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
-                  Download results (.xlsx)
-                </a>
-                <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_results_json" target="_blank">
-                  <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
-                  Download results (.json)
-                </a>
+                <p>From the 'Information' section you can download the results data for this model run and view the input parameters.</p>
               </div>
             </div>
-            <script type="application/json">{"title":"Download results data","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
-          </div>
-          <div class="col-sm-12">
-            <div class="card bs4Dash">
-              <div class="card-header">
-                <h3 class="card-title">Download outputs report</h3>
-              </div>
-              <div class="card-body">
-                <p>
-                  Download a file containing the input parameters and
-                  outputs (charts and tables) for the selected model run and selected sites.
-                  This will take a moment.
-                </p>
-                <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_report_html" target="_blank">
-                  <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
-                  Download report (.html)
-                </a>
-              </div>
-            </div>
-            <script type="application/json">{"title":"Download outputs report","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+            <script type="application/json">{"title":"App notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
           </div>
         </div>
         <div class="col-sm-6">
