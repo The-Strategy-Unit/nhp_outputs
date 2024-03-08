@@ -2,6 +2,8 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "R: Test",
+			"group": "test",
 			"type": "R",
 			"code": [
 				"devtools::test()"
@@ -9,73 +11,44 @@
 			"problemMatcher": [
 				"$testthat"
 			],
+			"presentation": {
+				"echo": true,
+				"reveal": "silent",
+				"focus": false,
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"clear": true
+			}
+		},
+		{
+			"label": "R: Generate Coverage",
 			"group": "test",
-			"label": "R: Test",
-			"presentation": {
-				"echo": true,
-				"reveal": "silent",
-				"focus": false,
-				"panel": "dedicated",
-				"showReuseMessage": false,
-				"clear": true
-			}
-		},
-		{
-			"type": "R",
-			"code": [
-				"browseURL('http://localhost:8080/')",
-				"golem::run_dev()"
-			],
-			"group": "none",
-			"isBackground": true,
-			"problemMatcher": [],
-			"label": "R: Run App",
-			"presentation": {
-				"reveal": "silent",
-				"focus": false,
-				"panel": "dedicated",
-				"clear": true
-			}
-		},
-		{
-			"type": "R",
-			"code": [
-				"source('dev/watch.R')"
-			],
-			"group": "none",
-			"isBackground": true,
-			"problemMatcher": [],
-			"label": "R: Run App (watch)",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "dedicated",
-				"showReuseMessage": false,
-				"clear": true
-			}
-		},
-		{
-			"type": "R",
-			"code": [
-				"rsconnect::deployApp(appName='nhp_dev_outputs', forceUpdate=TRUE, launch.browser=FALSE)"
-			],
-			"group": "none",
-			"isBackground": true,
-			"problemMatcher": [],
-			"label": "R: Deploy to dev"
-		},
-		{
 			"type": "R",
 			"code": [
 				"c <- covr::package_coverage()",
 				"covr::to_cobertura(c, 'coverage.xml')",
 				"print(c)"
 			],
-			"group": "none",
 			"isBackground": true,
 			"problemMatcher": [],
-			"label": "R: Generate Coverage",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "dedicated",
+				"showReuseMessage": false,
+				"clear": true
+			}
+		},
+		{
+			"label": "R: Run App (watch)",
+			"group": "build",
+			"type": "R",
+			"code": [
+				"source('dev/watch.R')"
+			],
+			"isBackground": true,
+			"problemMatcher": [],
 			"presentation": {
 				"echo": true,
 				"reveal": "always",

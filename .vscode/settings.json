@@ -2,7 +2,8 @@
   "triggerTaskOnSave.tasks": {
     "R: Test": [
       "R/*.R",
-      "tests/**/*.R"
+      "tests/**/*.R",
+      "DESCRIPTION"
     ]
   },
   "triggerTaskOnSave.on": true,
