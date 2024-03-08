@@ -51,6 +51,7 @@ BugReports: https://github.com/The-Strategy-Unit/nhp_model/issues
 Depends:
     R (>= 3.5.0)
 Config/testthat/edition: 3
+Config/testthat/parallel: false
 Config/renv/profiles/dev/dependencies:
     covr,
     devtools,
