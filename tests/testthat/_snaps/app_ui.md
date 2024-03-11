@@ -55,6 +55,12 @@
                         </a>
                       </li>
                       <li class="nav-item">
+                        <a class="nav-link treeview-link" id="tab-tab_plos" href="#" data-target="#shiny-tab-tab_plos" data-toggle="tab" data-value="tab_plos">
+                          <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
+                          <p>Length of stay</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
                         <a class="nav-link treeview-link" id="tab-tab_pcf" href="#" data-target="#shiny-tab-tab_pcf" data-toggle="tab" data-value="tab_pcf">
                           <i class="fas fa-angles-right" role="presentation" aria-label="angles-right icon" verify_fa="FALSE" cl="fas fa-angles-right nav-icon"></i>
                           <p>Impact of changes</p>
@@ -117,6 +123,58 @@
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_home">home</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_ps">principal_summary</div>
+                <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_plos">
+                  <h1>Principal projection: length of stay summary</h1>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash">
+                      <div class="card-header">
+                        <h3 class="card-title">Notes</h3>
+                      </div>
+                      <div class="card-body">
+                        <p>
+                          See the
+                          <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>
+                          for definitions of terms.
+                        </p>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash">
+                      <div class="card-header">
+                        <h3 class="card-title">Bed days summary by length of stay and point of delivery</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                          <div class="load-container shiny-spinner-hidden load1">
+                            <div id="spinner-1857099327b1aff77d32fa5ed14cd0bc" class="loader">Loading...</div>
+                          </div>
+                          <div style="height:400px" class="shiny-spinner-placeholder"></div>
+                          <div id="principal_summary_los-summary_los_table_beddays" class="shiny-html-output"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Bed days summary by length of stay and point of delivery","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="card bs4Dash">
+                      <div class="card-header">
+                        <h3 class="card-title">Admissions summary by length of stay and point of delivery</h3>
+                      </div>
+                      <div class="card-body">
+                        <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                          <div class="load-container shiny-spinner-hidden load1">
+                            <div id="spinner-27905ce65da0feb456001ecf156cc1d8" class="loader">Loading...</div>
+                          </div>
+                          <div style="height:400px" class="shiny-spinner-placeholder"></div>
+                          <div id="principal_summary_los-summary_los_table_admissions" class="shiny-html-output"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <script type="application/json">{"title":"Admissions summary by length of stay and point of delivery","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+                  </div>
+                </div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pcf">principal_change_factor_effects</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_phl">principal_high_level</div>
                 <div role="tabpanel" class="tab-pane container-fluid" id="shiny-tab-tab_pd">principal_detailed</div>
