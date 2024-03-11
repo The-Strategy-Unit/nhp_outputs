@@ -62,7 +62,11 @@ mod_principal_detailed_table <- function(data, aggregation, final_year) {
       change_pcnt = "Percent Change",
     ) |>
     gt::fmt_integer(c("baseline")) |>
-    gt::cols_width(.data$final ~ px(150), .data$change ~ px(150), .data$change_pcnt ~ px(150)) |>
+    gt::cols_width(
+      .data$final ~ gt::px(150),
+      .data$change ~ gt::px(150),
+      .data$change_pcnt ~ px(150)
+    ) |>
     gt::cols_align(
       align = "left",
       columns = c("agg", "final", "change", "change_pcnt")
@@ -111,8 +115,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       c(activity_type, pod, measure) %<-% selected_measure()
 
       agg_col <- switch(shiny::req(input$aggregation),
-        "Age Group" = "age_group",
-        "Treatment Specialty" = "tretspef"
+                        "Age Group" = "age_group",
+                        "Treatment Specialty" = "tretspef"
       )
 
       dat <- selected_data() |>

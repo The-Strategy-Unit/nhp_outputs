@@ -85,9 +85,9 @@ mod_principal_summary_los_table <- function(data) {
     ) |>
     gt::fmt_integer("baseline") |>
     gt::cols_width(
-      .data$principal ~ px(150),
-      .data$change ~ px(150),
-      .data$change_pcnt ~ px(150)
+      .data$principal ~ gt::px(150),
+      .data$change ~ gt::px(150),
+      .data$change_pcnt ~ gt::px(150)
     ) |>
     gt::cols_align(
       align = "left",
