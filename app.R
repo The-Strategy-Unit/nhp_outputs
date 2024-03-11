@@ -6,7 +6,9 @@ encrypt_filename <- function(filename, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) 
   ct <- openssl::aes_cbc_encrypt(f, key, NULL)
   hm <- as.raw(openssl::sha256(ct, key))
 
-  openssl::base64_encode(c(hm, ct))
+  openssl::base64_encode(c(hm, ct)) |>
+    # connect does something weird if it encounters strings of the form /w==, where / can be any special character
+    URLencode(reserved = TRUE)
 }
 
 get_container <- function() {
