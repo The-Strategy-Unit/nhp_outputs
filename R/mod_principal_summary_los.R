@@ -46,7 +46,7 @@ mod_principal_summary_los_ui <- function(id) {
 mod_principal_summary_los_data <- function(r, sites, measure) {
   pods <- mod_principal_high_level_pods()
 
-  summary_los <- r$results$los |>
+  summary_los <- r$results$los_group |>
     dplyr::filter(.data$measure == .env$measure) |>
     trust_site_aggregation(sites) |>
     dplyr::inner_join(pods, by = "pod") |>
@@ -62,7 +62,6 @@ mod_principal_summary_los_data <- function(r, sites, measure) {
     dplyr::arrange("pod_name", "los_group")
 
   summary_los[order(summary_los$pod_name, summary_los$los_group), ]
-
 }
 
 mod_principal_summary_los_table <- function(data) {
