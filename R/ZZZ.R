@@ -37,7 +37,9 @@ lookup_ods_org_code_name <- function(org_code) {
 }
 
 get_selected_file_from_url <- function(session, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) {
-  f <- stringr::str_sub(session$clientData$url_search, 2L)
+  f <- session$clientData$url_search |>
+    stringr::str_sub(2L) |>
+    URLdecode()
 
   key <- openssl::base64_decode(key_b64)
 
@@ -49,6 +51,7 @@ get_selected_file_from_url <- function(session, key_b64 = Sys.getenv("NHP_ENCRYP
       ct <- fd[-(1:32)]
 
       stopifnot("invalid hmac" = all(openssl::sha256(ct, key) == hm))
+
       rawToChar(openssl::aes_cbc_decrypt(ct, key, NULL))
     },
     error = \(e) NULL
