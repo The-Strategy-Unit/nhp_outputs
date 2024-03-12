@@ -121,7 +121,10 @@ mod_principal_summary_table <- function(data) {
       "change_pcnt" = "Percent Change"
     ) |>
     gt::fmt_integer("baseline") |>
-    gt::cols_width(.data$principal ~ px(150), .data$change ~ px(150), .data$change_pcnt ~ px(150)) |>
+    gt::cols_width(
+      .data$principal ~ gt::px(150),
+      .data$change ~ gt::px(150),
+      .data$change_pcnt ~ gt::px(150)) |>
     gt::cols_align(
       align = "left",
       columns = c("baseline", "principal", "change", "change_pcnt")

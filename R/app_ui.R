@@ -35,6 +35,10 @@ app_ui <- function(request) {
           tabName = "tab_ps"
         ),
         bs4Dash::menuSubItem(
+          text = "Length of stay",
+          tabName = "tab_plos"
+        ),
+        bs4Dash::menuSubItem(
           text = "Impact of changes",
           tabName = "tab_pcf"
         ),
@@ -82,6 +86,10 @@ app_ui <- function(request) {
       bs4Dash::tabItem(
         tabName = "tab_ps",
         mod_principal_summary_ui("principal_summary")
+      ),
+      bs4Dash::tabItem(
+        tabName = "tab_plos",
+        mod_principal_summary_los_ui("principal_summary_los")
       ),
       bs4Dash::tabItem(
         tabName = "tab_pcf",
