@@ -132,6 +132,7 @@
                       </div>
                       <div class="card-body">
                         <p>
+                          Bed days are defined as the difference in days between discharge and admission, plus one day.
                           See the
                           <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>
                           for definitions of terms.

@@ -16,7 +16,8 @@ mod_principal_change_factor_effects_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       htmltools::p(
-        "The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.",
+        "These results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.",
+        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
         "See the",
         htmltools::a(
           href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
