@@ -16,6 +16,7 @@ mod_principal_summary_los_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       htmltools::p(
+        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
         "See the",
         htmltools::a(
           href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",

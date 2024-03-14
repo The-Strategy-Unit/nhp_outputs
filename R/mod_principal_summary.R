@@ -16,6 +16,7 @@ mod_principal_summary_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       htmltools::p(
+        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
         "A&E and bed-availability data are not available at site level.",
         "See the",
         htmltools::a(
