@@ -38,6 +38,12 @@ test_that("it generates an excel file", {
             list(),
             list()
           )
+        ),
+        los_group = tibble::tibble(
+          pod = rep("a", 3),
+          measure = rep("b", 3),
+          sitetret = rep("c", 3),
+          los_group = c("22+ days", "0-day", "8-14 days")
         )
       )
     )
@@ -49,7 +55,23 @@ test_that("it generates an excel file", {
   mod_info_downloads_download_excel(data)("file")
 
   expect_called(m, 1)
-  expect_args(m, 1, list(a = tibble::tibble(x = 1:3, y = 4:6)), "file")
+  expect_args(
+    m,
+    1,
+    list(
+      a = tibble::tibble(x = 1:3, y = 4:6),
+      los_group = tibble::tibble(
+        pod = rep("a", 3),
+        measure = rep("b", 3),
+        sitetret = rep("c", 3),
+        los_group = factor(
+          c("0-day", "8-14 days", "22+ days"),
+          levels = c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
+        )
+      )
+    ),
+    "file"
+  )
 })
 
 test_that("it generates a json file", {

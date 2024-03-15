@@ -39,7 +39,7 @@ lookup_ods_org_code_name <- function(org_code) {
 get_selected_file_from_url <- function(session, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) {
   f <- session$clientData$url_search |>
     stringr::str_sub(2L) |>
-    URLdecode()
+    utils::URLdecode()
 
   key <- openssl::base64_decode(key_b64)
 
