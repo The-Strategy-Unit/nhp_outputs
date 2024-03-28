@@ -38,7 +38,10 @@ get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL), 
     purrr::set_names() |>
     purrr::map(\(name, ...) AzureStor::get_storage_metadata(cont, name)) |>
     dplyr::bind_rows(.id = "file") |>
-    dplyr::semi_join(ds, by = dplyr::join_by("dataset"))
+    dplyr::semi_join(ds, by = dplyr::join_by("dataset")) |>
+    dplyr::mutate(
+      dplyr::across("viewable", as.logical)
+    )
 }
 
 get_user_allowed_datasets <- function(groups) {
@@ -124,8 +127,9 @@ server <- function(input, output, session) {
       config::get("folder")
     )
 
-    if (!"nhp_devs" %in% session$groups) {
-      rs <- dplyr::filter(rs, .data[["app_version"]] != "dev")
+    # if a user isn't in these groups, then do not display un-viewable/dev results
+    if (any(c("nhp_devs", "nhp_power_users") %in% session$groups)) {
+      rs <- dplyr::filter(rs, .data[["viewable"]], .data[["app_version"]] != "dev")
     }
 
     rs
