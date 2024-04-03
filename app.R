@@ -128,7 +128,7 @@ server <- function(input, output, session) {
     )
 
     # if a user isn't in these groups, then do not display un-viewable/dev results
-    if (any(c("nhp_devs", "nhp_power_users") %in% session$groups)) {
+    if (!any(c("nhp_devs", "nhp_power_users") %in% session$groups)) {
       rs <- dplyr::filter(rs, .data[["viewable"]], .data[["app_version"]] != "dev")
     }
 
