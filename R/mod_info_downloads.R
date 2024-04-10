@@ -34,21 +34,36 @@ mod_info_downloads_ui <- function(id) {
         )
       ),
       bs4Dash::box(
+        title = "Download parameters report",
+        collapsible = FALSE,
+        width = 12,
+        htmltools::p(
+          "Download a file containing the input parameters for",
+          "the selected model run and selected sites."
+        ),
+        shinyjs::disabled(
+          shiny::downloadButton(
+            ns("download_report_params_html"),
+            "Download parameters report (.html)"
+          )
+        )
+      ),
+      bs4Dash::box(
         title = "Download outputs report",
         collapsible = FALSE,
         width = 12,
         htmltools::p(
-          "Download a file containing the input parameters and",
-          "outputs (charts and tables) for the selected model run and selected sites.",
-          "This will take a moment.",
+          "Download a file containing the outputs (charts and tables)",
+          "for the selected model run. This will take a moment.",
         ),
         shinyjs::disabled(
           shiny::downloadButton(
-            ns("download_report_html"),
-            "Download report (.html)"
+            ns("download_report_outputs_html"),
+            "Download outputs report (.html)"
           )
         )
       )
+
     )
   )
 }
@@ -81,18 +96,27 @@ mod_info_downloads_download_json <- function(data) {
   }
 }
 
-mod_info_downloads_download_report_html <- function(data, sites) {
+mod_info_downloads_download_report_html <- function(
+    data,
+    sites,
+    report_type = c("params", "output")
+) {
+
   function(file) {
-    temp_report <- file.path(tempdir(), "report.Rmd")
-    file.copy(app_sys("report.Rmd"), temp_report, overwrite = TRUE)
+
+    report_file <- glue::glue("report-{report_type}.Rmd")
+    temp_report <- file.path(tempdir(), report_file)
+    file.copy(app_sys(report_file), temp_report, overwrite = TRUE)
 
     params <- list(r = data(), sites = sites())
+    if (report_type == "params") params <- params["r"]  # site not needed for parameters report
 
     download_notification <- shiny::showNotification(
       "Rendering report...",
       duration = NULL,
       closeButton = FALSE
     )
+
     on.exit(shiny::removeNotification(download_notification), add = TRUE)
 
     rmarkdown::render(
@@ -102,6 +126,7 @@ mod_info_downloads_download_report_html <- function(data, sites) {
       envir = new.env(parent = globalenv())
     )
   }
+
 }
 
 #' info_downloads Server Functions
@@ -116,11 +141,15 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
 
       shinyjs::enable("download_results_xlsx")
       shinyjs::enable("download_results_json")
-      shinyjs::enable("download_report_html")
+
+      shinyjs::enable("download_report_params_html")
+      shinyjs::enable("download_report_outputs_html")
     }) |>
       shiny::bindEvent(selected_data())
 
     # download buttons ----
+
+    # results
 
     output$download_results_xlsx <- shiny::downloadHandler(
       filename = \() {
@@ -142,14 +171,36 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
       content = mod_info_downloads_download_json(selected_data)
     )
 
-    output$download_report_html <- shiny::downloadHandler(
+    # params
+
+    output$download_report_params_html <- shiny::downloadHandler(
       filename = \() {
         paste0(
           selected_data()$params$id,
-          "_report-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
+          "_report-parameters", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
         )
       },
-      content = mod_info_downloads_download_report_html(selected_data, selected_site)
+      content = mod_info_downloads_download_report_html(
+        selected_data,
+        report_type = "params"
+      )
     )
+
+    # outputs (plots, tables, etc)
+
+    output$download_report_outputs_html <- shiny::downloadHandler(
+      filename = \() {
+        paste0(
+          selected_data()$params$id,
+          "_report-outputs-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
+        )
+      },
+      content = mod_info_downloads_download_report_html(
+        selected_data,
+        selected_site,
+        report_type = "outputs"
+      )
+    )
+
   })
 }

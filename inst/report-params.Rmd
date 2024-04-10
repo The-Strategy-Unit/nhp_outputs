@@ -1,0 +1,215 @@
+---
+title: "NHP Parameters Report"
+subtitle: Model run `r params$r$params$id`
+output:
+  html_document:
+    toc: true
+    toc_depth: 6
+    toc_float:
+      collapsed: true
+params:
+  r: NA
+---
+
+```{r}
+#| label: setup
+#| echo: false
+
+knitr::opts_chunk$set(error = TRUE, echo = FALSE)
+
+# Check if fct_report functions are loaded by seeing if one exists in the env
+# (allows for both local and remote rendering)
+if (!exists("mod_info_downloads_download_json")) {
+  source(
+    here::here("R", "fct_report.R"),
+    local = knitr::knit_global()
+  )
+}
+```
+
+```{css}
+h1 {
+font-size: 32px;
+}
+
+h2 {
+font-size: 28px;
+}
+
+h3 {
+font-size: 26px;
+}
+
+h4 {
+font-size: 24px;
+}
+
+h5 {
+font-size: 22px;
+}
+
+h6 {
+font-size: 20px;
+}
+
+p {
+font-size: 16px;
+}
+```
+
+```{r}
+#| label: setup-params
+
+p <- get_params(params$r)
+```
+
+## Notes
+
+This report shows the parameter selections and their rationale. 
+
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide and methodology for the model and the outputs app.
+
+## Model run information
+
+```{r}
+#| label: params-model-run
+
+p_model_run <- purrr::keep(p, rlang::is_atomic)
+
+p_model_run[["start_year"]] <- scales::number(
+  p_model_run[["start_year"]] + ((p_model_run[["start_year"]] + 1) %% 100) / 100,
+  0.01,
+  big.mark = "", decimal.mark = "/"
+)
+p_model_run[["end_year"]] <- scales::number(
+  p_model_run[["end_year"]] + ((p_model_run[["end_year"]] + 1) %% 100) / 100,
+  0.01,
+  big.mark = "",
+  decimal.mark = "/"
+)
+
+p_model_run[["create_datetime"]] <- p_model_run[["create_datetime"]] |>
+  lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
+  format("%d-%b-%Y %H:%M:%S")
+
+p_model_run |>
+  unlist() |>
+  tibble::enframe() |> 
+  gt::gt("name") |> 
+  gt_theme() |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Demographic adjustment
+
+```{r}
+#| label: params-demographic-adjustment
+
+info_params_table_demographic_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Baseline adjustment
+
+```{r}
+#| label: params-baseline-adjustment
+
+info_params_table_baseline_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Covid adjustment
+
+```{r}
+#| label: params-covid-adjustment
+
+info_params_table_covid_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Waiting list adjustment
+
+Time profile: `r params$r$params[["time_profile_mappings"]][["waiting_list_adjustment"]]`
+
+```{r}
+#| label: params-waiting-list-adjustment
+
+info_params_table_waiting_list_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Expatriation
+
+Time profile: `r params$r$params[["time_profile_mappings"]][["expat"]]`
+
+```{r}
+#| label: params-expat
+
+info_params_table_expat_repat_adjustment(p, "expat") |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Repatriation (local)
+
+Time profile: `r params$r$params[["time_profile_mappings"]][["repat_local"]]`
+
+```{r}
+#| label: params-repat-local
+
+info_params_table_expat_repat_adjustment(p, "repat_local") |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Repatriation (non-local)
+
+Time profile: `r params$r$params[["time_profile_mappings"]][["repat_nonlocal"]]`
+
+```{r}
+#| label: params-repat-non-local
+
+info_params_table_expat_repat_adjustment(p, "repat_nonlocal") |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Non-demographic adjustment
+
+```{r}
+#| label: params-non-demographic-adjustment
+
+info_params_table_non_demographic_adjustment(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Activity avoidance
+
+```{r}
+#| label: params-activity-avoidance
+
+info_params_table_activity_avoidance(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Efficiencies
+
+```{r}
+#| label: params-efficiencies
+
+info_params_table_efficiencies(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Bed occupancy
+
+```{r}
+#| label: params-bed-occupancy-day-night
+
+info_params_table_bed_occupancy_day_night(p) |> 
+  gt::tab_options(table.align = "left")
+```
+
+```{r}
+#| label: params-bed-occupancy-specialty-mapping
+
+info_params_table_bed_occupancy_specialty_mapping(p) |> 
+  gt::tab_options(table.align = "left")
+```
