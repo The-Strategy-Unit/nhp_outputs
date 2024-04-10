@@ -231,17 +231,12 @@ server <- function(input, output, session) {
   })
 }
 
-app <- shiny::shinyApp(
+shiny::shinyApp(
   shiny::tagList(
     shiny::tags$head(
       shiny::tags$title("NHP: Outputs Selection")
     ),
     ui
   ),
-  server,
-  options = list(port = 9081)
+  server
 )
-
-if (interactive()) {
-  print(app)
-}
