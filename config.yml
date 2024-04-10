@@ -1,5 +1,5 @@
 default:
-  folder: "dev"
+  folder: "prod"
   app_url: "http://localhost:8081/"
 
 development:
