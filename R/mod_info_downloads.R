@@ -55,13 +55,23 @@ mod_info_downloads_ui <- function(id) {
 
 mod_info_downloads_download_excel <- function(data) {
   function(file) {
-    data() |>
+    results <- data() |>
       purrr::pluck("results") |>
       purrr::map(
         dplyr::select,
         -tidyselect::where(is.list)
+      )
+
+    results[["los_group"]] <- results[["los_group"]] |>
+      dplyr::mutate(
+        los_group = factor(
+          .data$los_group,
+          levels = c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
+        )
       ) |>
-      writexl::write_xlsx(file)
+      dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
+
+    writexl::write_xlsx(results, file)
   }
 }
 
