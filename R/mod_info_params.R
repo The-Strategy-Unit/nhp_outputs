@@ -23,6 +23,7 @@ mod_info_params_ui <- function(id) {
           href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
           "model project information site."
         ),
+        "You can download a file of this information in the 'Downloads' tab."
       )
     ),
     bs4Dash::box(

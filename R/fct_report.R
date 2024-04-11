@@ -1,3 +1,35 @@
+# Model run information ----
+
+tabulate_model_run_info <- function(p) {
+
+  p_model_run <- purrr::keep(p, rlang::is_atomic)
+
+  p_model_run[["start_year"]] <- scales::number(
+    p_model_run[["start_year"]] + ((p_model_run[["start_year"]] + 1) %% 100) / 100,
+    0.01,
+    big.mark = "", decimal.mark = "/"
+  )
+
+  p_model_run[["end_year"]] <- scales::number(
+    p_model_run[["end_year"]] + ((p_model_run[["end_year"]] + 1) %% 100) / 100,
+    0.01,
+    big.mark = "",
+    decimal.mark = "/"
+  )
+
+  p_model_run[["create_datetime"]] <- p_model_run[["create_datetime"]] |>
+    lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
+    format("%d-%b-%Y %H:%M:%S")
+
+  p_model_run |>
+    unlist() |>
+    tibble::enframe() |>
+    gt::gt("name") |>
+    gt_theme() |>
+    gt::tab_options(table.align = "left")
+
+}
+
 # Impact of changes ----
 
 prep_principal_change_factors <- function(

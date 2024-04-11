@@ -1,6 +1,6 @@
 ---
 title: "NHP Parameters Report"
-subtitle: "Model run: `r params$r$params$id`"
+subtitle: Model run `r params$r$params$id`
 output:
   html_document:
     toc: true
@@ -10,36 +10,6 @@ output:
 params:
   r: NA
 ---
-
-```{css, echo=FALSE}
-h1 {
-  font-size: 32px;
-}
-
-h2 {
-  font-size: 28px;
-}
-
-h3 {
-  font-size: 26px;
-}
-
-h4 {
-  font-size: 24px;
-}
-
-h5 {
-  font-size: 22px;
-}
-
-h6 {
-  font-size: 20px;
-}
-
-p {
-  font-size: 16px;
-}
-```
 
 ```{r}
 #| label: setup
@@ -55,9 +25,43 @@ if (!exists("mod_info_downloads_download_json")) {
     local = knitr::knit_global()
   )
 }
+```
+
+```{css}
+h1 {
+font-size: 32px;
+}
+
+h2 {
+font-size: 28px;
+}
+
+h3 {
+font-size: 26px;
+}
+
+h4 {
+font-size: 24px;
+}
+
+h5 {
+font-size: 22px;
+}
+
+h6 {
+font-size: 20px;
+}
+
+p {
+font-size: 16px;
+}
+```
+
+```{r}
+#| label: setup-params
 
 p <- get_params(params$r)
-t_profile <- p[["time_profile_mappings"]]
+t_profile <- params$r$params[["time_profile_mappings"]]
 ```
 
 ## Notes

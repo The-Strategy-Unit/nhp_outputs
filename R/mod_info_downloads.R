@@ -13,7 +13,13 @@ mod_info_downloads_ui <- function(id) {
     shiny::h1("Information: downloads"),
     shiny::fluidRow(
       bs4Dash::box(
-        title = "Results data",
+        title = "Notes",
+        collapsible = FALSE,
+        width = 12,
+        htmltools::p("These files will download one at a time and may take a moment to be generated.")
+      ),
+      bs4Dash::box(
+        title = "Download results data",
         collapsible = FALSE,
         width = 12,
         htmltools::p(
@@ -43,7 +49,7 @@ mod_info_downloads_ui <- function(id) {
         ),
         shinyjs::disabled(
           shiny::downloadButton(
-            ns("download_report_params_html"),
+            ns("download_report_parameters_html"),
             "Download parameters report (.html)"
           )
         )
@@ -86,20 +92,36 @@ mod_info_downloads_download_excel <- function(data) {
       ) |>
       dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
 
+    download_notification <- shiny::showNotification(
+      glue::glue("Preparing results file (xlsx)..."),
+      duration = NULL,
+      closeButton = FALSE
+    )
+
+    on.exit(shiny::removeNotification(download_notification), add = TRUE)
+
     writexl::write_xlsx(results, file)
   }
 }
 
 mod_info_downloads_download_json <- function(data) {
   function(file) {
+    download_notification <- shiny::showNotification(
+      glue::glue("Preparing results file (json)..."),
+      duration = NULL,
+      closeButton = FALSE
+    )
+
+    on.exit(shiny::removeNotification(download_notification), add = TRUE)
+
     jsonlite::write_json(data(), file, pretty = TRUE, auto_unbox = TRUE)
   }
 }
 
 mod_info_downloads_download_report_html <- function(
     data,
-    sites,
-    report_type = c("params", "output")
+    sites = NULL,
+    report_type = c("parameters", "outputs")
 ) {
 
   function(file) {
@@ -108,11 +130,11 @@ mod_info_downloads_download_report_html <- function(
     temp_report <- file.path(tempdir(), report_file)
     file.copy(app_sys(report_file), temp_report, overwrite = TRUE)
 
-    params <- list(r = data(), sites = sites())
-    if (report_type == "params") params <- params["r"]  # site not needed for parameters report
+    if (report_type == "parameters") params <- list(r = data())
+    if (report_type == "outputs") params <- list(r = data(), sites = sites())
 
     download_notification <- shiny::showNotification(
-      "Rendering report...",
+      glue::glue("Rendering {report_type} report..."),
       duration = NULL,
       closeButton = FALSE
     )
@@ -142,7 +164,7 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
       shinyjs::enable("download_results_xlsx")
       shinyjs::enable("download_results_json")
 
-      shinyjs::enable("download_report_params_html")
+      shinyjs::enable("download_report_parameters_html")
       shinyjs::enable("download_report_outputs_html")
     }) |>
       shiny::bindEvent(selected_data())
@@ -173,16 +195,16 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
 
     # params
 
-    output$download_report_params_html <- shiny::downloadHandler(
+    output$download_report_parameters_html <- shiny::downloadHandler(
       filename = \() {
         paste0(
           selected_data()$params$id,
-          "_report-parameters", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
+          "_report-parameters-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
         )
       },
       content = mod_info_downloads_download_report_html(
         selected_data,
-        report_type = "params"
+        report_type = "parameters"
       )
     )
 

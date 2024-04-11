@@ -15,7 +15,8 @@ app_ui <- function(request) {
 
       bs4Dash::menuItem(
         text = "Home",
-        tabName = "tab_home"
+        tabName = "tab_home",
+        icon = shiny::icon("house")
       ),
 
       bs4Dash::bs4SidebarHeader("Site Selection"),
