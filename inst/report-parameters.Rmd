@@ -1,6 +1,6 @@
 ---
 title: "NHP Parameters Report"
-subtitle: Model run `r params$r$params$id`
+subtitle: "Scenario: `r params$r$params$scenario`"
 output:
   html_document:
     toc: true
@@ -29,31 +29,31 @@ if (!exists("mod_info_downloads_download_json")) {
 
 ```{css}
 h1 {
-font-size: 32px;
+  font-size: 32px;
 }
 
 h2 {
-font-size: 28px;
+  font-size: 28px;
 }
 
 h3 {
-font-size: 26px;
+  font-size: 26px;
 }
 
 h4 {
-font-size: 24px;
+  font-size: 24px;
 }
 
 h5 {
-font-size: 22px;
+  font-size: 22px;
 }
 
 h6 {
-font-size: 20px;
+  font-size: 20px;
 }
 
 p {
-font-size: 16px;
+  font-size: 16px;
 }
 ```
 
@@ -61,22 +61,26 @@ font-size: 16px;
 #| label: setup-params
 
 p <- get_params(params$r)
-t_profile <- params$r$params[["time_profile_mappings"]]
+t_profile <- params$r$params$time_profile_mappings
 ```
 
-## Notes
+# Notes
 
-This report shows the parameter selections and their rationale. 
+This report provides the parameter selections for the selected model scenario (`r params$r$params$scenario`) and the rationale given for these choices.
 
 See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide and methodology for the model and the outputs app.
 
-## Model run information
+# Metadata
+
+This table shows the metadata for the selected model run:
 
 ```{r}
 #| label: params-model-run
 
 tabulate_model_run_info(p)
 ```
+
+# Parameters
 
 ## Demographic adjustment
 
@@ -190,4 +194,16 @@ info_params_table_bed_occupancy_day_night(p) |>
 
 info_params_table_bed_occupancy_specialty_mapping(p) |> 
   gt::tab_options(table.align = "left")
+```
+
+# Rationale
+
+```{r echo=F, results='asis'}
+reasons <- p$reasons
+
+if (is.null(reasons)) {
+  cat("No rationale provided.\n\n")
+} else {
+  expand_reasons_to_rmd(reasons)
+}
 ```

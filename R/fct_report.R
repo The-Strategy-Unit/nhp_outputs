@@ -235,3 +235,67 @@ plot_activity_distributions <- function(
   dplyr::lst(beeswarm_plot, ecdf_plot)
 
 }
+
+# Rationale ----
+
+remove_blanks_recursively <- function(reasons) {
+
+  if (!is.list(reasons)) return(reasons)
+
+  reasons |>
+    purrr::discard(\(x) isTRUE(nchar(x) == 0)) |>  # i.e. remove blanks like ""
+    purrr::map(remove_blanks_recursively)
+
+}
+
+expand_reasons_to_rmd <- function(reasons, h_start = "##") {
+
+  reasons <- remove_blanks_recursively(reasons)
+
+  l1_names <- names(reasons)
+
+  for (l1 in l1_names) {
+
+    cat(h_start, l1, "\n\n")
+
+    l1_is_list <- is.list(reasons[[l1]])
+
+    if (!l1_is_list) cat(reasons[[l1]], "\n\n")
+
+    if (l1_is_list) {
+
+      l2_names <- names(reasons[[l1]])
+
+      for (l2 in l2_names) {
+
+        cat(paste0(h_start, "#"), l2, "\n\n")
+
+        l2_is_list <- is.list(reasons[[l1]][[l2]])
+
+        if (!l2_is_list) cat(reasons[[l1]][[l2]], "\n\n")
+
+        if (l2_is_list) {
+
+          l3_names <- names(reasons[[l1]][[l2]])
+
+          for (l3 in l3_names) {
+
+            cat(paste0(h_start, "##"), l3, "\n\n")
+
+            l3_is_list <- is.list(reasons[[l1]][[l2]][[l3]])
+
+            if (!l3_is_list) cat(reasons[[l1]][[l2]][[l3]], "\n\n")
+
+            if (l3_is_list) warning("Unexpected depth in reasons list object.")
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}
