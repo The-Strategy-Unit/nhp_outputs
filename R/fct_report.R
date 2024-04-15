@@ -236,64 +236,209 @@ plot_activity_distributions <- function(
 
 }
 
-# Rationale ----
+# Params ----
 
-expand_reasons_to_rmd <- function(reasons, h_start = "##") {
+#' Convert a List of Parameter Data to a List of 'gt' Objects
+#' @param p A list. Parameter selections for a given model scenario, likely
+#'     read in with [get_params].
+#' @noRd
+param_tables_to_list <- function(p) {
 
-  reasons <- reasons |>
-    remove_blanks_recursively() |>
-    rename_list_recursively()
+  t_profiles <- p$time_profile_mappings
 
-  l1_names <- names(reasons)
+  # Use functions developed for the app. For ther report, we need to catch
+  # shiny::need() errors as NULLs.
+
+  possibly_table_baseline_adjustment <- purrr::possibly(
+    info_params_table_baseline_adjustment
+  )
+  possibly_table_covid_adjustment <- purrr::possibly(
+    info_params_table_covid_adjustment
+  )
+
+  possibly_table_waiting_list_adjustment <- purrr::possibly(
+    info_params_table_waiting_list_adjustment
+  )
+  possibly_table_expat_repat_adjustment <- purrr::possibly(
+    info_params_table_expat_repat_adjustment
+  )
+
+  possibly_table_non_demographic_adjustment <- purrr::possibly(
+    info_params_table_non_demographic_adjustment
+  )
+  possibly_table_demographic_adjustment <- purrr::possibly(
+    info_params_table_demographic_adjustment
+  )
+
+  possibly_table_activity_avoidance <- purrr::possibly(
+    info_params_table_activity_avoidance
+  )
+  possibly_table_efficiencies <- purrr::possibly(
+    info_params_table_efficiencies
+  )
+
+  possibly_table_bed_occupancy_day_night <-purrr::possibly(
+    info_params_table_bed_occupancy_day_night
+  )
+  possibly_table_bed_occupancy_specialty_mapping <-purrr::possibly(
+    info_params_table_bed_occupancy_specialty_mapping
+  )
+
+  params_list <- list(
+
+    "Baseline adjustment" = possibly_table_baseline_adjustment(p),
+    "Covid adjustment" = possibly_table_covid_adjustment(p),
+
+    "Waiting list adjustment" = list(
+      "Time profile" = t_profiles$waiting_list_adjustment,
+      "Table" = possibly_table_waiting_list_adjustment(p)
+    ),
+    "Expatriation" = list(
+      "Time profile" = t_profiles$expat,
+      "Table" = possibly_table_expat_repat_adjustment(p, "expat")
+    ),
+    "Repatriation (local)" = list(
+      "Time profile" = t_profiles$repat_local,
+      "Table" = possibly_table_expat_repat_adjustment(p, "repat_local")
+    ),
+    "Repatriation (non-local)" = list(
+      "Time profile" = t_profiles$repat_nonlocal,
+      "Table" = possibly_table_expat_repat_adjustment(p, "repat_nonlocal")
+    ),
+
+    "Non-demographic adjustment" = possibly_table_non_demographic_adjustment(p),
+    "Demographic adjustment" = possibly_table_demographic_adjustment(p),
+
+    "Activity avoidance" = possibly_table_activity_avoidance(p),
+    "Efficiencies" = possibly_table_efficiencies(p),
+
+    "Bed occupancy (day/night)" = possibly_table_bed_occupancy_day_night(p),
+    "Bed occupancy (specialty mapping)" = possibly_table_bed_occupancy_specialty_mapping(p)
+
+  ) |>
+    purrr::compact()
+
+  invisible(params_list)
+
+}
+
+#' Expand a List of Parameter Data to R Markdown
+#' @param param_tables_list A list. The outcome of passing a model parameter
+#'     object `p` to [param_tables_to_list]. Each element is a parameter group
+#'     ('baseline adjustment', etc) and contains a 'gt' table object
+#'     describing the parameter selections, or a further list with elements for
+#'     a 'gt' object and a character value (the time profile mapping).
+#' @noRd
+expand_param_tables_to_rmd <- function(param_tables_list) {
+
+  l1_names <- names(param_tables_list)
 
   for (l1 in l1_names) {
 
-    cat(h_start, l1, "\n\n")
+    cat("##", l1, "\n\n")
 
-    l1_is_list <- is.list(reasons[[l1]])
+    l1_object <- param_tables_list[[l1]]
+    l1_is_gt <- inherits(l1_object, "gt_tbl")
+    l1_is_list <- is.list(l1_object)
 
-    if (!l1_is_list) cat(reasons[[l1]], "\n\n")
+    if (l1_is_gt) {
+      l1_object |>
+        gt::tab_options(table.align = "left") |>
+        htmltools::tagList() |>
+        print()
+    }
 
-    if (l1_is_list) {
+    if (!l1_is_gt & l1_is_list) {
 
-      l2_names <- names(reasons[[l1]])
+      l2_names <- names(l1_object)
 
       for (l2 in l2_names) {
 
-        cat(paste0(h_start, "#"), l2, "\n\n")
+        l2_object <- l1_object[[l2]]
+        l2_is_char <- is.character(l2_object)
+        l2_is_gt <- inherits(l2_object, "gt_tbl")
 
-        l2_is_list <- is.list(reasons[[l1]][[l2]])
+        if (l2_is_char) cat("Time profile mapping:", l2_object, "\n\n")
 
-        if (!l2_is_list) cat(reasons[[l1]][[l2]], "\n\n")
-
-        if (l2_is_list) {
-
-          l3_names <- names(reasons[[l1]][[l2]])
-
-          for (l3 in l3_names) {
-
-            cat(paste0(h_start, "##"), l3, "\n\n")
-
-            l3_is_list <- is.list(reasons[[l1]][[l2]][[l3]])
-
-            if (!l3_is_list) cat(reasons[[l1]][[l2]][[l3]], "\n\n")
-
-            if (l3_is_list) warning("Unexpected depth in reasons list object.")
-
-          }
-
+        if (l2_is_gt) {
+          l2_object |>
+            gt::tab_options(table.align = "left") |>
+            htmltools::tagList() |>
+            print()
         }
-
       }
-
     }
-
   }
 
 }
 
+#' Expand a List of Parameter-Selection Rationale to R Markdown
+#' @param reasons_list A list. The 'reasons' element of a list `p` (i.e.
+#'     the parameter selections for a given model scenario). Each element is a
+#'     string describing the reason for a given parameter selection.
+#' @noRd
+expand_reasons_to_rmd <- function(reasons_list) {
+
+  reasons_list <- reasons_list |>
+    remove_blanks_recursively() |>
+    rename_list_recursively()
+
+  l1_names <- names(reasons_list)
+
+  for (l1 in l1_names) {
+
+    cat("##", l1, "\n\n")
+
+    l1_object <- reasons_list[[l1]]
+    l1_is_list <- is.list(l1_object)
+
+    if (!l1_is_list) cat(l1_object, "\n\n")
+
+    if (l1_is_list) {
+
+      l2_names <- names(l1_object)
+
+      for (l2 in l2_names) {
+
+        cat("###", l2, "\n\n")
+
+        l2_object <- l1_object[[l2]]
+        l2_is_list <- is.list(l2_object)
+
+        if (!l2_is_list) cat(l2_object, "\n\n")
+
+        if (l2_is_list) {
+
+          l3_names <- names(l2_object)
+
+          for (l3 in l3_names) {
+
+            cat("####", l3, "\n\n")
+
+            l3_object <- l2_object[[l3]]
+            l3_is_list <- is.list(l3_object)
+
+            if (!l3_is_list) cat(l3_object, "\n\n")
+
+            if (l3_is_list) warning("Unexpected depth in reasons list object.")
+
+          }
+        }
+      }
+    }
+  }
+}
+
+#' Rename Elements of a Nested List Regardless of Depth
+#' @param reasons_list A list. The 'reasons' element of a list `p` (i.e.
+#'     the parameter selections for a given model scenario). Each element is a
+#'     string describing the reason for a given parameter selection.
+#' @param lookup_json_path Character. Path to a JSON file that maps mitigator
+#'     codes to human-readable mitigator names. Defaults to the file hosted in
+#'     this package.
+#' @noRd
 rename_list_recursively <- function(
-    reasons,
+    reasons_list,
     lookup_json_path = app_sys("app", "data", "mitigators.json")
 ) {
 
@@ -312,20 +457,33 @@ rename_list_recursively <- function(
     "aae" = "Accident & Emergency"
   )
 
-  name_exists <- names(reasons) %in% names(lookup)
+  name_exists <- names(reasons_list) %in% names(lookup)
 
-  names(reasons)[name_exists] <- lookup[names(reasons)[name_exists]]
+  names(reasons_list)[name_exists] <- lookup[names(reasons_list)[name_exists]]
 
-  reasons |> purrr::map(\(x) if (is.list(x)) rename_list_recursively(x) else x)
+  purrr::map(
+    reasons_list,
+    \(x) {
+      if (is.list(x)) {
+        rename_list_recursively(x)
+      } else {
+        x
+      }
+    }
+  )
 
 }
 
+#' Remove Empty Strings from a Nested List
+#' @param reasons_list A list. The 'reasons' element of a list `p` (i.e.
+#'     the parameter selections for a given model scenario). Each element is a
+#'     string describing the reason for a given parameter selection.
+#' @noRd
+remove_blanks_recursively <- function(reasons_list) {
 
-remove_blanks_recursively <- function(reasons) {
+  if (!is.list(reasons_list)) return(reasons_list)
 
-  if (!is.list(reasons)) return(reasons)
-
-  reasons |>
+  reasons_list |>
     purrr::discard(\(x) isTRUE(nchar(x) == 0)) |>  # i.e. remove blanks like ""
     purrr::map(remove_blanks_recursively)
 
