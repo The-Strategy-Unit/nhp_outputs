@@ -238,19 +238,11 @@ plot_activity_distributions <- function(
 
 # Rationale ----
 
-remove_blanks_recursively <- function(reasons) {
-
-  if (!is.list(reasons)) return(reasons)
-
-  reasons |>
-    purrr::discard(\(x) isTRUE(nchar(x) == 0)) |>  # i.e. remove blanks like ""
-    purrr::map(remove_blanks_recursively)
-
-}
-
 expand_reasons_to_rmd <- function(reasons, h_start = "##") {
 
-  reasons <- remove_blanks_recursively(reasons)
+  reasons <- reasons |>
+    remove_blanks_recursively() |>
+    rename_list_recursively()
 
   l1_names <- names(reasons)
 
@@ -297,5 +289,44 @@ expand_reasons_to_rmd <- function(reasons, h_start = "##") {
     }
 
   }
+
+}
+
+rename_list_recursively <- function(
+    reasons,
+    lookup_json_path = app_sys("app", "data", "mitigators.json")
+) {
+
+  lookup <- c(
+    jsonlite::read_json(lookup_json_path) |> unlist(),
+    "baseline_adjustment" = "Baseline adjustment",
+    "demographic_factors" = "Demographic factors",
+    "waiting_list_adjustment" = "Waiting list adjustment",
+    "expat_repat" = "Expatriation and repatriation",
+    "non-demographic_adjustment" = "Non-demographic adjustment",
+    "activity_avoidance" = "Activity avoidance",
+    "efficiencies" = "Efficiencies",
+    "bed_occupancy" = "Bed occupancy",
+    "ip" = "Inpatient",
+    "op" = "Outpatient",
+    "aae" = "Accident & Emergency"
+  )
+
+  name_exists <- names(reasons) %in% names(lookup)
+
+  names(reasons)[name_exists] <- lookup[names(reasons)[name_exists]]
+
+  reasons |> purrr::map(\(x) if (is.list(x)) rename_list_recursively(x) else x)
+
+}
+
+
+remove_blanks_recursively <- function(reasons) {
+
+  if (!is.list(reasons)) return(reasons)
+
+  reasons |>
+    purrr::discard(\(x) isTRUE(nchar(x) == 0)) |>  # i.e. remove blanks like ""
+    purrr::map(remove_blanks_recursively)
 
 }
