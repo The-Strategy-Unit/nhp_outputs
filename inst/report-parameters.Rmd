@@ -16,50 +16,7 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-
-# Check if fct_report functions are loaded by seeing if one exists in the env
-# (allows for both local and remote rendering)
-if (!exists("mod_info_downloads_download_json")) {
-  source(
-    here::here("R", "fct_report.R"),
-    local = knitr::knit_global()
-  )
-}
-```
-
-```{css}
-h1 {
-  font-size: 32px;
-}
-
-h2 {
-  font-size: 28px;
-}
-
-h3 {
-  font-size: 26px;
-}
-
-h4 {
-  font-size: 24px;
-}
-
-h5 {
-  font-size: 22px;
-}
-
-h6 {
-  font-size: 20px;
-}
-
-p {
-  font-size: 16px;
-}
-```
-
-```{r}
-#| label: setup-params
-
+source(here::here("R", "fct_report.R"), local = knitr::knit_global())
 p <- get_params(params$r)
 ```
 

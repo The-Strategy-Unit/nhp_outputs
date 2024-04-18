@@ -11,50 +11,12 @@ params:
   sites: NA
 ---
 
-```{css, echo=FALSE}
-h1 {
-  font-size: 32px;
-}
-
-h2 {
-  font-size: 28px;
-}
-
-h3 {
-  font-size: 26px;
-}
-
-h4 {
-  font-size: 24px;
-}
-
-h5 {
-  font-size: 22px;
-}
-
-h6 {
-  font-size: 20px;
-}
-
-p {
-  font-size: 16px;
-}
-```
-
 ```{r}
 #| label: setup
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-
-# Check if fct_report functions are loaded by seeing if one exists in the env
-# (allows for both local and remote rendering)
-if (!exists("mod_info_downloads_download_json")) {
-  source(
-    here::here("R", "fct_report.R"),
-    local = knitr::knit_global()
-  )
-}
+source(here::here("R", "fct_report.R"), local = knitr::knit_global())
 ```
 
 ```{r}
@@ -63,20 +25,32 @@ if (!exists("mod_info_downloads_download_json")) {
 
 sites_were_selected <- if (is.null(params$sites)) FALSE else TRUE
 
-selected_sites <- if (sites_were_selected) {
-  paste(params$sites, collapse = ", ")
+if (sites_were_selected) {
+  
+  site_status <- "selected sites"
+  
+  site_lookup <- jsonlite::read_json(app_sys("app", "data", "sites.json"))
+  sites_list <- site_lookup[params$sites]
+  
+  selected_sites <-
+    paste0(sites_list, " (", names(sites_list), ")") |> 
+    sort() |> 
+    stringr::str_flatten(collapse = ", ", last = " and ")
+  
 } else {
-  "all sites"
+  
+  site_status <- selected_sites <- "all sites"
+  
 }
 ```
 
 ---
-subtitle: "Scenario: `r params$r$params$scenario` (`r selected_sites` selected)"
+subtitle: "Scenario: `r params$r$params$scenario` (`r site_status`)"
 ---
 
 # Notes
 
-This report provides the outputs (tables and charts) for the selected model scenario (`r params$r$params$scenario`) and the following sites: `r selected_sites`.
+This report provides the outputs (tables and charts) from the selected model scenario (`r params$r$params$scenario`) for the following sites combined: `r selected_sites`.
 
 Note that A&E results are only available at trust level. Tables and charts won't be shown if there's insufficient data to produce them.
 
@@ -676,6 +650,10 @@ params$r |>
 ## Activity distribution
 
 A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+In 'beeswarm' plots (showing model-run distributions), the red vertical dashed line is the principal value and the grey vertical continuous line is the baseline value.
+
+In 'S-curve' plots (showing empirical cumulative distribution function), the red dashed line is the principal value, the blue dashed lines are the 10th and 90th percentiles and the grey vertical continuous line is the baseline value.
 
 ```{r}
 #| label: dop-activity-distribution-setup
