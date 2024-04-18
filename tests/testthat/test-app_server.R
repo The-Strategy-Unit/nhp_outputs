@@ -32,7 +32,7 @@ test_that("it loads the modules correctly", {
     expect_args(m, 6, "model_core_activity", selected_data, selected_site)
     expect_args(m, 7, "model_results_distribution", selected_data, selected_site)
 
-    expect_args(m, 8, "info_downloads", selected_data)
+    expect_args(m, 8, "info_downloads", selected_data, selected_site)
     expect_args(m, 9, "info_params", selected_data)
   })
 })

@@ -28,6 +28,7 @@
                 <ul class="nav nav-pills nav-sidebar flex-column sidebar-menu nav-child-indent" data-widget="treeview" role="menu" data-accordion="true">
                   <li class="nav-item">
                     <a class="nav-link" id="tab-tab_home" href="#" data-target="#shiny-tab-tab_home" data-toggle="tab" data-value="tab_home">
+                      <i class="fas fa-house nav-icon" role="presentation" aria-label="house icon" verify_fa="FALSE"></i>
                       <p>Home</p>
                     </a>
                   </li>
