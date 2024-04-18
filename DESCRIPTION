@@ -25,6 +25,7 @@ Imports:
     plotly,
     purrr,
     rlang,
+    rmarkdown,
     scales,
     shiny (>= 1.7.1),
     shinycssloaders,

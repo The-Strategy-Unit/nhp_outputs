@@ -92,28 +92,12 @@ mod_info_downloads_download_excel <- function(data) {
       ) |>
       dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
 
-    download_notification <- shiny::showNotification(
-      glue::glue("Preparing results file (xlsx)..."),
-      duration = NULL,
-      closeButton = FALSE
-    )
-
-    on.exit(shiny::removeNotification(download_notification), add = TRUE)
-
     writexl::write_xlsx(results, file)
   }
 }
 
 mod_info_downloads_download_json <- function(data) {
   function(file) {
-    download_notification <- shiny::showNotification(
-      glue::glue("Preparing results file (json)..."),
-      duration = NULL,
-      closeButton = FALSE
-    )
-
-    on.exit(shiny::removeNotification(download_notification), add = TRUE)
-
     jsonlite::write_json(data(), file, pretty = TRUE, auto_unbox = TRUE)
   }
 }
