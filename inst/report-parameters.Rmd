@@ -17,7 +17,7 @@ params:
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
 source(here::here("R", "fct_report.R"), local = knitr::knit_global())
-p <- get_params(params$r)
+pkgload::load_all(params$wd)
 ```
 
 # Notes
