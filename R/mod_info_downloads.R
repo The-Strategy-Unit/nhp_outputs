@@ -107,7 +107,8 @@ mod_info_downloads_download_report_html <- function(
     sites = NULL,
     report_type = c("parameters", "outputs")
 ) {
-
+  force(data)
+  report_type <- match.arg(report_type)
   function(file) {
 
     report_file <- glue::glue("report-{report_type}.Rmd")
