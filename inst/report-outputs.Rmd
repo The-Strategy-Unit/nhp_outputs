@@ -9,6 +9,7 @@ output:
 params:
   r: NA
   sites: NA
+  wd: ".."
 ---
 
 ```{r}
