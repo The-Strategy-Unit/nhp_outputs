@@ -30,15 +30,15 @@ change_factors_expected <- list(
     "ip_elective_admission", "R00", "admissions", "baseline", "-", "-", 100000,
     "ip_elective_admission", "R00", "admissions", "demographic_adjustment", "-", "-", 15000,
     "ip_elective_admission", "R00", "admissions", "health_status_adjustment", "-", "-", -1000,
-    "ip_elective_admission", "R00", "admissions", "activity_avoidance", "alcohol_wholly_attributable", "Alcohol Related Admissions (Wholly Attributable)", -100,
-    "ip_elective_admission", "R00", "admissions", "activity_avoidance", "ambulatory_care_conditions_acute", "Ambulatory Care Sensitive Admissions (Acute Conditions)", -250,
-    "ip_elective_admission", "R00", "admissions", "activity_avoidance", "ambulatory_care_conditions_chronic", "Ambulatory Care Sensitive Admissions (Chronic Conditions)", -300,
+    "ip_elective_admission", "R00", "admissions", "activity_avoidance", "alcohol_wholly_attributable", "Alcohol Related Admissions (Wholly Attributable) (IP-AA-003)", -100,
+    "ip_elective_admission", "R00", "admissions", "activity_avoidance", "ambulatory_care_conditions_acute", "Ambulatory Care Sensitive Admissions (Acute Conditions) (IP-AA-004)", -250,
+    "ip_elective_admission", "R00", "admissions", "activity_avoidance", "ambulatory_care_conditions_chronic", "Ambulatory Care Sensitive Admissions (Chronic Conditions) (IP-AA-005)", -300,
     "ip_elective_admission", "R00", "beddays", "baseline", "-", "-", 200000,
     "ip_elective_admission", "R00", "beddays", "demographic_adjustment", "-", "-", 30000,
     "ip_elective_admission", "R00", "beddays", "health_status_adjustment", "-", "-", -2000,
-    "ip_elective_admission", "R00", "beddays", "activity_avoidance", "alcohol_wholly_attributable", "Alcohol Related Admissions (Wholly Attributable)", -200,
-    "ip_elective_admission", "R00", "beddays", "activity_avoidance", "ambulatory_care_conditions_acute", "Ambulatory Care Sensitive Admissions (Acute Conditions)", -500,
-    "ip_elective_admission", "R00", "beddays", "activity_avoidance", "ambulatory_care_conditions_chronic", "Ambulatory Care Sensitive Admissions (Chronic Conditions)", -600
+    "ip_elective_admission", "R00", "beddays", "activity_avoidance", "alcohol_wholly_attributable", "Alcohol Related Admissions (Wholly Attributable) (IP-AA-003)", -200,
+    "ip_elective_admission", "R00", "beddays", "activity_avoidance", "ambulatory_care_conditions_acute", "Ambulatory Care Sensitive Admissions (Acute Conditions) (IP-AA-004)", -500,
+    "ip_elective_admission", "R00", "beddays", "activity_avoidance", "ambulatory_care_conditions_chronic", "Ambulatory Care Sensitive Admissions (Chronic Conditions) (IP-AA-005)", -600
   )
 ) |>
   purrr::map(~ dplyr::mutate(

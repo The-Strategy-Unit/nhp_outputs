@@ -85,7 +85,7 @@ app_server <- function(input, output, session) {
   mod_model_core_activity_server("model_core_activity", selected_data, selected_site)
   mod_model_results_distribution_server("model_results_distribution", selected_data, selected_site)
 
-  mod_info_downloads_server("info_downloads", selected_data)
+  mod_info_downloads_server("info_downloads", selected_data, selected_site)
   mod_info_params_server("info_params", selected_data)
 
   # other stuff ----

@@ -9,6 +9,7 @@ output:
 params:
   r: NA
   sites: NA
+  wd: ".."
 ---
 
 ```{r}
@@ -16,229 +17,60 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-
-# Check if fct_report functions are loaded by seeing if one exists in the env
-# (allows for both local and remote rendering)
-if (!exists("mod_info_downloads_download_json")) {
-  source(
-    here::here("R", "fct_report.R"),
-    local = knitr::knit_global()
-  )
-}
-```
-
-```{css}
-h1 {
-font-size: 32px;
-}
-
-h2 {
-font-size: 28px;
-}
-
-h3 {
-font-size: 26px;
-}
-
-h4 {
-font-size: 24px;
-}
-
-h5 {
-font-size: 22px;
-}
-
-h6 {
-font-size: 20px;
-}
-
-p {
-font-size: 16px;
-}
+pkgload::load_all(params$wd, quiet = TRUE)
 ```
 
 ```{r}
 #| label: site-selections
+#| echo: false
 
 sites_were_selected <- if (is.null(params$sites)) FALSE else TRUE
 
-selected_sites <- if (sites_were_selected) {
-  paste(params$sites, collapse = ", ")
+if (sites_were_selected) {
+  
+  site_status <- "selected sites"
+  
+  site_lookup <- jsonlite::read_json(app_sys("app", "data", "sites.json"))
+  sites_list <- site_lookup[params$sites]
+  
+  selected_sites <-
+    paste0(sites_list, " (", names(sites_list), ")") |> 
+    sort() |> 
+    stringr::str_flatten(collapse = ", ", last = " and ")
+  
 } else {
-  "all sites"
+  
+  site_status <- selected_sites <- "all sites"
+  
 }
 ```
 
 ---
-subtitle: Model run `r params$r$params$id` with `r selected_sites` selected
+subtitle: "Scenario: `r params$r$params$scenario` (`r site_status`)"
 ---
 
-## Notes
+# Notes
 
-See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide and methodology for the model and the outputs app.
+This report provides the outputs (tables and charts) from the selected model scenario (`r params$r$params$scenario`) for the following sites combined: `r selected_sites`.
 
-This report reflects the site selections made in the app before the 'download report' button was clicked. The site selections for this report are: `r selected_sites`. 
+Note that A&E results are only available at trust level. Tables and charts won't be shown if there's insufficient data to produce them.
 
-A&E results are only available at trust level. Tables and charts won't be shown if there's insufficient data to produce them.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide, mitigator lookup and methodology for the model and the outputs app.
 
-## Input parameters
+# Metadata
 
-```{r}
-#| label: setup-params
-
-p <- get_params(params$r)
-```
-
-### Model run
+This table shows the metadata for the selected model run:
 
 ```{r}
 #| label: params-model-run
 
-p_model_run <- purrr::keep(p, rlang::is_atomic)
-
-p_model_run[["start_year"]] <- scales::number(
-  p_model_run[["start_year"]] + ((p_model_run[["start_year"]] + 1) %% 100) / 100,
-  0.01,
-  big.mark = "", decimal.mark = "/"
-)
-p_model_run[["end_year"]] <- scales::number(
-  p_model_run[["end_year"]] + ((p_model_run[["end_year"]] + 1) %% 100) / 100,
-  0.01,
-  big.mark = "",
-  decimal.mark = "/"
-)
-
-p_model_run[["create_datetime"]] <- p_model_run[["create_datetime"]] |>
-  lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
-  format("%d-%b-%Y %H:%M:%S")
-
-p_model_run |>
-  unlist() |>
-  tibble::enframe() |> 
-  gt::gt("name") |> 
-  gt_theme() |> 
-  gt::tab_options(table.align = "left")
+p <- get_params(params$r)
+tabulate_model_run_info(p)
 ```
 
-### Demographic adjustment
+# Principal projection
 
-```{r}
-#| label: params-demographic-adjustment
-
-info_params_table_demographic_adjustment(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Baseline adjustment
-
-```{r}
-#| label: params-baseline-adjustment
-
-info_params_table_baseline_adjustment(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Covid adjustment
-
-```{r}
-#| label: params-covid-adjustment
-
-info_params_table_covid_adjustment(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Waiting list adjustment
-
-Time profile: `r params$r$params[["time_profile_mappings"]][["waiting_list_adjustment"]]`
-
-```{r}
-#| label: params-waiting-list-adjustment
-
-info_params_table_waiting_list_adjustment(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Expatriation
-
-Time profile: `r params$r$params[["time_profile_mappings"]][["expat"]]`
-
-```{r}
-#| label: params-expat
-
-info_params_table_expat_repat_adjustment(p, "expat") |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Repatriation (local)
-
-Time profile: `r params$r$params[["time_profile_mappings"]][["repat_local"]]`
-
-```{r}
-#| label: params-repat-local
-
-info_params_table_expat_repat_adjustment(p, "repat_local") |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Repatriation (non-local)
-
-Time profile: `r params$r$params[["time_profile_mappings"]][["repat_nonlocal"]]`
-
-```{r}
-#| label: params-repat-non-local
-
-info_params_table_expat_repat_adjustment(p, "repat_nonlocal") |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Non-demographic adjustment
-
-```{r}
-#| label: params-non-demographic-adjustment
-
-info_params_table_non_demographic_adjustment(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Activity avoidance
-
-```{r}
-#| label: params-activity-avoidance
-
-info_params_table_activity_avoidance(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Efficiencies
-
-```{r}
-#| label: params-efficiencies
-
-info_params_table_efficiencies(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-### Bed occupancy
-
-```{r}
-#| label: params-bed-occupancy-day-night
-
-info_params_table_bed_occupancy_day_night(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-```{r}
-#| label: params-bed-occupancy-specialty-mapping
-
-info_params_table_bed_occupancy_specialty_mapping(p) |> 
-  gt::tab_options(table.align = "left")
-```
-
-## Outputs
-
-### Principal projection
-
-#### Summary
+## Summary
 
 A&E and bed-availability data are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
@@ -250,7 +82,7 @@ mod_principal_summary_data(params$r, params$sites) |>
   gt::tab_options(table.align = "left")
 ```
 
-#### Impact of changes
+## Impact of changes
 
 The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. The plots here show results for all points of delivery combined. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
@@ -307,9 +139,9 @@ aae_pcf <- possibly_prep_principal_change_factors(
 )
 ```
 
-##### Inpatients
+### Inpatients
 
-###### Bed days
+#### Bed days
 
 ```{r}
 #| label: pp-impact-of-changes-ip-bed-days
@@ -317,7 +149,7 @@ aae_pcf <- possibly_prep_principal_change_factors(
 plot_impact_and_individual_change(ip_pcf, "beddays") |> purrr::walk(print)
 ```
 
-###### Admissions
+#### Admissions
 
 ```{r}
 #| label: pp-impact-of-changes-ip-admissions
@@ -325,9 +157,9 @@ plot_impact_and_individual_change(ip_pcf, "beddays") |> purrr::walk(print)
 plot_impact_and_individual_change(ip_pcf, "admissions") |> purrr::walk(print)
 ```
 
-##### Outpatients
+### Outpatients
 
-###### Attendances
+#### Attendances
 
 ```{r}
 #| label: pp-impact-of-changes-op-attendances
@@ -335,7 +167,7 @@ plot_impact_and_individual_change(ip_pcf, "admissions") |> purrr::walk(print)
 plot_impact_and_individual_change(op_pcf, "attendances") |> purrr::walk(print)
 ```
 
-###### Tele-attendances
+#### Tele-attendances
 
 ```{r}
 #| label: pp-impact-of-changes-op-tele-attendances
@@ -344,11 +176,11 @@ plot_impact_and_individual_change(op_pcf, "tele_attendances") |>
   purrr::walk(print)
 ```
 
-##### A&E (trust-level)
+### A&E (trust-level only)
 
 A&E data is not available at site level. 
 
-###### Arrivals
+#### Arrivals
 
 ```{r}
 #| label: pp-impact-of-changes-aae-arrivals
@@ -356,7 +188,7 @@ A&E data is not available at site level.
 plot_impact_and_individual_change(aae_pcf, "arrivals") |> purrr::walk(print)
 ```
 
-#### Summary by year
+## Summary by year
 
 A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
@@ -379,7 +211,7 @@ possibly_mod_principal_high_level_plot <- purrr::possibly(
 )
 ```
 
-##### Values
+### Values
 
 ```{r}
 #| label: pp-summary-by-year
@@ -388,7 +220,7 @@ principal_high_level_summary_data |>
   possibly_mod_principal_high_level_table(summary_type = "value")
 ```
 
-##### Change
+### Change
 
 ```{r}
 #| label: pp-summary-by-year-change
@@ -397,7 +229,7 @@ principal_high_level_summary_data |>
   possibly_mod_principal_high_level_table(summary_type = "change")
 ```
 
-##### Percent change
+### Percent change
 
 ```{r}
 #| label: pp-summary-by-year-percent-change
@@ -406,8 +238,7 @@ principal_high_level_summary_data |>
   possibly_mod_principal_high_level_table(summary_type = "change_pcnt")
 ```
 
-
-##### Inpatient admissions
+### Inpatient admissions
 
 ```{r}
 #| label: pp-summary-by-year-plot-ip
@@ -416,7 +247,7 @@ principal_high_level_summary_data |>
   possibly_mod_principal_high_level_plot(activity_type = "ip")
 ```
 
-##### Outpatient attendances
+### Outpatient attendances
 
 ```{r}
 #| label: pp-summary-by-year-plot-op
@@ -425,7 +256,7 @@ principal_high_level_summary_data |>
   possibly_mod_principal_high_level_plot(activity_type = "op")
 ```
 
-##### A&E attendances (trust-level only)
+### A&E attendances (trust-level only)
 
 A&E data is not available at site level. 
 
@@ -436,7 +267,7 @@ principal_high_level_summary_data |>
   possibly_mod_principal_high_level_plot(activity_type = "aae")
 ```
 
-#### Activity in detail
+## Activity in detail
 
 A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
@@ -497,11 +328,11 @@ activity_in_detail_tables <- purrr::pmap(
   purrr::set_names(activity_in_detail_table_names)
 ```
 
-##### Inpatients
+### Inpatients
 
-###### Non-elective admission
+#### Non-elective admission
 
-Bed days by age group
+##### Bed days by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-1
@@ -509,7 +340,7 @@ Bed days by age group
 activity_in_detail_tables$`ip_non-elective_admission_beddays_age_group`
 ```
 
-Bed days by treatment specialty
+##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-2
@@ -517,7 +348,7 @@ Bed days by treatment specialty
 activity_in_detail_tables$`ip_non-elective_admission_beddays_tretspef`
 ```
 
-Admissions by age group
+##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-3
@@ -525,7 +356,7 @@ Admissions by age group
 activity_in_detail_tables$`ip_non-elective_admission_admissions_age_group`
 ```
 
-Admissions by treatment specialty
+##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-4
@@ -533,9 +364,9 @@ Admissions by treatment specialty
 activity_in_detail_tables$`ip_non-elective_admission_admissions_tretspef`
 ```
 
-###### Elective admission
+#### Elective admission
 
-Bed days by age group
+##### Bed days by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-5
@@ -543,7 +374,7 @@ Bed days by age group
 activity_in_detail_tables$ip_elective_admission_beddays_age_group
 ```
 
-Bed days by treatment specialty
+##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-6
@@ -551,7 +382,7 @@ Bed days by treatment specialty
 activity_in_detail_tables$ip_elective_admission_beddays_tretspef
 ```
 
-Admissions by age group
+##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-7
@@ -559,7 +390,7 @@ Admissions by age group
 activity_in_detail_tables$ip_elective_admission_admissions_age_group
 ```
 
-Admissions by treatment specialty
+##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-8
@@ -567,9 +398,9 @@ Admissions by treatment specialty
 activity_in_detail_tables$ip_elective_admission_admissions_tretspef
 ```
 
-###### Daycase admission
+#### Daycase admission
 
-Bed days by age group
+##### Bed days by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-9
@@ -577,7 +408,7 @@ Bed days by age group
 activity_in_detail_tables$ip_elective_daycase_beddays_age_group
 ```
 
-Bed days by treatment specialty
+##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-10
@@ -585,7 +416,7 @@ Bed days by treatment specialty
 activity_in_detail_tables$ip_elective_daycase_beddays_tretspef
 ```
 
-Admissions by age group
+##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-11
@@ -593,7 +424,7 @@ Admissions by age group
 activity_in_detail_tables$ip_elective_daycase_admissions_age_group
 ```
 
-Admissions by treatment specialty
+##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-12
@@ -601,9 +432,9 @@ Admissions by treatment specialty
 activity_in_detail_tables$ip_elective_daycase_admissions_tretspef
 ```
 
-###### Maternity admission
+#### Maternity admission
 
-Bed days by age group
+##### Bed days by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-13
@@ -611,7 +442,7 @@ Bed days by age group
 activity_in_detail_tables$ip_maternity_admission_beddays_age_group
 ```
 
-Bed days by treatment specialty
+##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-14
@@ -619,7 +450,7 @@ Bed days by treatment specialty
 activity_in_detail_tables$ip_maternity_admission_beddays_tretspef
 ```
 
-Admissions by age group
+##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-15
@@ -627,7 +458,7 @@ Admissions by age group
 activity_in_detail_tables$ip_maternity_admission_admissions_age_group
 ```
 
-Admissions by treatment specialty
+##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-16
@@ -635,11 +466,11 @@ Admissions by treatment specialty
 activity_in_detail_tables$ip_maternity_admission_admissions_tretspef
 ```
 
-##### Outpatients
+### Outpatients
 
-###### First oupatient attendance
+#### First oupatient attendance
 
-Attendances by age group
+##### Attendances by age group
 
 ```{r}
 #| label: pp-activity-in-detail-op-1
@@ -647,7 +478,7 @@ Attendances by age group
 activity_in_detail_tables$op_first_attendances_age_group
 ```
 
-Attendances by treatment specialty
+##### Attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-2
@@ -655,7 +486,7 @@ Attendances by treatment specialty
 activity_in_detail_tables$op_first_attendances_tretspef
 ```
 
-Tele-attendances by age group
+##### Tele-attendances by age group
 
 ```{r}
 #| label: pp-activity-in-detail-op-3
@@ -663,7 +494,7 @@ Tele-attendances by age group
 activity_in_detail_tables$op_first_tele_attendances_age_group
 ```
 
-Tele-attendances by treatment specialty
+##### Tele-attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-4
@@ -671,9 +502,9 @@ Tele-attendances by treatment specialty
 activity_in_detail_tables$op_first_tele_attendances_tretspef
 ```
 
-###### Follow-up outpatient attendance
+#### Follow-up outpatient attendance
 
-Attendances by age group
+##### Attendances by age group
 
 ```{r}
 #| label: pp-activity-in-detail-op-5
@@ -681,7 +512,7 @@ Attendances by age group
 activity_in_detail_tables$`op_follow-up_attendances_age_group`
 ```
 
-Attendances by treatment specialty
+##### Attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-6
@@ -689,7 +520,7 @@ Attendances by treatment specialty
 activity_in_detail_tables$`op_follow-up_attendances_tretspef`
 ```
 
-Tele-attendances by age group
+##### Tele-attendances by age group
 
 ```{r}
 #| label: pp-activity-in-detail-op-7
@@ -697,7 +528,7 @@ Tele-attendances by age group
 activity_in_detail_tables$`op_follow-up_tele_attendances_age_group`
 ```
 
-Tele-attendances by treatment specialty
+##### Tele-attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-8
@@ -705,9 +536,9 @@ Tele-attendances by treatment specialty
 activity_in_detail_tables$`op_follow-up_tele_attendances_tretspef`
 ```
 
-###### Outpatient procedure
+#### Outpatient procedure
 
-Attendances by age group
+##### Attendances by age group
 
 ```{r}
 #| label: pp-activity-in-detail-op-9
@@ -715,7 +546,7 @@ Attendances by age group
 activity_in_detail_tables$op_procedure_attendances_age_group
 ```
 
-Attendances by treatment specialty
+##### Attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-10
@@ -723,13 +554,13 @@ Attendances by treatment specialty
 activity_in_detail_tables$op_procedure_attendances_tretspef
 ```
 
-##### A&E (trust-level only)
+### A&E (trust-level only)
 
 A&E data is not available at site level. 
 
-###### Type 1 department
+#### Type 1 department
 
-Ambulance arrivals by age group
+##### Ambulance arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-1
@@ -737,7 +568,7 @@ Ambulance arrivals by age group
 activity_in_detail_tables$`aae_type-01_ambulance_age_group`
 ```
 
-Walk-in arrivals by age group
+##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-3
@@ -745,9 +576,9 @@ Walk-in arrivals by age group
 activity_in_detail_tables$`aae_type-01_walk-in_age_group`
 ```
 
-###### Type 2 department
+#### Type 2 department
 
-Ambulance arrivals by age group
+##### Ambulance arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-5
@@ -755,7 +586,7 @@ Ambulance arrivals by age group
 activity_in_detail_tables$`aae_type-02_ambulance_age_group`
 ```
 
-Walk-in arrivals by age group
+##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-7
@@ -763,9 +594,9 @@ Walk-in arrivals by age group
 activity_in_detail_tables$`aae_type-02_walk-in_age_group`
 ```
 
-###### Type 3 department
+#### Type 3 department
 
-Ambulance arrivals by age group
+##### Ambulance arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-9
@@ -773,7 +604,7 @@ Ambulance arrivals by age group
 activity_in_detail_tables$`aae_type-03_ambulance_age_group`
 ```
 
-Walk-in arrivals by age group
+##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-11
@@ -781,9 +612,9 @@ Walk-in arrivals by age group
 activity_in_detail_tables$`aae_type-03_walk-in_age_group`
 ```
 
-###### Type 4 department
+#### Type 4 department
 
-Ambulance arrivals by age group
+##### Ambulance arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-13
@@ -791,7 +622,7 @@ Ambulance arrivals by age group
 activity_in_detail_tables$`aae_type-04_ambulance_age_group`
 ```
 
-Walk-in arrivals by age group
+##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-15
@@ -799,9 +630,9 @@ Walk-in arrivals by age group
 activity_in_detail_tables$`aae_type-04_walk-in_age_group`
 ```
 
-### Distribution of projections
+# Distribution of projections
 
-#### Activity summary
+## Activity summary
 
 A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
@@ -817,9 +648,13 @@ params$r |>
   gt::tab_options(table.width = gt::pct(100))
 ```
 
-#### Activity distribution
+## Activity distribution
 
 A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+
+In 'beeswarm' plots (showing model-run distributions), the red vertical dashed line is the principal value and the grey vertical continuous line is the baseline value.
+
+In 'S-curve' plots (showing empirical cumulative distribution function), the red dashed line is the principal value, the blue dashed lines are the 10th and 90th percentiles and the grey vertical continuous line is the baseline value.
 
 ```{r}
 #| label: dop-activity-distribution-setup
@@ -856,11 +691,11 @@ activity_distributions <- atpmo_simplified |>
   purrr::set_names(activity_distribution_table_names)
 ```
 
-##### Inpatients
+### Inpatients
 
-###### Non-elective admission
+#### Non-elective admission
 
-Bed days
+##### Bed days
 
 ```{r}
 #| label: pp-activity-distribution-ip-1
@@ -868,7 +703,7 @@ Bed days
 activity_distributions$`ip_non-elective_admission_beddays` |> purrr::walk(print)
 ```
 
-Admissions
+##### Admissions
 
 ```{r}
 #| label: pp-activity-distribution-ip-2
@@ -877,9 +712,9 @@ activity_distributions$`ip_non-elective_admission_admissions` |>
   purrr::walk(print)
 ```
 
-###### Elective admission
+#### Elective admission
 
-Bed days
+##### Bed days
 
 ```{r}
 #| label: pp-activity-distribution-ip-3
@@ -887,7 +722,7 @@ Bed days
 activity_distributions$`ip_elective_admission_beddays` |> purrr::walk(print)
 ```
 
-Admissions
+##### Admissions
 
 ```{r}
 #| label: pp-activity-distribution-ip-4
@@ -895,9 +730,9 @@ Admissions
 activity_distributions$`ip_elective_admission_admissions` |> purrr::walk(print)
 ```
 
-###### Daycase admission
+#### Daycase admission
 
-Bed days
+##### Bed days
 
 ```{r}
 #| label: pp-activity-distribution-ip-5
@@ -905,7 +740,7 @@ Bed days
 activity_distributions$`ip_daycase_admission_beddays` |> purrr::walk(print)
 ```
 
-Admissions
+##### Admissions
 
 ```{r}
 #| label: pp-activity-distribution-ip-6
@@ -913,9 +748,9 @@ Admissions
 activity_distributions$`ip_daycase_admission_admissions` |> purrr::walk(print)
 ```
 
-###### Maternity admission
+#### Maternity admission
 
-Bed days
+##### Bed days
 
 ```{r}
 #| label: pp-activity-distribution-ip-7
@@ -923,7 +758,7 @@ Bed days
 activity_distributions$`ip_maternity_admission_beddays` |> purrr::walk(print)
 ```
 
-Admissions
+##### Admissions
 
 ```{r}
 #| label: pp-activity-distribution-ip-8
@@ -931,11 +766,11 @@ Admissions
 activity_distributions$`ip_maternity_admission_admissions` |> purrr::walk(print)
 ```
 
-##### Outpatients
+### Outpatients
 
-###### First outpatient attendance
+#### First outpatient attendance
 
-Attendances
+##### Attendances
 
 ```{r}
 #| label: pp-activity-distribution-op-1
@@ -943,7 +778,7 @@ Attendances
 activity_distributions$`op_first_attendances` |> purrr::walk(print)
 ```
 
-Tele-attendances
+##### Tele-attendances
 
 ```{r}
 #| label: pp-activity-distribution-op-2
@@ -951,9 +786,9 @@ Tele-attendances
 activity_distributions$`op_first_tele_attendances` |> purrr::walk(print)
 ```
 
-###### Follow-up outpatient attendances
+#### Follow-up outpatient attendances
 
-Attendances
+##### Attendances
 
 ```{r}
 #| label: pp-activity-distribution-op-3
@@ -961,7 +796,7 @@ Attendances
 activity_distributions$`op_follow-up_attendances` |> purrr::walk(print)
 ```
 
-Tele-attendances
+##### Tele-attendances
 
 ```{r}
 #| label: pp-activity-distribution-op-4
@@ -969,9 +804,9 @@ Tele-attendances
 activity_distributions$`op_follow-up_tele_attendances` |> purrr::walk(print)
 ```
 
-###### Outpatient procedures
+#### Outpatient procedures
 
-Attendances
+##### Attendances
 
 ```{r}
 #| label: pp-activity-distribution-op-5
@@ -979,7 +814,7 @@ Attendances
 activity_distributions$`op_outpatient_attendances` |> purrr::walk(print)
 ```
 
-Tele-attendances
+##### Tele-attendances
 
 ```{r}
 #| label: pp-activity-distribution-op-6
@@ -987,13 +822,13 @@ Tele-attendances
 activity_distributions$`op_outpatient_tele_attendances` |> purrr::walk(print)
 ```
 
-##### A&E (trust-level only)
+### A&E (trust-level only)
 
 A&E data is not available at site level. 
 
-###### Type 1 department
+#### Type 1 department
 
-Walk-in arrivals
+##### Walk-in arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-1
@@ -1001,7 +836,7 @@ Walk-in arrivals
 activity_distributions$`aae_type-01_walk-in` |> purrr::walk(print)
 ```
 
-Ambulance arrivals
+##### Ambulance arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-2
@@ -1009,9 +844,9 @@ Ambulance arrivals
 activity_distributions$`aae_type-01_ambulance` |> purrr::walk(print)
 ```
 
-###### Type 2 department
+#### Type 2 department
 
-Walk-in arrivals
+##### Walk-in arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-3
@@ -1019,7 +854,7 @@ Walk-in arrivals
 activity_distributions$`aae_type-02_walk-in` |> purrr::walk(print)
 ```
 
-Ambulance arrivals
+##### Ambulance arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-4
@@ -1027,9 +862,9 @@ Ambulance arrivals
 activity_distributions$`aae_type-02_ambulance` |> purrr::walk(print)
 ```
 
-###### Type 3 department
+#### Type 3 department
 
-Walk-in arrivals
+##### Walk-in arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-5
@@ -1037,7 +872,7 @@ Walk-in arrivals
 activity_distributions$`aae_type-03_walk-in` |> purrr::walk(print)
 ```
 
-Ambulance arrivals
+##### Ambulance arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-6
@@ -1045,9 +880,9 @@ Ambulance arrivals
 activity_distributions$`aae_type-03_ambulance` |> purrr::walk(print)
 ```
 
-###### Type 4 department
+#### Type 4 department
 
-Walk-in arrivals
+##### Walk-in arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-7
@@ -1055,7 +890,7 @@ Walk-in arrivals
 activity_distributions$`aae_type-04_walk-in` |> purrr::walk(print)
 ```
 
-Ambulance arrivals
+##### Ambulance arrivals
 
 ```{r}
 #| label: pp-activity-distribution-aae-8

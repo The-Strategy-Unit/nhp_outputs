@@ -33,12 +33,12 @@
                 <h3 class="card-title">App notes</h3>
               </div>
               <div class="card-body">
-                <p>Select the 'Results' section in the navbar (left) to view outputs from the selected model run.</p>
+                <p>Select from the 'Results' section in the navbar (left) to view outputs from the selected model run.</p>
                 <p>
                   Use the multi-choice 'Site selection' box in the navbar to filter results by sites.
                   Note that A&amp;E results will not be shown at site level.
                 </p>
-                <p>From the 'Information' section you can download the results data for this model run and view the input parameters.</p>
+                <p>From the 'Information' section you can download the results data and reports containing the parameters and outputs for this model run.</p>
               </div>
             </div>
             <script type="application/json">{"title":"App notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>

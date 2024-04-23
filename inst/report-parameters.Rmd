@@ -1,0 +1,60 @@
+---
+title: "NHP Parameters Report"
+subtitle: "Scenario: `r params$r$params$scenario`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 6
+    toc_float:
+      collapsed: true
+params:
+  r: NA
+  wd: ".."
+---
+
+```{r}
+#| label: setup
+#| echo: false
+
+knitr::opts_chunk$set(error = TRUE, echo = FALSE)
+pkgload::load_all(params$wd, quiet = TRUE)
+p <- get_params(params$r)
+```
+
+# Notes
+
+This report provides the parameter selections for the selected model scenario (`r params$r$params$scenario`) and the rationale given for these choices.
+
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide, mitigator lookup and methodology for the model and the outputs app.
+
+# Metadata
+
+This table shows the metadata for the selected model run:
+
+```{r}
+#| label: params-model-run
+
+tabulate_model_run_info(p)
+```
+
+# Parameters
+
+```{r echo=F, results='asis'}
+#| label: params-expand
+
+p |> param_tables_to_list() |> expand_param_tables_to_rmd()
+```
+
+# Rationale
+
+```{r echo=F, results='asis'}
+#| label: rationale-expand
+#| 
+reasons <- p$reasons
+
+if (is.null(reasons)) {
+  cat("No rationale provided.\n\n")
+} else {
+   expand_reasons_to_rmd(reasons)
+}
+```
