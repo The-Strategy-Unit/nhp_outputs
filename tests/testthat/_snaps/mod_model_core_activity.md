@@ -4,25 +4,24 @@
       mod_model_core_activity_ui("id")
     Output
       <h1>Distribution of projections: activity distribution summary</h1>
-      <div class="col-sm-12">
-        <div class="card bs4Dash">
-          <div class="card-header">
-            <h3 class="card-title">Notes</h3>
-          </div>
-          <div class="card-body">
-            <p>
-              Bed days are defined as the difference in days between discharge and admission, plus one day.
-              A&amp;E results are not available at site level.
-              See the
-              <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a>
-              for definitions of terms.
-            </p>
-          </div>
-        </div>
-        <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
-      </div>
       <div class="row">
         <div class="col-sm-3"></div>
+        <div class="col-sm-12">
+          <div class="card bs4Dash">
+            <div class="card-header">
+              <h3 class="card-title">Notes</h3>
+            </div>
+            <div class="card-body">
+              <p>
+                Bed days are defined as the difference in days between discharge and admission, plus one day.
+                See the
+                <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a>
+                for definitions of terms.
+              </p>
+            </div>
+          </div>
+          <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+        </div>
         <div class="col-sm-12">
           <div class="card bs4Dash">
             <div class="card-header">

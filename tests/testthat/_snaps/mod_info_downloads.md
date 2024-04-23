@@ -46,7 +46,7 @@
             <div class="card-body">
               <p>
                 Download a file containing the input parameters for
-                the selected model run and selected sites.
+                the selected model run.
               </p>
               <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_report_parameters_html" target="_blank">
                 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
@@ -63,8 +63,8 @@
             </div>
             <div class="card-body">
               <p>
-                Download a file containing the outputs (charts and tables)
-                for the selected model run. This will take a moment.
+                Download a file containing the outputs (charts and tables) for the
+                selected model run and selected sites. This will take a moment.
               </p>
               <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_report_outputs_html" target="_blank">
                 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
