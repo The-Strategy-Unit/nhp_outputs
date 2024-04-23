@@ -17,7 +17,7 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-pkgload::load_all(params$wd)
+pkgload::load_all(params$wd, quiet = TRUE)
 p <- get_params(params$r)
 ```
 
@@ -25,7 +25,7 @@ p <- get_params(params$r)
 
 This report provides the parameter selections for the selected model scenario (`r params$r$params$scenario`) and the rationale given for these choices.
 
-See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide and methodology for the model and the outputs app.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide, mitigator lookup and methodology for the model and the outputs app.
 
 # Metadata
 

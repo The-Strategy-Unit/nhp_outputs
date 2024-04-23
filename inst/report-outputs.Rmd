@@ -17,7 +17,7 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-pkgload::load_all(params$wd)
+pkgload::load_all(params$wd, quiet = TRUE)
 ```
 
 ```{r}
@@ -55,7 +55,7 @@ This report provides the outputs (tables and charts) from the selected model sce
 
 Note that A&E results are only available at trust level. Tables and charts won't be shown if there's insufficient data to produce them.
 
-See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide and methodology for the model and the outputs app.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide, mitigator lookup and methodology for the model and the outputs app.
 
 # Metadata
 
