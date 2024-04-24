@@ -45,7 +45,7 @@ mod_info_downloads_ui <- function(id) {
         width = 12,
         htmltools::p(
           "Download a file containing the input parameters for",
-          "the selected model run and selected sites."
+          "the selected model run."
         ),
         shinyjs::disabled(
           shiny::downloadButton(
@@ -59,8 +59,8 @@ mod_info_downloads_ui <- function(id) {
         collapsible = FALSE,
         width = 12,
         htmltools::p(
-          "Download a file containing the outputs (charts and tables)",
-          "for the selected model run. This will take a moment.",
+          "Download a file containing the outputs (charts and tables) for the",
+          "selected model run and selected sites. This will take a moment.",
         ),
         shinyjs::disabled(
           shiny::downloadButton(

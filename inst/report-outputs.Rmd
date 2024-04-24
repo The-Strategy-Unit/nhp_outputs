@@ -53,7 +53,7 @@ subtitle: "Scenario: `r params$r$params$scenario` (`r site_status`)"
 
 This report provides the outputs (tables and charts) from the selected model scenario (`r params$r$params$scenario`) for the following sites combined: `r selected_sites`.
 
-Note that A&E results are only available at trust level. Tables and charts won't be shown if there's insufficient data to produce them.
+Note that tables and charts won't be shown if there's insufficient data to produce them.
 
 See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide, mitigator lookup and methodology for the model and the outputs app.
 
@@ -72,7 +72,7 @@ tabulate_model_run_info(p)
 
 ## Summary
 
-A&E and bed-availability data are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+Bed-availability data is not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: pp-summary
@@ -176,9 +176,7 @@ plot_impact_and_individual_change(op_pcf, "tele_attendances") |>
   purrr::walk(print)
 ```
 
-### A&E (trust-level only)
-
-A&E data is not available at site level. 
+### A&E
 
 #### Arrivals
 
@@ -190,7 +188,7 @@ plot_impact_and_individual_change(aae_pcf, "arrivals") |> purrr::walk(print)
 
 ## Summary by year
 
-A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: pp-summary-by-year-prep
@@ -256,9 +254,7 @@ principal_high_level_summary_data |>
   possibly_mod_principal_high_level_plot(activity_type = "op")
 ```
 
-### A&E attendances (trust-level only)
-
-A&E data is not available at site level. 
+### A&E attendances
 
 ```{r}
 #| label: pp-summary-by-year-plot-aae
@@ -269,7 +265,7 @@ principal_high_level_summary_data |>
 
 ## Activity in detail
 
-A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: pp-activity-in-detail-setup
@@ -554,9 +550,7 @@ activity_in_detail_tables$op_procedure_attendances_age_group
 activity_in_detail_tables$op_procedure_attendances_tretspef
 ```
 
-### A&E (trust-level only)
-
-A&E data is not available at site level. 
+### A&E
 
 #### Type 1 department
 
@@ -634,7 +628,7 @@ activity_in_detail_tables$`aae_type-04_walk-in_age_group`
 
 ## Activity summary
 
-A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 ```{r}
 #| label: dop-activity-summary
@@ -650,7 +644,7 @@ params$r |>
 
 ## Activity distribution
 
-A&E results are not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
 
 In 'beeswarm' plots (showing model-run distributions), the red vertical dashed line is the principal value and the grey vertical continuous line is the baseline value.
 
@@ -822,9 +816,7 @@ activity_distributions$`op_outpatient_attendances` |> purrr::walk(print)
 activity_distributions$`op_outpatient_tele_attendances` |> purrr::walk(print)
 ```
 
-### A&E (trust-level only)
-
-A&E data is not available at site level. 
+### A&E
 
 #### Type 1 department
 

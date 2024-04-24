@@ -17,7 +17,7 @@ mod_principal_summary_ui <- function(id) {
       width = 12,
       htmltools::p(
         "Bed days are defined as the difference in days between discharge and admission, plus one day.",
-        "A&E and bed-availability data are not available at site level.",
+        "Bed-availability data is not available at site level.",
         "See the",
         htmltools::a(
           href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",

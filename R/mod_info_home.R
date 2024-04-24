@@ -41,10 +41,7 @@ mod_info_home_ui <- function(id) {
           collapsible = FALSE,
           width = 12,
           htmltools::p("Select from the 'Results' section in the navbar (left) to view outputs from the selected model run."),
-          htmltools::p(
-            "Use the multi-choice 'Site selection' box in the navbar to filter results by sites.",
-            "Note that A&E results will not be shown at site level."
-          ),
+          htmltools::p("Use the multi-choice 'Site selection' box in the navbar to filter results by sites."),
           htmltools::p("From the 'Information' section you can download the results data and reports containing the parameters and outputs for this model run.")
         )
       ),
