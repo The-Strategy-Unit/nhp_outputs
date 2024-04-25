@@ -53,7 +53,7 @@ subtitle: "Scenario: `r params$r$params$scenario` (`r site_status`)"
 
 This report provides the outputs (tables and charts) from the selected model scenario (`r params$r$params$scenario`) for the following sites combined: `r selected_sites`.
 
-Note that tables and charts won't be shown if there's insufficient data to produce them.
+Note that some tables and charts won't be generated if there was insufficient data to produce them, given the combination of trust and site selections (if any).
 
 See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide, mitigator lookup and methodology for the model and the outputs app.
 
@@ -79,6 +79,28 @@ Bed-availability data is not available at site level. See [the model project inf
 
 mod_principal_summary_data(params$r, params$sites) |> 
   mod_principal_summary_table() |> 
+  gt::tab_options(table.align = "left")
+```
+
+## Length of stay summary
+
+### Bed days
+
+```{r}
+#| label: pp-summary-los-beddays
+
+mod_principal_summary_los_data(params$r, params$sites, "beddays") |> 
+  mod_principal_summary_los_table() |> 
+  gt::tab_options(table.align = "left")
+```
+
+### admissions
+
+```{r}
+#| label: pp-summary-los-admissions
+
+mod_principal_summary_los_data(params$r, params$sites, "admissions") |> 
+  mod_principal_summary_los_table() |> 
   gt::tab_options(table.align = "left")
 ```
 
