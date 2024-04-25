@@ -127,12 +127,16 @@ server <- function(input, output, session) {
       config::get("folder")
     )
 
-    # if a user isn't in these groups, then do not display un-viewable/dev results
-    if (!any(c("nhp_devs", "nhp_power_users") %in% session$groups)) {
-      rs <- dplyr::filter(rs, .data[["viewable"]], .data[["app_version"]] != "dev")
+    # if a user isn't in the nhp_dev group, then do not display un-viewable/dev results
+    if (any(c("nhp_devs") %in% session$groups)) {
+      return(rs)
     }
 
-    rs
+    dplyr::filter(
+      rs,
+      .data[["viewable"]],
+      .data[["app_version"]] != "dev"
+    )
   })
 
   datasets <- shiny::reactive({
