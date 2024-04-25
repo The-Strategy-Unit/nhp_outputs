@@ -1,16 +1,22 @@
 get_container <- function() {
   ep_uri <- Sys.getenv("AZ_STORAGE_EP")
-  sa_key <- Sys.getenv("AZ_STORAGE_KEY")
+  app_id <- Sys.getenv("AZ_APP_ID")
 
-  ep <- if (sa_key != "") {
-    AzureStor::blob_endpoint(ep_uri, key = sa_key)
+  token <- if (app_id != "") {
+    AzureAuth::get_azure_token(
+      "https://storage.azure.com",
+      tenant = Sys.getenv("AZ_TENANT_ID"),
+      app = app_id,
+      password = Sys.getenv("AZ_APP_SECRET")
+    )
   } else {
-    token <- AzureAuth::get_managed_token("https://storage.azure.com/") |>
+    AzureAuth::get_managed_token("https://storage.azure.com/") |>
       AzureAuth::extract_jwt()
-
-    AzureStor::blob_endpoint(ep_uri, token = token)
   }
-  AzureStor::storage_container(ep, Sys.getenv("AZ_STORAGE_CONTAINER"))
+
+  ep_uri |>
+    AzureStor::blob_endpoint(token = token) |>
+    AzureStor::storage_container(Sys.getenv("AZ_STORAGE_CONTAINER"))
 }
 
 get_params <- function(r) {
@@ -40,20 +46,22 @@ get_params <- function(r) {
   recursive_discard(r$params)
 }
 
-get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL),
-                            app_version = "dev") {
+get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL), folder = "prod") {
   ds <- tibble::tibble(dataset = allowed_datasets)
 
   cont <- get_container()
 
   cont |>
-    AzureStor::list_blobs(app_version, "all", TRUE) |>
+    AzureStor::list_blobs(folder, info = "all", recursive = TRUE) |>
     dplyr::filter(!.data[["isdir"]]) |>
     purrr::pluck("name") |>
     purrr::set_names() |>
     purrr::map(\(name, ...) AzureStor::get_storage_metadata(cont, name)) |>
     dplyr::bind_rows(.id = "file") |>
-    dplyr::semi_join(ds, by = dplyr::join_by("dataset"))
+    dplyr::semi_join(ds, by = dplyr::join_by("dataset")) |>
+    dplyr::mutate(
+      dplyr::across("viewable", as.logical)
+    )
 }
 
 get_results_from_azure <- function(filename) {
