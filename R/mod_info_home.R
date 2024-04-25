@@ -42,7 +42,7 @@ mod_info_home_ui <- function(id) {
           width = 12,
           htmltools::p("Select from the 'Results' section in the navbar (left) to view outputs from the selected model run."),
           htmltools::p("Use the multi-choice 'Site selection' box in the navbar to filter results by sites."),
-          htmltools::p("From the 'Information' section you can download the results data and reports containing the parameters and outputs for this model run.")
+          htmltools::p("From the 'Information' section you can download the results data and reports containing the parameters and outputs (by sites, if selected) for this model run.")
         )
       ),
       bs4Dash::column(
