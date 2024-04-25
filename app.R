@@ -5,8 +5,4 @@
 pkgload::load_all(export_all = FALSE, helpers = FALSE, attach_testthat = FALSE)
 options("golem.app.prod" = TRUE)
 
-cat(
-  "NHP_APP_VERSION:", Sys.getenv("NHP_APP_VERSION", "dev"), "\n"
-)
-
 outputs::run_app() # add parameters here (if any)

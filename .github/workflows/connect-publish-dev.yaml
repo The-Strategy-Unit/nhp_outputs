@@ -16,7 +16,6 @@ jobs:
       - name: Publish Connect content
         uses: rstudio/actions/connect-publish@main
         env:
-          CONNECT_ENV_SET_NHP_APP_VERSION: dev
           CONNECT_ENV_SET_AZ_STORAGE_CONTAINER: ${{ secrets.AZ_STORAGE_CONTAINER }}
           CONNECT_ENV_SET_AZ_STORAGE_EP: ${{ secrets.AZ_STORAGE_EP }}
           CONNECT_ENV_SET_NHP_ENCRYPT_KEY: ${{ secrets.NHP_ENCRYPT_KEY }}
