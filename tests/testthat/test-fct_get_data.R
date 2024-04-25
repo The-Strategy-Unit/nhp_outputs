@@ -2,6 +2,7 @@ library(shiny)
 library(mockery)
 
 test_that("get_container uses managed token", {
+  m0 <- mock("t0")
   m1 <- mock("t1")
   m2 <- mock("t2")
   m3 <- mock("ep")
@@ -9,10 +10,11 @@ test_that("get_container uses managed token", {
 
   withr::local_envvar(
     "AZ_STORAGE_EP" = "url/results",
-    "AZ_STORAGE_KEY" = "",
+    "AZ_APP_ID" = "",
     "AZ_STORAGE_CONTAINER" = "results"
   )
 
+  stub(get_container, "AzureAuth::get_azure_token", m0)
   stub(get_container, "AzureAuth::get_managed_token", m1)
   stub(get_container, "AzureAuth::extract_jwt", m2)
   stub(get_container, "AzureStor::blob_endpoint", m3)
@@ -20,6 +22,7 @@ test_that("get_container uses managed token", {
 
   expect_equal(get_container(), "container")
 
+  expect_called(m0, 0)
   expect_called(m1, 1)
   expect_called(m2, 1)
   expect_called(m3, 1)
@@ -31,7 +34,8 @@ test_that("get_container uses managed token", {
   expect_args(m4, 1, "ep", "results")
 })
 
-test_that("get_container uses azure key if present", {
+test_that("get_container uses azure app id if present", {
+  m0 <- mock("t0")
   m1 <- mock("t1")
   m2 <- mock("t2")
   m3 <- mock("ep")
@@ -39,10 +43,13 @@ test_that("get_container uses azure key if present", {
 
   withr::local_envvar(
     "AZ_STORAGE_EP" = "url/results",
-    "AZ_STORAGE_KEY" = "key",
+    "AZ_TENANT_ID" = "tenant_id",
+    "AZ_APP_ID" = "app_id",
+    "AZ_APP_SECRET" = "secret",
     "AZ_STORAGE_CONTAINER" = "results"
   )
 
+  stub(get_container, "AzureAuth::get_azure_token", m0)
   stub(get_container, "AzureAuth::get_managed_token", m1)
   stub(get_container, "AzureAuth::extract_jwt", m2)
   stub(get_container, "AzureStor::blob_endpoint", m3)
@@ -50,12 +57,21 @@ test_that("get_container uses azure key if present", {
 
   expect_equal(get_container(), "container")
 
+  expect_called(m0, 1)
   expect_called(m1, 0)
   expect_called(m2, 0)
   expect_called(m3, 1)
   expect_called(m4, 1)
 
-  expect_args(m3, 1, "url/results", key = "key")
+  expect_args(
+    m0,
+    1,
+    "https://storage.azure.com",
+    tenant = "tenant_id",
+    app = "app_id",
+    password = "secret"
+  )
+  expect_args(m3, 1, "url/results", token = "t0")
   expect_args(m4, 1, "ep", "results")
 })
 
@@ -73,10 +89,10 @@ test_that("get_result_sets returns files", {
     )
   )
   m2 <- mock(
-    list(dataset = "a"),
-    list(dataset = "b"),
-    list(dataset = "a"),
-    list(dataset = "c")
+    list(dataset = "a", viewable = "true"),
+    list(dataset = "b", viewable = "false"),
+    list(dataset = "a", viewable = "false"),
+    list(dataset = "c", viewable = "true")
   )
 
   stub(get_result_sets, "get_container", "container")
@@ -84,10 +100,10 @@ test_that("get_result_sets returns files", {
   stub(get_result_sets, "AzureStor::get_storage_metadata", m2)
 
   expected <- tibble::tribble(
-    ~file, ~dataset,
-    "1", "a",
-    "2", "b",
-    "3", "a"
+    ~file, ~dataset, ~viewable,
+    "1", "a", TRUE,
+    "2", "b", FALSE,
+    "3", "a", FALSE
   )
 
   result <- get_result_sets(c("a", "b"), "dev")
