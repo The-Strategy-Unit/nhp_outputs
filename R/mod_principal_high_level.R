@@ -83,36 +83,66 @@ mod_principal_high_level_ui <- function(id) {
 mod_principal_high_level_pods <- function() {
   get_activity_type_pod_measure_options() |>
     dplyr::filter(.data$activity_type != "aae") |>
+    dplyr::mutate(
+      pod_name = dplyr::if_else(
+        measures == "beddays",
+        pod_name |> stringr::str_replace("Admission", "Bed Days"),
+        pod_name
+      ),
+      pod = dplyr::if_else(
+        activity_type == "ip",
+        glue::glue("{pod}_{measures}"),
+        pod
+      )
+    ) |>
+    dplyr::mutate(measures = measures |> forcats::fct_relevel("admissions", "beddays")) |>
+    dplyr::arrange(measures) |>
     dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
-    dplyr::bind_rows(data.frame(activity_type = "aae", pod = "aae", pod_name = "A&E Attendance")) |>
+    dplyr::bind_rows(
+      data.frame(
+        activity_type = "aae",
+        pod = "aae",
+        pod_name = "A&E Attendance"
+      )
+    ) |>
     dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
-mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_level_pods(), sites) {
+mod_principal_high_level_summary_data <- function(
+    r,
+    pods = mod_principal_high_level_pods(),
+    sites
+) {
   get_time_profiles(r, "default") |>
-    dplyr::filter(
-      !.data[["measure"]] %in% c("beddays", "procedures", "tele_attendances")
-    ) |>
-    dplyr::select(-"measure") |>
+    dplyr::filter(!.data[["measure"]] %in% c("procedures", "tele_attendances")) |>
     dplyr::mutate(
+      pod = dplyr::if_else(
+        stringr::str_detect(pod, "^ip_"),
+        glue::glue("{pod}_{measure}"),
+        pod
+      ),
       dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x)),
       fyear = fyear_str(.data[["year"]])
     ) |>
     dplyr::summarise(
       dplyr::across("value", sum),
-      .by = -"value"
+      .by = -c("value", "measure")
     ) |>
     trust_site_aggregation(sites) |>
     dplyr::inner_join(pods, by = "pod") |>
-    dplyr::select(-"pod") |>
     dplyr::mutate(
       .by = c("pod_name"),
       change = .data$value - dplyr::lag(.data$value),
       change_pcnt = .data$change / dplyr::lag(.data$value)
-    )
+    ) |>
+    dplyr::arrange(.data$activity_type, .data$pod_name) |>
+    dplyr::select(-"pod")
 }
 
-mod_principal_high_level_table <- function(data, summary_type = c("value", "change", "change_pcnt")) {
+mod_principal_high_level_table <- function(
+    data,
+    summary_type = c("value", "change", "change_pcnt")
+) {
   fyear_rx <- "\\d{4}/\\d{2}"
 
   suppressWarnings( # TODO: warning in test, all_of should work
