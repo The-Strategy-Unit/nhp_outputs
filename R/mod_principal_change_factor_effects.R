@@ -301,7 +301,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
         mod_principal_change_factor_effects_summarised(measure, input$include_baseline) |>
         mod_principal_change_factor_effects_cf_plot()
 
-      plotly::ggplotly(p, tooltip = "text") |>
+      plotly::ggplotly(p, tooltip = FALSE) |>
         plotly::layout(showlegend = FALSE)
     })
 
@@ -313,7 +313,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
         "Activity Avoidance",
         snakecase::to_title_case(input$measure)
       ) |>
-        plotly::ggplotly(tooltip = "text") |>
+        plotly::ggplotly(tooltip = FALSE) |>
         plotly::layout(showlegend = FALSE)
     })
 
@@ -325,7 +325,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
         "Efficiencies",
         snakecase::to_title_case(input$measure)
       ) |>
-        plotly::ggplotly(tooltip = "text") |>
+        plotly::ggplotly(tooltip = FALSE) |>
         plotly::layout(showlegend = FALSE)
     })
   })
