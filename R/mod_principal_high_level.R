@@ -56,9 +56,17 @@ mod_principal_high_level_ui <- function(id) {
         title = "Inpatient admissions",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
-          plotly::plotlyOutput(ns("ip"))
+          plotly::plotlyOutput(ns("ip_admissions"))
         ),
-        width = 4
+        width = 6
+      ),
+      bs4Dash::box(
+        title = "Inpatient bed days",
+        collapsible = FALSE,
+        shinycssloaders::withSpinner(
+          plotly::plotlyOutput(ns("ip_beddays"))
+        ),
+        width = 6
       ),
       bs4Dash::box(
         title = "Outpatient attendances",
@@ -66,7 +74,7 @@ mod_principal_high_level_ui <- function(id) {
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("op"))
         ),
-        width = 4
+        width = 6
       ),
       bs4Dash::box(
         title = "A&E attendances",
@@ -74,7 +82,7 @@ mod_principal_high_level_ui <- function(id) {
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("aae"))
         ),
-        width = 4
+        width = 6
       )
     )
   )
@@ -99,7 +107,7 @@ mod_principal_high_level_pods <- function() {
     dplyr::arrange(measures) |>
     dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
     dplyr::bind_rows(
-      data.frame(
+      data.frame(  # so ambulance and walk-ins can be aggregated under the same pod_name
         activity_type = "aae",
         pod = "aae",
         pod_name = "A&E Attendance"
@@ -118,7 +126,7 @@ mod_principal_high_level_summary_data <- function(
     dplyr::mutate(
       pod = dplyr::if_else(
         stringr::str_detect(pod, "^ip_"),
-        glue::glue("{pod}_{measure}"),
+        glue::glue("{pod}_{measure}"),  # label admissions and beddays uniquely
         pod
       ),
       dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x)),
@@ -189,12 +197,23 @@ mod_principal_high_level_table <- function(
   summary_table |> gt_theme()
 }
 
-mod_principal_high_level_plot <- function(data, activity_type) {
+mod_principal_high_level_plot <- function(
+    data,
+    activity_type,
+    pod_name_string = NULL  # "Admissions", "Bed Days" for IP
+) {
   start_year <- end_year <- NULL
   c(start_year, end_year) %<-% range(data$year)
 
-  data |>
-    dplyr::filter(.data$activity_type == .env$activity_type) |>
+  data_filtered <- data |>
+    dplyr::filter(.data$activity_type == .env$activity_type)
+
+  if (!is.null(pod_name_string)) {
+    data_filtered <- data_filtered |>
+      dplyr::filter(stringr::str_detect(.data$pod_name, pod_name_string))
+  }
+
+  data_filtered |>
     require_rows() |>
     ggplot2::ggplot(
       ggplot2::aes(
@@ -257,9 +276,18 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
         ))
     })
 
-    output$ip <- plotly::renderPlotly({
+    output$ip_admissions <- plotly::renderPlotly({
       summary_data() |>
-        mod_principal_high_level_plot("ip") |>
+        mod_principal_high_level_plot("ip", "Admission") |>
+        plotly::ggplotly(tooltip = "text") |>
+        plotly::layout(legend = list(
+          orientation = "h"
+        ))
+    })
+
+    output$ip_beddays <- plotly::renderPlotly({
+      summary_data() |>
+        mod_principal_high_level_plot("ip", "Bed Days") |>
         plotly::ggplotly(tooltip = "text") |>
         plotly::layout(legend = list(
           orientation = "h"
