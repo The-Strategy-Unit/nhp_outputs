@@ -92,19 +92,30 @@ mod_principal_high_level_pods <- function() {
   get_activity_type_pod_measure_options() |>
     dplyr::filter(.data$activity_type != "aae") |>
     dplyr::mutate(
-      pod_name = dplyr::if_else(
-        measures == "beddays",
-        pod_name |> stringr::str_replace("Admission", "Bed Days"),
-        pod_name
+      dplyr::across(
+        "pod_name",
+        ~ dplyr::if_else(
+          .data$measures == "beddays",
+          .data$pod_name |> stringr::str_replace("Admission", "Bed Days"),
+          .data$pod_name
+        )
       ),
-      pod = dplyr::if_else(
-        activity_type == "ip",
-        glue::glue("{pod}_{measures}"),
-        pod
+      dplyr::across(
+        "pod",
+        ~ dplyr::if_else(
+          .data$activity_type == "ip",
+          glue::glue("{.data$pod}_{.data$measures}"),
+          .data$pod
+        )
       )
     ) |>
-    dplyr::mutate(measures = measures |> forcats::fct_relevel("admissions", "beddays")) |>
-    dplyr::arrange(measures) |>
+    dplyr::mutate(
+      dplyr::across(
+        "measures",
+        ~ forcats::fct_relevel(.data$measures, "admissions", "beddays")
+      )
+    ) |>
+    dplyr::arrange(.data$measures) |>
     dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
     dplyr::bind_rows(
       data.frame(  # so ambulance and walk-ins can be aggregated under the same pod_name
@@ -124,10 +135,13 @@ mod_principal_high_level_summary_data <- function(
   get_time_profiles(r, "default") |>
     dplyr::filter(!.data[["measure"]] %in% c("procedures", "tele_attendances")) |>
     dplyr::mutate(
-      pod = dplyr::if_else(
-        stringr::str_detect(pod, "^ip_"),
-        glue::glue("{pod}_{measure}"),  # unique pod value for admissions and beddays
-        pod
+      dplyr::across(
+        "pod",
+        ~ dplyr::if_else(
+          stringr::str_detect(.data$pod, "^ip_"),
+          glue::glue("{.data$pod}_{.data$measure}"),  # unique pod value for admissions and beddays
+          .data$pod
+        )
       ),
       dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x)),
       fyear = fyear_str(.data[["year"]])
@@ -164,18 +178,19 @@ mod_principal_high_level_table <- function(
         "activity_type"
       ) |>
       dplyr::mutate(
-        activity_type = dplyr::case_when(
-          .data$activity_type == "ip" &
-            stringr::str_detect(pod_name, "Admission") ~ "Inpatient Admissions",
-          .data$activity_type == "ip" &
-            stringr::str_detect(pod_name, "Bed Days") ~ "Inpatient Bed Days",
-          .data$activity_type == "op"  ~ "Outpatient",
-          .data$activity_type == "aae" ~ "A&E"
+        dplyr::across(
+          "activity_type",
+          ~ dplyr::case_when(
+            .data$activity_type == "ip" & stringr::str_detect(.data$pod_name, "Admission") ~ "Inpatient Admissions",
+            .data$activity_type == "ip" & stringr::str_detect(.data$pod_name, "Bed Days") ~ "Inpatient Bed Days",
+            .data$activity_type == "op"  ~ "Outpatient",
+            .data$activity_type == "aae" ~ "A&E"
+          )
         ),
         dplyr::across(
           "activity_type",
-          \(x) forcats::fct_relevel(
-            x,
+          ~ forcats::fct_relevel(
+            .x,
             "Inpatient Admissions",
             "Inpatient Bed Days",
             "Outpatient",
@@ -219,7 +234,6 @@ mod_principal_high_level_plot <- function(
     dplyr::filter(.data$activity_type == .env$activity_type)
 
   if (activity_type == "ip" && measure == "admissions") {
-    # data object doesn't contain 'measure', but we can infer from pod_name
     data_filtered <- data_filtered |>
       dplyr::filter(stringr::str_detect(.data$pod_name, "Admission"))
   }

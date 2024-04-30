@@ -67,7 +67,7 @@ mod_principal_summary_data <- function(r, sites) {
       dplyr::summarise(dplyr::across(c("baseline", "principal"), sum)) |>
       dplyr::summarise(
         dplyr::across(c("baseline", "principal"), mean),
-        pod_name = "Beds Available"
+        "pod_name" = "Beds Available"
       )
   }
 
@@ -78,23 +78,26 @@ mod_principal_summary_data <- function(r, sites) {
     bed_occupancy
   ) |>
     dplyr::mutate(
-      activity_type = dplyr::case_match(
-        .data$activity_type,
-        "ip" ~ "Inpatient",
-        "op" ~ "Outpatient",
-        "aae" ~ "A&E",
-        .default = "Beds Available"
+      dplyr::across(
+        "activity_type",
+        ~ dplyr::case_match(
+          .data$activity_type,
+          "ip" ~ "Inpatient",
+          "op" ~ "Outpatient",
+          "aae" ~ "A&E",
+          .default = "Beds Available"
+        )
       ),
       dplyr::across(
         "activity_type",
         ~ forcats::fct_relevel(.x, "Inpatient", "Outpatient", after = 0)
       ),
       measure = dplyr::case_when(
-        stringr::str_detect(pod_name, "Admission$") ~ "admission",
-        stringr::str_detect(pod_name, "Attendance$") ~ "attendance",
-        stringr::str_detect(pod_name, "Tele-attendance$") ~ "tele_attendance",
-        stringr::str_detect(pod_name, "Procedure$") ~ "procedure",
-        stringr::str_detect(pod_name, "Bed Days$") ~ "bed_days"
+        stringr::str_detect(.data$pod_name, "Admission$") ~ "admission",
+        stringr::str_detect(.data$pod_name, "Attendance$") ~ "attendance",
+        stringr::str_detect(.data$pod_name, "Tele-attendance$") ~ "tele_attendance",
+        stringr::str_detect(.data$pod_name, "Procedure$") ~ "procedure",
+        stringr::str_detect(.data$pod_name, "Bed Days$") ~ "bed_days"
       ),
       change = .data$principal - .data$baseline,
       change_pcnt = .data$change / .data$baseline
@@ -120,8 +123,8 @@ mod_principal_summary_table <- function(data) {
     dplyr::mutate(
       "activity_type" = as.character(.data$activity_type),
       "activity_type" = dplyr::case_when(  # include admissions/beddays in gt groupnames
-        stringr::str_detect(pod_name, "Admission") ~ glue::glue("{activity_type} Admissions"),
-        stringr::str_detect(pod_name, "Bed Days") ~ glue::glue("{activity_type} Bed Days"),
+        stringr::str_detect(.data$pod_name, "Admission") ~ glue::glue("{.data$activity_type} Admissions"),
+        stringr::str_detect(.data$pod_name, "Bed Days") ~ glue::glue("{.data$activity_type} Bed Days"),
         .default = .data$activity_type
       )
     ) |>
