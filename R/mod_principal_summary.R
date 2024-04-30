@@ -38,7 +38,7 @@ mod_principal_summary_ui <- function(id) {
 }
 
 mod_principal_summary_data <- function(r, sites) {
-  pods <- mod_principal_high_level_pods()
+  pods <- mod_principal_los_pods()   # uses same POD lookup as LoS summary
 
   main_summary <- get_principal_high_level(
     r,
@@ -101,7 +101,12 @@ mod_principal_summary_data <- function(r, sites) {
     ) |>
     dplyr::arrange(.data$activity_type, .data$measure, .data$pod_name) |>
     dplyr::select(
-      "pod_name", "activity_type", "baseline", "principal", "change", "change_pcnt"
+      "pod_name",
+      "activity_type",
+      "baseline",
+      "principal",
+      "change",
+      "change_pcnt"
     )
 }
 
@@ -111,6 +116,14 @@ mod_principal_summary_table <- function(data) {
       dplyr::across("principal", \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")),
       dplyr::across("change", \(.x) gt_bar(.x, scales::comma_format(1))),
       dplyr::across("change_pcnt", \(.x) gt_bar(.x, scales::percent_format(1)))
+    ) |>
+    dplyr::mutate(
+      "activity_type" = as.character(.data$activity_type),
+      "activity_type" = dplyr::case_when(  # include admissions/beddays in gt groupnames
+        stringr::str_detect(pod_name, "Admission") ~ glue::glue("{activity_type} Admissions"),
+        stringr::str_detect(pod_name, "Bed Days") ~ glue::glue("{activity_type} Bed Days"),
+        .default = .data$activity_type
+      )
     ) |>
     gt::gt(groupname_col = "activity_type") |>
     gt::cols_align(align = "left", columns = "pod_name") |>

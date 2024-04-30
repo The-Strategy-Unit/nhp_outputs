@@ -44,8 +44,19 @@ mod_model_core_activity_server_table <- function(data) {
   data |>
     dplyr::mutate(
       change = .data$median - .data$baseline,
-      change_pcnt = .data$change / .data$baseline
+      change_pcnt = .data$change / .data$baseline,
+      measure = .data$measure |>
+        stringr::str_to_sentence() |>
+        stringr::str_replace("_", "-") |>  # tele_attendances
+        stringr::str_replace("Beddays", "Bed days"),
+      activity_type_name = forcats::fct_relevel(
+        .data$activity_type_name,
+        "Inpatients",
+        "Outpatients",
+        "A&E"
+      )
     ) |>
+    dplyr::arrange(.data$activity_type_name, .data$pod_name)|>
     dplyr::select(
       "activity_type_name",
       "pod_name",
@@ -60,6 +71,7 @@ mod_model_core_activity_server_table <- function(data) {
     gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
     gt::fmt_integer(c("baseline", "median", "change", "lwr_ci", "upr_ci")) |>
     gt::fmt_percent("change_pcnt", decimals = 0) |>
+    gt::cols_align(align = "left", columns = "measure") |>
     gt::cols_label(
       "measure" = "Measure",
       "baseline" = "Baseline",
