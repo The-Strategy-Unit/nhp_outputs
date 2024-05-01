@@ -68,7 +68,7 @@ test_that("mod_principal_summary_data summarises the data", {
 
   stub(
     mod_principal_summary_data,
-    "mod_principal_high_level_pods",
+    "mod_principal_los_pods",
     tibble::tibble(
       activity_type = c("ip", "ip", "op", "aae"),
       pod = c("a_1", "a_2", "b_1", "b_2"),
@@ -140,6 +140,7 @@ test_that("mod_principal_summary_table creates a gt object", {
   set.seed(1)
 
   data <- tibble::tibble(
+    activity_type = c("Inpatient", "Outpatient", "A&E"),
     pod_name = c("a", "b", "c"),
     baseline = 1:3,
     principal = 4:6

@@ -49,11 +49,9 @@ mod_model_core_activity_server_table <- function(data) {
         stringr::str_to_sentence() |>
         stringr::str_replace("_", "-") |>  # tele_attendances
         stringr::str_replace("Beddays", "Bed days"),
-      activity_type_name = forcats::fct_relevel(
+      activity_type_name = factor(
         .data$activity_type_name,
-        "Inpatients",
-        "Outpatients",
-        "A&E"
+        levels = c("Inpatients", "Outpatients", "A&E")
       )
     ) |>
     dplyr::arrange(.data$activity_type_name, .data$pod_name)|>

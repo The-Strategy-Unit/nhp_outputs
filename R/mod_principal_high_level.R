@@ -89,9 +89,12 @@ mod_principal_high_level_ui <- function(id) {
 }
 
 mod_principal_high_level_pods <- function() {
-  get_activity_type_pod_measure_options() |>
-    dplyr::filter(.data$activity_type != "aae") |>
-    dplyr::mutate(
+
+  lookup_in <- get_activity_type_pod_measure_options() |>
+    dplyr::filter(.data$activity_type != "aae")  # gets reinstated below
+
+  lookup_distinct_ip <- lookup_in |>
+    dplyr::mutate(  # make ip admissions and beddays distinct
       dplyr::across(
         "pod_name",
         ~ dplyr::if_else(
@@ -108,17 +111,24 @@ mod_principal_high_level_pods <- function() {
           .data$pod
         )
       )
-    ) |>
+    )
+
+  lookup_sorted <- lookup_distinct_ip |>
     dplyr::mutate(
       dplyr::across(
         "measures",
-        ~ forcats::fct_relevel(.data$measures, "admissions", "beddays")
+        ~ factor(
+          .data$measures,
+          levels = c("admissions", "beddays", "attendances", "tele_attendances")
+        )
       )
     ) |>
     dplyr::arrange(.data$measures) |>
-    dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
+    dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name)
+
+  lookup_sorted |>
     dplyr::bind_rows(
-      data.frame(  # so ambulance and walk-ins can be aggregated under the same pod_name
+      data.frame(  # reinsert A&E (pods and measures combined to one row)
         activity_type = "aae",
         pod = "aae",
         pod_name = "A&E Attendance"

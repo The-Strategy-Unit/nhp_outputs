@@ -90,7 +90,8 @@ mod_principal_summary_data <- function(r, sites) {
       ),
       dplyr::across(
         "activity_type",
-        ~ forcats::fct_relevel(.x, "Inpatient", "Outpatient", after = 0)
+        # ~ forcats::fct_relevel(.x, "Inpatient", "Outpatient", after = 0)
+        ~ factor(.x, levels = c("Inpatient", "Outpatient", "A&E", "Beds Available"))
       ),
       measure = dplyr::case_when(
         stringr::str_detect(.data$pod_name, "Admission$") ~ "admission",
