@@ -159,7 +159,7 @@ get_variants <- function(r) {
 get_model_run_distribution <- function(r, pod, measure, sites) {
   filtered_results <- r$results$default |>
     dplyr::filter(
-      .data$pod == .env$pod,
+      .data$pod %in% .env$pod,
       .data$measure == .env$measure
     ) |>
     dplyr::select("sitetret", "baseline", "principal", "model_runs")
@@ -189,7 +189,7 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
 
   filtered_results <- r$results[[agg_type]] |>
     dplyr::filter(
-      .data$pod == .env$pod,
+      .data$pod %in% .env$pod,
       .data$measure == .env$measure
     ) |>
     dplyr::select(-"pod", -"measure")
