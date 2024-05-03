@@ -32,8 +32,19 @@ mod_model_core_activity_ui <- function(id) {
         title = "Summary by activity type and measure",
         collapsible = FALSE,
         width = 12,
-        shinycssloaders::withSpinner(
-          gt::gt_output(ns("core_activity"))
+        bs4Dash::tabsetPanel(
+          shiny::tabPanel(
+            "Median",
+            shinycssloaders::withSpinner(
+              gt::gt_output(ns("core_activity_median"))
+            )
+          ),
+          shiny::tabPanel(
+            "Principal",
+            shinycssloaders::withSpinner(
+              gt::gt_output(ns("core_activity_principal"))
+            )
+          )
         )
       ),
       col_3()
@@ -41,10 +52,14 @@ mod_model_core_activity_ui <- function(id) {
   )
 }
 
-mod_model_core_activity_server_table <- function(data) {
-  data |>
+mod_model_core_activity_server_table <- function(
+    data,
+    value_type = c("median", "principal")
+) {
+
+  data_prep <- data |>
     dplyr::mutate(
-      change = .data$median - .data$baseline,
+      change = .data[[value_type]] - .data$baseline,
       change_pcnt = .data$change / .data$baseline,
       measure = .data$measure |>
         stringr::str_to_sentence() |>
@@ -61,21 +76,20 @@ mod_model_core_activity_server_table <- function(data) {
       "pod_name",
       "measure",
       "baseline",
-      "median",
+      .env$value_type,
       "change",
       "change_pcnt",
       "lwr_ci",
       "upr_ci"
-    ) |>
+    )
+
+  data_prep |>
     gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
-    gt::fmt_integer(c("baseline", "median", "change", "lwr_ci", "upr_ci")) |>
+    gt::fmt_integer(c("baseline", .env$value_type, "change", "lwr_ci", "upr_ci")) |>
     gt::fmt_percent("change_pcnt", decimals = 0) |>
     gt::cols_align(align = "left", columns = "measure") |>
+    gt::cols_label_with(fn = stringr::str_to_title) |>
     gt::cols_label(
-      "measure" = "Measure",
-      "baseline" = "Baseline",
-      "median" = "Median",
-      "change" = "Change",
       "change_pcnt" = gt::html("Percent<br>Change"),
       "lwr_ci" = "Lower",
       "upr_ci" = "Upper"
@@ -100,9 +114,14 @@ mod_model_core_activity_server <- function(id, selected_data, selected_site) {
         dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures"))
     })
 
-    output$core_activity <- gt::render_gt({
+    output$core_activity_median <- gt::render_gt({
       summarised_data() |>
-        mod_model_core_activity_server_table()
+        mod_model_core_activity_server_table(value_type = "median")
+    })
+
+    output$core_activity_principal <- gt::render_gt({
+      summarised_data() |>
+        mod_model_core_activity_server_table(value_type = "principal")
     })
   })
 }
