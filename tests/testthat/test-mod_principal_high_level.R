@@ -137,6 +137,7 @@ summary_data_expected <- tibble::tribble(
 test_that("ui is created correctly", {
   set.seed(123)
 
+  # requires hack because the gt id can't be controlled
   ui <- mod_principal_high_level_ui("id") |>
     as.character() |>
     stringr::str_replace_all(" data-tabsetid=\"\\d+\"", "") |>
