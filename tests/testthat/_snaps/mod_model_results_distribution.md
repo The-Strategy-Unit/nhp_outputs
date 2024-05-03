@@ -40,8 +40,8 @@
                 <div class="form-group shiny-input-container">
                   <label class="control-label" id="id-measure_selection-pod-label" for="id-measure_selection-pod">Point of Delivery</label>
                   <div>
-                    <select id="id-measure_selection-pod" class="shiny-input-select"></select>
-                    <script type="application/json" data-for="id-measure_selection-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+                    <select id="id-measure_selection-pod" class="shiny-input-select" multiple="multiple"></select>
+                    <script type="application/json" data-for="id-measure_selection-pod">{"plugins":["selectize-plugin-a11y"]}</script>
                   </div>
                 </div>
               </div>
@@ -76,7 +76,7 @@
             <div id="id-beeswarm_text" class="shiny-html-output"></div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-b48ec1189daabe57db8f00bbc7a75abd" class="loader">Loading...</div>
+                <div id="spinner-f98fa8306f9935bed7bb2e120e5af8a7" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-beeswarm" style="width:100%;height:400px;"></div>
             </div>
@@ -93,7 +93,7 @@
             <div id="id-ecdf_text" class="shiny-html-output"></div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-12f18e766a1116015fed39b1b08fb463" class="loader">Loading...</div>
+                <div id="spinner-fc6415a2e22b3f4594b9e179dddd4f55" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-ecdf" style="width:100%;height:400px;"></div>
             </div>
