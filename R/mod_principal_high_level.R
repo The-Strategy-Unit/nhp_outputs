@@ -143,7 +143,7 @@ mod_principal_high_level_summary_data <- function(
     sites
 ) {
   get_time_profiles(r, "default") |>
-    dplyr::filter(!.data[["measure"]] %in% c("procedures", "tele_attendances")) |>
+    dplyr::filter(!(.data[["measure"]] %in% c("procedures", "tele_attendances"))) |>
     dplyr::mutate(
       dplyr::across(
         "pod",
