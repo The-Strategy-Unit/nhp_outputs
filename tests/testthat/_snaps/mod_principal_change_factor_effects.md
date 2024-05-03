@@ -13,6 +13,7 @@
             <p>
               These results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.
               Bed days are defined as the difference in days between discharge and admission, plus one day.
+              One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.
               See the
               <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html">model project information site</a>
               for definitions of terms.
@@ -76,7 +77,7 @@
             </div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-af0436a5b97182f13f6c004f219de9f2" class="loader">Loading...</div>
+                <div id="spinner-fac52137bd9b9ca575e47193636bb3fb" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
             </div>
@@ -100,7 +101,7 @@
             </div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-79e8af59eb00d2cbdf5dca757129c9c4" class="loader">Loading...</div>
+                <div id="spinner-02d712da1fde4b737e463658c00feed6" class="loader">Loading...</div>
               </div>
               <div class="row">
                 <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>

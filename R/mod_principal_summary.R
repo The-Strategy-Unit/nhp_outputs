@@ -17,6 +17,7 @@ mod_principal_summary_ui <- function(id) {
       width = 12,
       htmltools::p(
         "Bed days are defined as the difference in days between discharge and admission, plus one day.",
+        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
         "Bed-availability data is not available at site level.",
         "See the",
         htmltools::a(
