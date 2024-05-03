@@ -96,8 +96,6 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
         get_available_aggregations()
     })
 
-    shiny::reactive({print(selected_measure())})
-
     shiny::observe({
       c(activity_type, pod, measure) %<-% selected_measure()
 
