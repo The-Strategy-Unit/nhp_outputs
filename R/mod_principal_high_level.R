@@ -56,9 +56,17 @@ mod_principal_high_level_ui <- function(id) {
         title = "Inpatient admissions",
         collapsible = FALSE,
         shinycssloaders::withSpinner(
-          plotly::plotlyOutput(ns("ip"))
+          plotly::plotlyOutput(ns("ip_admissions"))
         ),
-        width = 4
+        width = 6
+      ),
+      bs4Dash::box(
+        title = "Inpatient bed days",
+        collapsible = FALSE,
+        shinycssloaders::withSpinner(
+          plotly::plotlyOutput(ns("ip_beddays"))
+        ),
+        width = 6
       ),
       bs4Dash::box(
         title = "Outpatient attendances",
@@ -66,7 +74,7 @@ mod_principal_high_level_ui <- function(id) {
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("op"))
         ),
-        width = 4
+        width = 6
       ),
       bs4Dash::box(
         title = "A&E attendances",
@@ -74,45 +82,101 @@ mod_principal_high_level_ui <- function(id) {
         shinycssloaders::withSpinner(
           plotly::plotlyOutput(ns("aae"))
         ),
-        width = 4
+        width = 6
       )
     )
   )
 }
 
 mod_principal_high_level_pods <- function() {
-  get_activity_type_pod_measure_options() |>
-    dplyr::filter(.data$activity_type != "aae") |>
-    dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
-    dplyr::bind_rows(data.frame(activity_type = "aae", pod = "aae", pod_name = "A&E Attendance")) |>
+
+  lookup_in <- get_activity_type_pod_measure_options() |>
+    dplyr::filter(.data$activity_type != "aae")  # gets reinstated below
+
+  lookup_distinct_ip <- lookup_in |>
+    dplyr::mutate(  # make ip admissions and beddays distinct
+      dplyr::across(
+        "pod_name",
+        ~ dplyr::if_else(
+          .data$measures == "beddays",
+          .data$pod_name |> stringr::str_replace("Admission", "Bed Days"),
+          .data$pod_name
+        )
+      ),
+      dplyr::across(
+        "pod",
+        ~ dplyr::if_else(
+          .data$activity_type == "ip",
+          glue::glue("{.data$pod}_{.data$measures}"),
+          .data$pod
+        )
+      )
+    )
+
+  lookup_sorted <- lookup_distinct_ip |>
+    dplyr::mutate(
+      dplyr::across(
+        "measures",
+        ~ factor(
+          .data$measures,
+          levels = c("admissions", "beddays", "attendances", "tele_attendances")
+        )
+      )
+    ) |>
+    dplyr::arrange(.data$measures) |>
+    dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name)
+
+  lookup_sorted |>
+    dplyr::bind_rows(
+      data.frame(  # reinsert A&E (pods and measures combined to one row)
+        activity_type = "aae",
+        pod = "aae",
+        pod_name = "A&E Attendance"
+      )
+    ) |>
     dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
-mod_principal_high_level_summary_data <- function(r, pods = mod_principal_high_level_pods(), sites) {
+mod_principal_high_level_summary_data <- function(
+    r,
+    pods = mod_principal_high_level_pods(),
+    sites
+) {
   get_time_profiles(r, "default") |>
-    dplyr::filter(
-      !.data[["measure"]] %in% c("beddays", "procedures", "tele_attendances")
-    ) |>
-    dplyr::select(-"measure") |>
+    dplyr::filter(!(.data[["measure"]] %in% c("procedures", "tele_attendances"))) |>
     dplyr::mutate(
+      dplyr::across(
+        "pod",
+        ~ dplyr::if_else(
+          stringr::str_detect(.data$pod, "^ip_"),
+          glue::glue("{.data$pod}_{.data$measure}"),  # unique pod value for admissions and beddays
+          .data$pod
+        )
+      ),
       dplyr::across("pod", ~ ifelse(stringr::str_starts(.x, "aae"), "aae", .x)),
       fyear = fyear_str(.data[["year"]])
     ) |>
     dplyr::summarise(
       dplyr::across("value", sum),
-      .by = -"value"
+      .by = -c("value", "measure")
     ) |>
     trust_site_aggregation(sites) |>
     dplyr::inner_join(pods, by = "pod") |>
-    dplyr::select(-"pod") |>
     dplyr::mutate(
       .by = c("pod_name"),
       change = .data$value - dplyr::lag(.data$value),
       change_pcnt = .data$change / dplyr::lag(.data$value)
-    )
+    ) |>
+    dplyr::arrange(.data$activity_type, .data$pod_name) |>
+    dplyr::select(-"pod")
 }
 
-mod_principal_high_level_table <- function(data, summary_type = c("value", "change", "change_pcnt")) {
+mod_principal_high_level_table <- function(
+    data,
+    summary_type = c("value", "change", "change_pcnt")
+) {
+  summary_type = match.arg(summary_type)
+
   fyear_rx <- "\\d{4}/\\d{2}"
 
   suppressWarnings( # TODO: warning in test, all_of should work
@@ -124,15 +188,24 @@ mod_principal_high_level_table <- function(data, summary_type = c("value", "chan
         "activity_type"
       ) |>
       dplyr::mutate(
-        activity_type = dplyr::case_match(
-          .data$activity_type,
-          "ip"  ~ "Inpatient",
-          "op"  ~ "Outpatient",
-          "aae" ~ "A&E"
+        dplyr::across(
+          "activity_type",
+          ~ dplyr::case_when(
+            .data$activity_type == "ip" & stringr::str_detect(.data$pod_name, "Admission") ~ "Inpatient Admissions",
+            .data$activity_type == "ip" & stringr::str_detect(.data$pod_name, "Bed Days") ~ "Inpatient Bed Days",
+            .data$activity_type == "op"  ~ "Outpatient",
+            .data$activity_type == "aae" ~ "A&E"
+          )
         ),
         dplyr::across(
           "activity_type",
-          \(x) forcats::fct_relevel(x, "Inpatient", "Outpatient", "A&E")
+          ~ forcats::fct_relevel(
+            .x,
+            "Inpatient Admissions",
+            "Inpatient Bed Days",
+            "Outpatient",
+            "A&E"
+          )
         )
       ) |>
       dplyr::arrange(.data$activity_type) |>
@@ -159,12 +232,28 @@ mod_principal_high_level_table <- function(data, summary_type = c("value", "chan
   summary_table |> gt_theme()
 }
 
-mod_principal_high_level_plot <- function(data, activity_type) {
+mod_principal_high_level_plot <- function(
+    data,
+    activity_type,
+    measure = NULL  # needed because of separate admissions and beddays plots
+) {
   start_year <- end_year <- NULL
   c(start_year, end_year) %<-% range(data$year)
 
-  data |>
-    dplyr::filter(.data$activity_type == .env$activity_type) |>
+  data_filtered <- data |>
+    dplyr::filter(.data$activity_type == .env$activity_type)
+
+  if (activity_type == "ip" && measure == "admissions") {
+    data_filtered <- data_filtered |>
+      dplyr::filter(stringr::str_detect(.data$pod_name, "Admission"))
+  }
+
+  if (activity_type == "ip" && measure == "beddays") {
+    data_filtered <- data_filtered |>
+      dplyr::filter(stringr::str_detect(.data$pod_name, "Bed Days"))
+  }
+
+  data_filtered |>
     require_rows() |>
     ggplot2::ggplot(
       ggplot2::aes(
@@ -227,9 +316,18 @@ mod_principal_high_level_server <- function(id, selected_data, selected_site) {
         ))
     })
 
-    output$ip <- plotly::renderPlotly({
+    output$ip_admissions <- plotly::renderPlotly({
       summary_data() |>
-        mod_principal_high_level_plot("ip") |>
+        mod_principal_high_level_plot("ip", "admissions") |>
+        plotly::ggplotly(tooltip = "text") |>
+        plotly::layout(legend = list(
+          orientation = "h"
+        ))
+    })
+
+    output$ip_beddays <- plotly::renderPlotly({
+      summary_data() |>
+        mod_principal_high_level_plot("ip", "beddays") |>
         plotly::ggplotly(tooltip = "text") |>
         plotly::layout(legend = list(
           orientation = "h"

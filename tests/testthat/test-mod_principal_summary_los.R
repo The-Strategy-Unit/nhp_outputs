@@ -53,7 +53,7 @@ test_that("mod_principal_summary_los_data summarises the data", {
 
   stub(
     mod_principal_summary_los_data,
-    "mod_principal_high_level_pods",
+    "mod_principal_los_pods",
     tibble::tibble(
       pod = c("a", "b"),
       pod_name = c("A", "B")
