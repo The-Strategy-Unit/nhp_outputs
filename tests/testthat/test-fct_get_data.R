@@ -45,7 +45,6 @@ test_that("get_container uses azure app id if present", {
     "AZ_STORAGE_EP" = "url/results",
     "AZ_TENANT_ID" = "tenant_id",
     "AZ_APP_ID" = "app_id",
-    "AZ_APP_SECRET" = "secret",
     "AZ_STORAGE_CONTAINER" = "results"
   )
 
@@ -69,7 +68,7 @@ test_that("get_container uses azure app id if present", {
     "https://storage.azure.com",
     tenant = "tenant_id",
     app = "app_id",
-    password = "secret"
+    auth_type = "device_code"
   )
   expect_args(m3, 1, "url/results", token = "t0")
   expect_args(m4, 1, "ep", "results")

@@ -7,7 +7,7 @@ get_container <- function() {
       "https://storage.azure.com",
       tenant = Sys.getenv("AZ_TENANT_ID"),
       app = app_id,
-      password = Sys.getenv("AZ_APP_SECRET")
+      auth_type = "device_code"
     )
   } else {
     AzureAuth::get_managed_token("https://storage.azure.com/") |>
