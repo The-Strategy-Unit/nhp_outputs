@@ -12,6 +12,7 @@
           <div class="card-body">
             <p>
               Bed days are defined as the difference in days between discharge and admission, plus one day.
+              One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.
               See the
               <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a>
               for definitions of terms.
@@ -76,7 +77,7 @@
             <div id="id-beeswarm_text" class="shiny-html-output"></div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-b48ec1189daabe57db8f00bbc7a75abd" class="loader">Loading...</div>
+                <div id="spinner-f98fa8306f9935bed7bb2e120e5af8a7" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-beeswarm" style="width:100%;height:400px;"></div>
             </div>
@@ -93,7 +94,7 @@
             <div id="id-ecdf_text" class="shiny-html-output"></div>
             <div class="shiny-spinner-output-container shiny-spinner-hideui ">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-12f18e766a1116015fed39b1b08fb463" class="loader">Loading...</div>
+                <div id="spinner-fc6415a2e22b3f4594b9e179dddd4f55" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-ecdf" style="width:100%;height:400px;"></div>
             </div>
