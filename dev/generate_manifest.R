@@ -6,13 +6,6 @@ files <- c(
   fs::dir_ls("inst", recurse = TRUE, type = "file")
 )
 
-# monkey patch the function to use our prod profile
-assignInNamespace(
-  "renvLockFile",
-  \(...) "renv/profiles/dev/renv.lock",
-  "rsconnect"
-)
-
 rsconnect::writeManifest(appFiles = files)
 
 system("node remove_files_from_manifest.js")

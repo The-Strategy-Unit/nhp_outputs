@@ -34,8 +34,6 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-renv@v2
-        with:
-          profile: '"prod"'
 
       - run: install.packages("rcmdcheck")
         shell: Rscript {0}
