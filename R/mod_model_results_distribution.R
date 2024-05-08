@@ -84,10 +84,6 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
     ggplot2::geom_hline(yintercept = b, colour = "dimgrey") +
     ggplot2::geom_hline(yintercept = p, linetype = "dashed", colour = "red") +
     ggplot2::expand_limits(y = ifelse(show_origin, 0, b)) +
-    ggplot2::scale_fill_manual(values = c(
-      "principal" = "#f9bf07",
-      "high_migration" = "#5881c1"
-    )) +
     ggplot2::coord_flip() +
     ggplot2::scale_y_continuous(
       breaks = scales::pretty_breaks(10),

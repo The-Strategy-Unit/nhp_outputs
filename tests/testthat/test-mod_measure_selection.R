@@ -7,7 +7,8 @@ library(mockery)
 
 atpmo_expected <- tibble::tribble(
   ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
+  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance",
+  "aae", "A&E", "aae_type-02", "Type 2 Department", "ambulance",
 )
 
 set_names <- function(x) {
@@ -90,7 +91,7 @@ test_that("it updates the pod dropdown when activity_type changes", {
     session$setInputs(activity_type = at)
 
     expect_called(m, 2)
-    expect_args(m, 2, session, "pod", choices = pods)
+    expect_args(m, 2, session, "pod", choices = pods, selected = pods)
   })
 })
 
@@ -158,7 +159,35 @@ test_that("selected_measure contains the selected dropdown values", {
     session$setInputs(activity_type = at, pod = p, measure = m)
     expect_equal(
       selected_measure(),
-      c(activity_type = at, pod = p, measure = m)
+      list(activity_type = at, pod = p, measure = m)
+    )
+  })
+})
+
+test_that("selected_measure contains the selected multi-pod dropdown values", {
+  stub(
+    mod_measure_selection_server,
+    "get_activity_type_pod_measure_options",
+    atpmo_expected,
+    2
+  )
+
+  at <- "aae"
+  p <- c("aae_type-01", "aae_type-02")
+  m <- "ambulance"
+
+  shiny::testServer(mod_measure_selection_server, {
+    # first, test that we get errors if values aren't set
+    expect_error(selected_measure())
+    session$setInputs(activity_type = at)
+    expect_error(selected_measure())
+    session$setInputs(activity_type = at, pod = p)
+    expect_error(selected_measure())
+
+    session$setInputs(activity_type = at, pod = p, measure = m)
+    expect_equal(
+      selected_measure(),
+      list(activity_type = at, pod = p, measure = m)
     )
   })
 })

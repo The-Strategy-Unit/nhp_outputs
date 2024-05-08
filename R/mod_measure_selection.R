@@ -12,7 +12,7 @@ mod_measure_selection_ui <- function(id, width = 4) {
 
   shiny::tagList(
     bs4Dash::column(width, shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-    bs4Dash::column(width, shiny::selectInput(ns("pod"), "Point of Delivery", NULL)),
+    bs4Dash::column(width, shiny::selectInput(ns("pod"), "Point of Delivery", NULL, multiple = TRUE)),
     bs4Dash::column(width, shiny::selectInput(ns("measure"), "Measure", NULL))
   )
 }
@@ -49,7 +49,7 @@ mod_measure_selection_server <- function(id) {
         ) |>
         set_names()
 
-      shiny::updateSelectInput(session, "pod", choices = pods)
+      shiny::updateSelectInput(session, "pod", choices = pods, selected = pods)
     })
 
     shiny::observeEvent(input$pod, {
@@ -59,7 +59,7 @@ mod_measure_selection_server <- function(id) {
       measure_names <- get_golem_config("measures")
 
       measures <- atpmo |>
-        dplyr::filter(.data$activity_type == at, .data$pod == p) |>
+        dplyr::filter(.data$activity_type == at, .data$pod %in% p) |>
         purrr::pluck("measures")
 
       shiny::updateSelectInput(
@@ -76,9 +76,9 @@ mod_measure_selection_server <- function(id) {
       m <- shiny::req(input$measure)
 
       # ensure a valid set of pod/measure has been selected. If activity type changes we may end up with invalid options
-      shiny::req(nrow(dplyr::filter(atpmo, .data$pod == p, .data$measures == m)) > 0)
+      shiny::req(nrow(dplyr::filter(atpmo, .data$pod %in% p, .data$measures == m)) > 0)
 
-      c(activity_type = at, pod = p, measure = m)
+      list(activity_type = at, pod = p, measure = m)
     })
     return(selected_measure)
   })

@@ -16,8 +16,8 @@
         <div class="form-group shiny-input-container">
           <label class="control-label" id="id-pod-label" for="id-pod">Point of Delivery</label>
           <div>
-            <select id="id-pod" class="shiny-input-select"></select>
-            <script type="application/json" data-for="id-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+            <select id="id-pod" class="shiny-input-select" multiple="multiple"></select>
+            <script type="application/json" data-for="id-pod">{"plugins":["selectize-plugin-a11y"]}</script>
           </div>
         </div>
       </div>
@@ -49,8 +49,8 @@
         <div class="form-group shiny-input-container">
           <label class="control-label" id="id-pod-label" for="id-pod">Point of Delivery</label>
           <div>
-            <select id="id-pod" class="shiny-input-select"></select>
-            <script type="application/json" data-for="id-pod" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
+            <select id="id-pod" class="shiny-input-select" multiple="multiple"></select>
+            <script type="application/json" data-for="id-pod">{"plugins":["selectize-plugin-a11y"]}</script>
           </div>
         </div>
       </div>
