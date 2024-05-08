@@ -40,11 +40,18 @@ Imports:
     writexl,
     zeallot
 Suggests:
+    covr,
+    devtools,
+    httpgd,
+    languageserver,
     mockery,
-    readr,
-    readxl,
+    rcmdcheck,
+    rsconnect,
     testthat (>= 3.0.0),
-    utils
+    usethis,
+    utils,
+    vscDebugger,
+    watchr (>= 0.0.0.9000)
 Encoding: UTF-8
 RoxygenNote: 7.3.1
 URL: https://github.com/The-Strategy-Unit/nhp_model
@@ -53,14 +60,6 @@ Depends:
     R (>= 3.5.0)
 Config/testthat/edition: 3
 Config/testthat/parallel: false
-Config/renv/profiles/dev/dependencies:
-    covr,
-    devtools,
-    rsconnect,
-    languageserver,
-    usethis,
-    vscDebugger,
-    watchr (>= 0.0.0.9000)
-Config/renv/profiles/dev/remotes:
+Remotes:
     github::tomjemmett/watchr,
     github::ManuelHentschel/vscDebugger
