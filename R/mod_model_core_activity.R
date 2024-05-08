@@ -19,6 +19,7 @@ mod_model_core_activity_ui <- function(id) {
         width = 12,
         htmltools::p(
           "Bed days are defined as the difference in days between discharge and admission, plus one day.",
+          "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
           "See the",
           htmltools::a(
             href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
@@ -44,8 +45,17 @@ mod_model_core_activity_server_table <- function(data) {
   data |>
     dplyr::mutate(
       change = .data$median - .data$baseline,
-      change_pcnt = .data$change / .data$baseline
+      change_pcnt = .data$change / .data$baseline,
+      measure = .data$measure |>
+        stringr::str_to_sentence() |>
+        stringr::str_replace("_", "-") |>  # tele_attendances
+        stringr::str_replace("Beddays", "Bed days"),
+      activity_type_name = factor(
+        .data$activity_type_name,
+        levels = c("Inpatients", "Outpatients", "A&E")
+      )
     ) |>
+    dplyr::arrange(.data$activity_type_name, .data$pod_name)|>
     dplyr::select(
       "activity_type_name",
       "pod_name",
@@ -60,6 +70,7 @@ mod_model_core_activity_server_table <- function(data) {
     gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
     gt::fmt_integer(c("baseline", "median", "change", "lwr_ci", "upr_ci")) |>
     gt::fmt_percent("change_pcnt", decimals = 0) |>
+    gt::cols_align(align = "left", columns = "measure") |>
     gt::cols_label(
       "measure" = "Measure",
       "baseline" = "Baseline",

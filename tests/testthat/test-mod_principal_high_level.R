@@ -33,13 +33,20 @@ atpmo_expected <- tibble::tribble(
 
 pods_expected <- tibble::tribble(
   ~activity_type, ~pod, ~pod_name,
-  "ip", "ip_elective_admission", "Elective Admission",
-  "ip", "ip_elective_daycase", "Daycase Admission",
-  "ip", "ip_non-elective_admission", "Non-Elective Admission",
-  "ip", "ip_maternity_admission", "Maternity Admission",
+  "ip", "ip_elective_admission_admissions", "Elective Admission",
+  "ip", "ip_elective_daycase_admissions", "Daycase Admission",
+  "ip", "ip_non-elective_admission_admissions", "Non-Elective Admission",
+  "ip", "ip_maternity_admission_admissions", "Maternity Admission",
+
+  "ip", "ip_elective_admission_beddays", "Elective Bed Days",
+  "ip", "ip_elective_daycase_beddays", "Daycase Bed Days",
+  "ip", "ip_non-elective_admission_beddays", "Non-Elective Bed Days",
+  "ip", "ip_maternity_admission_beddays", "Maternity Bed Days",
+
   "op", "op_first", "First Outpatient Attendance",
   "op", "op_follow-up", "Follow-up Outpatient Attendance",
   "op", "op_procedure", "Outpatient Procedure",
+
   "aae", "aae", "A&E Attendance"
 ) |>
   dplyr::mutate(dplyr::across(pod_name, forcats::fct_inorder))
@@ -48,16 +55,27 @@ principal_high_level_expected <- tibble::tribble(
   ~pod, ~measure, ~year, ~value,
   "aae", "a", 2018, 135000,
   "aae", "a", 2020, 137000,
-  "ip_elective_admission", "a", 2018, 8800,
-  "ip_elective_admission", "a", 2020, 10700,
-  "ip_elective_daycase", "a", 2018, 58000,
-  "ip_elective_daycase", "a", 2020, 74000,
-  "ip_maternity_admission", "a", 2018, 1100,
-  "ip_maternity_admission", "a", 2020, 1200,
-  "ip_non-elective_admission", "a", 2018, 60000,
-  "ip_non-elective_admission", "a", 2020, 70000,
+
+  "ip_elective_admission", "admissions", 2018, 8800,
+  "ip_elective_admission", "admissions", 2020, 10700,
+  "ip_elective_daycase", "admissions", 2018, 58000,
+  "ip_elective_daycase", "admissions", 2020, 74000,
+  "ip_maternity_admission", "admissions", 2018, 1100,
+  "ip_maternity_admission", "admissions", 2020, 1200,
+  "ip_non-elective_admission", "admissions", 2018, 60000,
+  "ip_non-elective_admission", "admissions", 2020, 70000,
+  # "ip_non-elective_admission", "beddays", 2018, 60000,
+  # "ip_non-elective_admission", "beddays", 2020, 70000,
+
+  "ip_elective_admission", "beddays", 2018, 8800,
+  "ip_elective_admission", "beddays", 2020, 10700,
+  "ip_elective_daycase", "beddays", 2018, 58000,
+  "ip_elective_daycase", "beddays", 2020, 74000,
   "ip_non-elective_admission", "beddays", 2018, 60000,
   "ip_non-elective_admission", "beddays", 2020, 70000,
+  "ip_maternity_admission", "beddays", 2018, 1100,
+  "ip_maternity_admission", "beddays", 2020, 1200,
+
   "op_first", "a", 2018, 140000,
   "op_first", "a", 2020, 150000,
   "op_first", "tele_attendances", 2018, 140000,
@@ -78,14 +96,25 @@ summary_data_expected <- tibble::tribble(
   ~year, ~fyear, ~value, ~activity_type, ~pod_name,
   2018, "2018/19", 135000, "aae", "A&E Attendance",
   2020, "2020/21", 137000, "aae", "A&E Attendance",
-  2018, "2018/19", 8800, "ip", "Elective Admission",
+
+  2018, "2018/19", 8800,  "ip", "Elective Admission",
   2020, "2020/21", 10700, "ip", "Elective Admission",
   2018, "2018/19", 58000, "ip", "Daycase Admission",
   2020, "2020/21", 74000, "ip", "Daycase Admission",
-  2018, "2018/19", 1100, "ip", "Maternity Admission",
-  2020, "2020/21", 1200, "ip", "Maternity Admission",
   2018, "2018/19", 60000, "ip", "Non-Elective Admission",
   2020, "2020/21", 70000, "ip", "Non-Elective Admission",
+  2018, "2018/19", 1100,  "ip", "Maternity Admission",
+  2020, "2020/21", 1200,  "ip", "Maternity Admission",
+
+  2018, "2018/19", 8800,  "ip", "Elective Bed Days",
+  2020, "2020/21", 10700, "ip", "Elective Bed Days",
+  2018, "2018/19", 58000, "ip", "Daycase Bed Days",
+  2020, "2020/21", 74000, "ip", "Daycase Bed Days",
+  2018, "2018/19", 60000, "ip", "Non-Elective Bed Days",
+  2020, "2020/21", 70000, "ip", "Non-Elective Bed Days",
+  2018, "2018/19", 1100,  "ip", "Maternity Bed Days",
+  2020, "2020/21", 1200,  "ip", "Maternity Bed Days",
+
   2018, "2018/19", 140000, "op", "First Outpatient Attendance",
   2020, "2020/21", 150000, "op", "First Outpatient Attendance",
   2018, "2018/19", 370000, "op", "Follow-up Outpatient Attendance",
@@ -210,13 +239,13 @@ test_that("it creates the table", {
   })
 })
 
-test_that("it creates 3 plots", {
+test_that("it creates 4 plots", {
   m <- mock()
   stub(mod_principal_high_level_server, "plotly::renderPlotly", m)
   stub(mod_principal_high_level_server, "mod_principal_high_level_summary_data", NULL)
   stub(mod_principal_high_level_server, "mod_principal_high_level_plot", ggplot2::ggplot())
 
   shiny::testServer(mod_principal_high_level_server, args = list(reactiveVal(), reactiveVal("trust")), {
-    expect_called(m, 3)
+    expect_called(m, 4)
   })
 })

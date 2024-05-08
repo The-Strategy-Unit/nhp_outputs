@@ -17,6 +17,7 @@ mod_principal_summary_los_ui <- function(id) {
       width = 12,
       htmltools::p(
         "Bed days are defined as the difference in days between discharge and admission, plus one day.",
+        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
         "See the",
         htmltools::a(
           href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
@@ -44,8 +45,16 @@ mod_principal_summary_los_ui <- function(id) {
   )
 }
 
+mod_principal_los_pods <- function() {
+  get_activity_type_pod_measure_options() |>
+    dplyr::filter(.data$activity_type != "aae") |>
+    dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
+    dplyr::bind_rows(data.frame(activity_type = "aae", pod = "aae", pod_name = "A&E Attendance")) |>
+    dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
+}
+
 mod_principal_summary_los_data <- function(r, sites, measure) {
-  pods <- mod_principal_high_level_pods()
+  pods <- mod_principal_los_pods()
 
   summary_los <- r$results$los_group |>
     dplyr::filter(.data$measure == .env$measure) |>

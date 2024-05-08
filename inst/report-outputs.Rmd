@@ -94,7 +94,7 @@ mod_principal_summary_los_data(params$r, params$sites, "beddays") |>
   gt::tab_options(table.align = "left")
 ```
 
-### admissions
+### Admissions
 
 ```{r}
 #| label: pp-summary-los-admissions
@@ -261,10 +261,25 @@ principal_high_level_summary_data |>
 ### Inpatient admissions
 
 ```{r}
-#| label: pp-summary-by-year-plot-ip
+#| label: pp-summary-by-year-plot-ip-admissions
 
 principal_high_level_summary_data |> 
-  possibly_mod_principal_high_level_plot(activity_type = "ip")
+  possibly_mod_principal_high_level_plot(
+    activity_type = "ip",
+    measure = "admissions"
+  )
+```
+
+### Inpatient bed days
+
+```{r}
+#| label: pp-summary-by-year-plot-ip-beddays
+
+principal_high_level_summary_data |> 
+  possibly_mod_principal_high_level_plot(
+    activity_type = "ip",
+    measure = "beddays"
+  )
 ```
 
 ### Outpatient attendances

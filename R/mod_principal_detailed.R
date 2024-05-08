@@ -17,6 +17,7 @@ mod_principal_detailed_ui <- function(id) {
       width = 12,
       htmltools::p(
         "Bed days are defined as the difference in days between discharge and admission, plus one day.",
+        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
         "See the",
         htmltools::a(
           href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
@@ -55,7 +56,12 @@ mod_principal_detailed_table <- function(data, aggregation, final_year) {
     ) |>
     gt::gt(groupname_col = "sex") |>
     gt::cols_label(
-      agg = aggregation,
+      agg = dplyr::case_match(
+        aggregation,
+        "age_group" ~ "Age Group",
+        "tretspef" ~ "Treatment Specialty",
+        .default = aggregation
+      ),
       baseline = "Baseline",
       final = paste0("Final (", final_year, ")"),
       change = "Change",
