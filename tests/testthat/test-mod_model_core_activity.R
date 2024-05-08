@@ -15,24 +15,48 @@ model_core_activity_expected <- tibble::tribble(
   "aae_type-01", "ambulance", 30000, 35000, 34000, 36000
 )
 
+model_core_activity_principal_expected <- tibble::tribble(
+  ~pod, ~measure, ~baseline, ~principal, ~lwr_ci, ~upr_ci,
+  "aae_type-01", "ambulance", 30000, 35000, 34000, 36000
+)
+
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
-  expect_snapshot(mod_model_core_activity_ui("id"))
+  set.seed(123)
+
+  # requires hack because the gt id can't be controlled
+  ui <- mod_model_core_activity_ui("id") |>
+    as.character() |>
+    stringr::str_replace_all(" data-tabsetid=\"\\d+\"", "") |>
+    stringr::str_replace_all("#?tab-\\d+-\\d+", "")
+
+  expect_snapshot(ui)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # helpers
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-test_that("mod_model_core_activity_server_table returns a gt", {
+test_that("mod_model_core_activity_server_table returns a gt for median data", {
   set.seed(1) # ensure gt id always regenerated identically
 
   table <- model_core_activity_expected |>
     dplyr::inner_join(atpmo_expected, by = c("pod", "measure" = "measures")) |>
-    mod_model_core_activity_server_table()
+    mod_model_core_activity_server_table(value_type = "median")
+
+  expect_s3_class(table, "gt_tbl")
+  expect_snapshot(gt::as_raw_html(table))
+})
+
+test_that("mod_model_core_activity_server_table returns a gt for principal data", {
+  set.seed(1) # ensure gt id always regenerated identically
+
+  table <- model_core_activity_principal_expected |>
+    dplyr::inner_join(atpmo_expected, by = c("pod", "measure" = "measures")) |>
+    mod_model_core_activity_server_table(value_type = "principal")
 
   expect_s3_class(table, "gt_tbl")
   expect_snapshot(gt::as_raw_html(table))
@@ -115,7 +139,7 @@ test_that("it renders the table", {
   shiny::testServer(mod_model_core_activity_server, args = list(selected_model_run), {
     selected_model_run("id")
 
-    expect_called(m, 1)
+    expect_called(m, 2)
     expect_args(m, 1, "table")
   })
 })
