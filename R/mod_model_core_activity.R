@@ -56,7 +56,7 @@ mod_model_core_activity_server_table <- function(
     data,
     value_type = c("median", "principal")
 ) {
-
+value_type <- match.arg(value_type)
   data_prep <- data |>
     dplyr::mutate(
       change = .data[[value_type]] - .data$baseline,
