@@ -282,7 +282,12 @@ trust_site_aggregation <- function(data, sites) {
   data_filtered |>
     dplyr::group_by(
       dplyr::across(
-        c(tidyselect::where(is.character), dplyr::matches("model_run|year"), -"sitetret")
+        c(
+          tidyselect::where(is.character),
+          tidyselect::where(is.factor),
+          dplyr::matches("model_run|year"),
+          -"sitetret"
+        )
       )
     ) |>
     dplyr::summarise(
