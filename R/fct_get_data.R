@@ -90,6 +90,33 @@ parse_results <- function(r) {
     purrr::compose(list, as.numeric)
   )
 
+  patch_results(r)
+}
+
+patch_results <- function(r) {
+  r$results[["tretspef_raw"]] <- dplyr::bind_rows(
+    r$results[["tretspef_raw"]],
+    r$results[["tretspef_raw+los_group"]] |>
+      dplyr::summarise(
+        .by = c("measure", "pod", "tretspef_raw", "sitetret"),
+        dplyr::across(
+          c("baseline", "principal", "lwr_ci", "median", "upr_ci"),
+          sum
+        ),
+        dplyr::across("time_profiles", \(.x) list(purrr::reduce(.x, `+`)))
+      )
+  )
+
+  r$results[["los_group"]] <- r$results[["tretspef_raw+los_group"]] |>
+    dplyr::summarise(
+      .by = c("measure", "pod", "los_group", "sitetret"),
+      dplyr::across(
+        c("baseline", "principal", "lwr_ci", "median", "upr_ci"),
+        sum
+      ),
+      dplyr::across("time_profiles", \(.x) list(purrr::reduce(.x, `+`)))
+    )
+
   r
 }
 
