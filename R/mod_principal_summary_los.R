@@ -56,15 +56,12 @@ mod_principal_los_pods <- function() {
 mod_principal_summary_los_data <- function(r, sites, measure) {
   pods <- mod_principal_los_pods()
 
-  summary_los <- r$results$los_group |>
+  summary_los <- r$results[["tretspef_raw+los_group"]] |>
     dplyr::filter(.data$measure == .env$measure) |>
+    dplyr::select(-"tretspef_raw") |>
     trust_site_aggregation(sites) |>
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::mutate(
-      los_group = factor(
-        .data$los_group,
-        levels = c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
-      ),
       change = .data$principal - .data$baseline,
       change_pcnt = .data$change / .data$baseline
     ) |>

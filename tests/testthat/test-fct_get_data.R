@@ -228,6 +228,7 @@ test_that("parse_results converts results correctly", {
 })
 
 test_that("patch_results returns correct values", {
+  # "1-7 days", "8-14 days", "15-21 days", "22+ days"
   # arrange
   r <- list(
     results = list(
@@ -236,23 +237,23 @@ test_that("patch_results returns correct values", {
         "a", "op", "100", "s1", 1, 2, c(1, 2), 3, 4, 5
       ),
       "tretspef_raw+los_group" = tibble::tribble(
-        ~measure, ~pod, ~los_group, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_ci, ~median, ~upr_ci, # nolint
-        "a", "ip", 0, "100", "s1", 1, 2, c(1, 2), 3, 4, 5,
-        "b", "ip", 0, "100", "s1", 2, 3, c(3, 4), 4, 5, 6,
-        "a", "ip", 1, "100", "s1", 3, 4, c(5, 6), 5, 6, 7,
-        "b", "ip", 1, "100", "s1", 4, 5, c(7, 8), 6, 7, 8,
-        "a", "ip", 0, "200", "s1", 2, 1, c(9, 0), 4, 5, 3,
-        "b", "ip", 0, "200", "s1", 3, 2, c(1, 3), 5, 6, 4,
-        "a", "ip", 1, "200", "s1", 4, 3, c(2, 5), 6, 7, 5,
-        "b", "ip", 1, "200", "s1", 5, 4, c(3, 7), 7, 8, 6,
-        "a", "ip", 0, "100", "s2", 5, 4, c(4, 9), 4, 5, 3,
-        "b", "ip", 0, "100", "s2", 4, 3, c(5, 0), 5, 6, 4,
-        "a", "ip", 1, "100", "s2", 3, 2, c(6, 2), 6, 7, 5,
-        "b", "ip", 1, "100", "s2", 2, 1, c(7, 4), 7, 8, 6,
-        "a", "ip", 0, "200", "s2", 4, 5, c(8, 6), 5, 6, 1,
-        "b", "ip", 0, "200", "s2", 3, 4, c(9, 8), 6, 7, 2,
-        "a", "ip", 1, "200", "s2", 2, 3, c(0, 0), 7, 8, 3,
-        "b", "ip", 1, "200", "s2", 1, 2, c(1, 9), 8, 9, 4
+        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_ci, ~median, ~upr_ci, ~los_group, # nolint
+        "a", "ip", "100", "s1", 1, 2, c(1, 2), 3, 4, 5, "0-day",
+        "b", "ip", "100", "s1", 2, 3, c(3, 4), 4, 5, 6, "1-7 days",
+        "a", "ip", "100", "s1", 3, 4, c(5, 6), 5, 6, 7, "8-14 days",
+        "b", "ip", "100", "s1", 4, 5, c(7, 8), 6, 7, 8, "15-21 days",
+        "a", "ip", "200", "s1", 2, 1, c(9, 0), 4, 5, 3, "22+ days",
+        "b", "ip", "200", "s1", 3, 2, c(1, 3), 5, 6, 4, "0-day",
+        "a", "ip", "200", "s1", 4, 3, c(2, 5), 6, 7, 5, "1-7 days",
+        "b", "ip", "200", "s1", 5, 4, c(3, 7), 7, 8, 6, "8-14 days",
+        "a", "ip", "100", "s2", 5, 4, c(4, 9), 4, 5, 3, "15-21 days",
+        "b", "ip", "100", "s2", 4, 3, c(5, 0), 5, 6, 4, "22+ days",
+        "a", "ip", "100", "s2", 3, 2, c(6, 2), 6, 7, 5, "0-day",
+        "b", "ip", "100", "s2", 2, 1, c(7, 4), 7, 8, 6, "1-7 days",
+        "a", "ip", "200", "s2", 4, 5, c(8, 6), 5, 6, 1, "8-14 days",
+        "b", "ip", "200", "s2", 3, 4, c(9, 8), 6, 7, 2, "15-21 days",
+        "a", "ip", "200", "s2", 2, 3, c(0, 0), 7, 8, 3, "22+ days",
+        "b", "ip", "200", "s2", 1, 2, c(1, 9), 8, 9, 4, "0-day"
       )
     )
   )
@@ -271,18 +272,19 @@ test_that("patch_results returns correct values", {
         "a", "ip", "200", "s2", 6, 8, c(8, 6), 12, 14, 4,
         "b", "ip", "200", "s2", 4, 6, c(10, 17), 14, 16, 6
       ),
-      "tretspef_raw+los_group" = r$results[["tretspef_raw+los_group"]],
-      "los_group" = tibble::tribble(
-        ~measure, ~pod, ~los_group, ~sitetret, ~baseline, ~principal, ~lwr_ci, ~median, ~upr_ci, ~time_profiles, # nolint
-        "a", "ip", 0, "s1", 3, 3, 7, 9, 8, c(10, 2),
-        "b", "ip", 0, "s1", 5, 5, 9, 11, 10, c(4, 7),
-        "a", "ip", 1, "s1", 7, 7, 11, 13, 12, c(7, 11),
-        "b", "ip", 1, "s1", 9, 9, 13, 15, 14, c(10, 15),
-        "a", "ip", 0, "s2", 9, 9, 9, 11, 4, c(12, 15),
-        "b", "ip", 0, "s2", 7, 7, 11, 13, 6, c(14, 8),
-        "a", "ip", 1, "s2", 5, 5, 13, 15, 8, c(6, 2),
-        "b", "ip", 1, "s2", 3, 3, 15, 17, 10, c(8, 13)
-      )
+      "tretspef_raw+los_group" = r$results[["tretspef_raw+los_group"]] |>
+        dplyr::mutate(
+          dplyr::across(
+            "los_group",
+            \(.x) {
+              forcats::fct_relevel(
+                .x,
+                c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
+              )
+            }
+          )
+        ) |>
+        dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
     )
   )
 

@@ -69,7 +69,6 @@ mod_info_downloads_ui <- function(id) {
           )
         )
       )
-
     )
   )
 }
@@ -81,18 +80,8 @@ mod_info_downloads_download_excel <- function(data) {
       purrr::map(
         dplyr::select,
         -tidyselect::where(is.list)
-      )
-
-    results[["los_group"]] <- results[["los_group"]] |>
-      dplyr::mutate(
-        los_group = factor(
-          .data$los_group,
-          levels = c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
-        )
       ) |>
-      dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
-
-    writexl::write_xlsx(results, file)
+      writexl::write_xlsx(file)
   }
 }
 
@@ -105,12 +94,10 @@ mod_info_downloads_download_json <- function(data) {
 mod_info_downloads_download_report_html <- function(
     data,
     sites = NULL,
-    report_type = c("parameters", "outputs")
-) {
+    report_type = c("parameters", "outputs")) {
   force(data)
   report_type <- match.arg(report_type)
   function(file) {
-
     report_file <- glue::glue("report-{report_type}.Rmd")
     temp_report <- file.path(tempdir(), report_file)
     file.copy(app_sys(report_file), temp_report, overwrite = TRUE)
@@ -135,7 +122,6 @@ mod_info_downloads_download_report_html <- function(
       envir = new.env(parent = globalenv())
     )
   }
-
 }
 
 #' info_downloads Server Functions
@@ -143,7 +129,6 @@ mod_info_downloads_download_report_html <- function(
 #' @noRd
 mod_info_downloads_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
-
     # observers ----
     shiny::observe({
       shiny::req(selected_data())
@@ -210,6 +195,5 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
         report_type = "outputs"
       )
     )
-
   })
 }

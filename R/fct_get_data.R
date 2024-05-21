@@ -107,15 +107,19 @@ patch_results <- function(r) {
       )
   )
 
-  r$results[["los_group"]] <- r$results[["tretspef_raw+los_group"]] |>
-    dplyr::summarise(
-      .by = c("measure", "pod", "los_group", "sitetret"),
+  r$results[["tretspef_raw+los_group"]] <- r$results[["tretspef_raw+los_group"]] |>
+    dplyr::mutate(
       dplyr::across(
-        c("baseline", "principal", "lwr_ci", "median", "upr_ci"),
-        sum
-      ),
-      dplyr::across("time_profiles", \(.x) list(purrr::reduce(.x, `+`)))
-    )
+        "los_group",
+        \(.x) {
+          forcats::fct_relevel(
+            .x,
+            c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
+          )
+        }
+      )
+    ) |>
+    dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
 
   r
 }
