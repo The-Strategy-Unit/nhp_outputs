@@ -21,16 +21,16 @@ test_that("ui is created correctly", {
 test_that("mod_principal_summary_los_data summarises the data", {
   data <- list(
     results = list(
-      los_group = tibble::tribble(
-        ~pod, ~measure, ~sitetret, ~los_group, ~baseline, ~principal,
-        "a", "beddays", "trust", "0-day", 1, 2,
-        "a", "beddays", "trust", "1-7 days", 3, 4,
-        "a", "beddays", "trust", "8-14 days", 5, 6,
-        "b", "beddays", "trust", "0-day", 7, 8,
-        "a", "admissions", "trust", "0-day", 1, 2,
-        "a", "admissions", "trust", "1-7 days", 3, 4,
-        "a", "admissions", "trust", "8-14 days", 5, 6,
-        "b", "admissions", "trust", "0-day", 7, 8
+      "tretspef_raw+los_group" = tibble::tribble(
+        ~tretspef_raw, ~pod, ~measure, ~sitetret, ~los_group, ~baseline, ~principal,
+        1, "a", "beddays", "trust", "0-day", 1, 2,
+        2, "a", "beddays", "trust", "1-7 days", 3, 4,
+        3, "a", "beddays", "trust", "8-14 days", 5, 6,
+        4, "b", "beddays", "trust", "0-day", 7, 8,
+        5, "a", "admissions", "trust", "0-day", 1, 2,
+        6, "a", "admissions", "trust", "1-7 days", 3, 4,
+        7, "a", "admissions", "trust", "8-14 days", 5, 6,
+        8, "b", "admissions", "trust", "0-day", 7, 8
       )
     )
   )
@@ -43,10 +43,6 @@ test_that("mod_principal_summary_los_data summarises the data", {
     "B", "0-day", 7, 8
   ) |>
     dplyr::mutate(
-      los_group = factor(
-        los_group,
-        levels = c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
-      ),
       change = principal - baseline,
       change_pcnt = change / baseline
     )
@@ -101,7 +97,9 @@ test_that("it sets up the reactives correctly", {
   stub(mod_principal_summary_los_server, "mod_principal_summary_los_data", m)
 
   shiny::testServer(
-    mod_principal_summary_los_server, args = list(reactiveVal(), reactiveVal()), {
+    mod_principal_summary_los_server,
+    args = list(reactiveVal(), reactiveVal()),
+    {
       selected_data(1)
       selected_site("a")
 
@@ -113,7 +111,6 @@ test_that("it sets up the reactives correctly", {
   expect_called(m, 2)
   expect_args(m, 1, 1, "a", "beddays")
   expect_args(m, 2, 1, "a", "admissions")
-
 })
 
 test_that("it creates the table", {

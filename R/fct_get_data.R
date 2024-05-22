@@ -90,6 +90,37 @@ parse_results <- function(r) {
     purrr::compose(list, as.numeric)
   )
 
+  patch_results(r)
+}
+
+patch_results <- function(r) {
+  r$results[["tretspef_raw"]] <- dplyr::bind_rows(
+    r$results[["tretspef_raw"]],
+    r$results[["tretspef_raw+los_group"]] |>
+      dplyr::summarise(
+        .by = c("measure", "pod", "tretspef_raw", "sitetret"),
+        dplyr::across(
+          c("baseline", "principal", "lwr_ci", "median", "upr_ci"),
+          sum
+        ),
+        dplyr::across("time_profiles", \(.x) list(purrr::reduce(.x, `+`)))
+      )
+  )
+
+  r$results[["tretspef_raw+los_group"]] <- r$results[["tretspef_raw+los_group"]] |>
+    dplyr::mutate(
+      dplyr::across(
+        "los_group",
+        \(.x) {
+          forcats::fct_relevel(
+            .x,
+            c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
+          )
+        }
+      )
+    ) |>
+    dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
+
   r
 }
 
@@ -251,7 +282,12 @@ trust_site_aggregation <- function(data, sites) {
   data_filtered |>
     dplyr::group_by(
       dplyr::across(
-        c(tidyselect::where(is.character), dplyr::matches("model_run|year"), -"sitetret")
+        c(
+          tidyselect::where(is.character),
+          tidyselect::where(is.factor),
+          dplyr::matches("model_run|year"),
+          -"sitetret"
+        )
       )
     ) |>
     dplyr::summarise(
