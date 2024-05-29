@@ -30,19 +30,6 @@ test_that("mod_principal_summary_data summarises the data", {
     ),
     cycle = TRUE
   )
-  m2 <- mock(
-    tibble::tribble(
-      ~quarter, ~model_run, ~baseline, ~principal,
-      "q1", 1, 1, 2,
-      "q1", 1, 3, 4,
-      "q2", 1, 1, 2,
-      "q2", 1, 3, 4,
-      "q1", 2, 1, 2,
-      "q1", 2, 3, 4,
-      "q2", 2, 1, 2,
-      "q2", 2, 3, 4,
-    )
-  )
 
   expected <- tibble::tribble(
     ~pod_name, ~activity_type, ~baseline, ~principal,
@@ -57,8 +44,7 @@ test_that("mod_principal_summary_data summarises the data", {
     "B 1", "Outpatient", 4, 5,
     "B 2", "A&E", 6, 7,
     "B 2", "A&E", 6, 7,
-    "B 2", "A&E", 6, 7,
-    "Beds Available", "Beds Available", 4, 6
+    "B 2", "A&E", 6, 7
   ) |>
     dplyr::mutate(
       activity_type = forcats::as_factor(activity_type),
@@ -77,63 +63,16 @@ test_that("mod_principal_summary_data summarises the data", {
   )
 
   stub(mod_principal_summary_data, "get_principal_high_level", m1)
-  stub(mod_principal_summary_data, "get_bed_occupancy", m2)
 
   actual <- mod_principal_summary_data("data", character())
 
   expect_called(m1, 3)
-  expect_called(m2, 1)
 
   expect_args(m1, 1, "data", c("admissions", "attendances", "walk-in", "ambulance"), character())
   expect_args(m1, 2, "data", "tele_attendances", character())
   expect_args(m1, 3, "data", "beddays", character())
-  expect_args(m2, 1, "data")
 
   expect_equal(actual, expected)
-})
-
-test_that("mod_principal_summary_data doesn't show bed occupancy if all sites aren't selected", {
-  m1 <- mock(
-    tibble::tribble(
-      ~pod, ~baseline, ~principal,
-      "a_1", 1, 2,
-      "a_2", 3, 4,
-      "b_1", 4, 5,
-      "b_2", 6, 7,
-      "c_1", 8, 9
-    ),
-    cycle = TRUE
-  )
-  m2 <- mock(
-    tibble::tribble(
-      ~quarter, ~model_run, ~baseline, ~principal,
-      "q1", 1, 1, 2,
-      "q1", 1, 3, 4,
-      "q2", 1, 1, 2,
-      "q2", 1, 3, 4,
-      "q1", 2, 1, 2,
-      "q1", 2, 3, 4,
-      "q2", 2, 1, 2,
-      "q2", 2, 3, 4,
-    )
-  )
-
-  stub(
-    mod_principal_summary_data,
-    "mod_principal_high_level_pods",
-    tibble::tibble(
-      activity_type = c("ip", "ip", "op", "aae"),
-      pod = c("a_1", "a_2", "b_1", "b_2"),
-      pod_name = c("A 1", "A 2", "B 1", "B 2")
-    )
-  )
-
-  stub(mod_principal_summary_data, "get_principal_high_level", m1)
-  stub(mod_principal_summary_data, "get_bed_occupancy", m2)
-
-  mod_principal_summary_data("data", "a")
-
-  expect_called(m2, 0)
 })
 
 test_that("mod_principal_summary_table creates a gt object", {

@@ -33,8 +33,6 @@ test_that("it calls get_params correctly", {
   stub(mod_info_params_server, "info_params_table_non_demographic_adjustment", "non_demographic_adjustment")
   stub(mod_info_params_server, "info_params_table_activity_avoidance", "activity_avoidance")
   stub(mod_info_params_server, "info_params_table_efficiencies", "efficiencies")
-  stub(mod_info_params_server, "info_params_table_bed_occupancy_day_night", "bed_occupancy_day_night")
-  stub(mod_info_params_server, "info_params_table_bed_occupancy_specialty_mapping", "bed_occupancy_specialty_mapping")
 
   testServer(
     mod_info_params_server,
@@ -70,8 +68,6 @@ test_that("outputs are set correctly", {
   stub(mod_info_params_server, "info_params_table_non_demographic_adjustment", m)
   stub(mod_info_params_server, "info_params_table_activity_avoidance", m)
   stub(mod_info_params_server, "info_params_table_efficiencies", m)
-  stub(mod_info_params_server, "info_params_table_bed_occupancy_day_night", m)
-  stub(mod_info_params_server, "info_params_table_bed_occupancy_specialty_mapping", m)
 
   testServer(
     mod_info_params_server,
@@ -83,7 +79,7 @@ test_that("outputs are set correctly", {
       expect_equal(output$time_profile_repat_local, "linear")
       expect_equal(output$time_profile_repat_nonlocal, "linear")
 
-      expect_called(m, 12)
+      expect_called(m, 10)
       expect_args(m, 1, expected_data)
       expect_args(m, 2, expected_data)
       expect_args(m, 3, expected_data)
@@ -94,8 +90,6 @@ test_that("outputs are set correctly", {
       expect_args(m, 8, expected_data)
       expect_args(m, 9, expected_data)
       expect_args(m, 10, expected_data)
-      expect_args(m, 11, expected_data)
-      expect_args(m, 12, expected_data)
     }
   )
 })

@@ -248,30 +248,6 @@ get_principal_change_factors <- function(r, activity_type, sites) {
     trust_site_aggregation(sites)
 }
 
-get_bed_occupancy <- function(r) {
-  r$results$bed_occupancy |>
-    dplyr::select(
-      "measure",
-      "quarter",
-      "ward_type",
-      "ward_group",
-      "baseline",
-      "principal",
-      "median",
-      "lwr_ci",
-      "upr_ci",
-      "model_runs"
-    ) |>
-    dplyr::mutate(
-      dplyr::across(
-        "model_runs",
-        \(.x) purrr::map(.x, tibble::enframe, name = "model_run")
-      )
-    ) |>
-    tidyr::unnest("model_runs") |>
-    dplyr::inner_join(get_variants(r), by = "model_run")
-}
-
 trust_site_aggregation <- function(data, sites) {
   data_filtered <- if (length(sites) == 0) {
     data

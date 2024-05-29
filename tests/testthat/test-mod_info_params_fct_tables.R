@@ -39,14 +39,6 @@ test_that("info_params_tables generated validation errors if no params provided"
   expect_error(
     info_params_table_efficiencies(p)
   )
-
-  expect_error(
-    info_params_table_bed_occupancy_day_night(p)
-  )
-
-  expect_error(
-    info_params_table_bed_occupancy_specialty_mapping(p)
-  )
 })
 
 test_that("info_params_table_demographic_adjustment creates table correctly", {
@@ -117,24 +109,6 @@ test_that("info_params_table_efficiencies creates table correctly", {
   expect_snapshot(
     gt::as_raw_html(
       info_params_table_efficiencies(p)
-    )
-  )
-})
-
-test_that("info_params_table_bed_occupancy_day_night creates table correctly", {
-  set.seed(1)
-  expect_snapshot(
-    gt::as_raw_html(
-      info_params_table_bed_occupancy_day_night(p)
-    )
-  )
-})
-
-test_that("info_params_table_bed_occupancy_specialty_mapping creates table correctly", {
-  set.seed(1)
-  expect_snapshot(
-    gt::as_raw_html(
-      info_params_table_bed_occupancy_specialty_mapping(p)
     )
   )
 })
