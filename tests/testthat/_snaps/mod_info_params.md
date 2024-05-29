@@ -196,29 +196,4 @@
         </div>
         <script type="application/json">{"title":"Efficiencies","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
-      <div class="col-sm-12">
-        <div class="card bs4Dash collapsed-card">
-          <div class="card-header">
-            <h3 class="card-title">Bed occupancy</h3>
-            <div class="card-tools float-right">
-              <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
-                <i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-6">
-                <h4>Day and night</h4>
-                <div id="id-params_bed_occupancy_day_night" class="shiny-html-output"></div>
-              </div>
-              <div class="col-sm-6">
-                <h4>Specialty mapping</h4>
-                <div id="id-params_bed_occupancy_specialty_mapping" class="shiny-html-output"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <script type="application/json">{"title":"Bed occupancy","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
-      </div>
 

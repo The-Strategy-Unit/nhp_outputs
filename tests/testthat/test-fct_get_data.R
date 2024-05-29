@@ -581,50 +581,6 @@ test_that("get_principal_change_factors validates the arguments", {
   expect_error(get_principal_change_factors(r, "x"), "Invalid activity_type")
 })
 
-test_that("get_bed_occupancy gets the results", {
-  stub(
-    get_bed_occupancy,
-    "get_variants",
-    tibble::tibble(model_run = 1:3, variant = c("a", "a", "b"))
-  )
-
-  r <- list(
-    results = list(
-      bed_occupancy = tibble::tibble(
-        measure = "m",
-        quarter = "q",
-        ward_type = "t",
-        ward_group = "w",
-        baseline = "b",
-        principal = "p",
-        median = 1,
-        lwr_ci = 0,
-        upr_ci = 2,
-        model_runs = list(4:6)
-      )
-    )
-  )
-
-  expected <- tibble::tibble(
-    measure = c("m", "m", "m"),
-    quarter = c("q", "q", "q"),
-    ward_type = c("t", "t", "t"),
-    ward_group = c("w", "w", "w"),
-    baseline = c("b", "b", "b"),
-    principal = c("p", "p", "p"),
-    median = c(1, 1, 1),
-    lwr_ci = c(0, 0, 0),
-    upr_ci = c(2, 2, 2),
-    model_run = 1:3,
-    value = 4:6,
-    variant = c("a", "a", "b")
-  )
-
-  actual <- get_bed_occupancy(r)
-
-  expect_equal(actual, expected)
-})
-
 test_that("trust_site_aggregation adds in a trust level aggregatrion", {
   df <- tibble::tribble(
     ~sitetret, ~x, ~v,

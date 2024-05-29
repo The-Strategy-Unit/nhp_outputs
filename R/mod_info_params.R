@@ -101,21 +101,6 @@ mod_info_params_ui <- function(id) {
       collapsed = TRUE,
       width = 12,
       gt::gt_output(ns("params_efficiencies"))
-    ),
-    bs4Dash::box(
-      title = "Bed occupancy",
-      collapsed = TRUE,
-      width = 12,
-      shiny::fluidRow(
-        col_6(
-          shiny::h4("Day and night"),
-          gt::gt_output(ns("params_bed_occupancy_day_night")),
-        ),
-        col_6(
-          shiny::h4("Specialty mapping"),
-          gt::gt_output(ns("params_bed_occupancy_specialty_mapping"))
-        )
-      )
     )
   )
 }
@@ -167,14 +152,6 @@ mod_info_params_server <- function(id, selected_data) {
 
     output$params_efficiencies <- gt::render_gt({
       info_params_table_efficiencies(params_data())
-    })
-
-    output$params_bed_occupancy_day_night <- gt::render_gt({
-      info_params_table_bed_occupancy_day_night(params_data())
-    })
-
-    output$params_bed_occupancy_specialty_mapping <- gt::render_gt({
-      info_params_table_bed_occupancy_specialty_mapping(params_data())
     })
 
     output$time_profile_waiting_list_adjustment <- shiny::renderText({

@@ -39,7 +39,7 @@ mod_principal_summary_ui <- function(id) {
 }
 
 mod_principal_summary_data <- function(r, sites) {
-  pods <- mod_principal_los_pods()   # uses same POD lookup as LoS summary
+  pods <- mod_principal_los_pods() # uses same POD lookup as LoS summary
 
   main_summary <- get_principal_high_level(
     r,
@@ -61,22 +61,10 @@ mod_principal_summary_data <- function(r, sites) {
       "pod_name" = stringr::str_replace(.data$pod_name, "Admission", "Bed Days")
     )
 
-  bed_occupancy <- if (length(sites) == 0) {
-    get_bed_occupancy(r) |>
-      dplyr::filter(.data$model_run == 1) |>
-      dplyr::group_by(.data$quarter) |>
-      dplyr::summarise(dplyr::across(c("baseline", "principal"), sum)) |>
-      dplyr::summarise(
-        dplyr::across(c("baseline", "principal"), mean),
-        "pod_name" = "Beds Available"
-      )
-  }
-
   dplyr::bind_rows(
     main_summary,
     tele_attendances,
-    bed_days,
-    bed_occupancy
+    bed_days
   ) |>
     dplyr::mutate(
       dplyr::across(
@@ -85,14 +73,13 @@ mod_principal_summary_data <- function(r, sites) {
           .data$activity_type,
           "ip" ~ "Inpatient",
           "op" ~ "Outpatient",
-          "aae" ~ "A&E",
-          .default = "Beds Available"
+          "aae" ~ "A&E"
         )
       ),
       dplyr::across(
         "activity_type",
         # ~ forcats::fct_relevel(.x, "Inpatient", "Outpatient", after = 0)
-        ~ factor(.x, levels = c("Inpatient", "Outpatient", "A&E", "Beds Available"))
+        ~ factor(.x, levels = c("Inpatient", "Outpatient", "A&E"))
       ),
       measure = dplyr::case_when(
         stringr::str_detect(.data$pod_name, "Admission$") ~ "admission",
@@ -124,7 +111,7 @@ mod_principal_summary_table <- function(data) {
     ) |>
     dplyr::mutate(
       "activity_type" = as.character(.data$activity_type),
-      "activity_type" = dplyr::case_when(  # include admissions/beddays in gt groupnames
+      "activity_type" = dplyr::case_when( # include admissions/beddays in gt groupnames
         stringr::str_detect(.data$pod_name, "Admission") ~ glue::glue("{.data$activity_type} Admissions"),
         stringr::str_detect(.data$pod_name, "Bed Days") ~ glue::glue("{.data$activity_type} Bed Days"),
         .default = .data$activity_type
@@ -143,7 +130,8 @@ mod_principal_summary_table <- function(data) {
     gt::cols_width(
       .data$principal ~ gt::px(150),
       .data$change ~ gt::px(150),
-      .data$change_pcnt ~ gt::px(150)) |>
+      .data$change_pcnt ~ gt::px(150)
+    ) |>
     gt::cols_align(
       align = "left",
       columns = c("baseline", "principal", "change", "change_pcnt")

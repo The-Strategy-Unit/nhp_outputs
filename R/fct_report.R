@@ -5,7 +5,6 @@
 #'     read in with [get_params].
 #' @noRd
 tabulate_model_run_info <- function(p) {
-
   p_model_run <- purrr::keep(p, rlang::is_atomic)
 
   p_model_run[["start_year"]] <- scales::number(
@@ -31,7 +30,6 @@ tabulate_model_run_info <- function(p) {
     gt::gt("name") |>
     gt_theme() |>
     gt::tab_options(table.align = "left")
-
 }
 
 # Impact of changes ----
@@ -52,9 +50,7 @@ prep_principal_change_factors <- function(
     sites,
     mitigators,
     at,
-    pods
-) {
-
+    pods) {
   principal_change_factors_raw <- data |>
     get_principal_change_factors(at, sites)
 
@@ -88,7 +84,6 @@ prep_principal_change_factors <- function(
       wt = .data[["value"]],
       name = "value"
     )
-
 }
 
 #' Prepare Individual Change Factors Data
@@ -99,9 +94,7 @@ prep_principal_change_factors <- function(
 #' @noRd
 prep_individual_change_factors <- function(
     principal_change_factors,
-    measure
-) {
-
+    measure) {
   principal_change_factors |>
     dplyr::filter(
       .data$measure == .env$measure,
@@ -114,7 +107,6 @@ prep_individual_change_factors <- function(
         \(.x) forcats::fct_reorder(.x, -.data$value)
       )
     )
-
 }
 
 #' Plot Individual Change Factors Data
@@ -128,9 +120,7 @@ prep_individual_change_factors <- function(
 plot_individual_change_factors <- function(
     principal_change_factors,
     measure,
-    change_factor
-) {
-
+    change_factor) {
   individual_change_factors <-
     prep_individual_change_factors(principal_change_factors, measure) |>
     dplyr::filter(change_factor == .env$change_factor)
@@ -142,7 +132,6 @@ plot_individual_change_factors <- function(
     snakecase::to_title_case(change_factor),
     snakecase::to_title_case(measure)
   )
-
 }
 
 #' Plot Impact and Individual Change Factors Data
@@ -154,9 +143,7 @@ plot_individual_change_factors <- function(
 #' @noRd
 plot_impact_and_individual_change <- function(
     principal_change_factors,
-    measure
-) {
-
+    measure) {
   possibly_mod_principal_change_factor_effects_cf_plot <-
     purrr::possibly(
       mod_principal_change_factor_effects_cf_plot,
@@ -180,7 +167,6 @@ plot_impact_and_individual_change <- function(
     possibly_plot_individual_change_factors(measure, "efficiencies")
 
   dplyr::lst(waterfall_plot, activity_avoidance_plot, efficiencies_plot)
-
 }
 
 # Activity in detail ----
@@ -205,9 +191,7 @@ generate_activity_in_detail_table <- function(
     activity_type,
     pod,
     measure,
-    agg_col
-) {
-
+    agg_col) {
   aggregated_data <- data |>
     get_aggregation(pod, measure, agg_col, sites)
 
@@ -252,7 +236,6 @@ generate_activity_in_detail_table <- function(
       final_year = end_fyear
     ) |>
     gt::tab_options(table.align = "left")
-
 }
 
 # Activity distribution----
@@ -271,9 +254,7 @@ plot_activity_distributions <- function(
     sites,
     activity_type,
     pod,
-    measure
-) {
-
+    measure) {
   selected_measure <- c(activity_type, pod, measure)
 
   aggregated_data <- data |>
@@ -291,7 +272,6 @@ plot_activity_distributions <- function(
   )
 
   dplyr::lst(beeswarm_plot, ecdf_plot)
-
 }
 
 # Params ----
@@ -303,7 +283,6 @@ plot_activity_distributions <- function(
 #'     [expand_param_tables_to_rmd].
 #' @noRd
 param_tables_to_list <- function(p) {
-
   time_profiles <- p$time_profile_mappings
 
   # We can use some functions developed for the app but need to catch
@@ -338,20 +317,10 @@ param_tables_to_list <- function(p) {
     info_params_table_efficiencies
   )
 
-  possibly_table_bed_occupancy_day_night <-purrr::possibly(
-    info_params_table_bed_occupancy_day_night
-  )
-  possibly_table_bed_occupancy_specialty_mapping <-purrr::possibly(
-    info_params_table_bed_occupancy_specialty_mapping
-  )
-
   params_list <- list(
-
     "Baseline adjustment" = possibly_table_baseline_adjustment(p),
     "Covid adjustment" = possibly_table_covid_adjustment(p),
-
     "Demographic adjustment" = possibly_table_demographic_adjustment(p),
-
     "Waiting list adjustment" = list(
       "Time profile" = time_profiles$waiting_list_adjustment,
       "Table" = possibly_table_waiting_list_adjustment(p)
@@ -368,20 +337,13 @@ param_tables_to_list <- function(p) {
       "Time profile" = time_profiles$repat_nonlocal,
       "Table" = possibly_table_expat_repat_adjustment(p, "repat_nonlocal")
     ),
-
     "Non-demographic adjustment" = possibly_table_non_demographic_adjustment(p),
-
     "Activity avoidance" = possibly_table_activity_avoidance(p),
-    "Efficiencies" = possibly_table_efficiencies(p),
-
-    "Bed occupancy (day/night)" = possibly_table_bed_occupancy_day_night(p),
-    "Bed occupancy (specialty mapping)" = possibly_table_bed_occupancy_specialty_mapping(p)
-
+    "Efficiencies" = possibly_table_efficiencies(p)
   ) |>
     purrr::compact()
 
   invisible(params_list)
-
 }
 
 #' Expand a List of Parameter Tables to R Markdown
@@ -392,11 +354,9 @@ param_tables_to_list <- function(p) {
 #'     a 'gt' object and a character value (the time profile mapping).
 #' @noRd
 expand_param_tables_to_rmd <- function(param_tables_list) {
-
-  l1_names <- names(param_tables_list)  # 'l1' as in 'level 1' of the list
+  l1_names <- names(param_tables_list) # 'l1' as in 'level 1' of the list
 
   for (l1 in l1_names) {
-
     cat("##", l1, "\n\n")
 
     l1_object <- param_tables_list[[l1]]
@@ -411,11 +371,9 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
     }
 
     if (!l1_is_gt & l1_is_list) {
-
       l2_names <- names(l1_object)
 
       for (l2 in l2_names) {
-
         l2_object <- l1_object[[l2]]
         l2_is_char <- is.character(l2_object)
         l2_is_gt <- inherits(l2_object, "gt_tbl")
@@ -431,7 +389,6 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
       }
     }
   }
-
 }
 
 #' Expand a List of Parameter-Selection Reasons to R Markdown
@@ -440,8 +397,7 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
 #'     string describing the reason for a given parameter selection.
 #' @noRd
 expand_reasons_to_rmd <- function(reasons_list) {
-
-  mitigators_json_path = app_sys("app", "data", "mitigators.json")
+  mitigators_json_path <- app_sys("app", "data", "mitigators.json")
 
   lookup <- c(
     jsonlite::read_json(mitigators_json_path) |> unlist(),
@@ -452,7 +408,6 @@ expand_reasons_to_rmd <- function(reasons_list) {
     "non-demographic_adjustment" = "Non-demographic adjustment",
     "activity_avoidance" = "Activity avoidance",
     "efficiencies" = "Efficiencies",
-    "bed_occupancy" = "Bed occupancy",
     "inequalities" = "Inequalities",
     "ip" = "Inpatient",
     "op" = "Outpatient",
@@ -463,10 +418,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
     remove_blanks_recursively() |>
     rename_recursively(lookup)
 
-  l1_names <- names(reasons_list)  # 'l1' as in 'level 1' of the list
+  l1_names <- names(reasons_list) # 'l1' as in 'level 1' of the list
 
   for (l1 in l1_names) {
-
     cat("##", l1, "\n\n")
 
     l1_object <- reasons_list[[l1]]
@@ -475,11 +429,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
     if (!l1_is_list) cat(l1_object, "\n\n")
 
     if (l1_is_list) {
-
       l2_names <- names(l1_object)
 
       for (l2 in l2_names) {
-
         cat("###", l2, "\n\n")
 
         l2_object <- l1_object[[l2]]
@@ -488,11 +440,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
         if (!l2_is_list) cat(l2_object, "\n\n")
 
         if (l2_is_list) {
-
           l3_names <- names(l2_object)
 
           for (l3 in l3_names) {
-
             cat("####", l3, "\n\n")
 
             l3_object <- l2_object[[l3]]
@@ -501,7 +451,6 @@ expand_reasons_to_rmd <- function(reasons_list) {
             if (!l3_is_list) cat(l3_object, "\n\n")
 
             if (l3_is_list) warning("Unexpected depth in reasons list object.")
-
           }
         }
       }
@@ -516,7 +465,6 @@ expand_reasons_to_rmd <- function(reasons_list) {
 #'     for the element anme that they're replacing (e.g. `c("old" = "new")`).
 #' @noRd
 rename_recursively <- function(list_in, names_lookup) {
-
   name_exists <- names(list_in) %in% names(names_lookup)
 
   names(list_in)[name_exists] <- names_lookup[names(list_in)[name_exists]]
@@ -525,7 +473,6 @@ rename_recursively <- function(list_in, names_lookup) {
     list_in,
     \(x) if (is.list(x)) rename_recursively(x, names_lookup) else x
   )
-
 }
 
 #' Remove Empty Strings from a (Possibly Nested) List
@@ -533,11 +480,11 @@ rename_recursively <- function(list_in, names_lookup) {
 #'     elements.
 #' @noRd
 remove_blanks_recursively <- function(list_in) {
-
-  if (!is.list(list_in)) return(list_in)
+  if (!is.list(list_in)) {
+    return(list_in)
+  }
 
   list_in |>
     purrr::discard(\(x) isTRUE(x == "")) |>
     purrr::map(remove_blanks_recursively)
-
 }
