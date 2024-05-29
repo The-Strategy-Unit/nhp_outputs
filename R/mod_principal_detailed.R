@@ -121,8 +121,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       c(activity_type, pod, measure) %<-% selected_measure()
 
       agg_col <- switch(shiny::req(input$aggregation),
-                        "Age Group" = "age_group",
-                        "Treatment Specialty" = "tretspef"
+        "Age Group" = "age_group",
+        "Treatment Specialty" = "tretspef"
       )
 
       dat <- selected_data() |>

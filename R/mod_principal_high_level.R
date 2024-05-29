@@ -91,12 +91,11 @@ mod_principal_high_level_ui <- function(id) {
 }
 
 mod_principal_high_level_pods <- function() {
-
   lookup_in <- get_activity_type_pod_measure_options() |>
-    dplyr::filter(.data$activity_type != "aae")  # gets reinstated below
+    dplyr::filter(.data$activity_type != "aae") # gets reinstated below
 
   lookup_distinct_ip <- lookup_in |>
-    dplyr::mutate(  # make ip admissions and beddays distinct
+    dplyr::mutate( # make ip admissions and beddays distinct
       dplyr::across(
         "pod_name",
         ~ dplyr::if_else(
@@ -130,7 +129,7 @@ mod_principal_high_level_pods <- function() {
 
   lookup_sorted |>
     dplyr::bind_rows(
-      data.frame(  # reinsert A&E (pods and measures combined to one row)
+      data.frame( # reinsert A&E (pods and measures combined to one row)
         activity_type = "aae",
         pod = "aae",
         pod_name = "A&E Attendance"
@@ -142,8 +141,7 @@ mod_principal_high_level_pods <- function() {
 mod_principal_high_level_summary_data <- function(
     r,
     pods = mod_principal_high_level_pods(),
-    sites
-) {
+    sites) {
   get_time_profiles(r, "default") |>
     dplyr::filter(!(.data[["measure"]] %in% c("procedures", "tele_attendances"))) |>
     dplyr::mutate(
@@ -151,7 +149,7 @@ mod_principal_high_level_summary_data <- function(
         "pod",
         ~ dplyr::if_else(
           stringr::str_detect(.data$pod, "^ip_"),
-          glue::glue("{.data$pod}_{.data$measure}"),  # unique pod value for admissions and beddays
+          glue::glue("{.data$pod}_{.data$measure}"), # unique pod value for admissions and beddays
           .data$pod
         )
       ),
@@ -175,9 +173,8 @@ mod_principal_high_level_summary_data <- function(
 
 mod_principal_high_level_table <- function(
     data,
-    summary_type = c("value", "change", "change_pcnt")
-) {
-  summary_type = match.arg(summary_type)
+    summary_type = c("value", "change", "change_pcnt")) {
+  summary_type <- match.arg(summary_type)
 
   fyear_rx <- "\\d{4}/\\d{2}"
 
@@ -195,7 +192,7 @@ mod_principal_high_level_table <- function(
           ~ dplyr::case_when(
             .data$activity_type == "ip" & stringr::str_detect(.data$pod_name, "Admission") ~ "Inpatient Admissions",
             .data$activity_type == "ip" & stringr::str_detect(.data$pod_name, "Bed Days") ~ "Inpatient Bed Days",
-            .data$activity_type == "op"  ~ "Outpatient",
+            .data$activity_type == "op" ~ "Outpatient",
             .data$activity_type == "aae" ~ "A&E"
           )
         ),
@@ -237,8 +234,8 @@ mod_principal_high_level_table <- function(
 mod_principal_high_level_plot <- function(
     data,
     activity_type,
-    measure = NULL  # needed because of separate admissions and beddays plots
-) {
+    measure = NULL # needed because of separate admissions and beddays plots
+    ) {
   start_year <- end_year <- NULL
   c(start_year, end_year) %<-% range(data$year)
 
@@ -265,7 +262,7 @@ mod_principal_high_level_plot <- function(
       )
     ) +
     ggplot2::geom_line() +
-    suppressWarnings(  # TODO: works, but 'Ignoring unknown aesthetics: text' warning
+    suppressWarnings( # TODO: works, but 'Ignoring unknown aesthetics: text' warning
       ggplot2::geom_point(ggplot2::aes(text = glue::glue(
         "{pod_name}\n{year}/{(year + 1) %% 100}: ",
         "{scales::comma(value, accuracy = 1)}"

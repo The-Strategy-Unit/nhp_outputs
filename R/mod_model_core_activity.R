@@ -54,23 +54,22 @@ mod_model_core_activity_ui <- function(id) {
 
 mod_model_core_activity_server_table <- function(
     data,
-    value_type = c("median", "principal")
-) {
-value_type <- match.arg(value_type)
+    value_type = c("median", "principal")) {
+  value_type <- match.arg(value_type)
   data_prep <- data |>
     dplyr::mutate(
       change = .data[[value_type]] - .data$baseline,
       change_pcnt = .data$change / .data$baseline,
       measure = .data$measure |>
         stringr::str_to_sentence() |>
-        stringr::str_replace("_", "-") |>  # tele_attendances
+        stringr::str_replace("_", "-") |> # tele_attendances
         stringr::str_replace("Beddays", "Bed days"),
       activity_type_name = factor(
         .data$activity_type_name,
         levels = c("Inpatients", "Outpatients", "A&E")
       )
     ) |>
-    dplyr::arrange(.data$activity_type_name, .data$pod_name)|>
+    dplyr::arrange(.data$activity_type_name, .data$pod_name) |>
     dplyr::select(
       "activity_type_name",
       "pod_name",

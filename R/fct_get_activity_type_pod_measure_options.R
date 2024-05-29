@@ -1,4 +1,3 @@
-
 get_activity_type_pod_measure_options <- function() {
   get_golem_config("pod_measures") |>
     purrr::map_dfr(\(.x) {
