@@ -65,8 +65,17 @@ mod_principal_summary_los_data <- function(r, sites, measure) {
       change = .data$principal - .data$baseline,
       change_pcnt = .data$change / .data$baseline
     ) |>
-    dplyr::select("pod_name", "los_group", "baseline", "principal", "change", "change_pcnt") |>
-    dplyr::arrange("pod_name", "los_group")
+    dplyr::select("pod_name", "los_group", "baseline", "principal", "change", "change_pcnt")
+
+  if (measure == "beddays") {
+    summary_los <- summary_los |>
+      dplyr::mutate(
+        pod_name = forcats::fct_relabel(
+          pod_name,
+          \(.x) stringr::str_replace(.x, "Admission", "Bed Days")
+        )
+      )
+  }
 
   summary_los[order(summary_los$pod_name, summary_los$los_group), ]
 }
