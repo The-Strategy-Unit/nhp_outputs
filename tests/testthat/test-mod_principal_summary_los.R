@@ -43,6 +43,7 @@ test_that("mod_principal_summary_los_data summarises the data", {
     "B", "0-day", 7, 8
   ) |>
     dplyr::mutate(
+      pod_name = factor(pod_name),
       change = principal - baseline,
       change_pcnt = change / baseline
     )
@@ -52,7 +53,7 @@ test_that("mod_principal_summary_los_data summarises the data", {
     "mod_principal_los_pods",
     tibble::tibble(
       pod = c("a", "b"),
-      pod_name = c("A", "B")
+      pod_name = factor(c("A", "B"))
     )
   )
 
