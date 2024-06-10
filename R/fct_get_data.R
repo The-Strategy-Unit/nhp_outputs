@@ -261,7 +261,7 @@ trust_site_aggregation <- function(data, sites) {
         c(
           tidyselect::where(is.character),
           tidyselect::where(is.factor),
-          dplyr::matches("model_run|year"),
+          tidyselect::any_of(c("model_run", "year")),
           -"sitetret"
         )
       )
