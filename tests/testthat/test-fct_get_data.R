@@ -234,10 +234,15 @@ test_that("patch_principal returns correct values (not step_counts)", {
   stub(patch_principal, "patch_principal_step_counts", m)
 
   results <- tibble::tibble(
-    model_runs = list(c(1, 2, 3, 4))
+    model_runs = list(c(1:100))
   )
-  expected <- results |>
-    dplyr::mutate(principal = 2.5)
+  expected <- dplyr::mutate(
+    results,
+    principal = 50.5,
+    median = 50.5,
+    lwr_ci = 10.9,
+    upr_ci = 90.1
+  )
 
   # act
   actual <- patch_principal(results, "x")

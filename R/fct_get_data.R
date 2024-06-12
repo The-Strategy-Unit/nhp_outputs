@@ -100,7 +100,10 @@ patch_principal <- function(results, name) {
 
   dplyr::mutate(
     results,
-    principal = purrr::map_dbl(.data[["model_runs"]], mean)
+    principal = purrr::map_dbl(.data[["model_runs"]], mean),
+    median = purrr::map_dbl(.data[["model_runs"]], quantile, 0.5),
+    lwr_ci = purrr::map_dbl(.data[["model_runs"]], quantile, 0.1),
+    upr_ci = purrr::map_dbl(.data[["model_runs"]], quantile, 0.9)
   )
 }
 
