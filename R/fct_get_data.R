@@ -108,14 +108,9 @@ patch_principal <- function(results, name) {
 }
 
 patch_principal_step_counts <- function(results) {
-  x <- split(results, results[["change_factor"]] == "baseline")
-
-  dplyr::bind_rows(
-    x[["TRUE"]],
-    dplyr::mutate(
-      x[["FALSE"]],
-      value = purrr::map_dbl(.data[["model_runs"]], mean)
-    )
+  dplyr::mutate(
+    results,
+    value = purrr::map_dbl(.data[["model_runs"]], mean)
   )
 }
 

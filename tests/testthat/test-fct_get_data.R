@@ -271,11 +271,10 @@ test_that("patch_principal_step_counts returns correct values", {
   # arrange
   results <- tibble::tibble(
     change_factor = c("baseline", "x"),
-    value = c(1, 2),
-    model_runs = list(NULL, c(1, 2))
+    model_runs = list(1, 2:4)
   )
   expected <- results |>
-    dplyr::mutate(value = c(1, 1.5))
+    dplyr::mutate(value = c(1, 3))
 
   # act
   actual <- patch_principal_step_counts(results)
