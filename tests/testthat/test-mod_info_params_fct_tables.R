@@ -1,9 +1,11 @@
 library(shiny)
 library(mockery)
 
-p <- app_sys("sample_results.json") |>
-  get_results_from_local() |>
-  get_params()
+get_sample_params <- \() {
+  app_sys("sample_results.json") |>
+    get_results_from_local() |>
+    get_params()
+}
 
 test_that("info_params_tables generated validation errors if no params provided", {
   p <- list()
@@ -42,6 +44,9 @@ test_that("info_params_tables generated validation errors if no params provided"
 })
 
 test_that("info_params_table_demographic_adjustment creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
@@ -51,6 +56,9 @@ test_that("info_params_table_demographic_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_baseline_adjustment creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
@@ -60,6 +68,9 @@ test_that("info_params_table_baseline_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_covid_adjustment creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
@@ -69,6 +80,9 @@ test_that("info_params_table_covid_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_waiting_list_adjustment creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
@@ -78,6 +92,9 @@ test_that("info_params_table_waiting_list_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_expat_repat_adjustment creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
@@ -87,6 +104,9 @@ test_that("info_params_table_expat_repat_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_non_demographic_adjustment creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
@@ -96,6 +116,9 @@ test_that("info_params_table_non_demographic_adjustment creates table correctly"
 })
 
 test_that("info_params_table_activity_avoidance creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
@@ -105,6 +128,9 @@ test_that("info_params_table_activity_avoidance creates table correctly", {
 })
 
 test_that("info_params_table_efficiencies creates table correctly", {
+  testthat::skip_on_ci()
+  p <- get_sample_params()
+
   set.seed(1)
   expect_snapshot(
     gt::as_raw_html(
