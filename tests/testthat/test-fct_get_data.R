@@ -283,6 +283,42 @@ test_that("patch_principal_step_counts returns correct values", {
   expect_equal(actual, expected)
 })
 
+test_that("patch_step_counts returns correct values (no strategy)", {
+  # arrange
+  expected <- tibble::tibble(
+    change_factor = "a",
+    strategy = NA_character_,
+    value = 1
+  )
+  r <- list(
+    step_counts = dplyr::select(expected, -"strategy")
+  )
+
+  # act
+  actual <- patch_step_counts(r)
+
+  # assert
+  expect_equal(actual$step_counts, expected)
+})
+
+test_that("patch_step_counts returns correct values (has strategy)", {
+  # arrange
+  expected <- tibble::tibble(
+    change_factor = "a",
+    strategy = "b",
+    value = 1
+  )
+  r <- list(
+    step_counts = expected
+  )
+
+  # act
+  actual <- patch_step_counts(r)
+
+  # assert
+  expect_equal(actual$step_counts, expected)
+})
+
 test_that("patch_results returns correct values", {
   # arrange
   r <- list(
@@ -312,8 +348,9 @@ test_that("patch_results returns correct values", {
       )
     )
   )
-  m <- mock(r$results[[1]], r$results[[2]])
+  m <- mock(r$results[[1]], r$results[[2]], r$results)
   stub(patch_results, "patch_principal", m)
+  stub(patch_results, "patch_step_counts", m)
 
   expected <- list(
     results = list(
@@ -350,9 +387,10 @@ test_that("patch_results returns correct values", {
 
   # assert
   expect_equal(actual, expected)
-  expect_called(m, 2)
+  expect_called(m, 3)
   expect_args(m, 1, r$results[[1]], "tretspef_raw")
   expect_args(m, 2, r$results[[2]], "tretspef_raw+los_group")
+  expect_args(m, 3, r$results)
 })
 
 test_that("user_allowed_datasets returns correct values", {

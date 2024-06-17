@@ -114,8 +114,20 @@ patch_principal_step_counts <- function(results) {
   )
 }
 
+patch_step_counts <- function(results) {
+  if (!"strategy" %in% colnames(results$step_counts)) {
+    results$step_counts <- dplyr::mutate(
+      results$step_counts,
+      strategy = NA_character_,
+      .after = "change_factor"
+    )
+  }
+  results
+}
+
 patch_results <- function(r) {
   r$results <- purrr::imap(r$results, patch_principal)
+  r$results <- patch_step_counts(r$results)
 
   r$results[["tretspef_raw"]] <- dplyr::bind_rows(
     r$results[["tretspef_raw"]],
