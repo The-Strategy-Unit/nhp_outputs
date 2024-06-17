@@ -67,3 +67,5 @@ coverage.xml
 
 # worktrees
 results_selection_app/
+
+inst/sample_results.json

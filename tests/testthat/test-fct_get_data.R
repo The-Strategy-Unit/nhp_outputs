@@ -227,8 +227,63 @@ test_that("parse_results converts results correctly", {
   expect_equal(actual, "patched_results")
 })
 
+test_that("patch_principal returns correct values (not step_counts)", {
+  # arrange
+  m <- mock()
+
+  stub(patch_principal, "patch_principal_step_counts", m)
+
+  results <- tibble::tibble(
+    model_runs = list(c(1:100))
+  )
+  expected <- dplyr::mutate(
+    results,
+    principal = 50.5,
+    median = 50.5,
+    lwr_ci = 10.9,
+    upr_ci = 90.1
+  )
+
+  # act
+  actual <- patch_principal(results, "x")
+
+  # assert
+  expect_called(m, 0)
+  expect_equal(actual, expected)
+})
+
+test_that("patch_principal returns correct values (step_counts)", {
+  # arrange
+  m <- mock("patch_principal_step_counts")
+
+  stub(patch_principal, "patch_principal_step_counts", m)
+
+  # act
+  actual <- patch_principal("results", "step_counts")
+
+  # assert
+  expect_called(m, 1)
+  expect_args(m, 1, "results")
+  expect_equal(actual, "patch_principal_step_counts")
+})
+
+test_that("patch_principal_step_counts returns correct values", {
+  # arrange
+  results <- tibble::tibble(
+    change_factor = c("baseline", "x"),
+    model_runs = list(1, 2:4)
+  )
+  expected <- results |>
+    dplyr::mutate(value = c(1, 3))
+
+  # act
+  actual <- patch_principal_step_counts(results)
+
+  # assert
+  expect_equal(actual, expected)
+})
+
 test_that("patch_results returns correct values", {
-  # "1-7 days", "8-14 days", "15-21 days", "22+ days"
   # arrange
   r <- list(
     results = list(
@@ -257,6 +312,8 @@ test_that("patch_results returns correct values", {
       )
     )
   )
+  m <- mock(r$results[[1]], r$results[[2]])
+  stub(patch_results, "patch_principal", m)
 
   expected <- list(
     results = list(
@@ -293,6 +350,9 @@ test_that("patch_results returns correct values", {
 
   # assert
   expect_equal(actual, expected)
+  expect_called(m, 2)
+  expect_args(m, 1, r$results[[1]], "tretspef_raw")
+  expect_args(m, 2, r$results[[2]], "tretspef_raw+los_group")
 })
 
 test_that("user_allowed_datasets returns correct values", {

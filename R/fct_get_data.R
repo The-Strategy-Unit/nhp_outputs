@@ -93,7 +93,30 @@ parse_results <- function(r) {
   patch_results(r)
 }
 
+patch_principal <- function(results, name) {
+  if (name == "step_counts") {
+    return(patch_principal_step_counts(results))
+  }
+
+  dplyr::mutate(
+    results,
+    principal = purrr::map_dbl(.data[["model_runs"]], mean),
+    median = purrr::map_dbl(.data[["model_runs"]], quantile, 0.5),
+    lwr_ci = purrr::map_dbl(.data[["model_runs"]], quantile, 0.1),
+    upr_ci = purrr::map_dbl(.data[["model_runs"]], quantile, 0.9)
+  )
+}
+
+patch_principal_step_counts <- function(results) {
+  dplyr::mutate(
+    results,
+    value = purrr::map_dbl(.data[["model_runs"]], mean)
+  )
+}
+
 patch_results <- function(r) {
+  r$results <- purrr::imap(r$results, patch_principal)
+
   r$results[["tretspef_raw"]] <- dplyr::bind_rows(
     r$results[["tretspef_raw"]],
     r$results[["tretspef_raw+los_group"]] |>
