@@ -41,7 +41,7 @@
         <div class="col-sm-12">
           <div class="card bs4Dash">
             <div class="card-header">
-              <h3 class="card-title">Download parameters report</h3>
+              <h3 class="card-title">Download parameters report (Extract A)</h3>
             </div>
             <div class="card-body">
               <p>
@@ -54,12 +54,12 @@
               </a>
             </div>
           </div>
-          <script type="application/json">{"title":"Download parameters report","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"title":"Download parameters report (Extract A)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
         <div class="col-sm-12">
           <div class="card bs4Dash">
             <div class="card-header">
-              <h3 class="card-title">Download outputs report</h3>
+              <h3 class="card-title">Download summary outputs report (Extract B)</h3>
             </div>
             <div class="card-body">
               <p>
@@ -72,7 +72,7 @@
               </a>
             </div>
           </div>
-          <script type="application/json">{"title":"Download outputs report","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
+          <script type="application/json">{"title":"Download summary outputs report (Extract B)","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
         </div>
       </div>
 
