@@ -40,7 +40,7 @@ mod_info_downloads_ui <- function(id) {
         )
       ),
       bs4Dash::box(
-        title = "Download parameters report",
+        title = "Download parameters report (Extract A)",
         collapsible = FALSE,
         width = 12,
         htmltools::p(
@@ -55,7 +55,7 @@ mod_info_downloads_ui <- function(id) {
         )
       ),
       bs4Dash::box(
-        title = "Download outputs report",
+        title = "Download summary outputs report (Extract B)",
         collapsible = FALSE,
         width = 12,
         htmltools::p(
