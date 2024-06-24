@@ -79,7 +79,8 @@ app_server <- function(input, output, session) {
   mod_principal_summary_server("principal_summary", selected_data, selected_site)
   mod_principal_summary_los_server("principal_summary_los", selected_data, selected_site)
   mod_principal_change_factor_effects_server("principal_change_factor_effects", selected_data, selected_site)
-  mod_principal_high_level_server("principal_high_level", selected_data, selected_site)
+  # Note: hidden due to ongoing time-profile discussions
+  # mod_principal_high_level_server("principal_high_level", selected_data, selected_site)
   mod_principal_detailed_server("principal_detailed", selected_data, selected_site)
 
   mod_model_core_activity_server("model_core_activity", selected_data, selected_site)
