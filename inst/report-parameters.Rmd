@@ -1,5 +1,5 @@
 ---
-title: "NHP Parameters Report"
+title: "NHP Parameters Report (Extract A)"
 subtitle: "Scenario: `r params$r$params$scenario`"
 output:
   html_document:
