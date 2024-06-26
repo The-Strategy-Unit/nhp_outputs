@@ -208,6 +208,8 @@ plot_impact_and_individual_change(op_pcf, "tele_attendances") |>
 plot_impact_and_individual_change(aae_pcf, "arrivals") |> purrr::walk(print)
 ```
 
+<!-- Note: section hidden due to ongoing time-profile discussions
+
 ## Summary by year
 
 See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
@@ -299,6 +301,8 @@ principal_high_level_summary_data |>
 principal_high_level_summary_data |> 
   possibly_mod_principal_high_level_plot(activity_type = "aae")
 ```
+
+-->
 
 ## Activity in detail
 

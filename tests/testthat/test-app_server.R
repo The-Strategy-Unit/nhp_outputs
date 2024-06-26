@@ -11,7 +11,8 @@ test_that("it loads the modules correctly", {
 
   stub(app_server, "mod_principal_summary_server", m)
   stub(app_server, "mod_principal_change_factor_effects_server", m)
-  stub(app_server, "mod_principal_high_level_server", m)
+  # Note: hidden due to ongoing time-profile discussions
+  # stub(app_server, "mod_principal_high_level_server", m)
   stub(app_server, "mod_principal_detailed_server", m)
 
   stub(app_server, "mod_model_core_activity_server", m)
@@ -21,19 +22,20 @@ test_that("it loads the modules correctly", {
   stub(app_server, "mod_info_params_server", m)
 
   testServer(app_server, {
-    expect_called(m, 9)
+    expect_called(m, 8)
     expect_args(m, 1, "home", selected_data)
 
     expect_args(m, 2, "principal_summary", selected_data, selected_site)
     expect_args(m, 3, "principal_change_factor_effects", selected_data, selected_site)
-    expect_args(m, 4, "principal_high_level", selected_data, selected_site)
-    expect_args(m, 5, "principal_detailed", selected_data, selected_site)
+    # Note: hidden due to ongoing time-profile discussions
+    # expect_args(m, 4, "principal_high_level", selected_data, selected_site)
+    expect_args(m, 4, "principal_detailed", selected_data, selected_site)
 
-    expect_args(m, 6, "model_core_activity", selected_data, selected_site)
-    expect_args(m, 7, "model_results_distribution", selected_data, selected_site)
+    expect_args(m, 5, "model_core_activity", selected_data, selected_site)
+    expect_args(m, 6, "model_results_distribution", selected_data, selected_site)
 
-    expect_args(m, 8, "info_downloads", selected_data, selected_site)
-    expect_args(m, 9, "info_params", selected_data)
+    expect_args(m, 7, "info_downloads", selected_data, selected_site)
+    expect_args(m, 8, "info_params", selected_data)
   })
 })
 
@@ -46,7 +48,8 @@ test_that("selected_data calls server_get_results", {
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
 
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
-  stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
+  # Note: hidden due to ongoing time-profile discussions
+  # stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
   stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
 
@@ -74,7 +77,8 @@ test_that("if server_get_results errors the app exits", {
 
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  # Note: hidden due to ongoing time-profile discussions
+  # stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
 
   stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
@@ -103,7 +107,8 @@ test_that("selected_site uses the inputs values", {
 
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  # Note: hidden due to ongoing time-profile discussions
+  # stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
 
   stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
@@ -130,7 +135,8 @@ test_that("it gets the trust sites from the results", {
 
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  # Note: hidden due to ongoing time-profile discussions
+  # stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
 
   stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
@@ -157,7 +163,8 @@ test_that("it updates the site selection drop down", {
 
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  # Note: hidden due to ongoing time-profile discussions
+  # stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
 
   stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
@@ -193,7 +200,8 @@ test_that("it can reset the cache", {
 
   stub(app_server, "mod_principal_summary_server", "mod_principal_summary_server")
   stub(app_server, "mod_principal_change_factor_effects_server", "mod_principal_change_factor_effects_server")
-  stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
+  # Note: hidden due to ongoing time-profile discussions
+  # stub(app_server, "mod_principal_high_level_server", "mod_principal_high_level_server")
   stub(app_server, "mod_principal_detailed_server", "mod_principal_detailed_server")
 
   stub(app_server, "mod_model_core_activity_server", "mod_model_core_activity_server")
