@@ -19,5 +19,5 @@ You can install the development version of outputs from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("The-Strategy-Unit/834_nhp_model")
+devtools::install_github("The-Strategy-Unit/nhp_outputs")
 ```
