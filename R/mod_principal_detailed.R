@@ -113,7 +113,10 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
       an <- c("age_group" = "Age Group", "tretspef" = "Treatment Specialty")
 
-      shiny::updateSelectInput(session, "aggregation", choices = unname(an[a]))
+      agg_choices <- unname(an[a])
+      agg_choices <- agg_choices[!is.na(agg_choices)]
+
+      shiny::updateSelectInput(session, "aggregation", choices = agg_choices)
     })
 
     aggregated_data <- shiny::reactive({
