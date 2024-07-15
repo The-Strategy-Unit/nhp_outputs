@@ -99,9 +99,9 @@ mod_info_downloads_download_excel <- function(data) {
       decimal.mark = "/"
     )
 
-    # params_list[["create_datetime"]] <- params_list[["create_datetime"]] |>
-    #   lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
-    #   format("%d-%b-%Y %H:%M:%S")
+    params_list[["create_datetime"]] <- params_list[["create_datetime"]] |>
+      lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
+      format("%d-%b-%Y %H:%M:%S")
 
     params_df <- params_list |> unlist() |> tibble::enframe()
 
