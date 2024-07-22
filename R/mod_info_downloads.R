@@ -75,12 +75,37 @@ mod_info_downloads_ui <- function(id) {
 
 mod_info_downloads_download_excel <- function(data) {
   function(file) {
-    results <- data() |>
+    results_dfs <- data() |>
       purrr::pluck("results") |>
       purrr::map(
         dplyr::select,
         -tidyselect::where(is.list)
-      ) |>
+      )
+
+    params_list <- data() |>
+      purrr::pluck("params") |>
+      purrr::keep(rlang::is_atomic)
+
+    params_list[["start_year"]] <- scales::number(
+      params_list[["start_year"]] + ((params_list[["start_year"]] + 1) %% 100) / 100,
+      0.01,
+      big.mark = "", decimal.mark = "/"
+    )
+
+    params_list[["end_year"]] <- scales::number(
+      params_list[["end_year"]] + ((params_list[["end_year"]] + 1) %% 100) / 100,
+      0.01,
+      big.mark = "",
+      decimal.mark = "/"
+    )
+
+    params_list[["create_datetime"]] <- params_list[["create_datetime"]] |>
+      lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
+      format("%d-%b-%Y %H:%M:%S")
+
+    params_df <- params_list |> unlist() |> tibble::enframe()
+
+    c(list(metadata = params_df), results_dfs) |>
       writexl::write_xlsx(file)
   }
 }

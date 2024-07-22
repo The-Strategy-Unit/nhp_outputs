@@ -29,6 +29,7 @@ test_that("ui is created correctly", {
 test_that("it generates an excel file", {
   data <- \() {
     list(
+      params = list(x = 1, y = "x", create_datetime = "20220101_000000"),
       results = list(
         a = tibble::tibble(
           x = 1:3,
@@ -49,7 +50,18 @@ test_that("it generates an excel file", {
   mod_info_downloads_download_excel(data)("file")
 
   expect_called(m, 1)
-  expect_args(m, 1, list(a = tibble::tibble(x = 1:3, y = 4:6)), "file")
+  expect_args(
+    m,
+    1,
+    list(
+      metadata = tibble::tibble(
+        name = c("x", "y", "create_datetime"),
+        value = c("1", "x", "01-Jan-2022 00:00:00")
+      ),
+      a = tibble::tibble(x = 1:3, y = 4:6)
+    ),
+    "file"
+  )
 })
 
 test_that("it generates a json file", {
