@@ -25,6 +25,8 @@
               <p>
                 Download a file containing results data for the selected model run.
                 The data is provided for each site and for the overall trust level.
+                See details of the content on
+                <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/results.html">the project information site.</a>
               </p>
               <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_results_xlsx" target="_blank">
                 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>

@@ -24,7 +24,12 @@ mod_info_downloads_ui <- function(id) {
         width = 12,
         htmltools::p(
           "Download a file containing results data for the selected model run.",
-          "The data is provided for each site and for the overall trust level."
+          "The data is provided for each site and for the overall trust level.",
+          "See details of the content on",
+          htmltools::a(
+            href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/results.html",
+            "the project information site."
+          )
         ),
         shinyjs::disabled(
           shiny::downloadButton(
@@ -168,37 +173,28 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
 
     # download buttons ----
 
+    filename_stub <- shiny::reactive({
+      p <- selected_data()$params
+      create_datetime <- stringr::str_replace(p$create_datetime, "_", "-")
+      paste(p$dataset, p$scenario, create_datetime, sep = "-") |> tolower()
+    })
+
     # results
 
     output$download_results_xlsx <- shiny::downloadHandler(
-      filename = \() {
-        paste0(
-          selected_data()$params$id,
-          "_results-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".xlsx"
-        )
-      },
+      filename = \() paste0(filename_stub(), "_results.xlsx"),
       content = mod_info_downloads_download_excel(selected_data)
     )
 
     output$download_results_json <- shiny::downloadHandler(
-      filename = \() {
-        paste0(
-          selected_data()$params$id,
-          "_results-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".json"
-        )
-      },
+      filename = \() paste0(filename_stub(), "_results.json"),,
       content = mod_info_downloads_download_json(selected_data)
     )
 
     # params
 
     output$download_report_parameters_html <- shiny::downloadHandler(
-      filename = \() {
-        paste0(
-          selected_data()$params$id,
-          "_report-parameters-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
-        )
-      },
+      filename = \() paste0(filename_stub(), "_report-parameters_extract-a.html"),
       content = mod_info_downloads_download_report_html(
         selected_data,
         report_type = "parameters"
@@ -208,12 +204,7 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
     # outputs (plots, tables, etc)
 
     output$download_report_outputs_html <- shiny::downloadHandler(
-      filename = \() {
-        paste0(
-          selected_data()$params$id,
-          "_report-outputs-", format(Sys.time(), "%Y%m%d-%H%M%S"), ".html"
-        )
-      },
+      filename = \() paste0(filename_stub(), "_report-outputs_extract-b.html"),
       content = mod_info_downloads_download_report_html(
         selected_data,
         selected_site,
