@@ -345,10 +345,25 @@ test_that("patch_results returns correct values", {
         "b", "ip", "200", "s2", 3, 4, c(9, 8), 6, 7, 2, "15-21 days",
         "a", "ip", "200", "s2", 2, 3, c(0, 0), 7, 8, 3, "22+ days",
         "b", "ip", "200", "s2", 1, 2, c(1, 9), 8, 9, 4, "0-day"
+      ),
+      "sex+age_group" = tibble::tribble(
+        ~sitetret, ~pod, ~sex, ~age_group, ~measure, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci, # nolint
+        "s1", "ip", 1, "0",       "a", 1, 2, 4, 3, 5,
+        "s1", "ip", 1, "85+",     "b", 2, 3, 5, 4, 6,
+        "s1", "ip", 1, "65-74",   "a", 4, 5, 7, 6, 8,
+        "s1", "ip", 1, "16-17",   "b", 2, 1, 5, 4, 3,
+        "s1", "ip", 1, "18-34",   "a", 3, 2, 6, 5, 4,
+        "s1", "ip", 1, "35-49",   "b", 4, 3, 7, 6, 5,
+        "s1", "ip", 1, "5-9",     "a", 3, 4, 6, 5, 7,
+        "s1", "ip", 1, "50-64",   "b", 5, 4, 8, 7, 6,
+        "s2", "ip", 1, "10-15",   "a", 5, 4, 5, 4, 3,
+        "s2", "ip", 1, "75-84",   "b", 4, 3, 6, 5, 4,
+        "s2", "ip", 1, "1-4",     "a", 3, 2, 7, 6, 5,
+        "s2", "ip", 1, "Unknown", "b", 2, 1, 8, 7, 6
       )
     )
   )
-  m <- mock(r$results[[1]], r$results[[2]], r$results)
+  m <- mock(r$results[[1]], r$results[[2]], r$results[[3]], r$results)
   stub(patch_results, "patch_principal", m)
   stub(patch_results, "patch_step_counts", m)
 
@@ -378,7 +393,35 @@ test_that("patch_results returns correct values", {
             }
           )
         ) |>
-        dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
+        dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group),
+      "sex+age_group" = r$results[["sex+age_group"]] |>
+        dplyr::mutate(
+          dplyr::across(
+            "age_group",
+            \(.x) {
+              forcats::lvls_expand(
+                .x,
+                c(
+                  "0",
+                  "1-4",
+                  "5-9",
+                  "10-15",
+                  "16-17",
+                  "18-34",
+                  "35-49",
+                  "50-64",
+                  "65-74",
+                  "75-84",
+                  "85+",
+                  "Unknown"
+                )
+              )
+            }
+          )
+        ) |>
+        dplyr::arrange(
+          .data$pod, .data$measure, .data$sitetret, .data$sex, .data$age_group
+        )
     )
   )
 
@@ -387,10 +430,11 @@ test_that("patch_results returns correct values", {
 
   # assert
   expect_equal(actual, expected)
-  expect_called(m, 3)
+  expect_called(m, 4)
   expect_args(m, 1, r$results[[1]], "tretspef_raw")
   expect_args(m, 2, r$results[[2]], "tretspef_raw+los_group")
-  expect_args(m, 3, r$results)
+  expect_args(m, 3, r$results[[3]], "sex+age_group")
+  expect_args(m, 4, r$results)
 })
 
 test_that("user_allowed_datasets returns correct values", {

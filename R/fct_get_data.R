@@ -147,7 +147,7 @@ patch_results <- function(r) {
       dplyr::across(
         "los_group",
         \(.x) {
-          forcats::fct_relevel(
+          forcats::lvls_expand(  # order and include potentially missing levels
             .x,
             c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
           )
@@ -155,6 +155,35 @@ patch_results <- function(r) {
       )
     ) |>
     dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
+
+  r$results[["sex+age_group"]] <- r$results[["sex+age_group"]] |>
+    dplyr::mutate(
+      dplyr::across(
+        "age_group",
+        \(.x) {
+          forcats::lvls_expand(  # order and include potentially missing levels
+            .x,
+            c(
+              "0",
+              "1-4",
+              "5-9",
+              "10-15",
+              "16-17",
+              "18-34",
+              "35-49",
+              "50-64",
+              "65-74",
+              "75-84",
+              "85+",
+              "Unknown"
+            )
+          )
+        }
+      )
+    ) |>
+    dplyr::arrange(
+      .data$pod, .data$measure, .data$sitetret, .data$sex, .data$age_group
+    )
 
   r
 }
