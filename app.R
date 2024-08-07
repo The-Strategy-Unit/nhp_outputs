@@ -95,10 +95,6 @@ ui_body <- bs4Dash::bs4DashBody(
         href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
         "model project information site."
       )
-    ),
-    htmltools::p(
-      "Note that some data is presented at trust level even if you make a site selection.",
-      "Check the notes in each tab for details."
     )
   )
 )
