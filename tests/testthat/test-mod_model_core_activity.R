@@ -11,12 +11,12 @@ atpmo_expected <- tibble::tribble(
 )
 
 model_core_activity_expected <- tibble::tribble(
-  ~pod, ~measure, ~baseline, ~median, ~lwr_ci, ~upr_ci,
+  ~pod, ~measure, ~baseline, ~median, ~lwr_pi, ~upr_pi,
   "aae_type-01", "ambulance", 30000, 35000, 34000, 36000
 )
 
 model_core_activity_principal_expected <- tibble::tribble(
-  ~pod, ~measure, ~baseline, ~principal, ~lwr_ci, ~upr_ci,
+  ~pod, ~measure, ~baseline, ~principal, ~lwr_pi, ~upr_pi,
   "aae_type-01", "ambulance", 30000, 35000, 34000, 36000
 )
 

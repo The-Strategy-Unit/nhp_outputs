@@ -102,8 +102,8 @@ patch_principal <- function(results, name) {
     results,
     principal = purrr::map_dbl(.data[["model_runs"]], mean),
     median = purrr::map_dbl(.data[["model_runs"]], quantile, 0.5),
-    lwr_ci = purrr::map_dbl(.data[["model_runs"]], quantile, 0.1),
-    upr_ci = purrr::map_dbl(.data[["model_runs"]], quantile, 0.9)
+    lwr_pi = purrr::map_dbl(.data[["model_runs"]], quantile, 0.1),
+    upr_pi = purrr::map_dbl(.data[["model_runs"]], quantile, 0.9)
   )
 }
 
@@ -135,7 +135,7 @@ patch_results <- function(r) {
       dplyr::summarise(
         .by = c("measure", "pod", "tretspef_raw", "sitetret"),
         dplyr::across(
-          c("baseline", "principal", "lwr_ci", "median", "upr_ci"),
+          c("baseline", "principal", "lwr_pi", "median", "upr_pi"),
           sum
         ),
         dplyr::across("time_profiles", \(.x) list(purrr::reduce(.x, `+`)))
@@ -345,7 +345,7 @@ get_time_profiles <- function(r, result) {
     dplyr::mutate(dplyr::across("year_n", \(.x) .x - 1))
 
   df <- r$results[[result]] |>
-    dplyr::select(-tidyselect::matches("^(model_runs|.*_ci|median)"))
+    dplyr::select(-tidyselect::matches("^(model_runs|.*_pi|median)"))
 
   dplyr::bind_rows(
     df |>
