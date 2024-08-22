@@ -117,7 +117,13 @@ mod_info_downloads_download_excel <- function(data) {
 
 mod_info_downloads_download_json <- function(data) {
   function(file) {
-    jsonlite::write_json(data(), file, pretty = TRUE, auto_unbox = TRUE)
+    jsonlite::write_json(
+      data(),
+      file,
+      pretty = TRUE,
+      auto_unbox = TRUE,
+      digits = NA  # max precision
+    )
   }
 }
 
