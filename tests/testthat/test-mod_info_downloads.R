@@ -72,7 +72,7 @@ test_that("it generates a json file", {
   mod_info_downloads_download_json(data)("file")
 
   expect_called(m, 1)
-  expect_args(m, 1, "data", "file", pretty = TRUE, auto_unbox = TRUE)
+  expect_args(m, 1, "data", "file", pretty = TRUE, auto_unbox = TRUE, digits = NA)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
