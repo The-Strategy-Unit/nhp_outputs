@@ -26,7 +26,8 @@ app_server <- function(input, output, session) {
         session$close()
       }
     )
-  })
+  }) |>
+    shiny::bindCache(session$clientData$url_search)
 
   # handle site selection ----
 
