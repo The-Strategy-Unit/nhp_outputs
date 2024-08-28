@@ -7,7 +7,8 @@ get_container <- function() {
       "https://storage.azure.com",
       tenant = Sys.getenv("AZ_TENANT_ID"),
       app = app_id,
-      auth_type = "device_code"
+      auth_type = "device_code",
+      use_cache = TRUE
     )
   } else {
     AzureAuth::get_managed_token("https://storage.azure.com/") |>
@@ -147,7 +148,7 @@ patch_results <- function(r) {
       dplyr::across(
         "los_group",
         \(.x) {
-          forcats::lvls_expand(  # order and include potentially missing levels
+          forcats::lvls_expand( # order and include potentially missing levels
             .x,
             c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
           )
@@ -161,7 +162,7 @@ patch_results <- function(r) {
       dplyr::across(
         "age_group",
         \(.x) {
-          forcats::lvls_expand(  # order and include potentially missing levels
+          forcats::lvls_expand( # order and include potentially missing levels
             .x,
             c(
               "0",

@@ -2,8 +2,9 @@ library(shiny)
 library(mockery)
 
 get_sample_params <- \() {
-  app_sys("sample_results.json") |>
-    get_results_from_local() |>
+  list(
+    params = jsonlite::read_json(app_sys("sample_params.json"), simplifyVector = FALSE)
+  ) |>
     get_params()
 }
 
@@ -44,7 +45,6 @@ test_that("info_params_tables generated validation errors if no params provided"
 })
 
 test_that("info_params_table_demographic_adjustment creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)
@@ -56,7 +56,6 @@ test_that("info_params_table_demographic_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_baseline_adjustment creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)
@@ -68,7 +67,6 @@ test_that("info_params_table_baseline_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_covid_adjustment creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)
@@ -80,7 +78,6 @@ test_that("info_params_table_covid_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_waiting_list_adjustment creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)
@@ -92,7 +89,6 @@ test_that("info_params_table_waiting_list_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_expat_repat_adjustment creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)
@@ -104,7 +100,6 @@ test_that("info_params_table_expat_repat_adjustment creates table correctly", {
 })
 
 test_that("info_params_table_non_demographic_adjustment creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)
@@ -116,7 +111,6 @@ test_that("info_params_table_non_demographic_adjustment creates table correctly"
 })
 
 test_that("info_params_table_activity_avoidance creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)
@@ -128,7 +122,6 @@ test_that("info_params_table_activity_avoidance creates table correctly", {
 })
 
 test_that("info_params_table_efficiencies creates table correctly", {
-  testthat::skip_on_ci()
   p <- get_sample_params()
 
   set.seed(1)

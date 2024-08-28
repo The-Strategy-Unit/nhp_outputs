@@ -1,12 +1,3 @@
 {
-  "triggerTaskOnSave.tasks": {
-    "R: Test": [
-      "R/*.R",
-      "tests/**/*.R",
-      "DESCRIPTION"
-    ]
-  },
-  "triggerTaskOnSave.on": true,
-  "triggerTaskOnSave.restart": true,
   "azurite.location": "../.azurite"
 }

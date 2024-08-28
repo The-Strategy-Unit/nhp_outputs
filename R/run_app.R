@@ -19,11 +19,6 @@ run_app <- function(onStart = NULL, # nolint
     create_data_cache()
   }
 
-
-
-
-
-
   golem::with_golem_options(
     app = shiny::shinyApp(
       ui = app_ui,

@@ -68,7 +68,8 @@ test_that("get_container uses azure app id if present", {
     "https://storage.azure.com",
     tenant = "tenant_id",
     app = "app_id",
-    auth_type = "device_code"
+    auth_type = "device_code",
+    use_cache = TRUE
   )
   expect_args(m3, 1, "url/results", token = "t0")
   expect_args(m4, 1, "ep", "results")
@@ -348,17 +349,17 @@ test_that("patch_results returns correct values", {
       ),
       "sex+age_group" = tibble::tribble(
         ~sitetret, ~pod, ~sex, ~age_group, ~measure, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi, # nolint
-        "s1", "ip", 1, "0",       "a", 1, 2, 4, 3, 5,
-        "s1", "ip", 1, "85+",     "b", 2, 3, 5, 4, 6,
-        "s1", "ip", 1, "65-74",   "a", 4, 5, 7, 6, 8,
-        "s1", "ip", 1, "16-17",   "b", 2, 1, 5, 4, 3,
-        "s1", "ip", 1, "18-34",   "a", 3, 2, 6, 5, 4,
-        "s1", "ip", 1, "35-49",   "b", 4, 3, 7, 6, 5,
-        "s1", "ip", 1, "5-9",     "a", 3, 4, 6, 5, 7,
-        "s1", "ip", 1, "50-64",   "b", 5, 4, 8, 7, 6,
-        "s2", "ip", 1, "10-15",   "a", 5, 4, 5, 4, 3,
-        "s2", "ip", 1, "75-84",   "b", 4, 3, 6, 5, 4,
-        "s2", "ip", 1, "1-4",     "a", 3, 2, 7, 6, 5,
+        "s1", "ip", 1, "0", "a", 1, 2, 4, 3, 5,
+        "s1", "ip", 1, "85+", "b", 2, 3, 5, 4, 6,
+        "s1", "ip", 1, "65-74", "a", 4, 5, 7, 6, 8,
+        "s1", "ip", 1, "16-17", "b", 2, 1, 5, 4, 3,
+        "s1", "ip", 1, "18-34", "a", 3, 2, 6, 5, 4,
+        "s1", "ip", 1, "35-49", "b", 4, 3, 7, 6, 5,
+        "s1", "ip", 1, "5-9", "a", 3, 4, 6, 5, 7,
+        "s1", "ip", 1, "50-64", "b", 5, 4, 8, 7, 6,
+        "s2", "ip", 1, "10-15", "a", 5, 4, 5, 4, 3,
+        "s2", "ip", 1, "75-84", "b", 4, 3, 6, 5, 4,
+        "s2", "ip", 1, "1-4", "a", 3, 2, 7, 6, 5,
         "s2", "ip", 1, "Unknown", "b", 2, 1, 8, 7, 6
       )
     )
