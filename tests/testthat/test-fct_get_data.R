@@ -240,8 +240,8 @@ test_that("patch_principal returns correct values (not step_counts)", {
     results,
     principal = 50.5,
     median = 50.5,
-    lwr_ci = 10.9,
-    upr_ci = 90.1
+    lwr_pi = 10.9,
+    upr_pi = 90.1
   )
 
   # act
@@ -324,11 +324,11 @@ test_that("patch_results returns correct values", {
   r <- list(
     results = list(
       "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_ci, ~median, ~upr_ci,
+        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_pi, ~median, ~upr_pi,
         "a", "op", "100", "s1", 1, 2, c(1, 2), 3, 4, 5
       ),
       "tretspef_raw+los_group" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_ci, ~median, ~upr_ci, ~los_group, # nolint
+        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_pi, ~median, ~upr_pi, ~los_group, # nolint
         "a", "ip", "100", "s1", 1, 2, c(1, 2), 3, 4, 5, "0-day",
         "b", "ip", "100", "s1", 2, 3, c(3, 4), 4, 5, 6, "1-7 days",
         "a", "ip", "100", "s1", 3, 4, c(5, 6), 5, 6, 7, "8-14 days",
@@ -347,7 +347,7 @@ test_that("patch_results returns correct values", {
         "b", "ip", "200", "s2", 1, 2, c(1, 9), 8, 9, 4, "0-day"
       ),
       "sex+age_group" = tibble::tribble(
-        ~sitetret, ~pod, ~sex, ~age_group, ~measure, ~baseline, ~principal, ~median, ~lwr_ci, ~upr_ci, # nolint
+        ~sitetret, ~pod, ~sex, ~age_group, ~measure, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi, # nolint
         "s1", "ip", 1, "0",       "a", 1, 2, 4, 3, 5,
         "s1", "ip", 1, "85+",     "b", 2, 3, 5, 4, 6,
         "s1", "ip", 1, "65-74",   "a", 4, 5, 7, 6, 8,
@@ -370,7 +370,7 @@ test_that("patch_results returns correct values", {
   expected <- list(
     results = list(
       "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_ci, ~median, ~upr_ci,
+        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_pi, ~median, ~upr_pi,
         "a", "op", "100", "s1", 1, 2, c(1, 2), 3, 4, 5,
         "a", "ip", "100", "s1", 4, 6, c(6, 8), 8, 10, 12,
         "b", "ip", "100", "s1", 6, 8, c(10, 12), 10, 12, 14,
@@ -774,9 +774,9 @@ test_that("get_time_profiles extracts the time profiles correctly", {
         time_profiles = list(
           1:9
         ),
-        lwr_ci = 20,
+        lwr_pi = 20,
         median = 30,
-        upr_ci = 40
+        upr_pi = 40
       )
     )
   )

@@ -78,24 +78,24 @@ mod_model_core_activity_server_table <- function(
       .env$value_type,
       "change",
       "change_pcnt",
-      "lwr_ci",
-      "upr_ci"
+      "lwr_pi",
+      "upr_pi"
     )
 
   data_prep |>
     gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
-    gt::fmt_integer(c("baseline", .env$value_type, "change", "lwr_ci", "upr_ci")) |>
+    gt::fmt_integer(c("baseline", .env$value_type, "change", "lwr_pi", "upr_pi")) |>
     gt::fmt_percent("change_pcnt", decimals = 0) |>
     gt::cols_align(align = "left", columns = "measure") |>
     gt::cols_label_with(fn = stringr::str_to_title) |>
     gt::cols_label(
       "change_pcnt" = gt::html("Percent<br>Change"),
-      "lwr_ci" = "Lower",
-      "upr_ci" = "Upper"
+      "lwr_pi" = "Lower",
+      "upr_pi" = "Upper"
     ) |>
     gt::tab_spanner(
-      "80% Confidence Interval",
-      c("lwr_ci", "upr_ci")
+      "80% prediction interval",
+      c("lwr_pi", "upr_pi")
     ) |>
     gt_theme()
 }
