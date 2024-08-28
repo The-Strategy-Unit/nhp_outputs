@@ -11,7 +11,7 @@ create_data_cache <- function() {
     dir.create(".cache")
   }
 
-  dc <- cachem::cache_disk(".cache/data_cache", 200 * 1024^2) # 200MB
+  dc <- cachem::cache_disk(".cache/data_cache", 1024^3) # 1GB
 
   # in case we need to invalidate the cache on rsconnect quickly, we can increment the "CACHE_VERSION" env var
   cache_version <- ifelse(
