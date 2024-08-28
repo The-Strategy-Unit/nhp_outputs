@@ -30,7 +30,7 @@ test_that("it creates a disk cache object", {
 
   create_data_cache()
   expect_called(m, 1)
-  expect_args(m, 1, ".cache/data_cache", 200 * 1024^2)
+  expect_args(m, 1, ".cache/data_cache", 1024^3)
 })
 
 test_that("it does not invalidate the cache if cache_version hasn't changed", {

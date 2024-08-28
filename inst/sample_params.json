@@ -1,0 +1,1574 @@
+{
+  "id": "test",
+  "scenario": "test",
+  "dataset": "synthetic",
+  "seed": 84308,
+  "model_runs": 256,
+  "start_year": 2019,
+  "end_year": 2035,
+  "app_version": "dev",
+  "create_datetime": "20220101_000000",
+  "demographic_factors": {
+    "file": "demographic_factors.csv",
+    "variant_probabilities": {
+      "principal_proj": 0.40,
+      "var_proj_10_year_migration": 0.15,
+      "var_proj_alt_internal_migration": 0.15,
+      "var_proj_high_intl_migration": 0.15,
+      "var_proj_low_intl_migration": 0.15
+    }
+  },
+  "covid_adjustment": {
+    "aae": {
+      "ambulance": [
+        1.014531,
+        1.014531
+      ],
+      "walk-in": [
+        1.031919,
+        1.031919
+      ]
+    },
+    "ip": {
+      "elective": [
+        1.023074,
+        1.023074
+      ],
+      "maternity": [
+        1.011324,
+        1.011324
+      ],
+      "non-elective": [
+        1.016637,
+        1.016637
+      ]
+    },
+    "op": {
+      "first": [
+        1.017960,
+        1.017960
+      ],
+      "followup": [
+        1.014095,
+        1.014095
+      ],
+      "procedure": [
+        1.026097,
+        1.026097
+      ]
+    }
+  },
+  "expat": {
+    "ip": {
+      "elective": {
+        "Other": [
+          0.97,
+          0.99
+        ]
+      },
+      "non-elective": {
+        "Other": [
+          0.97,
+          0.99
+        ]
+      },
+      "maternity": {
+        "Other (Medical)": [
+          0.97,
+          0.99
+        ]
+      }
+    },
+    "op": {
+      "Other": [
+        0.97,
+        0.99
+      ]
+    },
+    "aae": {
+      "walk-in": [
+        0.97,
+        0.99
+      ],
+      "ambulance": [
+        0.97,
+        0.99
+      ]
+    }
+  },
+  "repat_local": {
+    "ip": {
+      "elective": {
+        "100": [
+          1.01,
+          1.03
+        ],
+        "101": [
+          1.01,
+          1.03
+        ],
+        "110": [
+          1.01,
+          1.03
+        ],
+        "120": [
+          1.01,
+          1.03
+        ],
+        "130": [
+          1.01,
+          1.03
+        ],
+        "140": [
+          1.01,
+          1.03
+        ],
+        "150": [
+          1.01,
+          1.03
+        ],
+        "160": [
+          1.01,
+          1.03
+        ],
+        "170": [
+          1.01,
+          1.03
+        ],
+        "300": [
+          1.01,
+          1.03
+        ],
+        "301": [
+          1.01,
+          1.03
+        ],
+        "320": [
+          1.01,
+          1.03
+        ],
+        "330": [
+          1.01,
+          1.03
+        ],
+        "340": [
+          1.01,
+          1.03
+        ],
+        "400": [
+          1.01,
+          1.03
+        ],
+        "410": [
+          1.01,
+          1.03
+        ],
+        "430": [
+          1.01,
+          1.03
+        ],
+        "502": [
+          1.01,
+          1.03
+        ],
+        "Other (Medical)": [
+          1.01,
+          1.03
+        ],
+        "Other (Surgical)": [
+          1.01,
+          1.03
+        ],
+        "Other": [
+          1.01,
+          1.03
+        ]
+      },
+      "non-elective": {
+        "100": [
+          1.01,
+          1.03
+        ],
+        "101": [
+          1.01,
+          1.03
+        ],
+        "110": [
+          1.01,
+          1.03
+        ],
+        "120": [
+          1.01,
+          1.03
+        ],
+        "130": [
+          1.01,
+          1.03
+        ],
+        "140": [
+          1.01,
+          1.03
+        ],
+        "150": [
+          1.01,
+          1.03
+        ],
+        "160": [
+          1.01,
+          1.03
+        ],
+        "170": [
+          1.01,
+          1.03
+        ],
+        "300": [
+          1.01,
+          1.03
+        ],
+        "301": [
+          1.01,
+          1.03
+        ],
+        "320": [
+          1.01,
+          1.03
+        ],
+        "330": [
+          1.01,
+          1.03
+        ],
+        "340": [
+          1.01,
+          1.03
+        ],
+        "400": [
+          1.01,
+          1.03
+        ],
+        "410": [
+          1.01,
+          1.03
+        ],
+        "430": [
+          1.01,
+          1.03
+        ],
+        "502": [
+          1.01,
+          1.03
+        ],
+        "Other (Medical)": [
+          1.01,
+          1.03
+        ],
+        "Other (Surgical)": [
+          1.01,
+          1.03
+        ],
+        "Other": [
+          1.01,
+          1.03
+        ]
+      },
+      "maternity": {
+        "Other (Medical)": [
+          1.01,
+          1.03
+        ]
+      }
+    },
+    "op": {
+      "100": [
+        1.01,
+        1.03
+      ],
+      "101": [
+        1.01,
+        1.03
+      ],
+      "110": [
+        1.01,
+        1.03
+      ],
+      "120": [
+        1.01,
+        1.03
+      ],
+      "130": [
+        1.01,
+        1.03
+      ],
+      "140": [
+        1.01,
+        1.03
+      ],
+      "150": [
+        1.01,
+        1.03
+      ],
+      "160": [
+        1.01,
+        1.03
+      ],
+      "170": [
+        1.01,
+        1.03
+      ],
+      "300": [
+        1.01,
+        1.03
+      ],
+      "301": [
+        1.01,
+        1.03
+      ],
+      "320": [
+        1.01,
+        1.03
+      ],
+      "330": [
+        1.01,
+        1.03
+      ],
+      "340": [
+        1.01,
+        1.03
+      ],
+      "400": [
+        1.01,
+        1.03
+      ],
+      "410": [
+        1.01,
+        1.03
+      ],
+      "430": [
+        1.01,
+        1.03
+      ],
+      "502": [
+        1.01,
+        1.03
+      ],
+      "Other (Medical)": [
+        1.01,
+        1.03
+      ],
+      "Other (Surgical)": [
+        1.01,
+        1.03
+      ],
+      "Other": [
+        1.01,
+        1.03
+      ]
+    },
+    "aae": {
+      "walk-in": [
+        1.01,
+        1.03
+      ],
+      "ambulance": [
+        1.01,
+        1.03
+      ]
+    }
+  },
+  "repat_nonlocal": {
+    "ip": {
+      "elective": {
+        "100": [
+          1.01,
+          1.03
+        ],
+        "101": [
+          1.01,
+          1.03
+        ],
+        "110": [
+          1.01,
+          1.03
+        ],
+        "120": [
+          1.01,
+          1.03
+        ],
+        "130": [
+          1.01,
+          1.03
+        ],
+        "140": [
+          1.01,
+          1.03
+        ],
+        "150": [
+          1.01,
+          1.03
+        ],
+        "160": [
+          1.01,
+          1.03
+        ],
+        "170": [
+          1.01,
+          1.03
+        ],
+        "300": [
+          1.01,
+          1.03
+        ],
+        "301": [
+          1.01,
+          1.03
+        ],
+        "320": [
+          1.01,
+          1.03
+        ],
+        "330": [
+          1.01,
+          1.03
+        ],
+        "340": [
+          1.01,
+          1.03
+        ],
+        "400": [
+          1.01,
+          1.03
+        ],
+        "410": [
+          1.01,
+          1.03
+        ],
+        "430": [
+          1.01,
+          1.03
+        ],
+        "502": [
+          1.01,
+          1.03
+        ],
+        "Other (Medical)": [
+          1.01,
+          1.03
+        ],
+        "Other (Surgical)": [
+          1.01,
+          1.03
+        ],
+        "Other": [
+          1.01,
+          1.03
+        ]
+      },
+      "non-elective": {
+        "100": [
+          1.01,
+          1.03
+        ],
+        "101": [
+          1.01,
+          1.03
+        ],
+        "110": [
+          1.01,
+          1.03
+        ],
+        "120": [
+          1.01,
+          1.03
+        ],
+        "130": [
+          1.01,
+          1.03
+        ],
+        "140": [
+          1.01,
+          1.03
+        ],
+        "150": [
+          1.01,
+          1.03
+        ],
+        "160": [
+          1.01,
+          1.03
+        ],
+        "170": [
+          1.01,
+          1.03
+        ],
+        "300": [
+          1.01,
+          1.03
+        ],
+        "301": [
+          1.01,
+          1.03
+        ],
+        "320": [
+          1.01,
+          1.03
+        ],
+        "330": [
+          1.01,
+          1.03
+        ],
+        "340": [
+          1.01,
+          1.03
+        ],
+        "400": [
+          1.01,
+          1.03
+        ],
+        "410": [
+          1.01,
+          1.03
+        ],
+        "430": [
+          1.01,
+          1.03
+        ],
+        "502": [
+          1.01,
+          1.03
+        ],
+        "Other (Medical)": [
+          1.01,
+          1.03
+        ],
+        "Other (Surgical)": [
+          1.01,
+          1.03
+        ],
+        "Other": [
+          1.01,
+          1.03
+        ]
+      },
+      "maternity": {
+        "Other (Medical)": [
+          1.01,
+          1.03
+        ]
+      }
+    },
+    "op": {
+      "100": [
+        1.01,
+        1.03
+      ],
+      "101": [
+        1.01,
+        1.03
+      ],
+      "110": [
+        1.01,
+        1.03
+      ],
+      "120": [
+        1.01,
+        1.03
+      ],
+      "130": [
+        1.01,
+        1.03
+      ],
+      "140": [
+        1.01,
+        1.03
+      ],
+      "150": [
+        1.01,
+        1.03
+      ],
+      "160": [
+        1.01,
+        1.03
+      ],
+      "170": [
+        1.01,
+        1.03
+      ],
+      "300": [
+        1.01,
+        1.03
+      ],
+      "301": [
+        1.01,
+        1.03
+      ],
+      "320": [
+        1.01,
+        1.03
+      ],
+      "330": [
+        1.01,
+        1.03
+      ],
+      "340": [
+        1.01,
+        1.03
+      ],
+      "400": [
+        1.01,
+        1.03
+      ],
+      "410": [
+        1.01,
+        1.03
+      ],
+      "430": [
+        1.01,
+        1.03
+      ],
+      "502": [
+        1.01,
+        1.03
+      ],
+      "Other (Medical)": [
+        1.01,
+        1.03
+      ],
+      "Other (Surgical)": [
+        1.01,
+        1.03
+      ],
+      "Other": [
+        1.01,
+        1.03
+      ]
+    },
+    "aae": {
+      "walk-in": [
+        1.01,
+        1.03
+      ],
+      "ambulance": [
+        1.01,
+        1.03
+      ]
+    }
+  },
+  "baseline_adjustment": {
+    "ip": {
+      "elective": {
+        "100": 1.0,
+        "101": 1.0,
+        "110": 1.0,
+        "120": 1.0,
+        "130": 1.0,
+        "140": 1.0,
+        "150": 1.0,
+        "160": 1.0,
+        "170": 1.0,
+        "300": 1.0,
+        "301": 1.0,
+        "320": 1.0,
+        "330": 1.0,
+        "400": 1.0,
+        "410": 1.0,
+        "430": 1.0,
+        "502": 1.0,
+        "Other (Medical)": 1.0,
+        "Other (Surgical)": 1.0,
+        "Other": 1.0
+      },
+      "non-elective": {
+        "100": 1.0,
+        "101": 1.0,
+        "110": 1.0,
+        "120": 1.0,
+        "130": 1.0,
+        "140": 1.0,
+        "150": 1.0,
+        "160": 1.0,
+        "170": 1.0,
+        "300": 1.0,
+        "301": 1.0,
+        "320": 1.0,
+        "330": 1.0,
+        "400": 1.0,
+        "410": 1.0,
+        "430": 1.0,
+        "502": 1.0,
+        "Other (Medical)": 1.0,
+        "Other (Surgical)": 1.0,
+        "Other": 1.0
+      },
+      "maternity": {
+        "Other (Medical)": 1.0
+      }
+    },
+    "op": {
+      "first": {
+        "100": 1.0,
+        "101": 1.0,
+        "110": 1.0,
+        "120": 1.0,
+        "130": 1.0,
+        "140": 1.0,
+        "150": 1.0,
+        "160": 1.0,
+        "170": 1.0,
+        "300": 1.0,
+        "301": 1.0,
+        "320": 1.0,
+        "330": 1.0,
+        "400": 1.0,
+        "410": 1.0,
+        "430": 1.0,
+        "502": 1.0,
+        "Other (Medical)": 1.0,
+        "Other (Surgical)": 1.0,
+        "Other": 1.0
+      },
+      "followup": {
+        "100": 1.0,
+        "101": 1.0,
+        "110": 1.0,
+        "120": 1.0,
+        "130": 1.0,
+        "140": 1.0,
+        "150": 1.0,
+        "160": 1.0,
+        "170": 1.0,
+        "300": 1.0,
+        "301": 1.0,
+        "320": 1.0,
+        "330": 1.0,
+        "400": 1.0,
+        "410": 1.0,
+        "430": 1.0,
+        "502": 1.0,
+        "Other (Medical)": 1.0,
+        "Other (Surgical)": 1.0,
+        "Other": 1.0
+      },
+      "procedure": {
+        "100": 1.0,
+        "101": 1.0,
+        "110": 1.0,
+        "120": 1.0,
+        "130": 1.0,
+        "140": 1.0,
+        "150": 1.0,
+        "160": 1.0,
+        "170": 1.0,
+        "300": 1.0,
+        "301": 1.0,
+        "320": 1.0,
+        "330": 1.0,
+        "400": 1.0,
+        "410": 1.0,
+        "430": 1.0,
+        "502": 1.0,
+        "Other (Medical)": 1.0,
+        "Other (Surgical)": 1.0,
+        "Other": 1.0
+      }
+    },
+    "aae": {
+      "ambulance": 1.0,
+      "walk-in": 1.0
+    }
+  },
+  "waiting_list_adjustment": {
+    "ip": {
+      "100": 1.01,
+      "101": 1.01,
+      "110": 1.01,
+      "120": 1.01,
+      "130": 1.01,
+      "140": 1.01,
+      "150": 1.01,
+      "160": 1.01,
+      "170": 1.01,
+      "300": 1.01,
+      "301": 1.01,
+      "320": 1.01,
+      "330": 1.01,
+      "340": 1.01,
+      "400": 1.01,
+      "410": 1.01,
+      "430": 1.01,
+      "502": 1.01,
+      "Other (Medical)": 1.01,
+      "Other (Surgical)": 1.01,
+      "Other": 1.01
+    },
+    "op": {
+      "100": 1.02,
+      "101": 1.02,
+      "110": 1.02,
+      "120": 1.02,
+      "130": 1.02,
+      "140": 1.02,
+      "150": 1.02,
+      "160": 1.02,
+      "170": 1.02,
+      "300": 1.02,
+      "301": 1.02,
+      "320": 1.02,
+      "330": 1.02,
+      "340": 1.02,
+      "400": 1.02,
+      "410": 1.02,
+      "430": 1.02,
+      "502": 1.02,
+      "Other (Medical)": 1.02,
+      "Other (Surgical)": 1.02,
+      "Other": 1.02
+    }
+  },
+  "non-demographic_adjustment": {
+    "ip": {
+      "elective": [
+        1,
+        1.02
+      ],
+      "non-elective": [
+        1,
+        1.02
+      ],
+      "maternity": [
+        1,
+        1.02
+      ]
+    },
+    "op": {
+      "first": [
+        1,
+        1.02
+      ],
+      "followup": [
+        1,
+        1.02
+      ],
+      "procedure": [
+        1,
+        1.02
+      ]
+    },
+    "aae": {
+      "ambulance": [
+        1,
+        1.02
+      ],
+      "walk-in": [
+        1,
+        1.02
+      ]
+    }
+  },
+  "activity_avoidance": {
+    "aae": {
+      "frequent_attenders_adult_ambulance": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "frequent_attenders_adult_walk-in": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "frequent_attenders_child_ambulance": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "frequent_attenders_child_walk-in": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "left_before_seen_adult_ambulance": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "left_before_seen_adult_walk-in": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "left_before_seen_child_ambulance": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "left_before_seen_child_walk-in": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "low_cost_discharged_adult_ambulance": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "low_cost_discharged_adult_walk-in": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "low_cost_discharged_child_ambulance": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "low_cost_discharged_child_walk-in": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "discharged_no_treatment_adult_ambulance": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "discharged_no_treatment_adult_walk-in": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "discharged_no_treatment_child_ambulance": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "discharged_no_treatment_child_walk-in": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      }
+    },
+    "ip": {
+      "alcohol_partially_attributable_acute": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "alcohol_partially_attributable_chronic": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "alcohol_wholly_attributable": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "ambulatory_care_conditions_acute": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "ambulatory_care_conditions_chronic": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "ambulatory_care_conditions_vaccine_preventable": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "cancelled_operations": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "eol_care_2_days": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "eol_care_3_to_14_days": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "evidence_based_interventions_ent": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "evidence_based_interventions_general_surgery": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "evidence_based_interventions_gi_surgical": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "evidence_based_interventions_msk": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "evidence_based_interventions_vascular_varicose_veins": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "evidence_based_interventions_urology": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "falls_related_admissions": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "frail_elderly_high": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "frail_elderly_intermediate": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "intentional_self_harm": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "medically_unexplained_related_admissions": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "medicines_related_admissions_explicit": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "medicines_related_admissions_implicit_anti-diabetics": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "medicines_related_admissions_implicit_benzodiasepines": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "medicines_related_admissions_implicit_diurectics": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "medicines_related_admissions_implicit_nsaids": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "obesity_related_admissions": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "raid_ae": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "readmission_within_28_days": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "smoking": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "virtual_wards_activity_avoidance_ari": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "virtual_wards_activity_avoidance_heart_failure": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "zero_los_no_procedure_adult": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "zero_los_no_procedure_child": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      }
+    },
+    "op": {
+      "consultant_to_consultant_reduction_adult_surgical": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "consultant_to_consultant_reduction_adult_non-surgical": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "consultant_to_consultant_reduction_child_surgical": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "consultant_to_consultant_reduction_child_non-surgical": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "followup_reduction_adult_surgical": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "followup_reduction_adult_non-surgical": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "followup_reduction_child_surgical": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "followup_reduction_child_non-surgical": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      },
+      "gp_referred_first_attendance_reduction_adult_non-surgical": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "gp_referred_first_attendance_reduction_adult_surgical": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "gp_referred_first_attendance_reduction_child_non-surgical": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "gp_referred_first_attendance_reduction_child_surgical": {
+        "interval": [
+          0.7,
+          0.9
+        ]
+      }
+    }
+  },
+  "efficiencies": {
+    "ip": {
+      "ambulatory_emergency_care_low": {
+        "type": "aec",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "ambulatory_emergency_care_moderate": {
+        "type": "aec",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "ambulatory_emergency_care_high": {
+        "type": "aec",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "ambulatory_emergency_care_very_high": {
+        "type": "aec",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "emergency_elderly": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_bladder": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_breast": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_colectomy": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_hip": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_hysterectomy": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_knee": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_prostate": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "enhanced_recovery_rectum": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "excess_beddays_elective": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "excess_beddays_emergency": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "pre-op_los_1-day": {
+        "type": "pre-op",
+        "pre-op_days": 1,
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "pre-op_los_2-day": {
+        "type": "pre-op",
+        "pre-op_days": 2,
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "raid_ip": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "stroke_early_supported_discharge": {
+        "type": "all",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "day_procedures_occasionally_dc": {
+        "type": "day_procedures_daycase",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "day_procedures_occasionally_op": {
+        "type": "day_procedures_outpatients",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "day_procedures_usually_dc": {
+        "type": "day_procedures_daycase",
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "day_procedures_usually_op": {
+        "type": "day_procedures_outpatients",
+        "interval": [
+          0.89,
+          0.95
+        ]
+      },
+      "general_los_reduction_non-elective": {
+        "type": "all",
+        "interval": [
+          0.84,
+          0.86
+        ]
+      },
+      "general_los_reduction_elective": {
+        "type": "all",
+        "interval": [
+          0.91,
+          0.93
+        ]
+      },
+      "virtual_wards_efficiencies_ari": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      },
+      "virtual_wards_efficiencies_heart_failure": {
+        "interval": [
+          0.85,
+          0.95
+        ]
+      }
+    },
+    "op": {
+      "convert_to_tele_adult_surgical": {
+        "interval": [
+          0.95,
+          0.975
+        ]
+      },
+      "convert_to_tele_adult_non-surgical": {
+        "interval": [
+          0.95,
+          0.975
+        ]
+      },
+      "convert_to_tele_child_surgical": {
+        "interval": [
+          0.95,
+          0.975
+        ]
+      },
+      "convert_to_tele_child_non-surgical": {
+        "interval": [
+          0.95,
+          0.975
+        ]
+      }
+    }
+  },
+  "time_profile_mappings": {
+    "covid_adjustment": "none",
+    "baseline_adjustment": "none",
+    "expat": "linear",
+    "repat_local": "linear",
+    "repat_nonlocal": "linear",
+    "non-demographic_adjustment": "none",
+    "activity_avoidance": {
+      "aae": {
+        "frequent_attenders_adult_ambulance": "linear",
+        "frequent_attenders_adult_walk-in": "linear",
+        "frequent_attenders_child_ambulance": "linear",
+        "frequent_attenders_child_walk-in": "linear",
+        "left_before_seen_adult_ambulance": "linear",
+        "left_before_seen_adult_walk-in": "linear",
+        "left_before_seen_child_ambulance": "linear",
+        "left_before_seen_child_walk-in": "linear",
+        "low_cost_discharged_adult_ambulance": "linear",
+        "low_cost_discharged_adult_walk-in": "linear",
+        "low_cost_discharged_child_ambulance": "linear",
+        "low_cost_discharged_child_walk-in": "linear",
+        "discharged_no_treatment_adult_ambulance": "linear",
+        "discharged_no_treatment_adult_walk-in": "linear",
+        "discharged_no_treatment_child_ambulance": "linear",
+        "discharged_no_treatment_child_walk-in": "linear"
+      },
+      "ip": {
+        "alcohol_partially_attributable_acute": "linear",
+        "alcohol_partially_attributable_chronic": "linear",
+        "alcohol_wholly_attributable": "linear",
+        "ambulatory_care_conditions_acute": "linear",
+        "ambulatory_care_conditions_chronic": "linear",
+        "ambulatory_care_conditions_vaccine_preventable": "linear",
+        "cancelled_operations": "linear",
+        "eol_care_2_days": "linear",
+        "eol_care_3_to_14_days": "linear",
+        "evidence_based_interventions_ent": "linear",
+        "evidence_based_interventions_general_surgery": "linear",
+        "evidence_based_interventions_gi_surgical": "linear",
+        "evidence_based_interventions_msk": "linear",
+        "evidence_based_interventions_vascular_varicose_veins": "linear",
+        "evidence_based_interventions_urology": "linear",
+        "falls_related_admissions": "linear",
+        "frail_elderly_high": "linear",
+        "frail_elderly_intermediate": "linear",
+        "intentional_self_harm": "linear",
+        "medically_unexplained_related_admissions": "linear",
+        "medicines_related_admissions_explicit": "linear",
+        "medicines_related_admissions_implicit_anti-diabetics": "linear",
+        "medicines_related_admissions_implicit_benzodiasepines": "linear",
+        "medicines_related_admissions_implicit_diurectics": "linear",
+        "medicines_related_admissions_implicit_nsaids": "linear",
+        "obesity_related_admissions": "linear",
+        "raid_ae": "linear",
+        "readmission_within_28_days": "linear",
+        "smoking": "linear",
+        "virtual_wards_activity_avoidance_ari": "linear",
+        "virtual_wards_activity_avoidance_heart_failure": "linear",
+        "zero_los_no_procedure_adult": "linear",
+        "zero_los_no_procedure_child": "linear"
+      },
+      "op": {
+        "consultant_to_consultant_reduction_adult_surgical": "linear",
+        "consultant_to_consultant_reduction_adult_non-surgical": "linear",
+        "consultant_to_consultant_reduction_child_surgical": "linear",
+        "consultant_to_consultant_reduction_child_non-surgical": "linear",
+        "followup_reduction_adult_surgical": "linear",
+        "followup_reduction_adult_non-surgical": "linear",
+        "followup_reduction_child_surgical": "linear",
+        "followup_reduction_child_non-surgical": "linear",
+        "gp_referred_first_attendance_reduction_adult_non-surgical": "linear",
+        "gp_referred_first_attendance_reduction_adult_surgical": "linear",
+        "gp_referred_first_attendance_reduction_child_non-surgical": "linear",
+        "gp_referred_first_attendance_reduction_child_surgical": "linear"
+      }
+    },
+    "efficiencies": {
+      "ip": {
+        "ambulatory_emergency_care_low": "linear",
+        "ambulatory_emergency_care_moderate": "linear",
+        "ambulatory_emergency_care_high": "linear",
+        "ambulatory_emergency_care_very_high": "linear",
+        "emergency_elderly": "linear",
+        "enhanced_recovery_bladder": "linear",
+        "enhanced_recovery_breast": "linear",
+        "enhanced_recovery_colectomy": "linear",
+        "enhanced_recovery_hip": "linear",
+        "enhanced_recovery_hysterectomy": "linear",
+        "enhanced_recovery_knee": "linear",
+        "enhanced_recovery_prostate": "linear",
+        "enhanced_recovery_rectum": "linear",
+        "excess_beddays_elective": "linear",
+        "excess_beddays_emergency": "linear",
+        "pre-op_los_1-day": "linear",
+        "pre-op_los_2-day": "linear",
+        "raid_ip": "linear",
+        "stroke_early_supported_discharge": "linear",
+        "day_procedures_occasionally_dc": "linear",
+        "day_procedures_occasionally_op": "linear",
+        "day_procedures_usually_dc": "linear",
+        "day_procedures_usually_op": "linear",
+        "general_los_reduction_non-elective": "linear",
+        "general_los_reduction_elective": "linear",
+        "virtual_wards_efficiencies_ari": "linear",
+        "virtual_wards_efficiencies_heart_failure": "linear"
+      },
+      "op": {
+        "convert_to_tele_adult_surgical": "linear",
+        "convert_to_tele_adult_non-surgical": "linear",
+        "convert_to_tele_child_surgical": "linear",
+        "convert_to_tele_child_non-surgical": "linear"
+      }
+    },
+    "waiting_list_adjustment": "linear"
+  }
+}
