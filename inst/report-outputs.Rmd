@@ -503,6 +503,76 @@ activity_in_detail_tables$ip_maternity_admission_admissions_age_group
 activity_in_detail_tables$ip_maternity_admission_admissions_tretspef
 ```
 
+#### Regular day attender admission
+
+##### Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-17
+
+activity_in_detail_tables$ip_regular_day_attender_beddays_age_group
+```
+
+##### Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-18
+
+activity_in_detail_tables$ip_regular_day_attender_beddays_tretspef
+```
+
+##### Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-19
+
+activity_in_detail_tables$ip_regular_day_attender_admissions_age_group
+```
+
+##### Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-20
+
+activity_in_detail_tables$ip_regular_day_attender_admissions_tretspef
+```
+
+#### Regular night attender admission
+
+##### Bed days by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-21
+
+activity_in_detail_tables$ip_regular_night_attender_beddays_age_group
+```
+
+##### Bed days by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-22
+
+activity_in_detail_tables$ip_regular_night_attender_beddays_tretspef
+```
+
+##### Admissions by age group
+
+```{r}
+#| label: pp-activity-in-detail-ip-23
+
+activity_in_detail_tables$ip_regular_night_attender_admissions_age_group
+```
+
+##### Admissions by treatment specialty
+
+```{r}
+#| label: pp-activity-in-detail-ip-24
+
+activity_in_detail_tables$ip_regular_night_attender_admissions_tretspef
+```
+
+
+
 ### Outpatients
 
 #### First oupatient attendance
@@ -799,6 +869,42 @@ activity_distributions$`ip_maternity_admission_beddays` |> purrr::walk(print)
 #| label: pp-activity-distribution-ip-8
 
 activity_distributions$`ip_maternity_admission_admissions` |> purrr::walk(print)
+```
+
+#### Regular day attender admission
+
+##### Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-9
+
+activity_distributions$`ip_regular_day_attender_beddays` |> purrr::walk(print)
+```
+
+##### Admissions
+
+```{r}
+#| label: pp-activity-distribution-ip-10
+
+activity_distributions$`ip_regular_day_attender_admissions` |> purrr::walk(print)
+```
+
+#### Regular night attender admission
+
+##### Bed days
+
+```{r}
+#| label: pp-activity-distribution-ip-11
+
+activity_distributions$`ip_regular_night_attender_beddays` |> purrr::walk(print)
+```
+
+##### Admissions
+
+```{r}
+#| label: pp-activity-distribution-ip-12
+
+activity_distributions$`ip_regular_night_attender_admissions` |> purrr::walk(print)
 ```
 
 ### Outpatients

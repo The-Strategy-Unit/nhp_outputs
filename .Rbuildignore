@@ -22,3 +22,4 @@ $run_dev.*
 ^hooks$
 ^manifest.json$
 ^update_manifest.js$
+^remove_files_from_manifest.js$

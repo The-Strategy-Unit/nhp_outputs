@@ -71,7 +71,7 @@ mod_principal_summary_los_data <- function(r, sites, measure) {
     summary_los <- summary_los |>
       dplyr::mutate(
         pod_name = forcats::fct_relabel(
-          pod_name,
+          .data$pod_name,
           \(.x) stringr::str_replace(.x, "Admission", "Bed Days")
         )
       )
