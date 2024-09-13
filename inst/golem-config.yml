@@ -27,6 +27,16 @@ default:
           measures:
             - admissions
             - beddays
+        ip_regular_day_attender:
+          name: "Regular Day Attender Admission"
+          measures:
+            - admissions
+            - beddays
+        ip_regular_night_attender:
+          name: "Regular Night Attender Admission"
+          measures:
+            - admissions
+            - beddays
     op:
       name: "Outpatients"
       pods:
