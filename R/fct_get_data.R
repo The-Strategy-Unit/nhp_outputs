@@ -150,7 +150,16 @@ patch_results <- function(r) {
         \(.x) {
           forcats::lvls_expand( # order and include potentially missing levels
             .x,
-            c("0-day", "1-7 days", "8-14 days", "15-21 days", "22+ days")
+            c(
+              "0 days",
+              "1 day",
+              "2 days",
+              "3 days",
+              "4-7 days",
+              "8-14 days",
+              "15-21 days",
+              "22+ days"
+            )
           )
         }
       )
