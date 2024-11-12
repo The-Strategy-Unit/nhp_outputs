@@ -87,6 +87,20 @@ mod_info_downloads_download_excel <- function(data) {
         -tidyselect::where(is.list)
       )
 
+    # Rename as per
+    # https://www.datadictionary.nhs.uk/attributes/emergency_care_attendance_category.html
+    results_dfs[["attendance_category"]] <- results_dfs[["attendance_category"]] |>
+      dplyr::mutate(
+        attendance_category = dplyr::case_match(
+          attendance_category,
+          "1" ~ "unplanned_first_attendance",
+          "2" ~ "unplanned_follow-up_attendance_this_department",
+          "3" ~ "unplanned_follow-up_attendance_another_department",
+          "4" ~ "planned_follow-up_attendance",
+          .default = "unknown"
+        )
+      )
+
     params_list <- data() |>
       purrr::pluck("params") |>
       purrr::keep(rlang::is_atomic)
