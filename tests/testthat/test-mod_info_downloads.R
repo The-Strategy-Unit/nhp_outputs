@@ -39,6 +39,10 @@ test_that("it generates an excel file", {
             list(),
             list()
           )
+        ),
+        # test attendance_category becuase it's wrangled in the server
+        attendance_category = tibble::tibble(
+          attendance_category = c(1:4, "X")
         )
       )
     )
@@ -58,7 +62,16 @@ test_that("it generates an excel file", {
         name = c("x", "y", "create_datetime"),
         value = c("1", "x", "01-Jan-2022 00:00:00")
       ),
-      a = tibble::tibble(x = 1:3, y = 4:6)
+      a = tibble::tibble(x = 1:3, y = 4:6),
+      attendance_category = tibble::tibble(
+        attendance_category = c(
+          "unplanned_first_attendance",
+          "unplanned_follow-up_attendance_this_department",
+          "unplanned_follow-up_attendance_another_department",
+          "planned_follow-up_attendance",
+          "unknown"
+        )
+      )
     ),
     "file"
   )
