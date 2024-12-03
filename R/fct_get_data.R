@@ -87,7 +87,7 @@ parse_results <- function(r) {
     r$results,
     purrr::map_dfr,
     purrr::modify_at,
-    c("model_runs", "time_profiles"),
+    c("model_runs"),
     purrr::compose(list, as.numeric)
   )
 
@@ -138,8 +138,7 @@ patch_results <- function(r) {
         dplyr::across(
           c("baseline", "principal", "lwr_pi", "median", "upr_pi"),
           sum
-        ),
-        dplyr::across("time_profiles", \(.x) list(purrr::reduce(.x, `+`)))
+        )
       )
   )
 
@@ -344,38 +343,4 @@ trust_site_aggregation <- function(data, sites) {
       dplyr::across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE)),
       .groups = "drop"
     )
-}
-
-get_time_profiles <- function(r, result) {
-  start_year <- r$params[["start_year"]]
-  end_year <- r$params[["end_year"]]
-
-  years <- c(start_year:end_year) |>
-    tibble::enframe("year_n", "year") |>
-    dplyr::mutate(dplyr::across("year_n", \(.x) .x - 1))
-
-  df <- r$results[[result]] |>
-    dplyr::select(-tidyselect::matches("^(model_runs|.*_pi|median)"))
-
-  dplyr::bind_rows(
-    df |>
-      dplyr::select(-"time_profiles", -"principal") |>
-      dplyr::rename(value = "baseline") |>
-      dplyr::mutate(year_n = 0),
-    df |>
-      dplyr::select(-"baseline", -"principal") |>
-      dplyr::mutate(
-        dplyr::across(
-          "time_profiles",
-          \(.x) purrr::map(.x, tibble::enframe, "year_n")
-        )
-      ) |>
-      tidyr::unnest("time_profiles"),
-    df |>
-      dplyr::select(-"time_profiles", -"baseline") |>
-      dplyr::rename(value = "principal") |>
-      dplyr::mutate(year_n = end_year - start_year)
-  ) |>
-    dplyr::inner_join(years, by = dplyr::join_by("year_n")) |>
-    dplyr::select(-"year_n")
 }
