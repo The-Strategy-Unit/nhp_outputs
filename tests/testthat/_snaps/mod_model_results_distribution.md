@@ -75,7 +75,7 @@
           </div>
           <div class="card-body">
             <div id="id-beeswarm_text" class="shiny-html-output"></div>
-            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+            <div data-spinner-id="spinner-f98fa8306f9935bed7bb2e120e5af8a7" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-f98fa8306f9935bed7bb2e120e5af8a7" class="loader">Loading...</div>
               </div>
@@ -92,7 +92,7 @@
           </div>
           <div class="card-body">
             <div id="id-ecdf_text" class="shiny-html-output"></div>
-            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+            <div data-spinner-id="spinner-fc6415a2e22b3f4594b9e179dddd4f55" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-fc6415a2e22b3f4594b9e179dddd4f55" class="loader">Loading...</div>
               </div>

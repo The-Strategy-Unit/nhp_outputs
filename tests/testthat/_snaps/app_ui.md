@@ -143,7 +143,7 @@
                         <h3 class="card-title">Bed days summary by length of stay and point of delivery</h3>
                       </div>
                       <div class="card-body">
-                        <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                        <div data-spinner-id="spinner-1857099327b1aff77d32fa5ed14cd0bc" class="shiny-spinner-output-container shiny-spinner-hideui">
                           <div class="load-container shiny-spinner-hidden load1">
                             <div id="spinner-1857099327b1aff77d32fa5ed14cd0bc" class="loader">Loading...</div>
                           </div>
@@ -160,7 +160,7 @@
                         <h3 class="card-title">Admissions summary by length of stay and point of delivery</h3>
                       </div>
                       <div class="card-body">
-                        <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+                        <div data-spinner-id="spinner-27905ce65da0feb456001ecf156cc1d8" class="shiny-spinner-output-container shiny-spinner-hideui">
                           <div class="load-container shiny-spinner-hidden load1">
                             <div id="spinner-27905ce65da0feb456001ecf156cc1d8" class="loader">Loading...</div>
                           </div>
