@@ -99,7 +99,6 @@ test_that("it calls get_model_core_activity", {
 })
 
 test_that("it filters for the site data", {
-  stub(mod_model_core_activity_server, "mod_principal_high_level_pods", "pods")
   stub(mod_model_core_activity_server, "get_activity_type_pod_measure_options", atpmo_expected)
   stub(
     mod_model_core_activity_server,
