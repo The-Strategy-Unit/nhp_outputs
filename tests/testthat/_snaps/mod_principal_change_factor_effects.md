@@ -75,7 +75,7 @@
                 </label>
               </div>
             </div>
-            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+            <div data-spinner-id="spinner-fac52137bd9b9ca575e47193636bb3fb" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-fac52137bd9b9ca575e47193636bb3fb" class="loader">Loading...</div>
               </div>
@@ -99,7 +99,7 @@
                 <script type="application/json" data-for="id-sort_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
               </div>
             </div>
-            <div class="shiny-spinner-output-container shiny-spinner-hideui ">
+            <div data-spinner-id="spinner-02d712da1fde4b737e463658c00feed6" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-02d712da1fde4b737e463658c00feed6" class="loader">Loading...</div>
               </div>

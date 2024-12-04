@@ -28,11 +28,11 @@
                 See details of the content on
                 <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/results.html">the project information site.</a>
               </p>
-              <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_results_xlsx" target="_blank">
+              <a aria-disabled="true" class="btn btn-default shiny-download-link disabled shinyjs-disabled" download href="" id="id-download_results_xlsx" tabindex="-1" target="_blank">
                 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
                 Download results (.xlsx)
               </a>
-              <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_results_json" target="_blank">
+              <a aria-disabled="true" class="btn btn-default shiny-download-link disabled shinyjs-disabled" download href="" id="id-download_results_json" tabindex="-1" target="_blank">
                 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
                 Download results (.json)
               </a>
@@ -50,7 +50,7 @@
                 Download a file containing the input parameters for
                 the selected model run.
               </p>
-              <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_report_parameters_html" target="_blank">
+              <a aria-disabled="true" class="btn btn-default shiny-download-link disabled shinyjs-disabled" download href="" id="id-download_report_parameters_html" tabindex="-1" target="_blank">
                 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
                 Download parameters report (.html)
               </a>
@@ -68,7 +68,7 @@
                 Download a file containing the outputs (charts and tables) for the
                 selected model run and selected sites. This will take a moment.
               </p>
-              <a class="btn btn-default shiny-download-link  shinyjs-disabled" download href="" id="id-download_report_outputs_html" target="_blank">
+              <a aria-disabled="true" class="btn btn-default shiny-download-link disabled shinyjs-disabled" download href="" id="id-download_report_outputs_html" tabindex="-1" target="_blank">
                 <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
                 Download outputs report (.html)
               </a>
