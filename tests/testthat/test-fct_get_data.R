@@ -325,38 +325,36 @@ test_that("patch_results returns correct values", {
   r <- list(
     results = list(
       "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_pi, ~median, ~upr_pi,
-        "a", "op", "100", "s1", 1, 2, c(1, 2), 3, 4, 5
+        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
+        "a", "op", "100", "s1", 1, 2, 3, 4, 5
       ),
       "tretspef_raw+los_group" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_pi, ~median, ~upr_pi, ~los_group, # nolint
+        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi, ~los_group, # nolint
 
-        "a", "ip", "100", "s1", 1, 2, c(1, 2), 3, 4, 5, "0 days",
-        "b", "ip", "100", "s1", 2, 3, c(3, 4), 4, 5, 6, "1 day",
-        "a", "ip", "100", "s1", 3, 4, c(5, 6), 5, 6, 7, "2 days",
-        "b", "ip", "100", "s1", 4, 5, c(7, 8), 6, 7, 8, "3 days",
-        "a", "ip", "200", "s1", 2, 1, c(9, 0), 4, 5, 3, "4-7 days",
-        "a", "ip", "200", "s1", 1, 2, c(1, 2), 3, 4, 5, "8-14 days",
-        "a", "ip", "200", "s1", 2, 3, c(3, 4), 4, 5, 6, "15-21 days",
-        "a", "ip", "200", "s1", 3, 4, c(5, 6), 5, 6, 7, "22+ days",
-
-        "b", "ip", "200", "s1", 3, 2, c(1, 3), 5, 6, 4, "0 days",
-        "a", "ip", "200", "s1", 4, 3, c(2, 5), 6, 7, 5, "1 day",
-        "b", "ip", "200", "s1", 5, 4, c(3, 7), 7, 8, 6, "2 days",
-        "a", "ip", "100", "s2", 5, 4, c(4, 9), 4, 5, 3, "3 days",
-        "b", "ip", "100", "s2", 4, 3, c(5, 0), 5, 6, 4, "4-7 days",
-        "b", "ip", "100", "s2", 3, 2, c(1, 3), 5, 6, 4, "8-14 days",
-        "b", "ip", "100", "s2", 4, 3, c(2, 5), 6, 7, 5, "15-21 days",
-        "b", "ip", "100", "s2", 5, 4, c(3, 7), 7, 8, 6, "22+ days",
-
-        "a", "ip", "100", "s2", 3, 2, c(6, 2), 6, 7, 5, "0 days",
-        "b", "ip", "100", "s2", 2, 1, c(7, 4), 7, 8, 6, "1 day",
-        "a", "ip", "200", "s2", 4, 5, c(8, 6), 5, 6, 1, "2 days",
-        "b", "ip", "200", "s2", 3, 4, c(9, 8), 6, 7, 2, "3 days",
-        "a", "ip", "200", "s2", 2, 3, c(0, 0), 7, 8, 3, "4-7 days",
-        "a", "ip", "200", "s2", 3, 2, c(6, 2), 6, 7, 5, "8-14 days",
-        "a", "ip", "200", "s2", 2, 1, c(7, 4), 7, 8, 6, "15-21 days",
-        "a", "ip", "200", "s2", 4, 5, c(8, 6), 5, 6, 1, "22+ days",
+        "a", "ip", "100", "s1", 1, 2, 3, 4, 5, "0 days",
+        "b", "ip", "100", "s1", 2, 3, 4, 5, 6, "1 day",
+        "a", "ip", "100", "s1", 3, 4, 5, 6, 7, "2 days",
+        "b", "ip", "100", "s1", 4, 5, 6, 7, 8, "3 days",
+        "a", "ip", "200", "s1", 2, 1, 4, 5, 3, "4-7 days",
+        "a", "ip", "200", "s1", 1, 2, 3, 4, 5, "8-14 days",
+        "a", "ip", "200", "s1", 2, 3, 4, 5, 6, "15-21 days",
+        "a", "ip", "200", "s1", 3, 4, 5, 6, 7, "22+ days",
+        "b", "ip", "200", "s1", 3, 2, 5, 6, 4, "0 days",
+        "a", "ip", "200", "s1", 4, 3, 6, 7, 5, "1 day",
+        "b", "ip", "200", "s1", 5, 4, 7, 8, 6, "2 days",
+        "a", "ip", "100", "s2", 5, 4, 4, 5, 3, "3 days",
+        "b", "ip", "100", "s2", 4, 3, 5, 6, 4, "4-7 days",
+        "b", "ip", "100", "s2", 3, 2, 5, 6, 4, "8-14 days",
+        "b", "ip", "100", "s2", 4, 3, 6, 7, 5, "15-21 days",
+        "b", "ip", "100", "s2", 5, 4, 7, 8, 6, "22+ days",
+        "a", "ip", "100", "s2", 3, 2, 6, 7, 5, "0 days",
+        "b", "ip", "100", "s2", 2, 1, 7, 8, 6, "1 day",
+        "a", "ip", "200", "s2", 4, 5, 5, 6, 1, "2 days",
+        "b", "ip", "200", "s2", 3, 4, 6, 7, 2, "3 days",
+        "a", "ip", "200", "s2", 2, 3, 7, 8, 3, "4-7 days",
+        "a", "ip", "200", "s2", 3, 2, 6, 7, 5, "8-14 days",
+        "a", "ip", "200", "s2", 2, 1, 7, 8, 6, "15-21 days",
+        "a", "ip", "200", "s2", 4, 5, 5, 6, 1, "22+ days",
       ),
       "sex+age_group" = tibble::tribble(
         ~sitetret, ~pod, ~sex, ~age_group, ~measure, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi, # nolint
@@ -382,16 +380,16 @@ test_that("patch_results returns correct values", {
   expected <- list(
     results = list(
       "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~time_profiles, ~lwr_pi, ~median, ~upr_pi,
-        "a", "op", "100", "s1",  1,  2, c( 1,  2),  3,  4,  5,
-        "a", "ip", "100", "s1",  4,  6, c( 6,  8),  8, 10, 12,
-        "b", "ip", "100", "s1",  6,  8, c(10, 12), 10, 12, 14,
-        "a", "ip", "200", "s1", 12, 13, c(20, 17), 22, 27, 26,
-        "b", "ip", "200", "s1",  8,  6, c( 4, 10), 12, 14, 10,
-        "a", "ip", "100", "s2",  8,  6, c(10, 11), 10, 12,  8,
-        "b", "ip", "100", "s2", 18, 13, c(18, 19), 30, 35, 25,
-        "a", "ip", "200", "s2", 15, 16, c(29, 18), 30, 35, 16,
-        "b", "ip", "200", "s2",  3,  4, c( 9,  8),  6,  7,  2
+        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
+        "a", "op", "100", "s1", 1, 2, 3, 4, 5,
+        "a", "ip", "100", "s1", 4, 6, 8, 10, 12,
+        "b", "ip", "100", "s1", 6, 8, 10, 12, 14,
+        "a", "ip", "200", "s1", 12, 13, 22, 27, 26,
+        "b", "ip", "200", "s1", 8, 6, 12, 14, 10,
+        "a", "ip", "100", "s2", 8, 6, 10, 12, 8,
+        "b", "ip", "100", "s2", 18, 13, 30, 35, 25,
+        "a", "ip", "200", "s2", 15, 16, 30, 35, 16,
+        "b", "ip", "200", "s2", 3, 4, 6, 7, 2
       ),
       "tretspef_raw+los_group" = r$results[["tretspef_raw+los_group"]] |>
         dplyr::mutate(
@@ -777,36 +775,5 @@ test_that("trust_site_aggregation adds in a trust level aggregatrion", {
   expect_equal(
     trust_site_aggregation(df, character(0)),
     tibble::tibble(x = c("a", "b", "c"), v = c(1, 5, 9))
-  )
-})
-
-test_that("get_time_profiles extracts the time profiles correctly", {
-  # arrange
-  r <- list(
-    params = list(
-      start_year = 2020,
-      end_year = 2030
-    ),
-    results = list(
-      default = tibble::tibble(
-        baseline = 0,
-        principal = 10,
-        model_runs = list(20:40),
-        time_profiles = list(
-          1:9
-        ),
-        lwr_pi = 20,
-        median = 30,
-        upr_pi = 40
-      )
-    )
-  )
-  # act
-  actual <- get_time_profiles(r, "default")
-
-  # assert
-  expect_equal(
-    actual,
-    tibble::tibble(value = 0:10, year = 2020:2030)
   )
 })

@@ -92,11 +92,6 @@ app_ui <- function(request) {
         tabName = "tab_pcf",
         mod_principal_change_factor_effects_ui("principal_change_factor_effects")
       ),
-      # Note: hidden due to ongoing time-profile discussions
-      # bs4Dash::tabItem(
-      #   tabName = "tab_phl",
-      #   mod_principal_high_level_ui("principal_high_level")
-      # ),
       bs4Dash::tabItem(
         tabName = "tab_pd",
         mod_principal_detailed_ui("principal_detailed")

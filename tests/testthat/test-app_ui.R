@@ -22,8 +22,6 @@ test_that("ui is created correctly", {
     "home",
     "principal_summary",
     "principal_change_factor_effects",
-    # Note: hidden due to ongoing time-profile discussions
-    # "principal_high_level",
     "principal_detailed",
     "model_core_activity",
     "model_results_distribution",
@@ -34,8 +32,6 @@ test_that("ui is created correctly", {
   stub(app_ui, "mod_info_home_ui", m)
   stub(app_ui, "mod_principal_summary_ui", m)
   stub(app_ui, "mod_principal_change_factor_effects_ui", m)
-  # Note: hidden due to ongoing time-profile discussions
-  # stub(app_ui, "mod_principal_high_level_ui", m)
   stub(app_ui, "mod_principal_detailed_ui", m)
   stub(app_ui, "mod_model_core_activity_ui", m)
   stub(app_ui, "mod_model_results_distribution_ui", m)
@@ -49,8 +45,6 @@ test_that("ui is created correctly", {
   expect_args(m, 1, "home")
   expect_args(m, 2, "principal_summary")
   expect_args(m, 3, "principal_change_factor_effects")
-  # Note: hidden due to ongoing time-profile discussions
-  # expect_args(m, 4, "principal_high_level")
   expect_args(m, 4, "principal_detailed")
   expect_args(m, 5, "model_core_activity")
   expect_args(m, 6, "model_results_distribution")
