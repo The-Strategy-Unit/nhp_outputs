@@ -83,3 +83,10 @@ server_get_results <- function(session) {
     }
   )
 }
+
+get_mitigator_lookup <- function() {
+  mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
+    jsonlite::read_json(simplifyVector = TRUE) |>
+    purrr::simplify() |>
+    tibble::enframe("strategy", "mitigator_name")
+}
