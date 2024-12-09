@@ -90,6 +90,11 @@ test_that("it generates an excel file", {
           "Alcohol Related Admissions (Acute Conditions - Partially Attributable) (IP-AA-001)",
           "Outpatient Convert to Tele-Attendance (Adult, Non-Surgical) (OP-EF-001)",
           "A&E Discharged No Investigation or Treatment (Adult, Ambulance Conveyed) (AE-AA-001)"
+        ),
+        mitigator_code = c(
+          "IP-AA-001",
+          "OP-EF-001",
+          "AE-AA-001"
         )
       )
     ),

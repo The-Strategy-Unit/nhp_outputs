@@ -104,7 +104,7 @@ mod_info_downloads_download_excel <- function(data) {
     # Add the mitigator reference numbers
     results_dfs[["step_counts"]] <- results_dfs[["step_counts"]] |>
       dplyr::left_join(get_mitigator_lookup(), by = "strategy") |>
-      dplyr::relocate(mitigator_name, .after = strategy)
+      dplyr::relocate(mitigator_name, mitigator_code, .after = strategy)
 
     params_list <- data() |>
       purrr::pluck("params") |>
