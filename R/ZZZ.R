@@ -93,7 +93,8 @@ get_mitigator_lookup <- function(
     tibble::enframe("strategy", "mitigator_name") |>
     dplyr::mutate(
       mitigator_code = stringr::str_extract(
-        mitigator_name, "[:upper:][:upper:]-[:upper:][:upper:]-[:digit:][:digit:][:digit:]"
+        mitigator_name, 
+        "[:upper:]{2}-[:upper:]{2}-[:digit:]{3}"
       )
     )
 }
