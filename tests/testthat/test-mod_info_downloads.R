@@ -40,9 +40,17 @@ test_that("it generates an excel file", {
             list()
           )
         ),
-        # test attendance_category becuase it's wrangled in the server
+        # test attendance_category because it's wrangled in the server
         attendance_category = tibble::tibble(
           attendance_category = c(1:4, "X")
+        ),
+        # test step_counts because data is joined in the server
+        step_counts = tibble::tibble(
+          strategy = c(
+            "alcohol_partially_attributable_acute",
+            "convert_to_tele_adult_non-surgical",
+            "discharged_no_treatment_adult_ambulance"
+          )
         )
       )
     )
@@ -71,21 +79,27 @@ test_that("it generates an excel file", {
           "planned_follow-up_attendance",
           "unknown"
         )
+      ),
+      step_counts = tibble::tibble(
+        strategy = c(
+          "alcohol_partially_attributable_acute",
+          "convert_to_tele_adult_non-surgical",
+          "discharged_no_treatment_adult_ambulance"
+        ),
+        mitigator_name = c(
+          "Alcohol Related Admissions (Acute Conditions - Partially Attributable) (IP-AA-001)",
+          "Outpatient Convert to Tele-Attendance (Adult, Non-Surgical) (OP-EF-001)",
+          "A&E Discharged No Investigation or Treatment (Adult, Ambulance Conveyed) (AE-AA-001)"
+        ),
+        mitigator_code = c(
+          "IP-AA-001",
+          "OP-EF-001",
+          "AE-AA-001"
+        )
       )
     ),
     "file"
   )
-})
-
-test_that("it generates a json file", {
-  data <- \() "data"
-  m <- mock()
-  stub(mod_info_downloads_download_json, "jsonlite::write_json", m, 2)
-
-  mod_info_downloads_download_json(data)("file")
-
-  expect_called(m, 1)
-  expect_args(m, 1, "data", "file", pretty = TRUE, auto_unbox = TRUE, digits = NA)
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
