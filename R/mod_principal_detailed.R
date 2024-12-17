@@ -95,7 +95,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
         dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
         dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
       ) |>
-      dplyr::select(-"Group")
+      dplyr::select(-"Group") |>
+      dplyr::add_row(Code = "&", Description = "Not known")  # as per HES dictionary
 
     available_aggregations <- shiny::reactive({
       selected_data() |>
