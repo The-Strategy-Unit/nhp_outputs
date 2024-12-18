@@ -270,19 +270,44 @@ test_that("patch_principal returns correct values (step_counts)", {
 
 test_that("patch_principal_step_counts returns correct values", {
   # TODO: fix this test
-  # # arrange
-  # results <- tibble::tibble(
-  #   change_factor = c("baseline", "x"),
-  #   model_runs = list(1, 2:4)
-  # )
-  # expected <- results |>
-  #   dplyr::mutate(value = c(1, 3))
+  # arrange
+  results <- tibble::tribble(
+    ~change_factor, ~strategy, ~model_runs,
+    "baseline", "-", c(1),
+    "a", "-", c(2, 3, 4),
+    "b", "-", c(4, 5, 6),
+    "model_interaction_term", "-", c(7, 8, 9),
+    "activity_avoidance", "a", c(1, 2, 3),
+    "activity_avoidance", "b", c(4, 5, 6),
+    "activity_avoidance", "activity_avoidance_interaction_term", c(2, 3, 4),
+    "efficiencies", "a", c(1, 2, 3),
+    "efficiencies", "b", c(4, 5, 6)
+  ) |>
+    dplyr::mutate(
+      sitetret = "a",
+      pod = "a",
+      activity_type = "a",
+      measure = "a"
+    )
 
-  # # act
-  # actual <- patch_principal_step_counts(results)
+  expected <- tibble::tribble(
+    ~change_factor, ~strategy, ~model_runs, ~sitetret, ~pod, ~activity_type, ~measure, ~value, ~value_redistributed,
+    "baseline", "-", 1, "a", "a", "a", "a", 1, 1,
+    "efficiencies", "a", c(1, 2, 3), "a", "a", "a", "a", 2, 2,
+    "efficiencies", "b", c(4, 5, 6), "a", "a", "a", "a", 5, 5,
+    "a", "-", c(2, 3, 4), "a", "a", "a", "a", 3, 6,
+    "b", "-", c(4, 5, 6), "a", "a", "a", "a", 5, 10,
+    "model_interaction_term", "-", c(7, 8, 9), "a", "a", "a", "a", 8, NA,
+    "activity_avoidance", "a", c(1, 2, 3), "a", "a", "a", "a", 2, 2.85714285714286,
+    "activity_avoidance", "b", c(4, 5, 6), "a", "a", "a", "a", 5, 7.14285714285714,
+    "activity_avoidance", "activity_avoidance_interaction_term", c(2, 3, 4), "a", "a", "a", "a", 3, NA
+  )
 
-  # # assert
-  # expect_equal(actual, expected)
+  # act
+  actual <- patch_principal_step_counts(results)
+
+  # assert
+  expect_equal(actual, expected)
 })
 
 test_that("patch_step_counts returns correct values (no strategy)", {
