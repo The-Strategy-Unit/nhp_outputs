@@ -109,10 +109,64 @@ patch_principal <- function(results, name) {
 }
 
 patch_principal_step_counts <- function(results) {
-  dplyr::mutate(
+  step_counts <- dplyr::mutate(
     results,
     value = purrr::map_dbl(.data[["model_runs"]], mean)
   )
+
+  no_interaction_term_rows <- step_counts |>
+    dplyr::filter(.data[["change_factor"]] %in% c("baseline", "efficiencies")) |>
+    dplyr::mutate(value_redistributed = .data[["value"]])
+
+  interaction_term_rows <- dplyr::anti_join(
+    step_counts,
+    dplyr::distinct(no_interaction_term_rows, .data[["change_factor"]]),
+    "change_factor"
+  )
+
+  activity_resampling <- dplyr::filter(interaction_term_rows, .data[["change_factor"]] != "activity_avoidance")
+
+  ar_i_term <- activity_resampling |>
+    dplyr::filter(.data[["change_factor"]] == "model_interaction_term") |>
+    dplyr::select(-"change_factor", -"strategy", -"model_runs") |>
+    dplyr::rename("value_redistributed" = "value")
+
+  activity_resampling <- activity_resampling |>
+    dplyr::inner_join(ar_i_term, by = c("pod", "sitetret", "activity_type", "measure")) |>
+    dplyr::mutate(
+      .by = c("pod", "sitetret", "activity_type", "measure"),
+      value_tmp = ifelse(
+        .data[["change_factor"]] == "model_interaction_term",
+        NA_real_,
+        .data[["value"]]
+      ),
+      dplyr::across("value_tmp", \(.x) .x / sum(.x, na.rm = TRUE)),
+      value_redistributed = .data[["value"]] + .data[["value_redistributed"]] * .data[["value_tmp"]],
+    ) |>
+    dplyr::select(-"value_tmp")
+
+  activity_avoidance <- dplyr::filter(interaction_term_rows, .data[["change_factor"]] == "activity_avoidance")
+
+  aa_i_term <- activity_avoidance |>
+    dplyr::filter(.data[["strategy"]] == "activity_avoidance_interaction_term") |>
+    dplyr::select(-"change_factor", -"strategy", -"model_runs") |>
+    dplyr::rename("value_redistributed" = "value")
+
+  activity_avoidance <- activity_avoidance |>
+    dplyr::inner_join(aa_i_term, by = c("pod", "sitetret", "activity_type", "measure")) |>
+    dplyr::mutate(
+      .by = c("pod", "sitetret", "activity_type", "measure"),
+      value_tmp = ifelse(
+        .data[["strategy"]] == "activity_avoidance_interaction_term",
+        NA_real_,
+        .data[["value"]]
+      ),
+      dplyr::across("value_tmp", \(.x) .x / sum(.x, na.rm = TRUE)),
+      value_redistributed = .data[["value"]] + .data[["value_redistributed"]] * .data[["value_tmp"]],
+    ) |>
+    dplyr::select(-"value_tmp")
+
+  dplyr::bind_rows(no_interaction_term_rows, activity_resampling, activity_avoidance)
 }
 
 patch_step_counts <- function(results) {
