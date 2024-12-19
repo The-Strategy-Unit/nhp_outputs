@@ -1,6 +1,3 @@
-.data <- rlang::.data
-
-
 #' principal_change_factor_effects UI Function
 #'
 #' @description A shiny Module.
@@ -45,7 +42,6 @@ mod_principal_change_factor_effects_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
-      shiny::checkboxInput(ns("redistribute_model_interaction_term"), "Redistribute Model Interaction Term?", TRUE),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("change_factors"), height = "600px")
       )
@@ -200,19 +196,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
       mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
         jsonlite::read_json(simplifyVector = TRUE) |>
         purrr::simplify() |>
-        tibble::enframe("strategy", "mitigator_name") |>
-        dplyr::bind_rows(
-          tibble::tibble(
-            strategy = "activity_avoidance_interaction_term",
-            mitigator_name = "(Interaction Term)"
-          )
-        )
-
-      value_column <- if (input$redistribute_model_interaction_term) {
-        "value_redistributed"
-      } else {
-        "value"
-      }
+        tibble::enframe("strategy", "mitigator_name")
 
       selected_data() |>
         get_principal_change_factors(at, selected_site()) |>
@@ -222,10 +206,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
           dplyr::across(
             "change_factor",
             \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
-          ),
-          value = .data[[value_column]]
+          )
         ) |>
-        dplyr::select(-"value_redistributed") |>
         dplyr::left_join(
           mitigator_lookup,
           by = dplyr::join_by("strategy")
@@ -286,7 +268,7 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
         dplyr::filter(
           .data$measure == m,
           .data$strategy != "-",
-          .data$value != 0
+          .data$value < 0
         )
 
       if (input$sort_type == "Descending value") {
