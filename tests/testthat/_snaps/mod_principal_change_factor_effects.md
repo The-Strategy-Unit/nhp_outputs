@@ -75,14 +75,6 @@
                 </label>
               </div>
             </div>
-            <div class="form-group shiny-input-container">
-              <div class="checkbox">
-                <label>
-                  <input id="id-redistribute_model_interaction_term" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-                  <span>Redistribute Model Interaction Term?</span>
-                </label>
-              </div>
-            </div>
             <div data-spinner-id="spinner-fac52137bd9b9ca575e47193636bb3fb" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-fac52137bd9b9ca575e47193636bb3fb" class="loader">Loading...</div>
