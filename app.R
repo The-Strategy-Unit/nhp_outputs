@@ -110,7 +110,7 @@ ui <- bs4Dash::bs4DashPage(
 
 server <- function(input, output, session) {
   # static data files ----
-  providers <- c("Synthetic" = "synthetic", readRDS("providers.Rds"))
+  providers <- c("Synthetic" = "synthetic", "National" = "national", readRDS("providers.Rds"))
 
   # reactives ----
   allowed_datasets <- shiny::reactive({
