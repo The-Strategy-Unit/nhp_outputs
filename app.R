@@ -51,10 +51,10 @@ get_user_allowed_datasets <- function(groups) {
     a <- groups |>
       stringr::str_subset("^nhp_provider_") |>
       stringr::str_remove("^nhp_provider_")
-    p <- intersect(p, a)
+    intersect(p, a)
+  } else {
+    c("synthetic", "national", p)
   }
-
-  c("synthetic", p)
 }
 
 require_rows <- function(x) {
