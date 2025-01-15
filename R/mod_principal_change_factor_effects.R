@@ -43,7 +43,8 @@ mod_principal_change_factor_effects_ui <- function(id) {
       width = 12,
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
       shinycssloaders::withSpinner(
-        plotly::plotlyOutput(ns("change_factors"), height = "600px")
+        # plotly::plotlyOutput(ns("change_factors"), height = "600px")
+        shiny::plotOutput(ns("change_factors"), height = "600px")
       )
     ),
     bs4Dash::box(
@@ -290,15 +291,56 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
       }
     })
 
-    output$change_factors <- plotly::renderPlotly({
+    #output$change_factors <- plotly::renderPlotly({
+    output$change_factors <- shiny::renderPlot({
       measure <- shiny::req(input$measure)
 
-      p <- principal_change_factors() |>
-        mod_principal_change_factor_effects_summarised(measure, input$include_baseline) |>
-        mod_principal_change_factor_effects_cf_plot()
+      # TODO: put logic somewhere else
+      test_widen_data <- function(x) {
+        cols <- x$colour[!is.na(x$colour)]
+        x |>
+          tidyr::pivot_wider(
+            id_cols = .data[["change_factor"]],
+            names_from = .data[["name"]],
+            values_from = .data[["value"]]
+          ) |>
+          dplyr::mutate(colour = .env[["cols"]])
+      }
 
-      plotly::ggplotly(p, tooltip = FALSE) |>
-        plotly::layout(showlegend = FALSE)
+      # TODO: put logic somewhere else
+      test_seg_plot <- function(x) {
+        x |>
+          dplyr::mutate(
+            xstart = .data[["hidden"]],
+            xend = .data[["hidden"]] + .data[["value"]]
+          ) |>
+          ggplot2::ggplot(
+            ggplot2::aes(
+              x = .data[["xstart"]],
+              xend = .data[["xend"]],
+              y = .data[["change_factor"]],
+              colour = .data[["colour"]]
+            )
+          ) +
+          ggplot2::geom_segment(lwd = 28) +
+          ggplot2::scale_colour_identity() +
+          ggplot2::scale_x_continuous(
+            breaks = scales::pretty_breaks(5),
+            labels = scales::comma
+          ) +
+          ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
+          ggplot2::labs(x = "", y = "")
+      }
+
+      #p <- principal_change_factors() |>
+      principal_change_factors() |>
+        mod_principal_change_factor_effects_summarised(measure, input$include_baseline) |>
+        test_widen_data() |>
+        test_seg_plot()
+        # mod_principal_change_factor_effects_cf_plot()
+
+      #plotly::ggplotly(p, tooltip = FALSE) |>
+        #plotly::layout(showlegend = FALSE)
     })
 
     output$activity_avoidance <- plotly::renderPlotly({
