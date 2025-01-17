@@ -123,9 +123,9 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
   # Reorient data for geom_segment
   data_reoriented <- data |>
     tidyr::pivot_wider(
-      id_cols = .data[["change_factor"]],
-      names_from = .data[["name"]],
-      values_from = .data[["value"]]
+      id_cols = tidyselect::all_of("change_factor"),
+      names_from = tidyselect::all_of("name"),
+      values_from = tidyselect::all_of("value")
     ) |>
     dplyr::mutate(colour = data[["colour"]][!is.na(data[["colour"]])])
 
