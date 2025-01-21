@@ -93,8 +93,21 @@ get_mitigator_lookup <- function(
     tibble::enframe("strategy", "mitigator_name") |>
     dplyr::mutate(
       mitigator_code = stringr::str_extract(
-        mitigator_name, 
+        mitigator_name,
         "[:upper:]{2}-[:upper:]{2}-[:digit:]{3}"
       )
     )
 }
+
+get_excel_data_dictionary <- function(
+  data_dictionary = app_sys("app", "data", "excel_dictionary.json")
+) {
+    data_dictionary_loaded <- data_dictionary |>
+      jsonlite::read_json()
+
+    worksheets <- do.call(rbind, lapply(dictionary$worksheets, as.data.frame))
+
+    fields <- do.call(rbind, lapply(dictionary$fields, as.data.frame))
+
+    list(worksheets = worksheets, fields = fields)
+  }
