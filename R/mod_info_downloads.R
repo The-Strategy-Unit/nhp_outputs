@@ -129,7 +129,9 @@ mod_info_downloads_download_excel <- function(data) {
 
     params_df <- params_list |> unlist() |> tibble::enframe()
 
-    c(list(metadata = params_df), results_dfs) |>
+    data_dictionary <- get_excel_data_dictionary()
+
+    c(list(metadata = params_df), data_dictionary, results_dfs) |>
       writexl::write_xlsx(file)
   }
 }
