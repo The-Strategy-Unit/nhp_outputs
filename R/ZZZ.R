@@ -105,9 +105,9 @@ get_excel_data_dictionary <- function(
     data_dictionary_loaded <- data_dictionary |>
       jsonlite::read_json()
 
-    worksheets <- do.call(rbind, lapply(dictionary$worksheets, as.data.frame))
+    worksheets <- do.call(rbind, lapply(data_dictionary_loaded$worksheets, as.data.frame))
 
-    fields <- do.call(rbind, lapply(dictionary$fields, as.data.frame))
+    fields <- do.call(rbind, lapply(data_dictionary_loaded$fields, as.data.frame))
 
     list(worksheets = worksheets, fields = fields)
   }
