@@ -52,7 +52,8 @@ test_that("it generates an excel file", {
             "discharged_no_treatment_adult_ambulance"
           )
         )
-      )
+      ),
+      data_dictionary = get_excel_data_dictionary()
     )
   }
 
@@ -70,6 +71,8 @@ test_that("it generates an excel file", {
         name = c("x", "y", "create_datetime"),
         value = c("1", "x", "01-Jan-2022 00:00:00")
       ),
+      worksheets = get_excel_data_dictionary()[["worksheets"]],
+      fields = get_excel_data_dictionary()[["fields"]],
       a = tibble::tibble(x = 1:3, y = 4:6),
       attendance_category = tibble::tibble(
         attendance_category = c(
