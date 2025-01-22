@@ -53,7 +53,10 @@ test_that("it generates an excel file", {
           )
         )
       ),
-      data_dictionary = get_excel_data_dictionary()
+      data_dictionary = jsonlite::read_json(
+        app_sys("app", "data", "excel_dictionary.json"),
+        simplifyVector = TRUE
+      )
     )
   }
 
