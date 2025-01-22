@@ -129,7 +129,10 @@ mod_info_downloads_download_excel <- function(data) {
 
     params_df <- params_list |> unlist() |> tibble::enframe()
 
-    data_dictionary <- get_excel_data_dictionary()
+    data_dictionary <- jsonlite::read_json(
+      app_sys("app", "data", "excel_dictionary.json"),
+      simplifyVector = TRUE
+    )
 
     c(list(metadata = params_df), data_dictionary, results_dfs) |>
       writexl::write_xlsx(file)

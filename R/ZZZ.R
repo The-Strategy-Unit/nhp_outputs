@@ -98,16 +98,3 @@ get_mitigator_lookup <- function(
       )
     )
 }
-
-get_excel_data_dictionary <- function(
-  data_dictionary = app_sys("app", "data", "excel_dictionary.json")
-) {
-    data_dictionary_loaded <- data_dictionary |>
-      jsonlite::read_json()
-
-    worksheets <- do.call(rbind, lapply(data_dictionary_loaded$worksheets, as.data.frame))
-
-    fields <- do.call(rbind, lapply(data_dictionary_loaded$fields, as.data.frame))
-
-    list(worksheets = worksheets, fields = fields)
-  }
