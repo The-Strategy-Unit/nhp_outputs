@@ -14,6 +14,11 @@ set_names <- function(x) {
   purrr::set_names(x[[1]], x[[2]])
 }
 
+data_dictionary = jsonlite::read_json(
+  app_sys("app", "data", "excel_dictionary.json"),
+  simplifyVector = TRUE
+)
+
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # ui
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -52,7 +57,8 @@ test_that("it generates an excel file", {
             "discharged_no_treatment_adult_ambulance"
           )
         )
-      )
+      ),
+      data_dictionary = data_dictionary
     )
   }
 
@@ -70,6 +76,8 @@ test_that("it generates an excel file", {
         name = c("x", "y", "create_datetime"),
         value = c("1", "x", "01-Jan-2022 00:00:00")
       ),
+      worksheets = data_dictionary[["worksheets"]],
+      fields = data_dictionary[["fields"]],
       a = tibble::tibble(x = 1:3, y = 4:6),
       attendance_category = tibble::tibble(
         attendance_category = c(
