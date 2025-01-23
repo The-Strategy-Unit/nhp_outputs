@@ -122,17 +122,15 @@ possibly_prep_principal_change_factors <-
     "Insufficient data"
   )
 
+pods <- get_activity_type_pod_measure_options() |> 
+  dplyr::distinct(activity_type, pod)
+
 ip_pcf <- possibly_prep_principal_change_factors(
   data = params$r,
   sites = params$sites,
   mitigators = mitigator_lookup,
   at = "ip",
-  pods = c(
-    "ip_non-elective_admission", 
-    "ip_elective_admission",
-    "ip_elective_daycase",
-    "ip_maternity_admission"  
-  )
+  pods = pods |> dplyr::filter(activity_type == "ip") |> dplyr::pull(pod)
 ) 
 
 op_pcf <- possibly_prep_principal_change_factors(
@@ -140,11 +138,7 @@ op_pcf <- possibly_prep_principal_change_factors(
   sites = params$sites,
   mitigators = mitigator_lookup,
   at = "op",
-  pods = c(
-    "op_first",
-    "op_follow-up",
-    "op_procedure"
-  )
+  pods = pods |> dplyr::filter(activity_type == "op") |> dplyr::pull(pod)
 ) 
 
 aae_pcf <- possibly_prep_principal_change_factors(
@@ -152,12 +146,7 @@ aae_pcf <- possibly_prep_principal_change_factors(
   sites = params$sites,
   mitigators = mitigator_lookup,
   at = "aae",
-  pods = c(
-    "aae_type-01",
-    "aae_type-02",
-    "aae_type-03",
-    "aae_type-04" 
-  )
+  pods = pods |> dplyr::filter(activity_type == "aae") |> dplyr::pull(pod)
 )
 ```
 
