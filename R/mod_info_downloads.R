@@ -92,7 +92,7 @@ mod_info_downloads_download_excel <- function(data) {
     results_dfs[["attendance_category"]] <- results_dfs[["attendance_category"]] |>
       dplyr::mutate(
         attendance_category = dplyr::case_match(
-          attendance_category,
+          .data[["attendance_category"]],
           "1" ~ "unplanned_first_attendance",
           "2" ~ "unplanned_follow-up_attendance_this_department",
           "3" ~ "unplanned_follow-up_attendance_another_department",
@@ -104,7 +104,7 @@ mod_info_downloads_download_excel <- function(data) {
     # Add the mitigator reference numbers
     results_dfs[["step_counts"]] <- results_dfs[["step_counts"]] |>
       dplyr::left_join(get_mitigator_lookup(), by = "strategy") |>
-      dplyr::relocate(mitigator_name, mitigator_code, .after = strategy)
+      dplyr::relocate("mitigator_name", "mitigator_code", .after = "strategy")
 
     params_list <- data() |>
       purrr::pluck("params") |>

@@ -119,40 +119,42 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
 }
 
 mod_principal_change_factor_effects_cf_plot <- function(data) {
-  data |>
+
+  # Reorient data for geom_segment
+  data_reoriented <- data |>
+    tidyr::pivot_wider(
+      id_cols = tidyselect::all_of("change_factor"),
+      names_from = tidyselect::all_of("name"),
+      values_from = tidyselect::all_of("value")
+    ) |>
+    dplyr::mutate(colour = data[["colour"]][!is.na(data[["colour"]])])
+
+  data_reoriented |>
     dplyr::mutate(
-      tooltip = ifelse(
-        .data[["name"]] == "hidden",
-        0,
-        .data[["value"]]
-      ),
-      tooltip = glue::glue(
-        "{snakecase::to_title_case(as.character(change_factor))}: ",
-        "{scales::comma(sum(tooltip), accuracy = 1)}"
-      ),
-      .by = "change_factor"
+      xstart = .data[["hidden"]],
+      xend = .data[["hidden"]] + .data[["value"]]
     ) |>
     ggplot2::ggplot(
       ggplot2::aes(
-        .data[["value"]],
-        .data[["change_factor"]],
-        text = .data[["tooltip"]]
+        x = .data[["xstart"]],
+        xend = .data[["xend"]],
+        y = .data[["change_factor"]],
+        yend = .data[["change_factor"]],  # plotly errors if yend not included
+        colour = .data[["colour"]]
       )
     ) +
-    ggplot2::geom_col(
-      ggplot2::aes(
-        fill = .data[["colour"]]
-      ),
-      show.legend = FALSE,
-      position = "stack"
+    ggplot2::geom_segment(
+      # dynamic: bigger if fewer bars (130 is relative to 600px plot height)
+      lwd = 130 / nrow(data_reoriented)
     ) +
-    ggplot2::scale_fill_identity() +
+    ggplot2::scale_colour_identity() +
     ggplot2::scale_x_continuous(
       breaks = scales::pretty_breaks(5),
       labels = scales::comma
     ) +
     ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
     ggplot2::labs(x = "", y = "")
+
 }
 
 mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour, title, x_axis_label) {
