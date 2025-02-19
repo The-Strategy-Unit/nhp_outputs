@@ -44,7 +44,7 @@ app_server <- function(input, output, session) {
   })
 
   shiny::observe({
-    sites <- jsonlite::read_json(app_sys("app", "data", "sites.json"), simplify_vector = TRUE)
+    sites <- get_support_data("sites.json")
 
     trust_sites <- purrr::set_names(
       trust_sites(),
