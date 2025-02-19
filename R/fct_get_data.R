@@ -1,4 +1,4 @@
-get_container <- function() {
+get_container <- function(container_name = Sys.getenv("AZ_STORAGE_CONTAINER")) {
   ep_uri <- Sys.getenv("AZ_STORAGE_EP")
   app_id <- Sys.getenv("AZ_APP_ID")
 
@@ -17,7 +17,7 @@ get_container <- function() {
 
   ep_uri |>
     AzureStor::blob_endpoint(token = token) |>
-    AzureStor::storage_container(Sys.getenv("AZ_STORAGE_CONTAINER"))
+    AzureStor::storage_container(container_name)
 }
 
 get_params <- function(r) {
@@ -198,7 +198,7 @@ patch_results <- function(r) {
 }
 
 get_user_allowed_datasets <- function(groups) {
-  p <- jsonlite::read_json(app_sys("app", "data", "providers.json"), simplifyVector = TRUE)
+  p <- get_support_data("providers.json")
 
   if (!(is.null(groups) || any(c("nhp_devs", "nhp_power_users") %in% groups))) {
     a <- groups |>
@@ -343,4 +343,35 @@ trust_site_aggregation <- function(data, sites) {
       dplyr::across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE)),
       .groups = "drop"
     )
+}
+
+get_support_data <- function(filename) {
+
+  file_type <- tools::file_ext(filename)
+
+  if (file_type == "") {
+    stop("Argument 'filename' must include a file extension, like '.json'.")
+  }
+
+  if (file_type != "" & file_type != "json"){
+    stop("Only json files are handled for now.")
+  }
+
+  container_name <- Sys.getenv("AZ_STORAGE_CONTAINER_SUPPORT")
+  container_support <- get_container(container_name)
+
+  if (file_type == "json") {
+
+    dat <- AzureStor::storage_download(
+      container_support,
+      src = filename,
+      dest = NULL
+    ) |>
+      rawToChar() |>
+      jsonlite::fromJSON(simplifyVector = TRUE)
+
+    return(dat)
+
+  }
+
 }
