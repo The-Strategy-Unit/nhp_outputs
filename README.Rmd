@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 An app to explore the results of scenarios run through the New Hospital Programme (NHP) demand model. Provides interactive charts and tables, as well as downloads.
 
-The app is deployed to Posit Connect. You must have an account and sufficient permissions to view it.
+The app is [deployed to Posit Connect](https://connect.strategyunitwm.nhs.uk/nhp/outputs/). You must have an account and sufficient permissions to view it.
 
 You can find more information on [the NHP model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/), including [a diagram](https://connect.strategyunitwm.nhs.uk/nhp/project_information/project_plan_and_summary/components-overview.html) of how the components of the modelling process fit together.
 
