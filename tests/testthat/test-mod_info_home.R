@@ -6,8 +6,16 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 atpmo_expected <- tibble::tribble(
-  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
+  ~activity_type,
+  ~activity_type_name,
+  ~pod,
+  ~pod_name,
+  ~measures,
+  "aae",
+  "A&E",
+  "aae_type-01",
+  "Type 1 Department",
+  "ambulance"
 )
 
 set_names <- function(x) {
@@ -19,13 +27,13 @@ set_names <- function(x) {
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
+  set.seed(1)
   expect_snapshot(mod_info_home_ui("id"))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # helpers
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 # server
@@ -51,13 +59,20 @@ test_that("it gets the model run information from params", {
     args = list(selected_data = selected_data),
     {
       expected <- tibble::tribble(
-        ~name, ~value,
-        "id", "test-synthetic",
-        "scenario", "test",
-        "dataset", "synthetic",
-        "start_year", "2020/21",
-        "end_year", "2040/41",
-        "create_datetime", "23-Jan-2024 01:23:45"
+        ~name,
+        ~value,
+        "id",
+        "test-synthetic",
+        "scenario",
+        "test",
+        "dataset",
+        "synthetic",
+        "start_year",
+        "2020/21",
+        "end_year",
+        "2040/41",
+        "create_datetime",
+        "23-Jan-2024 01:23:45"
       )
 
       actual <- params_model_run()
@@ -82,13 +97,20 @@ test_that("it generates a gt table", {
   })
 
   expected <- tibble::tribble(
-    ~name, ~value,
-    "id", "test-synthetic",
-    "scenario", "test",
-    "dataset", "synthetic",
-    "start_year", "2020/21",
-    "end_year", "2040/41",
-    "create_datetime", "23-Jan-2024 01:23:45"
+    ~name,
+    ~value,
+    "id",
+    "test-synthetic",
+    "scenario",
+    "test",
+    "dataset",
+    "synthetic",
+    "start_year",
+    "2020/21",
+    "end_year",
+    "2040/41",
+    "create_datetime",
+    "23-Jan-2024 01:23:45"
   )
 
   m1 <- mock("gt")
