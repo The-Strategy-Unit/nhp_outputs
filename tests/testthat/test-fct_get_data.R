@@ -457,7 +457,7 @@ test_that("patch_results returns correct values", {
 })
 
 test_that("user_allowed_datasets returns correct values", {
-  stub(get_user_allowed_datasets, "jsonlite::read_json", c("A", "B", "C"))
+  stub(get_user_allowed_datasets, "get_support_data", c("A", "B", "C"))
 
   for (i in list(NULL, "nhp_devs", "nhp_power_users")) {
     expect_equal(
