@@ -195,9 +195,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
     principal_change_factors_raw <- shiny::reactive({
       at <- shiny::req(input$activity_type)
 
-      mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
-        jsonlite::read_json(simplifyVector = TRUE) |>
-        purrr::simplify() |>
+      mitigator_lookup <- get_support_data("mitigators.json") |>
+        purrr::list_simplify() |>
         tibble::enframe("strategy", "mitigator_name")
 
       selected_data() |>

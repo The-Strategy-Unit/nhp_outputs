@@ -84,12 +84,9 @@ server_get_results <- function(session) {
   )
 }
 
-get_mitigator_lookup <- function(
-  mitigator_lookup = app_sys("app", "data", "mitigators.json")
-) {
-  mitigator_lookup |>
-    jsonlite::read_json(simplifyVector = TRUE) |>
-    purrr::simplify() |>
+get_mitigator_lookup <- function() {
+  get_support_data("mitigators.json") |>
+    purrr::list_simplify() |>
     tibble::enframe("strategy", "mitigator_name") |>
     dplyr::mutate(
       mitigator_code = stringr::str_extract(

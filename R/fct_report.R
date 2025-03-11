@@ -39,7 +39,7 @@ tabulate_model_run_info <- function(p) {
 #' @param sites Character. Location codes selected by the user from the outputs
 #'     app interface.
 #' @param mitigators Data.frame. A lookup from mitgator codes to huamn-readable
-#'     names. Derived from the internal mitigators.json file.
+#'     names. Derived from the mitigators.json file on Azure.
 #' @param at Character. The activity type (e.g. 'ip' for inpatients).
 #' @param pods Character. The point of delivery (e.g.
 #'     'ip_non-elective_admission').
@@ -397,10 +397,8 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
 #'     string describing the reason for a given parameter selection.
 #' @noRd
 expand_reasons_to_rmd <- function(reasons_list) {
-  mitigators_json_path <- app_sys("app", "data", "mitigators.json")
-
   lookup <- c(
-    jsonlite::read_json(mitigators_json_path) |> unlist(),
+    get_support_data("mitigators.json") |> unlist(),
     "baseline_adjustment" = "Baseline adjustment",
     "demographic_factors" = "Demographic factors",
     "waiting_list_adjustment" = "Waiting list adjustment",
