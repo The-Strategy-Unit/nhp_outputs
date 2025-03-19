@@ -4,30 +4,40 @@ on:
     types: [published]
 
 jobs:
-  connect-publish-prod:
-    name: "Connect Publish: Production"
+  get-variables:
+    name: "Get Variables"
     runs-on: ubuntu-latest
+    env:
+      # these get set later
+      VERSION: ""
+      INPUTS_DATA_VERSION: ""
+    outputs:
+      NAMESPACE: ${{ steps.set-variables.outputs.NAMESPACE }}
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Get version
+        id: set-variables
         run: |
-          VERSION=`echo ${{ github.ref_name }} | awk 'BEGIN { FS="."; } { print ""$1"-"$2; }'`
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
-      - name: Update manifest.json
-        run: node update_manifest.js
+          NAMESPACE=`echo ${{ github.ref_name }} | awk 'BEGIN { FS="."; } { print ""$1"-"$2; }'`
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_ENV
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_OUTPUT
+  
+  publish-production:
+    name: "Publish (to production server)"
+    uses: ./.github/workflows/connect-publish-manual.yaml
+    needs: [get-variables]
+    with:
+      namespace: ${{ needs.get-variables.outputs.NAMEPSACE }}
+      environment: "production"
+    secrets: inherit
         
-      - name: Publish Connect content
-        uses: rstudio/actions/connect-publish@main
-        env:
-          CONNECT_ENV_SET_AZ_STORAGE_CONTAINER: ${{ secrets.AZ_STORAGE_CONTAINER }}
-          CONNECT_ENV_SET_AZ_STORAGE_EP: ${{ secrets.AZ_STORAGE_EP }}
-          CONNECT_ENV_SET_NHP_ENCRYPT_KEY: ${{ secrets.NHP_ENCRYPT_KEY }}
-        with:
-          url: ${{ secrets.RSCONNECT_URL }}
-          api-key: ${{ secrets.RSCONNECT_API_KEY }}
-          access-type: logged_in
-          force: true
-          dir: .:outputs
-          namespace: nhp/${{ env.VERSION }}
+  publish-new-production:
+    name: "Publish (to new production server)"
+    uses: ./.github/workflows/connect-publish-manual.yaml
+    needs: [get-variables]
+    with:
+      namespace: ${{ needs.get-variables.outputs.NAMESPACE }}
+      environment: "new-production"
+    secrets: inherit
