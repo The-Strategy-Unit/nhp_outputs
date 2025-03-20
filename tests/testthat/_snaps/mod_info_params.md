@@ -159,6 +159,14 @@
             </div>
           </div>
           <div class="card-body">
+            <p>
+              Variant:
+              <span id="id-variant_non_demographic_adjustment" class="shiny-text-output"></span>
+            </p>
+            <p>
+              Value type:
+              <span id="id-value_type_non_demographic_adjustment" class="shiny-text-output"></span>
+            </p>
             <div id="id-params_non_demographic_adjustment" class="shiny-html-output"></div>
           </div>
         </div>
