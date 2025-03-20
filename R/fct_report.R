@@ -337,7 +337,11 @@ param_tables_to_list <- function(p) {
       "Time profile" = time_profiles$repat_nonlocal,
       "Table" = possibly_table_expat_repat_adjustment(p, "repat_nonlocal")
     ),
-    "Non-demographic adjustment" = possibly_table_non_demographic_adjustment(p),
+    "Non-demographic adjustment" = list(
+      "Variant" = p[["non-demographic_adjustment"]][["variant"]],
+      "Value type" = p[["non-demographic_adjustment"]][["value-type"]],
+      "Table" = possibly_table_non_demographic_adjustment(p)
+    ),
     "Activity avoidance" = possibly_table_activity_avoidance(p),
     "Efficiencies" = possibly_table_efficiencies(p)
   ) |>
@@ -378,7 +382,7 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
         l2_is_char <- is.character(l2_object)
         l2_is_gt <- inherits(l2_object, "gt_tbl")
 
-        if (l2_is_char) cat("Time profile mapping:", l2_object, "\n\n")
+        if (l2_is_char) cat(paste0(l2, ":"), l2_object, "\n\n")
 
         if (l2_is_gt) {
           l2_object |>
