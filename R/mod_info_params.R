@@ -88,6 +88,20 @@ mod_info_params_ui <- function(id) {
       title = "Non-demographic adjustment",
       collapsed = TRUE,
       width = 12,
+      shiny::tags$p(
+        "Variant:",
+        shiny::textOutput(
+          ns("variant_non_demographic_adjustment"),
+          inline = TRUE
+        )
+      ),
+      shiny::tags$p(
+        "Value type:",
+        shiny::textOutput(
+          ns("value_type_non_demographic_adjustment"),
+          inline = TRUE
+        )
+      ),
       gt::gt_output(ns("params_non_demographic_adjustment"))
     ),
     bs4Dash::box(
@@ -113,6 +127,8 @@ mod_info_params_server <- function(id, selected_data) {
     params_data <- shiny::reactive({
       get_params(selected_data())
     })
+
+    # params
 
     output$params_demographic_factors <- gt::render_gt({
       info_params_table_demographic_adjustment(params_data())
@@ -154,6 +170,8 @@ mod_info_params_server <- function(id, selected_data) {
       info_params_table_efficiencies(params_data())
     })
 
+    # time profiles
+
     output$time_profile_waiting_list_adjustment <- shiny::renderText({
       params_data()[["time_profile_mappings"]][["waiting_list_adjustment"]]
     })
@@ -168,6 +186,16 @@ mod_info_params_server <- function(id, selected_data) {
 
     output$time_profile_repat_nonlocal <- shiny::renderText({
       params_data()[["time_profile_mappings"]][["repat_nonlocal"]]
+    })
+
+    # NDG
+
+    output$variant_non_demographic_adjustment <- shiny::renderText({
+      params_data()[["non-demographic_adjustment"]][["variant"]]
+    })
+
+    output$value_type_non_demographic_adjustment <- shiny::renderText({
+      params_data()[["non-demographic_adjustment"]][["value-type"]]
     })
   })
 }
