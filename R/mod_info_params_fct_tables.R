@@ -162,7 +162,7 @@ info_params_table_expat_repat_adjustment <- function(p, type) {
 }
 
 info_params_table_non_demographic_adjustment <- function(p) {
-  non_demographic_adjustment <- p[["non-demographic_adjustment"]]
+  non_demographic_adjustment <- p[["non-demographic_adjustment"]][["values"]]
 
   shiny::validate(
     shiny::need(non_demographic_adjustment, "No parameters provided")
