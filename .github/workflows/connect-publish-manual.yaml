@@ -18,9 +18,6 @@ on:
       namespace:
         required: true
         type: string
-      inputs_data_version:
-        required: true
-        type: string
       environment:
         description: "The environment to deploy to"
         required: true
