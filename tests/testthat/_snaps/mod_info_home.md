@@ -49,12 +49,12 @@
               </div>
               <div class="card-body">
                 <p>This is a reminder of the metadata for the model run you selected.</p>
-                <div data-spinner-id="spinner-4c06f33fbefba16ff0bce42ee10ea0e6" class="shiny-spinner-output-container shiny-spinner-hideui">
+                <div data-spinner-id="spinner-391063d83f9c071b22a508157faed85f" class="shiny-spinner-output-container shiny-spinner-hideui">
                   <div class="load-container shiny-spinner-hidden load1">
-                    <div id="spinner-4c06f33fbefba16ff0bce42ee10ea0e6" class="loader">Loading...</div>
+                    <div id="spinner-391063d83f9c071b22a508157faed85f" class="loader">Loading...</div>
                   </div>
                   <div style="height:400px" class="shiny-spinner-placeholder"></div>
-                  <div id="id-params_model_run" class="shiny-html-output"></div>
+                  <div class="shiny-html-output gt_shiny" id="id-params_model_run"></div>
                 </div>
               </div>
             </div>
