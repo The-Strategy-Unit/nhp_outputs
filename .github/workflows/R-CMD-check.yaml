@@ -33,6 +33,9 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Install system dependencies
+        run: sudo apt install -y libcurl4-openssl-dev libicu-dev libnode-dev libssl-dev libxml2-dev make zlib1g-dev
+
       - uses: r-lib/actions/setup-renv@v2
 
       - run: install.packages("rcmdcheck")
