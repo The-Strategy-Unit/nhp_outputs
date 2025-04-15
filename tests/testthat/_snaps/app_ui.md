@@ -143,12 +143,12 @@
                         <h3 class="card-title">Bed days summary by length of stay and point of delivery</h3>
                       </div>
                       <div class="card-body">
-                        <div data-spinner-id="spinner-1857099327b1aff77d32fa5ed14cd0bc" class="shiny-spinner-output-container shiny-spinner-hideui">
+                        <div data-spinner-id="spinner-a7cc487301d1bf521b7e3dc73589c3b1" class="shiny-spinner-output-container shiny-spinner-hideui">
                           <div class="load-container shiny-spinner-hidden load1">
-                            <div id="spinner-1857099327b1aff77d32fa5ed14cd0bc" class="loader">Loading...</div>
+                            <div id="spinner-a7cc487301d1bf521b7e3dc73589c3b1" class="loader">Loading...</div>
                           </div>
                           <div style="height:400px" class="shiny-spinner-placeholder"></div>
-                          <div id="principal_summary_los-summary_los_table_beddays" class="shiny-html-output"></div>
+                          <div class="shiny-html-output gt_shiny" id="principal_summary_los-summary_los_table_beddays"></div>
                         </div>
                       </div>
                     </div>
@@ -160,12 +160,12 @@
                         <h3 class="card-title">Admissions summary by length of stay and point of delivery</h3>
                       </div>
                       <div class="card-body">
-                        <div data-spinner-id="spinner-27905ce65da0feb456001ecf156cc1d8" class="shiny-spinner-output-container shiny-spinner-hideui">
+                        <div data-spinner-id="spinner-154b55ac46753d4836a4176357aa0ab6" class="shiny-spinner-output-container shiny-spinner-hideui">
                           <div class="load-container shiny-spinner-hidden load1">
-                            <div id="spinner-27905ce65da0feb456001ecf156cc1d8" class="loader">Loading...</div>
+                            <div id="spinner-154b55ac46753d4836a4176357aa0ab6" class="loader">Loading...</div>
                           </div>
                           <div style="height:400px" class="shiny-spinner-placeholder"></div>
-                          <div id="principal_summary_los-summary_los_table_admissions" class="shiny-html-output"></div>
+                          <div class="shiny-html-output gt_shiny" id="principal_summary_los-summary_los_table_admissions"></div>
                         </div>
                       </div>
                     </div>

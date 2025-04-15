@@ -7,11 +7,9 @@ test_that("ui is created correctly", {
   shiny_icon_fn <- shiny::icon
 
   assign_shiny_icon <- function(fn) {
-    rlang::env_unlock(env = asNamespace("shiny"))
     rlang::env_binding_unlock(env = asNamespace("shiny"))
     assign("icon", fn, envir = asNamespace("shiny"))
     rlang::env_binding_lock(env = asNamespace("shiny"))
-    rlang::env_lock(asNamespace("shiny"))
   }
   withr::defer({
     assign_shiny_icon(shiny_icon_fn)

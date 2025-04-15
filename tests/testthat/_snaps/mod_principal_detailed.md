@@ -75,12 +75,12 @@
             <h3 class="card-title">Activity by sex and age or treatment specialty</h3>
           </div>
           <div class="card-body">
-            <div data-spinner-id="spinner-a633f9f77c95364214bbb43adb765056" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-c035842a1e32484a3ac51311d84d605f" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-a633f9f77c95364214bbb43adb765056" class="loader">Loading...</div>
+                <div id="spinner-c035842a1e32484a3ac51311d84d605f" class="loader">Loading...</div>
               </div>
               <div style="height:400px" class="shiny-spinner-placeholder"></div>
-              <div id="id-results" class="shiny-html-output"></div>
+              <div class="shiny-html-output gt_shiny" id="id-results"></div>
             </div>
           </div>
         </div>

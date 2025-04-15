@@ -27,12 +27,12 @@
             <h3 class="card-title">Bed days summary by length of stay and point of delivery</h3>
           </div>
           <div class="card-body">
-            <div data-spinner-id="spinner-deda45324523b32597febcfbd63d76a5" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-71d763b4145de3f05c7a4c091c9b5b2a" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-deda45324523b32597febcfbd63d76a5" class="loader">Loading...</div>
+                <div id="spinner-71d763b4145de3f05c7a4c091c9b5b2a" class="loader">Loading...</div>
               </div>
               <div style="height:400px" class="shiny-spinner-placeholder"></div>
-              <div id="id-summary_los_table_beddays" class="shiny-html-output"></div>
+              <div class="shiny-html-output gt_shiny" id="id-summary_los_table_beddays"></div>
             </div>
           </div>
         </div>
@@ -44,12 +44,12 @@
             <h3 class="card-title">Admissions summary by length of stay and point of delivery</h3>
           </div>
           <div class="card-body">
-            <div data-spinner-id="spinner-82634ae7acb4969e0f7ac8c200619f48" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-57eeccda2d075ce4bf043b94a3bcec70" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-82634ae7acb4969e0f7ac8c200619f48" class="loader">Loading...</div>
+                <div id="spinner-57eeccda2d075ce4bf043b94a3bcec70" class="loader">Loading...</div>
               </div>
               <div style="height:400px" class="shiny-spinner-placeholder"></div>
-              <div id="id-summary_los_table_admissions" class="shiny-html-output"></div>
+              <div class="shiny-html-output gt_shiny" id="id-summary_los_table_admissions"></div>
             </div>
           </div>
         </div>
