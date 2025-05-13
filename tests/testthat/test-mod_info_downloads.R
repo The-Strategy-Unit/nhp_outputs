@@ -85,7 +85,7 @@ test_that("it generates an excel file", {
           "unplanned_follow-up_attendance_this_department",
           "unplanned_follow-up_attendance_another_department",
           "planned_follow-up_attendance",
-          "unknown"
+          "not_applicable"
         )
       ),
       step_counts = tibble::tibble(
