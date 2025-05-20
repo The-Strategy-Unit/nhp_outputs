@@ -24,7 +24,9 @@ get_params <- function(r) {
   is_scalar_numeric <- \(x) rlang::is_scalar_atomic(x) && is.numeric(x)
 
   to_interval <- function(x) {
-    if (length(x) == 2 && purrr::every(x, is_scalar_numeric) && is.null(names(x))) {
+    if (
+      length(x) == 2 && purrr::every(x, is_scalar_numeric) && is.null(names(x))
+    ) {
       x |>
         purrr::flatten_dbl() |>
         purrr::set_names(c("lo", "hi"))
@@ -47,7 +49,10 @@ get_params <- function(r) {
   recursive_discard(r$params)
 }
 
-get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL), folder = "prod") {
+get_result_sets <- function(
+  allowed_datasets = get_user_allowed_datasets(NULL),
+  folder = "prod"
+) {
   ds <- tibble::tibble(dataset = allowed_datasets)
 
   cont <- get_container()
@@ -130,24 +135,15 @@ patch_results <- function(r) {
   r$results <- purrr::imap(r$results, patch_principal)
   r$results <- patch_step_counts(r$results)
 
-  r$results[["tretspef_raw"]] <- dplyr::bind_rows(
-    r$results[["tretspef_raw"]],
-    r$results[["tretspef_raw+los_group"]] |>
-      dplyr::summarise(
-        .by = c("measure", "pod", "tretspef_raw", "sitetret"),
-        dplyr::across(
-          c("baseline", "principal", "lwr_pi", "median", "upr_pi"),
-          sum
-        )
-      )
-  )
-
-  r$results[["tretspef_raw+los_group"]] <- r$results[["tretspef_raw+los_group"]] |>
+  r$results[["tretspef_raw+los_group"]] <- r$results[[
+    "tretspef_raw+los_group"
+  ]] |>
     dplyr::mutate(
       dplyr::across(
         "los_group",
         \(.x) {
-          forcats::lvls_expand( # order and include potentially missing levels
+          forcats::lvls_expand(
+            # order and include potentially missing levels
             .x,
             c(
               "0 days",
@@ -170,7 +166,8 @@ patch_results <- function(r) {
       dplyr::across(
         "age_group",
         \(.x) {
-          forcats::lvls_expand( # order and include potentially missing levels
+          forcats::lvls_expand(
+            # order and include potentially missing levels
             .x,
             c(
               "0",
@@ -191,14 +188,21 @@ patch_results <- function(r) {
       )
     ) |>
     dplyr::arrange(
-      .data$pod, .data$measure, .data$sitetret, .data$sex, .data$age_group
+      .data$pod,
+      .data$measure,
+      .data$sitetret,
+      .data$sex,
+      .data$age_group
     )
 
   r
 }
 
 get_user_allowed_datasets <- function(groups) {
-  p <- jsonlite::read_json(app_sys("app", "data", "providers.json"), simplifyVector = TRUE)
+  p <- jsonlite::read_json(
+    app_sys("app", "data", "providers.json"),
+    simplifyVector = TRUE
+  )
 
   if (!(is.null(groups) || any(c("nhp_devs", "nhp_power_users") %in% groups))) {
     a <- groups |>
@@ -220,10 +224,11 @@ get_available_aggregations <- function(r) {
   r$results |>
     purrr::keep(\(.x) "pod" %in% colnames(.x)) |>
     purrr::map(
-      \(.x) .x |>
-        dplyr::pull("pod") |>
-        stringr::str_extract("^[a-z]*") |>
-        unique()
+      \(.x)
+        .x |>
+          dplyr::pull("pod") |>
+          stringr::str_extract("^[a-z]*") |>
+          unique()
     ) |>
     tibble::enframe() |>
     tidyr::unnest("value") |>
@@ -240,9 +245,14 @@ get_principal_high_level <- function(r, measures, sites) {
   r$results$default |>
     dplyr::filter(.data$measure %in% measures) |>
     dplyr::select("pod", "sitetret", "baseline", "principal") |>
-    dplyr::mutate(dplyr::across("pod", ~ ifelse(
-      stringr::str_starts(.x, "aae"), "aae", .x
-    ))) |>
+    dplyr::mutate(dplyr::across(
+      "pod",
+      ~ ifelse(
+        stringr::str_starts(.x, "aae"),
+        "aae",
+        .x
+      )
+    )) |>
     dplyr::group_by(.data$pod, .data$sitetret) |>
     dplyr::summarise(dplyr::across(where(is.numeric), sum), .groups = "drop") |>
     trust_site_aggregation(sites)
@@ -317,7 +327,10 @@ get_principal_change_factors <- function(r, activity_type, sites) {
   r$results$step_counts |>
     dplyr::filter(.data$activity_type == .env$activity_type) |>
     dplyr::select(-where(is.list)) |>
-    dplyr::mutate(dplyr::across("strategy", \(.x) tidyr::replace_na(.x, "-"))) |>
+    dplyr::mutate(dplyr::across(
+      "strategy",
+      \(.x) tidyr::replace_na(.x, "-")
+    )) |>
     trust_site_aggregation(sites)
 }
 
