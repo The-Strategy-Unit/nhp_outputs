@@ -8,9 +8,11 @@ tabulate_model_run_info <- function(p) {
   p_model_run <- purrr::keep(p, rlang::is_atomic)
 
   p_model_run[["start_year"]] <- scales::number(
-    p_model_run[["start_year"]] + ((p_model_run[["start_year"]] + 1) %% 100) / 100,
+    p_model_run[["start_year"]] +
+      ((p_model_run[["start_year"]] + 1) %% 100) / 100,
     0.01,
-    big.mark = "", decimal.mark = "/"
+    big.mark = "",
+    decimal.mark = "/"
   )
 
   p_model_run[["end_year"]] <- scales::number(
@@ -46,11 +48,12 @@ tabulate_model_run_info <- function(p) {
 #' @details This data will be used in the waterfall chart.
 #' @noRd
 prep_principal_change_factors <- function(
-    data,
-    sites,
-    mitigators,
-    at,
-    pods) {
+  data,
+  sites,
+  mitigators,
+  at,
+  pods
+) {
   principal_change_factors_raw <- data |>
     get_principal_change_factors(at, sites)
 
@@ -90,8 +93,9 @@ prep_principal_change_factors <- function(
 #' @details Used by [plot_individual_change_factors].
 #' @noRd
 prep_individual_change_factors <- function(
-    principal_change_factors,
-    measure) {
+  principal_change_factors,
+  measure
+) {
   principal_change_factors |>
     dplyr::filter(
       .data$measure == .env$measure,
@@ -115,9 +119,10 @@ prep_individual_change_factors <- function(
 #' @details Used by [plot_impact_and_individual_change].
 #' @noRd
 plot_individual_change_factors <- function(
-    principal_change_factors,
-    measure,
-    change_factor) {
+  principal_change_factors,
+  measure,
+  change_factor
+) {
   individual_change_factors <-
     prep_individual_change_factors(principal_change_factors, measure) |>
     dplyr::filter(change_factor == .env$change_factor)
@@ -139,8 +144,9 @@ plot_individual_change_factors <- function(
 #'     charts (activity avoidance and efficiencies) as one object.
 #' @noRd
 plot_impact_and_individual_change <- function(
-    principal_change_factors,
-    measure) {
+  principal_change_factors,
+  measure
+) {
   possibly_mod_principal_change_factor_effects_cf_plot <-
     purrr::possibly(
       mod_principal_change_factor_effects_cf_plot,
@@ -182,13 +188,14 @@ plot_impact_and_individual_change <- function(
 #'     'age_group', or treatment specialty, 'tretspef').
 #' @noRd
 generate_activity_in_detail_table <- function(
-    data,
-    sites,
-    tretspefs,
-    activity_type,
-    pod,
-    measure,
-    agg_col) {
+  data,
+  sites,
+  tretspefs,
+  activity_type,
+  pod,
+  measure,
+  agg_col
+) {
   aggregated_data <- data |>
     get_aggregation(pod, measure, agg_col, sites)
 
@@ -245,11 +252,12 @@ generate_activity_in_detail_table <- function(
 #' @param measure Character. A selected measure (e.g. 'beddays').
 #' @noRd
 plot_activity_distributions <- function(
-    data,
-    sites,
-    activity_type,
-    pod,
-    measure) {
+  data,
+  sites,
+  activity_type,
+  pod,
+  measure
+) {
   selected_measure <- c(activity_type, pod, measure)
 
   aggregated_data <- data |>
@@ -286,6 +294,7 @@ param_tables_to_list <- function(p) {
   possibly_table_baseline_adjustment <- purrr::possibly(
     info_params_table_baseline_adjustment
   )
+
   possibly_table_covid_adjustment <- purrr::possibly(
     info_params_table_covid_adjustment
   )
@@ -297,6 +306,7 @@ param_tables_to_list <- function(p) {
   possibly_table_waiting_list_adjustment <- purrr::possibly(
     info_params_table_waiting_list_adjustment
   )
+
   possibly_table_expat_repat_adjustment <- purrr::possibly(
     info_params_table_expat_repat_adjustment
   )
@@ -308,6 +318,7 @@ param_tables_to_list <- function(p) {
   possibly_table_activity_avoidance <- purrr::possibly(
     info_params_table_activity_avoidance
   )
+
   possibly_table_efficiencies <- purrr::possibly(
     info_params_table_efficiencies
   )
@@ -369,7 +380,7 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
         print()
     }
 
-    if (!l1_is_gt & l1_is_list) {
+    if (!l1_is_gt && l1_is_list) {
       l2_names <- names(l1_object)
 
       for (l2 in l2_names) {
