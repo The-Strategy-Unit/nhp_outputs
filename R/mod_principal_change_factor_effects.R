@@ -315,16 +315,16 @@ mod_principal_change_factor_effects_server <- function(
         d |>
           dplyr::mutate(
             dplyr::across(
-              "mitigator_name",
-              \(.x) forcats::fct_reorder(.x, -.data$value)
+              "mitigator_name", \(x) forcats::fct_reorder(x, -.data$value)
             )
           )
       } else {
         d |>
           dplyr::mutate(
             dplyr::across(
-              "mitigator_name",
-              \(.x) forcats::fct_rev(forcats::fct_reorder(.x, .data$mitigator_name))
+              "mitigator_name", \(x) {
+                forcats::fct_rev(forcats::fct_reorder(x, .data$mitigator_name))
+              }
             )
           )
       }
