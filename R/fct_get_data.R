@@ -116,13 +116,13 @@ patch_principal <- function(results, name) {
 
 patch_step_counts <- function(results) {
   if (!"strategy" %in% colnames(results$step_counts)) {
-    results$step_counts <- dplyr::mutate(
-      results$step_counts,
-      strategy = NA_character_,
-      .after = "change_factor"
-    )
+    results |>
+      purrr::modify_at("step_counts", \(x) {
+        dplyr::mutate(x, strategy = NA_character_, .after = "change_factor")
+      })
+  } else {
+    results
   }
-  results
 }
 
 patch_results <- function(results) {
@@ -154,6 +154,39 @@ patch_results <- function(results) {
       .data$sitetret,
       .data$sex,
       .data$age_group
+    purrr::modify_at(
+      "sex+age_group", \(x) {
+        x |>
+          dplyr::mutate(
+            dplyr::across("age_group", \(x) {
+              forcats::lvls_expand(
+                # order and include potentially missing levels
+                x,
+                c(
+                  "0",
+                  "1-4",
+                  "5-9",
+                  "10-15",
+                  "16-17",
+                  "18-34",
+                  "35-49",
+                  "50-64",
+                  "65-74",
+                  "75-84",
+                  "85+",
+                  "Unknown"
+                )
+              )
+            })
+          ) |>
+          dplyr::arrange(dplyr::pick(c(
+            "pod",
+            "measure",
+            "sitetret",
+            "sex",
+            "age_group"
+          )))
+      }
     )
 
   r
@@ -176,21 +209,15 @@ get_user_allowed_datasets <- function(groups) {
 }
 
 get_trust_sites <- function(r) {
-  r$results$default$sitetret |>
-    sort() |>
-    unique()
+  unique(sort(purrr::pluck(r, "results", "default", "sitetret")))
 }
 
 get_available_aggregations <- function(r) {
-  r$results |>
-    purrr::keep(\(.x) "pod" %in% colnames(.x)) |>
-    purrr::map(
-      \(.x)
-        .x |>
-          dplyr::pull("pod") |>
-          stringr::str_extract("^[a-z]*") |>
-          unique()
-    ) |>
+  extract_pods <- \(x) unique(stringr::str_extract(x[["pod"]], "^[a-z]*"))
+  r |>
+    purrr::pluck("results") |>
+    purrr::keep(\(x) "pod" %in% colnames(x)) |>
+    purrr::map(extract_pods) |>
     tibble::enframe() |>
     tidyr::unnest("value") |>
     dplyr::group_by(.data$value) |>
@@ -256,10 +283,11 @@ get_model_run_distribution <- function(r, pod, measure, sites) {
 }
 
 get_aggregation <- function(r, pod, measure, agg_col, sites) {
-  agg_type <- agg_col
 
   if (agg_col != "tretspef_raw") {
-    agg_type <- glue::glue("sex+{agg_col}") # nolint
+    agg_type <- glue::glue("sex+{agg_col}")
+  } else {
+    agg_type <- agg_col
   }
 
   filtered_results <- r$results[[agg_type]] |>
