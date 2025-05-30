@@ -75,9 +75,9 @@
                 </label>
               </div>
             </div>
-            <div data-spinner-id="spinner-fac52137bd9b9ca575e47193636bb3fb" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-94a56537f8b4af25d4e1fa77d841af30" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-fac52137bd9b9ca575e47193636bb3fb" class="loader">Loading...</div>
+                <div id="spinner-94a56537f8b4af25d4e1fa77d841af30" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
             </div>
@@ -99,9 +99,9 @@
                 <script type="application/json" data-for="id-sort_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
               </div>
             </div>
-            <div data-spinner-id="spinner-02d712da1fde4b737e463658c00feed6" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-0cadff256fe9f711537a30ffe1bfadf4" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-02d712da1fde4b737e463658c00feed6" class="loader">Loading...</div>
+                <div id="spinner-0cadff256fe9f711537a30ffe1bfadf4" class="loader">Loading...</div>
               </div>
               <div class="row">
                 <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>
