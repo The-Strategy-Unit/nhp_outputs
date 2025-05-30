@@ -64,7 +64,7 @@ get_result_sets <- function(
     rlang::set_names() |>
     purrr::map(\(name, ...) AzureStor::get_storage_metadata(cont, name)) |>
     dplyr::bind_rows(.id = "file") |>
-    dplyr::semi_join(ds, by = dplyr::join_by("dataset")) |>
+    dplyr::semi_join(ds, by = "dataset") |>
     dplyr::mutate(
       dplyr::across("viewable", as.logical)
     )
