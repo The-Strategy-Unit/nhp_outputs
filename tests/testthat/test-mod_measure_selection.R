@@ -92,11 +92,7 @@ test_that("it updates the pod dropdown when activity_type changes", {
   at <- "aae"
   pods <- atpmo_expected |>
     dplyr::filter(.data$activity_type == at) |>
-    dplyr::distinct(
-      dplyr::across(
-        tidyselect::starts_with("pod")
-      )
-    ) |>
+    dplyr::distinct(dplyr::pick(tidyselect::starts_with("pod"))) |>
     set_names()
 
   shiny::testServer(mod_measure_selection_server, {
