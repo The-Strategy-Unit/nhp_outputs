@@ -229,7 +229,8 @@ get_model_run_years <- function(r) {
 }
 
 get_principal_high_level <- function(r, measures, sites) {
-  r$results$default |>
+  r |>
+    purrr::pluck("results", "default") |>
     dplyr::filter(.data$measure %in% measures) |>
     dplyr::select("pod", "sitetret", "baseline", "principal") |>
     dplyr::mutate(
@@ -243,19 +244,22 @@ get_principal_high_level <- function(r, measures, sites) {
 }
 
 get_model_core_activity <- function(r, sites) {
-  r$results$default |>
+  r |>
+    purrr::pluck("results", "default") |>
     dplyr::select(-"model_runs") |>
     trust_site_aggregation(sites)
 }
 
 get_variants <- function(r) {
-  r$population_variants |>
+  r |>
+    purrr::pluck("population_variants") |>
     utils::tail(-1) |>
     tibble::enframe("model_run", "variant")
 }
 
 get_model_run_distribution <- function(r, pod, measure, sites) {
-  filtered_results <- r$results$default |>
+  filtered_results <- r |>
+    purrr::pluck("results", "default") |>
     dplyr::filter(
       .data$pod %in% .env$pod,
       .data$measure == .env$measure
@@ -286,7 +290,8 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
     agg_type <- agg_col
   }
 
-  filtered_results <- r$results[[agg_type]] |>
+  filtered_results <- r |>
+    purrr::pluck("results", agg_type) |>
     dplyr::filter(
       .data$pod %in% .env$pod,
       .data$measure == .env$measure
