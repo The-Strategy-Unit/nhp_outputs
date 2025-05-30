@@ -85,39 +85,33 @@ get_results_from_local <- function(filename) {
     parse_results()
 }
 
-parse_results <- function(r) {
-  r$population_variants <- as.character(r$population_variants)
-
-  r$results <- purrr::map(
-    r$results,
-    purrr::map_dfr,
-    purrr::modify_at,
-    c("model_runs"),
-    purrr::compose(list, as.numeric)
-  )
-
-  patch_results(r)
+parse_results <- function(results) {
+  results |>
+    purrr::modify_at("population_variants", as.character) |>
+    purrr::modify_at("results", \(x) {
+      x |>
+        purrr::map(\(x) {
+          purrr::map_dfr(x, \(x) {
+            purrr::modify_at(x, "model_runs", \(x) list(as.numeric(x)))
+          })
+        }) |>
+        patch_results()
+    })
 }
 
 patch_principal <- function(results, name) {
   if (name == "step_counts") {
-    return(patch_principal_step_counts(results))
+    results |>
+      dplyr::mutate(value = purrr::map_dbl(.data[["model_runs"]], mean))
+  } else {
+    results |>
+      dplyr::mutate(
+        principal = purrr::map_dbl(.data[["model_runs"]], mean),
+        median = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.5),
+        lwr_pi = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.1),
+        upr_pi = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.9)
+      )
   }
-
-  dplyr::mutate(
-    results,
-    principal = purrr::map_dbl(.data[["model_runs"]], mean),
-    median = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.5),
-    lwr_pi = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.1),
-    upr_pi = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.9)
-  )
-}
-
-patch_principal_step_counts <- function(results) {
-  dplyr::mutate(
-    results,
-    value = purrr::map_dbl(.data[["model_runs"]], mean)
-  )
 }
 
 patch_step_counts <- function(results) {
