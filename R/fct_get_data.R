@@ -232,14 +232,9 @@ get_principal_high_level <- function(r, measures, sites) {
   r$results$default |>
     dplyr::filter(.data$measure %in% measures) |>
     dplyr::select("pod", "sitetret", "baseline", "principal") |>
-    dplyr::mutate(dplyr::across(
-      "pod",
-      ~ ifelse(
-        stringr::str_starts(.x, "aae"),
-        "aae",
-        .x
-      )
-    )) |>
+    dplyr::mutate(
+      dplyr::across("pod", \(x) stringr::str_replace(x, "^aae.*", "aae"))
+    ) |>
     dplyr::summarise(
       dplyr::across(tidyselect::where(is.numeric), sum),
       .by = c("pod", "sitetret")
@@ -296,7 +291,7 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
       .data$pod %in% .env$pod,
       .data$measure == .env$measure
     ) |>
-    dplyr::select(-"pod", -"measure")
+    dplyr::select(-c("pod", "measure"))
 
   if (nrow(filtered_results) == 0) {
     return(NULL)
