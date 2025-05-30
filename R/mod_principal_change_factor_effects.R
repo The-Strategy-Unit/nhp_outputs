@@ -238,10 +238,17 @@ mod_principal_change_factor_effects_server <- function(
         get_principal_change_factors(at, selected_site()) |>
         require_rows() |>
         dplyr::mutate(
-          dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
             "change_factor",
-            \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
+            \(x) {
+              x |>
+                forcats::fct_inorder() |>
+                forcats::fct_relevel(
+                  "baseline",
+                  "demographic_adjustment",
+                  "health_status_adjustment"
+                )
+            }
           )
         ) |>
         dplyr::left_join(mitigator_lookup, by = "strategy") |>
