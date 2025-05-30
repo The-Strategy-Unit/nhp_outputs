@@ -304,7 +304,7 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
 
   filtered_results |>
     dplyr::mutate(
-      dplyr::across(dplyr::matches("sex|tretspef_raw"), as.character)
+      dplyr::across(tidyselect::matches("sex|tretspef_raw"), as.character)
     ) |>
     trust_site_aggregation(sites)
 }

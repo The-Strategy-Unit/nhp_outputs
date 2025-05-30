@@ -98,7 +98,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
         dplyr::across("Description", \(x) paste0(.data$Code, ": ", x)),
       ) |>
       dplyr::select(-"Group") |>
-      dplyr::add_row(Code = "&", Description = "Not known")  # as per HES dictionary
+      # as per HES dictionary:
+      dplyr::add_row(Code = "&", Description = "Not known")
 
     available_aggregations <- shiny::reactive({
       selected_data() |>
@@ -127,7 +128,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       activity_type <- pod <- measure <- NULL
       c(activity_type, pod, measure) %<-% selected_measure()
 
-      agg_col <- switch(shiny::req(input$aggregation),
+      agg_col <- switch(
+        shiny::req(input$aggregation),
         "Age Group" = "age_group",
         "Treatment Specialty" = "tretspef"
       )
@@ -172,7 +174,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
       end_year <- selected_data()[["params"]][["end_year"]]
       end_fyear <- paste0(
-        end_year, "/",
+        end_year,
+        "/",
         as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
       )
 
