@@ -244,10 +244,7 @@ mod_principal_change_factor_effects_server <- function(
             \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
           )
         ) |>
-        dplyr::left_join(
-          mitigator_lookup,
-          by = dplyr::join_by("strategy")
-        ) |>
+        dplyr::left_join(mitigator_lookup, by = "strategy") |>
         tidyr::replace_na(list("mitigator_name" = "-"))
     })
 
