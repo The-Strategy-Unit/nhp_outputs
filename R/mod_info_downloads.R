@@ -218,7 +218,7 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
     )
 
     output$download_results_json <- shiny::downloadHandler(
-      filename = \() paste0(filename_stub(), "_results.json"),,
+      filename = \() paste0(filename_stub(), "_results.json"),
       content = mod_info_downloads_download_json(selected_data)
     )
 
