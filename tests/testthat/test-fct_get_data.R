@@ -189,13 +189,10 @@ test_that("get_results_from_local returns data from local storage", {
 })
 
 test_that("parse_results converts results correctly", {
-  m <- mock("patched_results")
-  stub(parse_results, "patch_results", m)
-
-  data <- list(
+  results <- list(
     population_variants = list("a", "b"),
     results = list(
-      "a" = list(
+      a = list(
         list(
           x = 1,
           model_runs = list(1, 2, 3)
@@ -221,33 +218,34 @@ test_that("parse_results converts results correctly", {
   expected <- list(
     population_variants = c("a", "b"),
     results = list(
-      "a" = tibble::tibble(
+      a = tibble::tibble(
         x = 1:2,
-        model_runs = c(list(1:3), list(2:4))
+        model_runs = c(list(1:3), list(2:4)),
+        principal = 2:3,
+        median = 2:3,
+        lwr_pi = c(1.2, 2.2),
+        upr_pi = c(2.8, 3.8)
       ),
-      "b" = tibble::tibble(
+      b = tibble::tibble(
         x = 3:4,
-        model_runs = c(list(3:5), list(4:6))
+        model_runs = c(list(3:5), list(4:6)),
+        principal = 4:5,
+        median = 4:5,
+        lwr_pi = c(3.2, 4.2),
+        upr_pi = c(4.8, 5.8)
       )
     )
   )
 
   # act
-  actual <- parse_results(data)
+  actual <- parse_results(results)
 
   # assert
-  expect_called(m, 1)
-  expect_args(m, 1, expected)
-
-  expect_equal(actual, "patched_results")
+  expect_equal(actual, expected)
 })
 
 test_that("patch_principal returns correct values (not step_counts)", {
   # arrange
-  m <- mock()
-
-  stub(patch_principal, "patch_principal_step_counts", m)
-
   results <- tibble::tibble(
     model_runs = list(c(1:100))
   )
@@ -263,26 +261,10 @@ test_that("patch_principal returns correct values (not step_counts)", {
   actual <- patch_principal(results, "x")
 
   # assert
-  expect_called(m, 0)
   expect_equal(actual, expected)
 })
 
 test_that("patch_principal returns correct values (step_counts)", {
-  # arrange
-  m <- mock("patch_principal_step_counts")
-
-  stub(patch_principal, "patch_principal_step_counts", m)
-
-  # act
-  actual <- patch_principal("results", "step_counts")
-
-  # assert
-  expect_called(m, 1)
-  expect_args(m, 1, "results")
-  expect_equal(actual, "patch_principal_step_counts")
-})
-
-test_that("patch_principal_step_counts returns correct values", {
   # arrange
   results <- tibble::tibble(
     change_factor = c("baseline", "x"),
@@ -292,7 +274,7 @@ test_that("patch_principal_step_counts returns correct values", {
     dplyr::mutate(value = c(1, 3))
 
   # act
-  actual <- patch_principal_step_counts(results)
+  actual <- patch_principal(results, "step_counts")
 
   # assert
   expect_equal(actual, expected)
@@ -335,9 +317,7 @@ test_that("patch_step_counts returns correct values (has strategy)", {
 })
 
 test_that("patch_results returns correct values", {
-  # arrange
   r <- list(
-    results = list(
       "tretspef_raw" = tibble::tribble(
         ~measure,
         ~pod,
@@ -743,106 +723,15 @@ test_that("patch_results returns correct values", {
         7,
         6
       )
-    )
-  )
-  m <- mock(r$results[[1]], r$results[[2]], r$results[[3]], r$results)
-  stub(patch_results, "patch_principal", m)
-  stub(patch_results, "patch_step_counts", m)
-
-  expected <- list(
-    results = list(
-      "tretspef_raw" = tibble::tribble(
-        ~measure,
-        ~pod,
-        ~tretspef_raw,
-        ~sitetret,
-        ~baseline,
-        ~principal,
-        ~lwr_pi,
-        ~median,
-        ~upr_pi,
-        "a",
-        "op",
-        "100",
-        "s1",
-        1,
-        2,
-        3,
-        4,
-        5
-      ),
-      "tretspef_raw+los_group" = r$results[["tretspef_raw+los_group"]] |>
-        dplyr::mutate(
-          dplyr::across(
-            "los_group",
-            \(.x) {
-              forcats::fct_relevel(
-                .x,
-                c(
-                  "0 days",
-                  "1 day",
-                  "2 days",
-                  "3 days",
-                  "4-7 days",
-                  "8-14 days",
-                  "15-21 days",
-                  "22+ days"
-                )
-              )
-            }
-          )
-        ) |>
-        dplyr::arrange(
-          .data$pod,
-          .data$measure,
-          .data$sitetret,
-          .data$los_group
-        ),
-      "sex+age_group" = r$results[["sex+age_group"]] |>
-        dplyr::mutate(
-          dplyr::across(
-            "age_group",
-            \(.x) {
-              forcats::lvls_expand(
-                .x,
-                c(
-                  "0",
-                  "1-4",
-                  "5-9",
-                  "10-15",
-                  "16-17",
-                  "18-34",
-                  "35-49",
-                  "50-64",
-                  "65-74",
-                  "75-84",
-                  "85+",
-                  "Unknown"
-                )
-              )
-            }
-          )
-        ) |>
-        dplyr::arrange(
-          .data$pod,
-          .data$measure,
-          .data$sitetret,
-          .data$sex,
-          .data$age_group
-        )
-    )
   )
 
-  # act
-  actual <- patch_results(r)
-
-  # assert
-  expect_equal(actual, expected)
-  expect_called(m, 4)
-  expect_args(m, 1, r$results[[1]], "tretspef_raw")
-  expect_args(m, 2, r$results[[2]], "tretspef_raw+los_group")
-  expect_args(m, 3, r$results[[3]], "sex+age_group")
-  expect_args(m, 4, r$results)
+  with_mocked_bindings(
+    patch_results(r),
+    # negate these steps as we don't have model_run data in the test data
+    patch_principal = \(...) r,
+    patch_step_counts = \(...) r
+  ) |>
+    expect_snapshot_value("deparse")
 })
 
 test_that("user_allowed_datasets returns correct values", {
