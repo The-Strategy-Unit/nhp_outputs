@@ -44,14 +44,17 @@ app_server <- function(input, output, session) {
   })
 
   shiny::observe({
-    sites <- jsonlite::read_json(app_sys("app", "data", "sites.json"), simplify_vector = TRUE)
+    sites <- jsonlite::read_json(
+      app_sys("app", "data", "sites.json"),
+      simplify_vector = TRUE
+    )
 
-    trust_sites <- purrr::set_names(
+    trust_sites <- rlang::set_names(
       trust_sites(),
-      \(.x) {
+      \(x) {
         purrr::map_chr(
-          .x,
-          \(.y) glue::glue("{sites[[.y]] %||% lookup_ods_org_code_name(.y)} ({.y})")
+          x,
+          \(x) glue::glue("{sites[[x]] %||% lookup_ods_org_code_name(x)} ({x})")
         )
       }
     )
@@ -63,7 +66,11 @@ app_server <- function(input, output, session) {
     s <- length(selected_site())
 
     if (s == length(trust_sites())) {
-      shiny::updateSelectInput(session, "site_selection", selected = character())
+      shiny::updateSelectInput(
+        session,
+        "site_selection",
+        selected = character()
+      )
     }
 
     js <- glue::glue(
@@ -77,13 +84,37 @@ app_server <- function(input, output, session) {
 
   mod_info_home_server("home", selected_data)
 
-  mod_principal_summary_server("principal_summary", selected_data, selected_site)
-  mod_principal_summary_los_server("principal_summary_los", selected_data, selected_site)
-  mod_principal_change_factor_effects_server("principal_change_factor_effects", selected_data, selected_site)
-  mod_principal_detailed_server("principal_detailed", selected_data, selected_site)
+  mod_principal_summary_server(
+    "principal_summary",
+    selected_data,
+    selected_site
+  )
+  mod_principal_summary_los_server(
+    "principal_summary_los",
+    selected_data,
+    selected_site
+  )
+  mod_principal_change_factor_effects_server(
+    "principal_change_factor_effects",
+    selected_data,
+    selected_site
+  )
+  mod_principal_detailed_server(
+    "principal_detailed",
+    selected_data,
+    selected_site
+  )
 
-  mod_model_core_activity_server("model_core_activity", selected_data, selected_site)
-  mod_model_results_distribution_server("model_results_distribution", selected_data, selected_site)
+  mod_model_core_activity_server(
+    "model_core_activity",
+    selected_data,
+    selected_site
+  )
+  mod_model_results_distribution_server(
+    "model_results_distribution",
+    selected_data,
+    selected_site
+  )
 
   mod_info_downloads_server("info_downloads", selected_data, selected_site)
   mod_info_params_server("info_params", selected_data)
@@ -102,5 +133,5 @@ app_server <- function(input, output, session) {
     session$allowReconnect("force")
   }
 
-  return(NULL)
+  return(NULL) # nolint
 }
