@@ -220,8 +220,7 @@ get_available_aggregations <- function(r) {
     purrr::map(extract_pods) |>
     tibble::enframe() |>
     tidyr::unnest("value") |>
-    dplyr::group_by(.data$value) |>
-    dplyr::summarise(dplyr::across("name", list)) |>
+    dplyr::summarise(dplyr::across("name", list), .by = "value") |>
     tibble::deframe()
 }
 
@@ -241,8 +240,10 @@ get_principal_high_level <- function(r, measures, sites) {
         .x
       )
     )) |>
-    dplyr::group_by(.data$pod, .data$sitetret) |>
-    dplyr::summarise(dplyr::across(where(is.numeric), sum), .groups = "drop") |>
+    dplyr::summarise(
+      dplyr::across(tidyselect::where(is.numeric), sum),
+      .by = c("pod", "sitetret")
+    ) |>
     trust_site_aggregation(sites)
 }
 
@@ -328,18 +329,16 @@ trust_site_aggregation <- function(data, sites) {
   }
 
   data_filtered |>
-    dplyr::group_by(
-      dplyr::across(
-        c(
-          tidyselect::where(is.character),
-          tidyselect::where(is.factor),
-          tidyselect::any_of(c("model_run", "year")),
-          -"sitetret"
-        )
-      )
-    ) |>
     dplyr::summarise(
-      dplyr::across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE)),
-      .groups = "drop"
+      dplyr::across(
+        tidyselect::where(is.numeric),
+        \(x) sum(x, na.rm = TRUE)
+      ),
+      .by = c(
+        tidyselect::where(is.character),
+        tidyselect::where(is.factor),
+        tidyselect::any_of(c("model_run", "year")),
+        -"sitetret"
+      )
     )
 }
