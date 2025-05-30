@@ -72,10 +72,7 @@ prep_principal_change_factors <- function(
         }
       )
     ) |>
-    dplyr::left_join(
-      mitigators,
-      by = dplyr::join_by("strategy")
-    ) |>
+    dplyr::left_join(mitigators, by = "strategy") |>
     tidyr::replace_na(list("mitigator_name" = "-")) |>
     dplyr::filter(.data[["pod"]] %in% pods) |>
     dplyr::select(-"pod") |>
@@ -210,23 +207,21 @@ generate_activity_in_detail_table <- function(
 
   if (agg_col == "tretspef") {
     aggregated_data <- aggregated_data |>
-      dplyr::left_join(
-        tretspefs,
-        by = dplyr::join_by("agg" == "Code")
-      ) |>
+      dplyr::left_join(tretspefs, by = dplyr::join_by("agg" == "Code")) |>
       dplyr::mutate(
         dplyr::across(
           "Description",
-          \(x) dplyr::if_else(is.na(x), .data$agg, .data$Description)
+          \(x) dplyr::coalesce(x, .data[["agg"]])
         ),
+        .keep = "unused"
       ) |>
-      dplyr::select("sex", "Description", dplyr::everything(), -"agg") |>
-      dplyr::rename("agg" = "Description")
+      dplyr::select("sex", agg = "Description", tidyselect::everything())
   }
 
   end_year <- data[["params"]][["end_year"]]
   end_fyear <- paste0(
-    end_year, "/",
+    end_year,
+    "/",
     as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
   )
 
