@@ -1,10 +1,6 @@
 info_params_fix_data <- function(df) {
   at <- get_activity_type_pod_measure_options() |>
-    dplyr::distinct(
-      dplyr::across(
-        tidyselect::starts_with("activity_type")
-      )
-    )
+    dplyr::distinct(dplyr::pick(tidyselect::starts_with("activity_type")))
 
   specs <- app_sys("app", "data", "tx-lookup.json") |>
     jsonlite::read_json(simplifyVector = TRUE) |>
@@ -199,7 +195,7 @@ info_params_table_activity_avoidance <- function(p) {
       by = dplyr::join_by("activity_type", "strategy")
     ) |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
+    dplyr::arrange(dplyr::pick(c("activity_type_name", "mitigator_name"))) |>
     gt::gt("mitigator_name", "activity_type_name") |>
     gt_theme()
 }
@@ -223,7 +219,7 @@ info_params_table_efficiencies <- function(p) {
     tidyr::unnest_wider("value") |>
     dplyr::left_join(time_profiles, by = c("activity_type", "strategy")) |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
+    dplyr::arrange(dplyr::pick(c("activity_type_name", "mitigator_name"))) |>
     gt::gt("mitigator_name", "activity_type_name") |>
     gt_theme()
 }
