@@ -65,19 +65,18 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
 ) |>
   dplyr::mutate(
     dplyr::across(
-      "change_factor",
-      \(.x) forcats::fct_relevel(
-        .x,
-        "Estimate",
-        "health_status_adjustment",
-        "activity_avoidance",
-        "demographic_adjustment",
-        "baseline"
-      )
+      "change_factor", \(x) {
+        forcats::fct_relevel(
+          x,
+          "Estimate",
+          "health_status_adjustment",
+          "activity_avoidance",
+          "demographic_adjustment",
+          "baseline"
+        )
+      }
     ),
-    dplyr::across(
-      "name", \(.x) forcats::fct_relevel(.x, c("hidden", "value"))
-    )
+    dplyr::across("name", \(x) forcats::fct_relevel(x, c("hidden", "value")))
   )
 
 change_factors_summarised_expected_exc_baseline <- tibble::tribble(
@@ -93,18 +92,17 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
 ) |>
   dplyr::mutate(
     dplyr::across(
-      "change_factor",
-      \(.x) forcats::fct_relevel(
-        .x,
-        "Estimate",
-        "health_status_adjustment",
-        "activity_avoidance",
-        "demographic_adjustment"
-      )
+      "change_factor", \(x) {
+        forcats::fct_relevel(
+          x,
+          "Estimate",
+          "health_status_adjustment",
+          "activity_avoidance",
+          "demographic_adjustment"
+        )
+      }
     ),
-    dplyr::across(
-      "name", \(.x) forcats::fct_relevel(.x, c("hidden", "value"))
-    )
+    dplyr::across("name", \(x) forcats::fct_relevel(x, c("hidden", "value")))
   )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -6,15 +6,23 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 atpmo_expected <- tibble::tribble(
-  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
+  ~activity_type,
+  ~activity_type_name,
+  ~pod,
+  ~pod_name,
+  ~measures,
+  "aae",
+  "A&E",
+  "aae_type-01",
+  "Type 1 Department",
+  "ambulance"
 )
 
 set_names <- function(x) {
-  purrr::set_names(x[[1]], x[[2]])
+  rlang::set_names(x[[1]], x[[2]])
 }
 
-data_dictionary = jsonlite::read_json(
+data_dictionary <- jsonlite::read_json(
   app_sys("app", "data", "excel_dictionary.json"),
   simplifyVector = TRUE
 )
