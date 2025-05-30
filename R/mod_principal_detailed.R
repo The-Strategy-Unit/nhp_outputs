@@ -93,7 +93,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
     ) |>
       dplyr::mutate(
         dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
-        dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
+        dplyr::across("Description", \(x) paste0(.data$Code, ": ", x)),
       ) |>
       dplyr::select(-"Group") |>
       dplyr::add_row(Code = "&", Description = "Not known")  # as per HES dictionary
@@ -114,8 +114,9 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
       an <- c("age_group" = "Age Group", "tretspef" = "Treatment Specialty")
 
-      agg_choices <- unname(an[a])
-      agg_choices <- agg_choices[!is.na(agg_choices)]
+      agg_choices <- an[a] |>
+        unname() |>
+        purrr::discard(is.na)
 
       shiny::updateSelectInput(session, "aggregation", choices = agg_choices)
     })
@@ -150,11 +151,11 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
           dplyr::mutate(
             dplyr::across(
               "Description",
-              \(x) dplyr::if_else(is.na(x), .data$agg, .data$Description)
+              \(x) dplyr::coalesce(x, .data[["agg"]])
             ),
+            .keep = "unused"
           ) |>
-          dplyr::select("sex", "Description", dplyr::everything(), -"agg") |>
-          dplyr::rename("agg" = "Description")
+          dplyr::select("sex", agg = "Description", tidyselect::everything())
       }
 
       dat
