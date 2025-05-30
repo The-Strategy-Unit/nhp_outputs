@@ -6,13 +6,8 @@ NULL
 
 # converts a two column tibble into a named list suitable for shiny selectInput choices
 set_names <- function(.x) {
-  purrr::set_names(.x[[1]], .x[[2]])
+  rlang::set_names(.x[[1]], .x[[2]])
 }
-
-utils::globalVariables(c(
-  "where", # source: https://github.com/r-lib/tidyselect/issues/201#issuecomment-650547846
-  "ds", "sc", "cd" # because of the use of %<-%
-))
 
 `__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint
 `__STORAGE_EP__` <- "https://storage.azure.com/" # nolint
@@ -36,7 +31,10 @@ lookup_ods_org_code_name <- function(org_code) {
   httr::content(req)$Organisation$Name %||% "Unknown"
 }
 
-get_selected_file_from_url <- function(session, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) {
+get_selected_file_from_url <- function(
+  session,
+  key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")
+) {
   f <- session$clientData$url_search |>
     stringr::str_sub(2L) |>
     utils::URLdecode()
