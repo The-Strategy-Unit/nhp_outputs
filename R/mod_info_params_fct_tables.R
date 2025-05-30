@@ -5,8 +5,8 @@ info_params_fix_data <- function(df) {
   specs <- app_sys("app", "data", "tx-lookup.json") |>
     jsonlite::read_json(simplifyVector = TRUE) |>
     dplyr::select(
-      "specialty" = "Code",
-      "specialty_name" = "Description"
+      specialty = "Code",
+      specialty_name = "Description"
     )
 
   strategies <- app_sys("app", "data", "mitigators.json") |>
