@@ -86,7 +86,7 @@ info_params_table_baseline_adjustment <- function(p) {
   )
 
   baseline_adjustment |>
-    purrr::map_depth(2, tibble::enframe, "specialty") |>
+    purrr::map_depth(2, \(x) tibble::enframe(x, name = "specialty")) |>
     purrr::map(dplyr::bind_rows, .id = "pod") |>
     dplyr::bind_rows(.id = "activity_type") |>
     info_params_fix_data() |>
@@ -104,7 +104,7 @@ info_params_table_covid_adjustment <- function(p) {
   )
 
   covid_adjustment |>
-    purrr::map(tibble::enframe, "pod") |>
+    purrr::map(\(x) tibble::enframe(x, name = "pod")) |>
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
@@ -147,8 +147,8 @@ info_params_table_expat_repat_adjustment <- function(p, type) {
   )
 
   df |>
-    purrr::map_depth(2, tibble::enframe, "specialty") |>
-    purrr::map(dplyr::bind_rows, .id = "pod") |>
+    purrr::map_depth(2, \(x) tibble::enframe(x, name = "specialty")) |>
+    purrr::map(\(x) dplyr::bind_rows(x, .id = "pod")) |>
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
@@ -182,12 +182,12 @@ info_params_table_activity_avoidance <- function(p) {
 
   time_profiles <- p[["time_profile_mappings"]][["activity_avoidance"]] |>
     purrr::map(unlist) |>
-    purrr::map(tibble::enframe, "strategy", "time_profile") |>
+    purrr::map(\(x) tibble::enframe(x, "strategy", "time_profile")) |>
     dplyr::bind_rows(.id = "activity_type")
 
   actitvity_avoidance |>
     purrr::map_depth(2, "interval") |>
-    purrr::map(tibble::enframe, "strategy") |>
+    purrr::map(\(x) tibble::enframe(x, name = "strategy")) |>
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
     dplyr::left_join(
@@ -209,7 +209,7 @@ info_params_table_efficiencies <- function(p) {
 
   time_profiles <- p[["time_profile_mappings"]][["efficiencies"]] |>
     purrr::map(unlist) |>
-    purrr::map(tibble::enframe, "strategy", "time_profile") |>
+    purrr::map(\(x) tibble::enframe(x, "strategy", "time_profile")) |>
     dplyr::bind_rows(.id = "activity_type")
 
   efficiencies |>
