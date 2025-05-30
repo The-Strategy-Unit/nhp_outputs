@@ -190,10 +190,7 @@ info_params_table_activity_avoidance <- function(p) {
     purrr::map(\(x) tibble::enframe(x, name = "strategy")) |>
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
-    dplyr::left_join(
-      time_profiles,
-      by = dplyr::join_by("activity_type", "strategy")
-    ) |>
+    dplyr::left_join(time_profiles, by = c("activity_type", "strategy")) |>
     info_params_fix_data() |>
     dplyr::arrange(dplyr::pick(c("activity_type_name", "mitigator_name"))) |>
     gt::gt("mitigator_name", "activity_type_name") |>
