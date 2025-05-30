@@ -147,13 +147,15 @@ patch_results <- function(results) {
                 "22+ days"
               )
             )
+          })) |>
+          dplyr::arrange(dplyr::pick(c(
+            "pod",
+            "measure",
+            "sitetret",
+            "los_group"
+          )))
+      }
     ) |>
-    dplyr::arrange(
-      .data$pod,
-      .data$measure,
-      .data$sitetret,
-      .data$sex,
-      .data$age_group
     purrr::modify_at(
       "sex+age_group", \(x) {
         x |>
@@ -188,8 +190,6 @@ patch_results <- function(results) {
           )))
       }
     )
-
-  r
 }
 
 get_user_allowed_datasets <- function(groups) {
