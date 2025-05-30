@@ -131,61 +131,28 @@ patch_step_counts <- function(results) {
   results
 }
 
-patch_results <- function(r) {
-  r$results <- purrr::imap(r$results, patch_principal)
-  r$results <- patch_step_counts(r$results)
-
-  r$results[["tretspef_raw+los_group"]] <- r$results[[
-    "tretspef_raw+los_group"
-  ]] |>
-    dplyr::mutate(
-      dplyr::across(
-        "los_group",
-        \(.x) {
-          forcats::lvls_expand(
-            # order and include potentially missing levels
-            .x,
-            c(
-              "0 days",
-              "1 day",
-              "2 days",
-              "3 days",
-              "4-7 days",
-              "8-14 days",
-              "15-21 days",
-              "22+ days"
+patch_results <- function(results) {
+  results |>
+    purrr::imap(patch_principal) |>
+    patch_step_counts() |>
+    purrr::modify_at(
+      "tretspef_raw+los_group", \(x) {
+        x |>
+          dplyr::mutate(dplyr::across("los_group", \(x) {
+            forcats::lvls_expand(
+              # order and include potentially missing levels
+              x,
+              c(
+                "0 days",
+                "1 day",
+                "2 days",
+                "3 days",
+                "4-7 days",
+                "8-14 days",
+                "15-21 days",
+                "22+ days"
+              )
             )
-          )
-        }
-      )
-    ) |>
-    dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
-
-  r$results[["sex+age_group"]] <- r$results[["sex+age_group"]] |>
-    dplyr::mutate(
-      dplyr::across(
-        "age_group",
-        \(.x) {
-          forcats::lvls_expand(
-            # order and include potentially missing levels
-            .x,
-            c(
-              "0",
-              "1-4",
-              "5-9",
-              "10-15",
-              "16-17",
-              "18-34",
-              "35-49",
-              "50-64",
-              "65-74",
-              "75-84",
-              "85+",
-              "Unknown"
-            )
-          )
-        }
-      )
     ) |>
     dplyr::arrange(
       .data$pod,
@@ -286,7 +253,7 @@ get_model_run_distribution <- function(r, pod, measure, sites) {
     dplyr::mutate(
       dplyr::across(
         "model_runs",
-        \(.x) purrr::map(.x, tibble::enframe, name = "model_run")
+        \(x) purrr::map(x, \(x) tibble::enframe(x, name = "model_run"))
       )
     ) |>
     tidyr::unnest("model_runs") |>
@@ -326,11 +293,8 @@ get_principal_change_factors <- function(r, activity_type, sites) {
 
   r$results$step_counts |>
     dplyr::filter(.data$activity_type == .env$activity_type) |>
-    dplyr::select(-where(is.list)) |>
-    dplyr::mutate(dplyr::across(
-      "strategy",
-      \(.x) tidyr::replace_na(.x, "-")
-    )) |>
+    dplyr::select(-tidyselect::where(is.list)) |>
+    dplyr::mutate(dplyr::across("strategy", \(x) tidyr::replace_na(x, "-"))) |>
     trust_site_aggregation(sites)
 }
 
