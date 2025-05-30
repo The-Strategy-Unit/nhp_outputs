@@ -24,7 +24,7 @@ info_params_fix_data <- function(df) {
     }
 
     df |>
-      dplyr::inner_join(at, by = dplyr::join_by("activity_type")) |>
+      dplyr::inner_join(at, by = "activity_type") |>
       dplyr::select(-"activity_type")
   }
 
@@ -34,14 +34,14 @@ info_params_fix_data <- function(df) {
     }
 
     df |>
-      dplyr::left_join(specs, by = dplyr::join_by("specialty")) |>
+      dplyr::left_join(specs, by = "specialty") |>
       dplyr::mutate(
         dplyr::across(
           "specialty_name",
-          \(.x) ifelse(is.na(.x), .data[["specialty"]], .x)
-        )
-      ) |>
-      dplyr::select(-"specialty")
+          \(x) dplyr::coalesce(x, .data[["specialty"]])
+        ),
+        .keep = "unused"
+      )
   }
 
   fix_strategy <- function(df) {
@@ -50,7 +50,7 @@ info_params_fix_data <- function(df) {
     }
 
     df |>
-      dplyr::left_join(strategies, by = dplyr::join_by("strategy")) |>
+      dplyr::left_join(strategies, by = "strategy") |>
       dplyr::select(-"strategy")
   }
 
@@ -221,10 +221,7 @@ info_params_table_efficiencies <- function(p) {
     purrr::map(tibble::enframe, "strategy") |>
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
-    dplyr::left_join(
-      time_profiles,
-      by = dplyr::join_by("activity_type", "strategy")
-    ) |>
+    dplyr::left_join(time_profiles, by = c("activity_type", "strategy")) |>
     info_params_fix_data() |>
     dplyr::arrange("activity_type_name", "mitigator_name") |>
     gt::gt("mitigator_name", "activity_type_name") |>
