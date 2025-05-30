@@ -295,7 +295,7 @@ mod_principal_change_factor_effects_server <- function(
       shiny::updateSelectInput(
         session,
         "measure",
-        choices = purrr::set_names(measures, measure_names[measures]),
+        choices = rlang::set_names(measures, measure_names[measures]),
         selected = ifelse(at == "ip", "beddays", measures[[1]])
       )
     }) |>

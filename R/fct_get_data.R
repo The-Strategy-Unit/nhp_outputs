@@ -29,7 +29,7 @@ get_params <- function(r) {
     ) {
       x |>
         purrr::flatten_dbl() |>
-        purrr::set_names(c("lo", "hi"))
+        rlang::set_names(c("lo", "hi"))
     } else {
       x
     }
@@ -61,7 +61,7 @@ get_result_sets <- function(
     AzureStor::list_blobs(folder, info = "all", recursive = TRUE) |>
     dplyr::filter(!.data[["isdir"]]) |>
     purrr::pluck("name") |>
-    purrr::set_names() |>
+    rlang::set_names() |>
     purrr::map(\(name, ...) AzureStor::get_storage_metadata(cont, name)) |>
     dplyr::bind_rows(.id = "file") |>
     dplyr::semi_join(ds, by = dplyr::join_by("dataset")) |>
