@@ -16,7 +16,9 @@ mod_info_downloads_ui <- function(id) {
         title = "Notes",
         collapsible = FALSE,
         width = 12,
-        htmltools::p("These files will download one at a time and may take a moment to be generated.")
+        htmltools::p(
+          "These files will download one at a time and may take a moment to be generated."
+        )
       ),
       bs4Dash::box(
         title = "Download results data",
@@ -89,7 +91,9 @@ mod_info_downloads_download_excel <- function(data) {
 
     # Rename as per
     # https://www.datadictionary.nhs.uk/attributes/emergency_care_attendance_category.html
-    results_dfs[["attendance_category"]] <- results_dfs[["attendance_category"]] |>
+    results_dfs[["attendance_category"]] <- results_dfs[[
+      "attendance_category"
+    ]] |>
       dplyr::mutate(
         attendance_category = dplyr::case_match(
           .data[["attendance_category"]],
@@ -112,13 +116,16 @@ mod_info_downloads_download_excel <- function(data) {
       purrr::keep(rlang::is_atomic)
 
     params_list[["start_year"]] <- scales::number(
-      params_list[["start_year"]] + ((params_list[["start_year"]] + 1) %% 100) / 100,
+      params_list[["start_year"]] +
+        ((params_list[["start_year"]] + 1) %% 100) / 100,
       0.01,
-      big.mark = "", decimal.mark = "/"
+      big.mark = "",
+      decimal.mark = "/"
     )
 
     params_list[["end_year"]] <- scales::number(
-      params_list[["end_year"]] + ((params_list[["end_year"]] + 1) %% 100) / 100,
+      params_list[["end_year"]] +
+        ((params_list[["end_year"]] + 1) %% 100) / 100,
       0.01,
       big.mark = "",
       decimal.mark = "/"
@@ -147,15 +154,16 @@ mod_info_downloads_download_json <- function(data) {
       file,
       pretty = TRUE,
       auto_unbox = TRUE,
-      digits = NA  # max precision
+      digits = NA # max precision
     )
   }
 }
 
 mod_info_downloads_download_report_html <- function(
-    data,
-    sites = NULL,
-    report_type = c("parameters", "outputs")) {
+  data,
+  sites = NULL,
+  report_type = c("parameters", "outputs")
+) {
   force(data)
   report_type <- match.arg(report_type)
   function(file) {
@@ -218,14 +226,16 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
     )
 
     output$download_results_json <- shiny::downloadHandler(
-      filename = \() paste0(filename_stub(), "_results.json"),,
+      filename = \() paste0(filename_stub(), "_results.json"),
+      ,
       content = mod_info_downloads_download_json(selected_data)
     )
 
     # params
 
     output$download_report_parameters_html <- shiny::downloadHandler(
-      filename = \() paste0(filename_stub(), "_report-parameters_extract-a.html"),
+      filename = \()
+        paste0(filename_stub(), "_report-parameters_extract-a.html"),
       content = mod_info_downloads_download_report_html(
         selected_data,
         report_type = "parameters"

@@ -8,9 +8,11 @@ tabulate_model_run_info <- function(p) {
   p_model_run <- purrr::keep(p, rlang::is_atomic)
 
   p_model_run[["start_year"]] <- scales::number(
-    p_model_run[["start_year"]] + ((p_model_run[["start_year"]] + 1) %% 100) / 100,
+    p_model_run[["start_year"]] +
+      ((p_model_run[["start_year"]] + 1) %% 100) / 100,
     0.01,
-    big.mark = "", decimal.mark = "/"
+    big.mark = "",
+    decimal.mark = "/"
   )
 
   p_model_run[["end_year"]] <- scales::number(
@@ -46,11 +48,12 @@ tabulate_model_run_info <- function(p) {
 #' @details This data will be used in the waterfall chart.
 #' @noRd
 prep_principal_change_factors <- function(
-    data,
-    sites,
-    mitigators,
-    at,
-    pods) {
+  data,
+  sites,
+  mitigators,
+  at,
+  pods
+) {
   principal_change_factors_raw <- data |>
     get_principal_change_factors(at, sites)
 
@@ -93,8 +96,9 @@ prep_principal_change_factors <- function(
 #' @details Used by [plot_individual_change_factors].
 #' @noRd
 prep_individual_change_factors <- function(
-    principal_change_factors,
-    measure) {
+  principal_change_factors,
+  measure
+) {
   principal_change_factors |>
     dplyr::filter(
       .data$measure == .env$measure,
@@ -118,9 +122,10 @@ prep_individual_change_factors <- function(
 #' @details Used by [plot_impact_and_individual_change].
 #' @noRd
 plot_individual_change_factors <- function(
-    principal_change_factors,
-    measure,
-    change_factor) {
+  principal_change_factors,
+  measure,
+  change_factor
+) {
   individual_change_factors <-
     prep_individual_change_factors(principal_change_factors, measure) |>
     dplyr::filter(change_factor == .env$change_factor)
@@ -142,8 +147,9 @@ plot_individual_change_factors <- function(
 #'     charts (activity avoidance and efficiencies) as one object.
 #' @noRd
 plot_impact_and_individual_change <- function(
-    principal_change_factors,
-    measure) {
+  principal_change_factors,
+  measure
+) {
   possibly_mod_principal_change_factor_effects_cf_plot <-
     purrr::possibly(
       mod_principal_change_factor_effects_cf_plot,
@@ -185,13 +191,14 @@ plot_impact_and_individual_change <- function(
 #'     'age_group', or treatment specialty, 'tretspef').
 #' @noRd
 generate_activity_in_detail_table <- function(
-    data,
-    sites,
-    tretspefs,
-    activity_type,
-    pod,
-    measure,
-    agg_col) {
+  data,
+  sites,
+  tretspefs,
+  activity_type,
+  pod,
+  measure,
+  agg_col
+) {
   aggregated_data <- data |>
     get_aggregation(pod, measure, agg_col, sites)
 
@@ -226,7 +233,8 @@ generate_activity_in_detail_table <- function(
 
   end_year <- data[["params"]][["end_year"]]
   end_fyear <- paste0(
-    end_year, "/",
+    end_year,
+    "/",
     as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
   )
 
@@ -250,11 +258,12 @@ generate_activity_in_detail_table <- function(
 #' @param measure Character. A selected measure (e.g. 'beddays').
 #' @noRd
 plot_activity_distributions <- function(
-    data,
-    sites,
-    activity_type,
-    pod,
-    measure) {
+  data,
+  sites,
+  activity_type,
+  pod,
+  measure
+) {
   selected_measure <- c(activity_type, pod, measure)
 
   aggregated_data <- data |>

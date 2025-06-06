@@ -53,8 +53,9 @@ mod_model_core_activity_ui <- function(id) {
 }
 
 mod_model_core_activity_server_table <- function(
-    data,
-    value_type = c("median", "principal")) {
+  data,
+  value_type = c("median", "principal")
+) {
   value_type <- match.arg(value_type)
   data_prep <- data |>
     dplyr::mutate(
@@ -84,7 +85,13 @@ mod_model_core_activity_server_table <- function(
 
   data_prep |>
     gt::gt(groupname_col = c("activity_type_name", "pod_name")) |>
-    gt::fmt_integer(c("baseline", .env$value_type, "change", "lwr_pi", "upr_pi")) |>
+    gt::fmt_integer(c(
+      "baseline",
+      .env$value_type,
+      "change",
+      "lwr_pi",
+      "upr_pi"
+    )) |>
     gt::fmt_percent("change_pcnt", decimals = 0) |>
     gt::cols_align(align = "left", columns = "measure") |>
     gt::cols_label_with(fn = stringr::str_to_title) |>

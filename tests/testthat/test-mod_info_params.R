@@ -25,13 +25,41 @@ test_that("it calls get_params correctly", {
 
   stub(mod_info_params_server, "get_params", m)
 
-  stub(mod_info_params_server, "info_params_table_demographic_adjustment", "demographic_adjustment")
-  stub(mod_info_params_server, "info_params_table_baseline_adjustment", "baseline_adjustment")
-  stub(mod_info_params_server, "info_params_table_covid_adjustment", "covid_adjustment")
-  stub(mod_info_params_server, "info_params_table_waiting_list_adjustment", "waiting_list_adjustment")
-  stub(mod_info_params_server, "info_params_table_expat_repat_adjustment", "expat_repat_adjustment")
-  stub(mod_info_params_server, "info_params_table_non_demographic_adjustment", "non_demographic_adjustment")
-  stub(mod_info_params_server, "info_params_table_activity_avoidance", "activity_avoidance")
+  stub(
+    mod_info_params_server,
+    "info_params_table_demographic_adjustment",
+    "demographic_adjustment"
+  )
+  stub(
+    mod_info_params_server,
+    "info_params_table_baseline_adjustment",
+    "baseline_adjustment"
+  )
+  stub(
+    mod_info_params_server,
+    "info_params_table_covid_adjustment",
+    "covid_adjustment"
+  )
+  stub(
+    mod_info_params_server,
+    "info_params_table_waiting_list_adjustment",
+    "waiting_list_adjustment"
+  )
+  stub(
+    mod_info_params_server,
+    "info_params_table_expat_repat_adjustment",
+    "expat_repat_adjustment"
+  )
+  stub(
+    mod_info_params_server,
+    "info_params_table_non_demographic_adjustment",
+    "non_demographic_adjustment"
+  )
+  stub(
+    mod_info_params_server,
+    "info_params_table_activity_avoidance",
+    "activity_avoidance"
+  )
   stub(mod_info_params_server, "info_params_table_efficiencies", "efficiencies")
 
   testServer(
@@ -65,7 +93,11 @@ test_that("outputs are set correctly", {
   stub(mod_info_params_server, "info_params_table_covid_adjustment", m)
   stub(mod_info_params_server, "info_params_table_waiting_list_adjustment", m)
   stub(mod_info_params_server, "info_params_table_expat_repat_adjustment", m)
-  stub(mod_info_params_server, "info_params_table_non_demographic_adjustment", m)
+  stub(
+    mod_info_params_server,
+    "info_params_table_non_demographic_adjustment",
+    m
+  )
   stub(mod_info_params_server, "info_params_table_activity_avoidance", m)
   stub(mod_info_params_server, "info_params_table_efficiencies", m)
 
