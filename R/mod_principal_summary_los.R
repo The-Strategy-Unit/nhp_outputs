@@ -49,7 +49,11 @@ mod_principal_los_pods <- function() {
   get_activity_type_pod_measure_options() |>
     dplyr::filter(.data$activity_type != "aae") |>
     dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
-    dplyr::bind_rows(data.frame(activity_type = "aae", pod = "aae", pod_name = "A&E Attendance")) |>
+    dplyr::bind_rows(data.frame(
+      activity_type = "aae",
+      pod = "aae",
+      pod_name = "A&E Attendance"
+    )) |>
     dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
@@ -65,7 +69,14 @@ mod_principal_summary_los_data <- function(r, sites, measure) {
       change = .data$principal - .data$baseline,
       change_pcnt = .data$change / .data$baseline
     ) |>
-    dplyr::select("pod_name", "los_group", "baseline", "principal", "change", "change_pcnt")
+    dplyr::select(
+      "pod_name",
+      "los_group",
+      "baseline",
+      "principal",
+      "change",
+      "change_pcnt"
+    )
 
   if (measure == "beddays") {
     summary_los <- summary_los |>

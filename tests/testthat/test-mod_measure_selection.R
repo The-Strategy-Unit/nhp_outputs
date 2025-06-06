@@ -6,9 +6,21 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 atpmo_expected <- tibble::tribble(
-  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance",
-  "aae", "A&E", "aae_type-02", "Type 2 Department", "ambulance",
+  ~activity_type,
+  ~activity_type_name,
+  ~pod,
+  ~pod_name,
+  ~measures,
+  "aae",
+  "A&E",
+  "aae_type-01",
+  "Type 1 Department",
+  "ambulance",
+  "aae",
+  "A&E",
+  "aae_type-02",
+  "Type 2 Department",
+  "ambulance",
 )
 
 set_names <- function(x) {
@@ -129,11 +141,14 @@ test_that("it updates the measure dropdown when pod changes", {
 test_that("it returns a reactive", {
   stub(mod_measure_selection_server, "shiny::reactive", "reactive", 2)
 
-  shiny::testServer(function(input, output, session) {
-    r <- mod_measure_selection_server("id")
-  }, {
-    expect_equal(r, "reactive")
-  })
+  shiny::testServer(
+    function(input, output, session) {
+      r <- mod_measure_selection_server("id")
+    },
+    {
+      expect_equal(r, "reactive")
+    }
+  )
 })
 
 test_that("selected_measure contains the selected dropdown values", {

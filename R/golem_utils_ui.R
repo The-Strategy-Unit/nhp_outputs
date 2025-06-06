@@ -125,7 +125,8 @@ named_to_li <- function(list, class = NULL) {
 #' @examples
 #' a <- shiny::tags$p(src = "plop", "pouet")
 #' tagRemoveAttributes(a, "src")
-tagRemoveAttributes <- function(tag, ...) { # nolint
+tagRemoveAttributes <- function(tag, ...) {
+  # nolint
   attrs <- as.character(list(...))
   for (i in seq_along(attrs)) {
     tag$attribs[[attrs[i]]] <- NULL
@@ -208,13 +209,13 @@ with_red_star <- function(text) {
       paste0(
         text,
         shiny::tags$span(
-          style = "color:red", "*"
+          style = "color:red",
+          "*"
         )
       )
     )
   )
 }
-
 
 
 #' Repeat tags$br
@@ -314,7 +315,8 @@ col_1 <- function(...) {
 #'
 #'   shinyApp(ui, server)
 #' }
-make_action_button <- function(tag, inputId = NULL) { # nolint
+make_action_button <- function(tag, inputId = NULL) {
+  # nolint
   # some obvious checks
   if (!inherits(tag, "shiny.tag")) stop("Must provide a shiny tag.")
   if (!is.null(tag$attribs$class)) {
@@ -323,8 +325,10 @@ make_action_button <- function(tag, inputId = NULL) { # nolint
     }
   }
   if (is.null(inputId) && is.null(tag$attribs$id)) {
-    stop("tag does not have any id. Please use inputId to be able to
-           access it on the server side.")
+    stop(
+      "tag does not have any id. Please use inputId to be able to
+           access it on the server side."
+    )
   }
 
   # handle id

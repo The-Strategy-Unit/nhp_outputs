@@ -6,8 +6,16 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 atpmo_expected <- tibble::tribble(
-  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
+  ~activity_type,
+  ~activity_type_name,
+  ~pod,
+  ~pod_name,
+  ~measures,
+  "aae",
+  "A&E",
+  "aae_type-01",
+  "Type 1 Department",
+  "ambulance"
 )
 
 set_names <- function(x) {

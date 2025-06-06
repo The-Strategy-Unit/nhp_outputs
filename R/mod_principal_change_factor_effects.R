@@ -33,7 +33,12 @@ mod_principal_change_factor_effects_ui <- function(id) {
       width = 12,
       shiny::fluidRow(
         col_4(shiny::selectInput(ns("activity_type"), "Activity Type", NULL)),
-        col_4(shiny::selectInput(ns("pods"), "Point of Delivery", NULL, multiple = TRUE)),
+        col_4(shiny::selectInput(
+          ns("pods"),
+          "Point of Delivery",
+          NULL,
+          multiple = TRUE
+        )),
         col_4(shiny::selectInput(ns("measure"), "Measure", NULL))
       )
     ),
@@ -50,7 +55,11 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Individual change factors",
       collapsible = FALSE,
       width = 12,
-      shiny::selectInput(ns("sort_type"), "Sort By", c("Descending value", "Alphabetical")),
+      shiny::selectInput(
+        ns("sort_type"),
+        "Sort By",
+        c("Descending value", "Alphabetical")
+      ),
       shinycssloaders::withSpinner(
         shiny::fluidRow(
           plotly::plotlyOutput(ns("activity_avoidance"), height = "600px"),
@@ -61,7 +70,11 @@ mod_principal_change_factor_effects_ui <- function(id) {
   )
 }
 
-mod_principal_change_factor_effects_summarised <- function(data, measure, include_baseline) {
+mod_principal_change_factor_effects_summarised <- function(
+  data,
+  measure,
+  include_baseline
+) {
   data <- data |>
     dplyr::filter(
       .data$measure == .env$measure,
@@ -86,7 +99,10 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     dplyr::summarise(dplyr::across("value", \(.x) sum(.x, na.rm = TRUE))) |>
     dplyr::mutate(cuvalue = cumsum(.data$value)) |>
     dplyr::mutate(
-      hidden = tidyr::replace_na(dplyr::lag(.data$cuvalue) + pmin(.data$value, 0), 0),
+      hidden = tidyr::replace_na(
+        dplyr::lag(.data$cuvalue) + pmin(.data$value, 0),
+        0
+      ),
       colour = dplyr::case_when(
         .data$change_factor == "Baseline" ~ "#686f73",
         .data$value >= 0 ~ "#f9bf07",
@@ -96,7 +112,11 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
     ) |>
     dplyr::select(-"cuvalue")
 
-  levels <- unique(c("baseline", levels(forcats::fct_drop(cfs$change_factor)), "Estimate"))
+  levels <- unique(c(
+    "baseline",
+    levels(forcats::fct_drop(cfs$change_factor)),
+    "Estimate"
+  ))
   if (!include_baseline) {
     levels <- levels[-1]
   }
@@ -119,7 +139,6 @@ mod_principal_change_factor_effects_summarised <- function(data, measure, includ
 }
 
 mod_principal_change_factor_effects_cf_plot <- function(data) {
-
   # Reorient data for geom_segment
   data_reoriented <- data |>
     tidyr::pivot_wider(
@@ -139,7 +158,7 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
         x = .data[["xstart"]],
         xend = .data[["xend"]],
         y = .data[["change_factor"]],
-        yend = .data[["change_factor"]],  # plotly errors if yend not included
+        yend = .data[["change_factor"]], # plotly errors if yend not included
         colour = .data[["colour"]]
       )
     ) +
@@ -154,14 +173,21 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
     ) +
     ggplot2::scale_y_discrete(labels = snakecase::to_title_case) +
     ggplot2::labs(x = "", y = "")
-
 }
 
-mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, colour, title, x_axis_label) {
+mod_principal_change_factor_effects_ind_plot <- function(
+  data,
+  change_factor,
+  colour,
+  title,
+  x_axis_label
+) {
   data |>
     dplyr::filter(.data$change_factor == .env$change_factor) |>
     dplyr::mutate(
-      tooltip = glue::glue("{mitigator_name}: {scales::comma(value, accuracy = 1)}")
+      tooltip = glue::glue(
+        "{mitigator_name}: {scales::comma(value, accuracy = 1)}"
+      )
     ) |>
     require_rows() |>
     ggplot2::ggplot(
@@ -178,7 +204,11 @@ mod_principal_change_factor_effects_ind_plot <- function(data, change_factor, co
 #' principal_change_factor_effects Server Functions
 #'
 #' @noRd
-mod_principal_change_factor_effects_server <- function(id, selected_data, selected_site) {
+mod_principal_change_factor_effects_server <- function(
+  id,
+  selected_data,
+  selected_site
+) {
   shiny::moduleServer(id, function(input, output, session) {
     shiny::observe({
       activity_types <- get_activity_type_pod_measure_options() |>
@@ -189,7 +219,11 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
         ) |>
         set_names()
 
-      shiny::updateSelectInput(session, "activity_type", choices = activity_types)
+      shiny::updateSelectInput(
+        session,
+        "activity_type",
+        choices = activity_types
+      )
     })
 
     principal_change_factors_raw <- shiny::reactive({
@@ -207,7 +241,13 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
           dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
             "change_factor",
-            \(.x) forcats::fct_relevel(.x, "baseline", "demographic_adjustment", "health_status_adjustment")
+            \(.x)
+              forcats::fct_relevel(
+                .x,
+                "baseline",
+                "demographic_adjustment",
+                "health_status_adjustment"
+              )
           )
         ) |>
         dplyr::left_join(
@@ -286,7 +326,8 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
           dplyr::mutate(
             dplyr::across(
               "mitigator_name",
-              \(.x) forcats::fct_rev(forcats::fct_reorder(.x, .data$mitigator_name))
+              \(.x)
+                forcats::fct_rev(forcats::fct_reorder(.x, .data$mitigator_name))
             )
           )
       }
@@ -296,7 +337,10 @@ mod_principal_change_factor_effects_server <- function(id, selected_data, select
       measure <- shiny::req(input$measure)
 
       p <- principal_change_factors() |>
-        mod_principal_change_factor_effects_summarised(measure, input$include_baseline) |>
+        mod_principal_change_factor_effects_summarised(
+          measure,
+          input$include_baseline
+        ) |>
         mod_principal_change_factor_effects_cf_plot()
 
       plotly::ggplotly(p, tooltip = FALSE) |>

@@ -1,5 +1,3 @@
-^renv$
-^renv\.lock$
 ^requirements\.txt$
 ^.*\.Rproj$
 ^\.Rproj\.user$
@@ -18,8 +16,9 @@ $run_dev.*
 ^\.vscode$
 ^R/_disable_autoload.R$
 ^\.rscignore$
-^\.renvignore$
 ^hooks$
 ^manifest.json$
 ^update_manifest.js$
 ^remove_files_from_manifest.js$
+^CODEOWNERS$
+^results_selection_app/$

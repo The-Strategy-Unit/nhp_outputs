@@ -115,7 +115,11 @@ test_that("server_get_results errors if file is null", {
 test_that("server_get_results errors if file is null", {
   # arrange
   stub(server_get_results, "get_selected_file_from_url", "file")
-  stub(server_get_results, "get_results_from_azure", \(...) stop("error loading from"))
+  stub(
+    server_get_results,
+    "get_results_from_azure",
+    \(...) stop("error loading from")
+  )
 
   withr::local_envvar("NHP_ENCRYPT_KEY" = "key")
 

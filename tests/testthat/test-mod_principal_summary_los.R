@@ -22,25 +22,94 @@ test_that("mod_principal_summary_los_data summarises the data", {
   data <- list(
     results = list(
       "tretspef_raw+los_group" = tibble::tribble(
-        ~tretspef_raw, ~pod, ~measure, ~sitetret, ~los_group, ~baseline, ~principal,
-        1, "a", "beddays", "trust", "0-day", 1, 2,
-        2, "a", "beddays", "trust", "1-7 days", 3, 4,
-        3, "a", "beddays", "trust", "8-14 days", 5, 6,
-        4, "b", "beddays", "trust", "0-day", 7, 8,
-        5, "a", "admissions", "trust", "0-day", 1, 2,
-        6, "a", "admissions", "trust", "1-7 days", 3, 4,
-        7, "a", "admissions", "trust", "8-14 days", 5, 6,
-        8, "b", "admissions", "trust", "0-day", 7, 8
+        ~tretspef_raw,
+        ~pod,
+        ~measure,
+        ~sitetret,
+        ~los_group,
+        ~baseline,
+        ~principal,
+        1,
+        "a",
+        "beddays",
+        "trust",
+        "0-day",
+        1,
+        2,
+        2,
+        "a",
+        "beddays",
+        "trust",
+        "1-7 days",
+        3,
+        4,
+        3,
+        "a",
+        "beddays",
+        "trust",
+        "8-14 days",
+        5,
+        6,
+        4,
+        "b",
+        "beddays",
+        "trust",
+        "0-day",
+        7,
+        8,
+        5,
+        "a",
+        "admissions",
+        "trust",
+        "0-day",
+        1,
+        2,
+        6,
+        "a",
+        "admissions",
+        "trust",
+        "1-7 days",
+        3,
+        4,
+        7,
+        "a",
+        "admissions",
+        "trust",
+        "8-14 days",
+        5,
+        6,
+        8,
+        "b",
+        "admissions",
+        "trust",
+        "0-day",
+        7,
+        8
       )
     )
   )
 
   expected <- tibble::tribble(
-    ~pod_name, ~los_group, ~baseline, ~principal,
-    "A", "0-day", 1, 2,
-    "A", "1-7 days", 3, 4,
-    "A", "8-14 days", 5, 6,
-    "B", "0-day", 7, 8
+    ~pod_name,
+    ~los_group,
+    ~baseline,
+    ~principal,
+    "A",
+    "0-day",
+    1,
+    2,
+    "A",
+    "1-7 days",
+    3,
+    4,
+    "A",
+    "8-14 days",
+    5,
+    6,
+    "B",
+    "0-day",
+    7,
+    8
   ) |>
     dplyr::mutate(
       pod_name = factor(pod_name),
@@ -90,7 +159,6 @@ test_that("mod_principal_summary_los_table creates a gt object", {
 # server
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-
 test_that("it sets up the reactives correctly", {
   d <- tibble::tibble(value = 1:2)
   m <- mock(d, cycle = TRUE)
@@ -118,9 +186,17 @@ test_that("it creates the table", {
   m <- mock()
   stub(mod_principal_summary_los_server, "gt::render_gt", m)
   stub(mod_principal_summary_los_server, "mod_principal_summary_los_data", NULL)
-  stub(mod_principal_summary_los_server, "mod_principal_summary_los_table", NULL)
+  stub(
+    mod_principal_summary_los_server,
+    "mod_principal_summary_los_table",
+    NULL
+  )
 
-  shiny::testServer(mod_principal_summary_los_server, args = list(reactiveVal()), {
-    expect_called(m, 2)
-  })
+  shiny::testServer(
+    mod_principal_summary_los_server,
+    args = list(reactiveVal()),
+    {
+      expect_called(m, 2)
+    }
+  )
 })

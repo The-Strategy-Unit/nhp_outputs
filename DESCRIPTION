@@ -49,7 +49,6 @@ Imports:
 Suggests:
     covr,
     devtools,
-    httpgd,
     languageserver,
     mockery,
     rcmdcheck,
@@ -57,7 +56,6 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     utils,
-    vscDebugger,
     watchr (>= 0.0.0.9000)
 Remotes:
     github::ManuelHentschel/vscDebugger,

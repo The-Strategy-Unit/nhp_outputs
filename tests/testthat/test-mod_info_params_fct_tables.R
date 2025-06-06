@@ -3,7 +3,10 @@ library(mockery)
 
 get_sample_params <- \() {
   list(
-    params = jsonlite::read_json(app_sys("sample_params.json"), simplifyVector = FALSE)
+    params = jsonlite::read_json(
+      app_sys("sample_params.json"),
+      simplifyVector = FALSE
+    )
   ) |>
     get_params()
 }

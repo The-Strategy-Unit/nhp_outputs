@@ -21,30 +21,81 @@ test_that("ui is created correctly", {
 test_that("mod_principal_summary_data summarises the data", {
   m1 <- mock(
     tibble::tribble(
-      ~pod, ~baseline, ~principal,
-      "a_1", 1, 2,
-      "a_2", 3, 4,
-      "b_1", 4, 5,
-      "b_2", 6, 7,
-      "c_1", 8, 9
+      ~pod,
+      ~baseline,
+      ~principal,
+      "a_1",
+      1,
+      2,
+      "a_2",
+      3,
+      4,
+      "b_1",
+      4,
+      5,
+      "b_2",
+      6,
+      7,
+      "c_1",
+      8,
+      9
     ),
     cycle = TRUE
   )
 
   expected <- tibble::tribble(
-    ~pod_name, ~activity_type, ~baseline, ~principal,
-    "A 1", "Inpatient", 1, 2,
-    "A 1", "Inpatient", 1, 2,
-    "A 1", "Inpatient", 1, 2,
-    "A 2", "Inpatient", 3, 4,
-    "A 2", "Inpatient", 3, 4,
-    "A 2", "Inpatient", 3, 4,
-    "B 1", "Outpatient", 4, 5,
-    "B 1", "Outpatient", 4, 5,
-    "B 1", "Outpatient", 4, 5,
-    "B 2", "A&E", 6, 7,
-    "B 2", "A&E", 6, 7,
-    "B 2", "A&E", 6, 7
+    ~pod_name,
+    ~activity_type,
+    ~baseline,
+    ~principal,
+    "A 1",
+    "Inpatient",
+    1,
+    2,
+    "A 1",
+    "Inpatient",
+    1,
+    2,
+    "A 1",
+    "Inpatient",
+    1,
+    2,
+    "A 2",
+    "Inpatient",
+    3,
+    4,
+    "A 2",
+    "Inpatient",
+    3,
+    4,
+    "A 2",
+    "Inpatient",
+    3,
+    4,
+    "B 1",
+    "Outpatient",
+    4,
+    5,
+    "B 1",
+    "Outpatient",
+    4,
+    5,
+    "B 1",
+    "Outpatient",
+    4,
+    5,
+    "B 2",
+    "A&E",
+    6,
+    7,
+    "B 2",
+    "A&E",
+    6,
+    7,
+    "B 2",
+    "A&E",
+    6,
+    7
   ) |>
     dplyr::mutate(
       activity_type = forcats::as_factor(activity_type),
@@ -68,7 +119,13 @@ test_that("mod_principal_summary_data summarises the data", {
 
   expect_called(m1, 3)
 
-  expect_args(m1, 1, "data", c("admissions", "attendances", "walk-in", "ambulance"), character())
+  expect_args(
+    m1,
+    1,
+    "data",
+    c("admissions", "attendances", "walk-in", "ambulance"),
+    character()
+  )
   expect_args(m1, 2, "data", "tele_attendances", character())
   expect_args(m1, 3, "data", "beddays", character())
 
@@ -98,7 +155,6 @@ test_that("mod_principal_summary_table creates a gt object", {
 # server
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-
 test_that("it sets up the reactives correctly", {
   d <- tibble::tibble(
     value = 1:2
@@ -107,12 +163,16 @@ test_that("it sets up the reactives correctly", {
 
   stub(mod_principal_summary_server, "mod_principal_summary_data", m)
 
-  shiny::testServer(mod_principal_summary_server, args = list(reactiveVal(), reactiveVal()), {
-    selected_data(1)
-    selected_site("a")
+  shiny::testServer(
+    mod_principal_summary_server,
+    args = list(reactiveVal(), reactiveVal()),
+    {
+      selected_data(1)
+      selected_site("a")
 
-    expect_equal(summary_data(), d)
-  })
+      expect_equal(summary_data(), d)
+    }
+  )
 
   expect_called(m, 1)
   expect_args(m, 1, 1, "a")
