@@ -15,17 +15,8 @@ mod_principal_summary_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      htmltools::p(
-        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
-        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
-        "Bed-availability data is not available at site level.",
-        "See the",
-        htmltools::a(
-          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
-          "model project information site"
-        ),
-        "for definitions of terms."
-      )
+      md_file_to_html("app", "text", "notes-beddays.md"),
+      htmltools::p("Bed-availability data is not available at site level.")
     ),
     bs4Dash::box(
       title = "Summary by point of delivery",
@@ -82,7 +73,6 @@ mod_principal_summary_data <- function(r, sites) {
       ),
       dplyr::across(
         "activity_type",
-        # ~ forcats::fct_relevel(.x, "Inpatient", "Outpatient", after = 0)
         ~ factor(.x, levels = c("Inpatient", "Outpatient", "A&E"))
       ),
       measure = dplyr::case_when(

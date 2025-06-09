@@ -114,6 +114,8 @@ named_to_li <- function(list, class = NULL) {
   }
 }
 
+# nolint start: object_name_linter
+
 #' Remove a tag attribute
 #'
 #' @param tag the tag
@@ -126,13 +128,14 @@ named_to_li <- function(list, class = NULL) {
 #' a <- shiny::tags$p(src = "plop", "pouet")
 #' tagRemoveAttributes(a, "src")
 tagRemoveAttributes <- function(tag, ...) {
-  # nolint
   attrs <- as.character(list(...))
   for (i in seq_along(attrs)) {
     tag$attribs[[attrs[i]]] <- NULL
   }
   tag
 }
+
+# nolint end
 
 #' Hide or display a tag
 #'
@@ -315,8 +318,10 @@ col_1 <- function(...) {
 #'
 #'   shinyApp(ui, server)
 #' }
-make_action_button <- function(tag, inputId = NULL) {
-  # nolint
+make_action_button <- function(
+  tag,
+  inputId = NULL # nolint: object_name_linter
+) {
   # some obvious checks
   if (!inherits(tag, "shiny.tag")) stop("Must provide a shiny tag.")
   if (!is.null(tag$attribs$class)) {

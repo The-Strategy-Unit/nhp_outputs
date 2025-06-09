@@ -92,6 +92,7 @@ mod_measure_selection_server <- function(id) {
 
       list(activity_type = at, pod = p, measure = m)
     })
-    return(selected_measure)
+
+    selected_measure
   })
 }

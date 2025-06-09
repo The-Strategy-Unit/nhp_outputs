@@ -16,8 +16,8 @@ utils::globalVariables(c(
   "cd" # because of the use of %<-%
 ))
 
-`__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint
-`__STORAGE_EP__` <- "https://storage.azure.com/" # nolint
+`__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint: object_name_linter
+`__STORAGE_EP__` <- "https://storage.azure.com/" # nolint: object_name_linter
 
 fyear_str <- function(y) {
   glue::glue("{y}/{stringr::str_pad((y + 1) %% 100, 2, pad = '0')}")
@@ -102,4 +102,14 @@ get_mitigator_lookup <- function(
         "[:upper:]{2}-[:upper:]{2}-[:digit:]{3}"
       )
     )
+}
+
+md_file_to_html <- function(...) {
+  file <- app_sys(...)
+
+  if (!file.exists(file)) {
+    return(NULL)
+  }
+
+  shiny::HTML(markdown::mark_html(file, output = FALSE, template = FALSE))
 }

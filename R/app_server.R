@@ -54,8 +54,9 @@ app_server <- function(input, output, session) {
       \(.x) {
         purrr::map_chr(
           .x,
-          \(.y)
+          \(.y) {
             glue::glue("{sites[[.y]] %||% lookup_ods_org_code_name(.y)} ({.y})")
+          }
         )
       }
     )
@@ -134,5 +135,5 @@ app_server <- function(input, output, session) {
     session$allowReconnect("force")
   }
 
-  return(NULL)
+  NULL
 }

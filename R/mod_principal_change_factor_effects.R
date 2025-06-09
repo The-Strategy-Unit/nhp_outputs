@@ -15,16 +15,10 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
+      md_file_to_html("app", "text", "notes-beddays.md"),
       htmltools::p(
-        "These results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter.",
-        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
-        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
-        "See the",
-        htmltools::a(
-          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
-          "model project information site"
-        ),
-        "for definitions of terms."
+        "Regard these results as rough, high-level estimates of the number of",
+        "rows added/removed due to each parameter."
       )
     ),
     bs4Dash::box(
@@ -241,13 +235,14 @@ mod_principal_change_factor_effects_server <- function(
           dplyr::across("change_factor", forcats::fct_inorder),
           dplyr::across(
             "change_factor",
-            \(.x)
+            \(.x) {
               forcats::fct_relevel(
                 .x,
                 "baseline",
                 "demographic_adjustment",
                 "health_status_adjustment"
               )
+            }
           )
         ) |>
         dplyr::left_join(
@@ -326,8 +321,9 @@ mod_principal_change_factor_effects_server <- function(
           dplyr::mutate(
             dplyr::across(
               "mitigator_name",
-              \(.x)
+              \(.x) {
                 forcats::fct_rev(forcats::fct_reorder(.x, .data$mitigator_name))
+              }
             )
           )
       }

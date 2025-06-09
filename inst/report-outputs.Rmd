@@ -27,21 +27,21 @@ pkgload::load_all(params$wd, quiet = TRUE)
 sites_were_selected <- if (is.null(params$sites)) FALSE else TRUE
 
 if (sites_were_selected) {
-  
+
   site_status <- "selected sites"
-  
+
   site_lookup <- jsonlite::read_json(app_sys("app", "data", "sites.json"))
   sites_list <- site_lookup[params$sites]
-  
+
   selected_sites <-
-    paste0(sites_list, " (", names(sites_list), ")") |> 
-    sort() |> 
+    paste0(sites_list, " (", names(sites_list), ")") |>
+    sort() |>
     stringr::str_flatten(collapse = ", ", last = " and ")
-  
+
 } else {
-  
+
   site_status <- selected_sites <- "all sites"
-  
+
 }
 ```
 
@@ -77,8 +77,8 @@ Bed-availability data is not available at site level. See [the model project inf
 ```{r}
 #| label: pp-summary
 
-mod_principal_summary_data(params$r, params$sites) |> 
-  mod_principal_summary_table() |> 
+mod_principal_summary_data(params$r, params$sites) |>
+  mod_principal_summary_table() |>
   gt::tab_options(table.align = "left")
 ```
 
@@ -89,8 +89,8 @@ mod_principal_summary_data(params$r, params$sites) |>
 ```{r}
 #| label: pp-summary-los-beddays
 
-mod_principal_summary_los_data(params$r, params$sites, "beddays") |> 
-  mod_principal_summary_los_table() |> 
+mod_principal_summary_los_data(params$r, params$sites, "beddays") |>
+  mod_principal_summary_los_table() |>
   gt::tab_options(table.align = "left")
 ```
 
@@ -99,8 +99,8 @@ mod_principal_summary_los_data(params$r, params$sites, "beddays") |>
 ```{r}
 #| label: pp-summary-los-admissions
 
-mod_principal_summary_los_data(params$r, params$sites, "admissions") |> 
-  mod_principal_summary_los_table() |> 
+mod_principal_summary_los_data(params$r, params$sites, "admissions") |>
+  mod_principal_summary_los_table() |>
   gt::tab_options(table.align = "left")
 ```
 
@@ -116,13 +116,13 @@ mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
   purrr::simplify() |>
   tibble::enframe("strategy", "mitigator_name")
 
-possibly_prep_principal_change_factors <- 
+possibly_prep_principal_change_factors <-
   purrr::possibly(
     prep_principal_change_factors,
     "Insufficient data"
   )
 
-pods <- get_activity_type_pod_measure_options() |> 
+pods <- get_activity_type_pod_measure_options() |>
   dplyr::distinct(activity_type, pod)
 
 ip_pcf <- possibly_prep_principal_change_factors(
@@ -131,7 +131,7 @@ ip_pcf <- possibly_prep_principal_change_factors(
   mitigators = mitigator_lookup,
   at = "ip",
   pods = pods |> dplyr::filter(activity_type == "ip") |> dplyr::pull(pod)
-) 
+)
 
 op_pcf <- possibly_prep_principal_change_factors(
   data = params$r,
@@ -139,7 +139,7 @@ op_pcf <- possibly_prep_principal_change_factors(
   mitigators = mitigator_lookup,
   at = "op",
   pods = pods |> dplyr::filter(activity_type == "op") |> dplyr::pull(pod)
-) 
+)
 
 aae_pcf <- possibly_prep_principal_change_factors(
   data = params$r,
@@ -212,7 +212,7 @@ tretspef_lookup <- jsonlite::read_json(
     dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
     dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
   ) |>
-  dplyr::select(-"Group") |> 
+  dplyr::select(-"Group") |>
   dplyr::add_row(Code = "&", Description = "Not known")  # as per HES dictionary
 
 # Function to prepare data and table
@@ -224,26 +224,26 @@ possibly_generate_activity_in_detail_table <- purrr::possibly(
 
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
-atpmo_agg <- get_activity_type_pod_measure_options() |> 
-  dplyr::select("activity_type", "pod", "measure" = "measures") |> 
-  tidyr::crossing(agg_col = c("age_group", "tretspef")) |> 
+atpmo_agg <- get_activity_type_pod_measure_options() |>
+  dplyr::select("activity_type", "pod", "measure" = "measures") |>
+  tidyr::crossing(agg_col = c("age_group", "tretspef")) |>
   dplyr::mutate(
     activity_type = dplyr::case_match(
-      activity_type, 
+      activity_type,
       "ip" ~ "inpatients",
       "op" ~ "outpatients",
       "aae" ~ "aae"
     )
   )
 
-activity_in_detail_table_names <- atpmo_agg |> 
+activity_in_detail_table_names <- atpmo_agg |>
   dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
   dplyr::pull()
 
 # Prepare a list with each set of input combos
 
 activity_in_detail_tables <- purrr::pmap(
-  atpmo_agg, 
+  atpmo_agg,
   \(activity_type, pod, measure, agg_col) {
     possibly_generate_activity_in_detail_table(
       data = params$r,
@@ -255,7 +255,7 @@ activity_in_detail_tables <- purrr::pmap(
       agg_col
     )
   }
-) |> 
+) |>
   purrr::set_names(activity_in_detail_table_names)
 ```
 
@@ -642,8 +642,8 @@ atpmo <- get_activity_type_pod_measure_options()
 
 params$r |>
   get_model_core_activity(params$sites) |>
-  dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |> 
-  mod_model_core_activity_server_table() |> 
+  dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |>
+  mod_model_core_activity_server_table() |>
   gt::tab_options(table.width = gt::pct(100))
 ```
 
@@ -660,15 +660,15 @@ In 'S-curve' plots (showing empirical cumulative distribution function), the red
 
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
-atpmo_simplified <- get_activity_type_pod_measure_options() |> 
-  dplyr::select("activity_type", "pod", "measure" = "measures") |> 
+atpmo_simplified <- get_activity_type_pod_measure_options() |>
+  dplyr::select("activity_type", "pod", "measure" = "measures") |>
   dplyr::mutate(
     activity_type = dplyr::case_match(
       activity_type, "ip" ~ "inpatients", "op" ~ "outpatients", "aae" ~ "aae"
     )
   )
 
-activity_distribution_table_names <- atpmo_simplified |> 
+activity_distribution_table_names <- atpmo_simplified |>
   dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>
   dplyr::pull()
 

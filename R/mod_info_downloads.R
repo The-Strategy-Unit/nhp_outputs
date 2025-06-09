@@ -234,8 +234,9 @@ mod_info_downloads_server <- function(id, selected_data, selected_site) {
     # params
 
     output$download_report_parameters_html <- shiny::downloadHandler(
-      filename = \()
-        paste0(filename_stub(), "_report-parameters_extract-a.html"),
+      filename = \() {
+        paste0(filename_stub(), "_report-parameters_extract-a.html")
+      },
       content = mod_info_downloads_download_report_html(
         selected_data,
         report_type = "parameters"

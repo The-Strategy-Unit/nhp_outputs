@@ -16,16 +16,7 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      htmltools::p(
-        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
-        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
-        "See the",
-        htmltools::a(
-          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
-          "model project information site"
-        ),
-        "for definitions of terms."
-      )
+      md_file_to_html("app", "text", "notes-beddays.md")
     ),
     bs4Dash::box(
       title = "Make selections",

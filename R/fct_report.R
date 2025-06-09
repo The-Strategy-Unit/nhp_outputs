@@ -150,11 +150,13 @@ plot_impact_and_individual_change <- function(
   principal_change_factors,
   measure
 ) {
+  # nolint start: object_length_linter
   possibly_mod_principal_change_factor_effects_cf_plot <-
     purrr::possibly(
       mod_principal_change_factor_effects_cf_plot,
       "Insufficient information to produce this chart"
     )
+  # nolint end
 
   possibly_plot_individual_change_factors <-
     purrr::possibly(
@@ -383,7 +385,7 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
         print()
     }
 
-    if (!l1_is_gt & l1_is_list) {
+    if (!l1_is_gt && l1_is_list) {
       l2_names <- names(l1_object)
 
       for (l2 in l2_names) {

@@ -40,11 +40,6 @@ app_ui <- function(request) {
           text = "Impact of changes",
           tabName = "tab_pcf"
         ),
-        # Note: hidden due to ongoing time-profile discussions
-        # bs4Dash::menuSubItem(
-        #   text = "Summary by year",
-        #   tabName = "tab_phl"
-        # ),
         bs4Dash::menuSubItem(
           text = "Activity in detail",
           tabName = "tab_pd"

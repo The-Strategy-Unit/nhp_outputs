@@ -49,12 +49,12 @@ p |> param_tables_to_list() |> expand_param_tables_to_rmd()
 
 ```{r echo=F, results='asis'}
 #| label: rationale-expand
-#| 
+
 reasons <- p$reasons
 
 if (is.null(reasons)) {
   cat("No rationale provided.\n\n")
 } else {
-   expand_reasons_to_rmd(reasons)
+  expand_reasons_to_rmd(reasons)
 }
 ```

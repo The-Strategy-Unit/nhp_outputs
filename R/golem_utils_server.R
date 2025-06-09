@@ -21,6 +21,9 @@ drop_nulls <- function(x) {
   x[!sapply(x, is.null)]
 }
 
+
+# nolint start: object_name_linter
+
 #' If x is `NULL`, return y, otherwise return x
 #'
 #' @param x,y Two elements to test, one potentially `NULL`
@@ -30,7 +33,6 @@ drop_nulls <- function(x) {
 #' @examples
 #' NULL %||% 1
 "%||%" <- function(x, y) {
-  # nolint
   if (is.null(x)) {
     y
   } else {
@@ -47,13 +49,14 @@ drop_nulls <- function(x) {
 #' @examples
 #' NA %||% 1
 "%|NA|%" <- function(x, y) {
-  # nolint
   if (is.na(x)) {
     y
   } else {
     x
   }
 }
+
+# nolint end
 
 #' Typing reactiveValues is too long
 #'
