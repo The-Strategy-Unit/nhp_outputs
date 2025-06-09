@@ -171,8 +171,12 @@ mod_info_downloads_download_report_html <- function(
     temp_report <- file.path(tempdir(), report_file)
     file.copy(app_sys(report_file), temp_report, overwrite = TRUE)
 
-    if (report_type == "parameters") params <- list(r = data())
-    if (report_type == "outputs") params <- list(r = data(), sites = sites())
+    if (report_type == "parameters") {
+      params <- list(r = data())
+    }
+    if (report_type == "outputs") {
+      params <- list(r = data(), sites = sites())
+    }
 
     download_notification <- shiny::showNotification(
       glue::glue("Rendering {report_type} report..."),

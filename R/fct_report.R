@@ -58,7 +58,9 @@ prep_principal_change_factors <- function(
     get_principal_change_factors(at, sites)
 
   # if a site is selected then there are no rows for A&E
-  if (nrow(principal_change_factors_raw) == 0) stop("No data")
+  if (nrow(principal_change_factors_raw) == 0) {
+    stop("No data")
+  }
 
   principal_change_factors_raw |>
     dplyr::mutate(
@@ -205,7 +207,9 @@ generate_activity_in_detail_table <- function(
     get_aggregation(pod, measure, agg_col, sites)
 
   # if a site is selected then there are no rows for A&E
-  if (nrow(aggregated_data) == 0) stop("No data")
+  if (nrow(aggregated_data) == 0) {
+    stop("No data")
+  }
 
   aggregated_data <- aggregated_data |>
     dplyr::transmute(
@@ -393,7 +397,9 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
         l2_is_char <- is.character(l2_object)
         l2_is_gt <- inherits(l2_object, "gt_tbl")
 
-        if (l2_is_char) cat(paste0(l2, ":"), l2_object, "\n\n")
+        if (l2_is_char) {
+          cat(paste0(l2, ":"), l2_object, "\n\n")
+        }
 
         if (l2_is_gt) {
           l2_object |>
@@ -441,7 +447,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
     l1_object <- reasons_list[[l1]]
     l1_is_list <- is.list(l1_object)
 
-    if (!l1_is_list) cat(l1_object, "\n\n")
+    if (!l1_is_list) {
+      cat(l1_object, "\n\n")
+    }
 
     if (l1_is_list) {
       l2_names <- names(l1_object)
@@ -452,7 +460,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
         l2_object <- l1_object[[l2]]
         l2_is_list <- is.list(l2_object)
 
-        if (!l2_is_list) cat(l2_object, "\n\n")
+        if (!l2_is_list) {
+          cat(l2_object, "\n\n")
+        }
 
         if (l2_is_list) {
           l3_names <- names(l2_object)
@@ -463,7 +473,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
             l3_object <- l2_object[[l3]]
             l3_is_list <- is.list(l3_object)
 
-            if (!l3_is_list) cat(l3_object, "\n\n")
+            if (!l3_is_list) {
+              cat(l3_object, "\n\n")
+            }
 
             if (l3_is_list) warning("Unexpected depth in reasons list object.")
           }
