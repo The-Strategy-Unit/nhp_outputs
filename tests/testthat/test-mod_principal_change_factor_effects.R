@@ -195,13 +195,14 @@ change_factors_expected <- list(
       dplyr::across("change_factor", forcats::fct_inorder),
       dplyr::across(
         "change_factor",
-        \(.x)
+        \(.x) {
           forcats::fct_relevel(
             .x,
             "baseline",
             "demographic_adjustment",
             "health_status_adjustment"
           )
+        }
       )
     )
   )
@@ -255,7 +256,7 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
   dplyr::mutate(
     dplyr::across(
       "change_factor",
-      \(.x)
+      \(.x) {
         forcats::fct_relevel(
           .x,
           "Estimate",
@@ -264,6 +265,7 @@ change_factors_summarised_expected_inc_baseline <- tibble::tribble(
           "demographic_adjustment",
           "baseline"
         )
+      }
     ),
     dplyr::across(
       "name",
@@ -312,7 +314,7 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
   dplyr::mutate(
     dplyr::across(
       "change_factor",
-      \(.x)
+      \(.x) {
         forcats::fct_relevel(
           .x,
           "Estimate",
@@ -320,6 +322,7 @@ change_factors_summarised_expected_exc_baseline <- tibble::tribble(
           "activity_avoidance",
           "demographic_adjustment"
         )
+      }
     ),
     dplyr::across(
       "name",
@@ -598,11 +601,12 @@ test_that("it sets up the individual change factors", {
         dplyr::mutate(
           dplyr::across(
             "mitigator_name",
-            \(.x)
+            \(.x) {
               forcats::fct_rev(forcats::fct_reorder(
                 .x,
                 .data[["mitigator_name"]]
               ))
+            }
           )
         ) |>
         dplyr::select(-"pod")
