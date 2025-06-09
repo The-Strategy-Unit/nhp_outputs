@@ -28,6 +28,7 @@ Imports:
     httr,
     jsonlite,
     lubridate,
+    markdown,
     openssl,
     plotly,
     purrr,
