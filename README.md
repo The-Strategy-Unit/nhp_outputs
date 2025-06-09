@@ -17,14 +17,18 @@ An app to explore the results of scenarios run through the New Hospital
 Programme (NHP) demand model. Provides interactive charts and tables, as
 well as downloads.
 
-The app is deployed to Posit Connect. You must have an account and
-sufficient permissions to view it.
+The app is [deployed to Posit
+Connect](https://connect.strategyunitwm.nhs.uk/nhp/outputs/). You must
+have an account and sufficient permissions to view it.
 
 You can find more information on [the NHP model project information
 site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/),
 including [a
 diagram](https://connect.strategyunitwm.nhs.uk/nhp/project_information/project_plan_and_summary/components-overview.html)
 of how the components of the modelling process fit together.
+
+Packages used in the app are listed in `DESCRIPTION`, and can be
+installed with `devtools::install_deps(dependencies = TRUE)`.
 
 ## For developers
 
@@ -36,9 +40,7 @@ Science team.
 The app is built primarily with [Shiny](https://shiny.posit.co/) and
 [the {golem} package](https://thinkr-open.github.io/golem/). Server and
 UI modules can be found in `R/`. Configuration files, report templates
-and supporting data and text are in `inst/`. [The {renv}
-package](https://rstudio.github.io/renv/index.html) is used for
-dependency management.
+and supporting data and text are in `inst/`.
 
 ### Run locally
 
