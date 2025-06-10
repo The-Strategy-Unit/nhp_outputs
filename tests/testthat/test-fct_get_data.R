@@ -368,7 +368,7 @@ test_that("patch_results returns correct values", {
         ~lwr_pi,
         ~median,
         ~upr_pi,
-        ~los_group, # nolint
+        ~los_group,
 
         "a",
         "ip",
@@ -621,7 +621,7 @@ test_that("patch_results returns correct values", {
         ~principal,
         ~median,
         ~lwr_pi,
-        ~upr_pi, # nolint
+        ~upr_pi,
         "s1",
         "ip",
         1,

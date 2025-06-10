@@ -8,9 +8,11 @@ tabulate_model_run_info <- function(p) {
   p_model_run <- purrr::keep(p, rlang::is_atomic)
 
   p_model_run[["start_year"]] <- scales::number(
-    p_model_run[["start_year"]] + ((p_model_run[["start_year"]] + 1) %% 100) / 100,
+    p_model_run[["start_year"]] +
+      ((p_model_run[["start_year"]] + 1) %% 100) / 100,
     0.01,
-    big.mark = "", decimal.mark = "/"
+    big.mark = "",
+    decimal.mark = "/"
   )
 
   p_model_run[["end_year"]] <- scales::number(
@@ -46,16 +48,19 @@ tabulate_model_run_info <- function(p) {
 #' @details This data will be used in the waterfall chart.
 #' @noRd
 prep_principal_change_factors <- function(
-    data,
-    sites,
-    mitigators,
-    at,
-    pods) {
+  data,
+  sites,
+  mitigators,
+  at,
+  pods
+) {
   principal_change_factors_raw <- data |>
     get_principal_change_factors(at, sites)
 
   # if a site is selected then there are no rows for A&E
-  if (nrow(principal_change_factors_raw) == 0) stop("No data")
+  if (nrow(principal_change_factors_raw) == 0) {
+    stop("No data")
+  }
 
   principal_change_factors_raw |>
     dplyr::mutate(
@@ -93,8 +98,9 @@ prep_principal_change_factors <- function(
 #' @details Used by [plot_individual_change_factors].
 #' @noRd
 prep_individual_change_factors <- function(
-    principal_change_factors,
-    measure) {
+  principal_change_factors,
+  measure
+) {
   principal_change_factors |>
     dplyr::filter(
       .data$measure == .env$measure,
@@ -118,9 +124,10 @@ prep_individual_change_factors <- function(
 #' @details Used by [plot_impact_and_individual_change].
 #' @noRd
 plot_individual_change_factors <- function(
-    principal_change_factors,
-    measure,
-    change_factor) {
+  principal_change_factors,
+  measure,
+  change_factor
+) {
   individual_change_factors <-
     prep_individual_change_factors(principal_change_factors, measure) |>
     dplyr::filter(change_factor == .env$change_factor)
@@ -142,13 +149,16 @@ plot_individual_change_factors <- function(
 #'     charts (activity avoidance and efficiencies) as one object.
 #' @noRd
 plot_impact_and_individual_change <- function(
-    principal_change_factors,
-    measure) {
+  principal_change_factors,
+  measure
+) {
+  # nolint start: object_length_linter
   possibly_mod_principal_change_factor_effects_cf_plot <-
     purrr::possibly(
       mod_principal_change_factor_effects_cf_plot,
       "Insufficient information to produce this chart"
     )
+  # nolint end
 
   possibly_plot_individual_change_factors <-
     purrr::possibly(
@@ -185,18 +195,21 @@ plot_impact_and_individual_change <- function(
 #'     'age_group', or treatment specialty, 'tretspef').
 #' @noRd
 generate_activity_in_detail_table <- function(
-    data,
-    sites,
-    tretspefs,
-    activity_type,
-    pod,
-    measure,
-    agg_col) {
+  data,
+  sites,
+  tretspefs,
+  activity_type,
+  pod,
+  measure,
+  agg_col
+) {
   aggregated_data <- data |>
     get_aggregation(pod, measure, agg_col, sites)
 
   # if a site is selected then there are no rows for A&E
-  if (nrow(aggregated_data) == 0) stop("No data")
+  if (nrow(aggregated_data) == 0) {
+    stop("No data")
+  }
 
   aggregated_data <- aggregated_data |>
     dplyr::transmute(
@@ -226,7 +239,8 @@ generate_activity_in_detail_table <- function(
 
   end_year <- data[["params"]][["end_year"]]
   end_fyear <- paste0(
-    end_year, "/",
+    end_year,
+    "/",
     as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
   )
 
@@ -250,11 +264,12 @@ generate_activity_in_detail_table <- function(
 #' @param measure Character. A selected measure (e.g. 'beddays').
 #' @noRd
 plot_activity_distributions <- function(
-    data,
-    sites,
-    activity_type,
-    pod,
-    measure) {
+  data,
+  sites,
+  activity_type,
+  pod,
+  measure
+) {
   selected_measure <- c(activity_type, pod, measure)
 
   aggregated_data <- data |>
@@ -374,7 +389,7 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
         print()
     }
 
-    if (!l1_is_gt & l1_is_list) {
+    if (!l1_is_gt && l1_is_list) {
       l2_names <- names(l1_object)
 
       for (l2 in l2_names) {
@@ -382,7 +397,9 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
         l2_is_char <- is.character(l2_object)
         l2_is_gt <- inherits(l2_object, "gt_tbl")
 
-        if (l2_is_char) cat(paste0(l2, ":"), l2_object, "\n\n")
+        if (l2_is_char) {
+          cat(paste0(l2, ":"), l2_object, "\n\n")
+        }
 
         if (l2_is_gt) {
           l2_object |>
@@ -430,7 +447,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
     l1_object <- reasons_list[[l1]]
     l1_is_list <- is.list(l1_object)
 
-    if (!l1_is_list) cat(l1_object, "\n\n")
+    if (!l1_is_list) {
+      cat(l1_object, "\n\n")
+    }
 
     if (l1_is_list) {
       l2_names <- names(l1_object)
@@ -441,7 +460,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
         l2_object <- l1_object[[l2]]
         l2_is_list <- is.list(l2_object)
 
-        if (!l2_is_list) cat(l2_object, "\n\n")
+        if (!l2_is_list) {
+          cat(l2_object, "\n\n")
+        }
 
         if (l2_is_list) {
           l3_names <- names(l2_object)
@@ -452,7 +473,9 @@ expand_reasons_to_rmd <- function(reasons_list) {
             l3_object <- l2_object[[l3]]
             l3_is_list <- is.list(l3_object)
 
-            if (!l3_is_list) cat(l3_object, "\n\n")
+            if (!l3_is_list) {
+              cat(l3_object, "\n\n")
+            }
 
             if (l3_is_list) warning("Unexpected depth in reasons list object.")
           }

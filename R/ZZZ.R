@@ -11,11 +11,13 @@ set_names <- function(.x) {
 
 utils::globalVariables(c(
   "where", # source: https://github.com/r-lib/tidyselect/issues/201#issuecomment-650547846
-  "ds", "sc", "cd" # because of the use of %<-%
+  "ds",
+  "sc",
+  "cd" # because of the use of %<-%
 ))
 
-`__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint
-`__STORAGE_EP__` <- "https://storage.azure.com/" # nolint
+`__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint: object_name_linter
+`__STORAGE_EP__` <- "https://storage.azure.com/" # nolint: object_name_linter
 
 fyear_str <- function(y) {
   glue::glue("{y}/{stringr::str_pad((y + 1) %% 100, 2, pad = '0')}")
@@ -36,7 +38,10 @@ lookup_ods_org_code_name <- function(org_code) {
   httr::content(req)$Organisation$Name %||% "Unknown"
 }
 
-get_selected_file_from_url <- function(session, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) {
+get_selected_file_from_url <- function(
+  session,
+  key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")
+) {
   f <- session$clientData$url_search |>
     stringr::str_sub(2L) |>
     utils::URLdecode()
@@ -97,4 +102,14 @@ get_mitigator_lookup <- function(
         "[:upper:]{2}-[:upper:]{2}-[:digit:]{3}"
       )
     )
+}
+
+md_file_to_html <- function(...) {
+  file <- app_sys(...)
+
+  if (!file.exists(file)) {
+    return(NULL)
+  }
+
+  shiny::HTML(markdown::mark_html(file, output = FALSE, template = FALSE))
 }

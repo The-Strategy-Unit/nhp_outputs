@@ -15,16 +15,7 @@ mod_principal_detailed_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      htmltools::p(
-        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
-        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
-        "See the",
-        htmltools::a(
-          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
-          "model project information site"
-        ),
-        "for definitions of terms."
-      )
+      md_file_to_html("app", "text", "notes-beddays.md")
     ),
     bs4Dash::box(
       title = "Make selections",
@@ -50,7 +41,10 @@ mod_principal_detailed_table <- function(data, aggregation, final_year) {
   data |>
     dplyr::mutate(
       dplyr::across("sex", \(.x) ifelse(.x == 1, "Male", "Female")),
-      dplyr::across("final", \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")),
+      dplyr::across(
+        "final",
+        \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")
+      ),
       dplyr::across("change", \(.x) gt_bar(.x, scales::comma_format(1))),
       dplyr::across("change_pcnt", \(.x) gt_bar(.x, scales::percent_format(1)))
     ) |>
@@ -93,10 +87,13 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
     ) |>
       dplyr::mutate(
         dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
-        dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
+        dplyr::across(
+          "Description",
+          \(x) paste0(.data$Code, ": ", .data$Description)
+        ),
       ) |>
       dplyr::select(-"Group") |>
-      dplyr::add_row(Code = "&", Description = "Not known")  # as per HES dictionary
+      dplyr::add_row(Code = "&", Description = "Not known") # as per HES dictionary
 
     available_aggregations <- shiny::reactive({
       selected_data() |>
@@ -124,7 +121,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       activity_type <- pod <- measure <- NULL
       c(activity_type, pod, measure) %<-% selected_measure()
 
-      agg_col <- switch(shiny::req(input$aggregation),
+      agg_col <- switch(
+        shiny::req(input$aggregation),
         "Age Group" = "age_group",
         "Treatment Specialty" = "tretspef"
       )
@@ -169,7 +167,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
       end_year <- selected_data()[["params"]][["end_year"]]
       end_fyear <- paste0(
-        end_year, "/",
+        end_year,
+        "/",
         as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
       )
 

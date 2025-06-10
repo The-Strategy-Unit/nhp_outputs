@@ -16,16 +16,7 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      htmltools::p(
-        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
-        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
-        "See the",
-        htmltools::a(
-          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
-          "model project information site"
-        ),
-        "for definitions of terms."
-      )
+      md_file_to_html("app", "text", "notes-beddays.md")
     ),
     bs4Dash::box(
       title = "Make selections",
@@ -55,7 +46,11 @@ mod_model_results_distribution_ui <- function(id) {
   )
 }
 
-mod_model_results_distribution_get_data <- function(r, selected_measure, sites) {
+mod_model_results_distribution_get_data <- function(
+  r,
+  selected_measure,
+  sites
+) {
   activity_type <- pod <- measure <- NULL
   c(activity_type, pod, measure) %<-% selected_measure
   get_model_run_distribution(r, pod, measure, sites)
@@ -76,7 +71,9 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
           x = x_placeholder,
           y = .data$value,
           colour = .data$variant,
-          text = glue::glue("Value: {scales::comma(value, accuracy = 1)}\nVariant: {variant}")
+          text = glue::glue(
+            "Value: {scales::comma(value, accuracy = 1)}\nVariant: {variant}"
+          )
         ),
         alpha = 0.5
       )
@@ -122,10 +119,10 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
 
   line_guides <- tibble::tibble(
     x_start = c(rep(min_x, 3), x_quantiles, p),
-    x_end   = rep(c(x_quantiles, p), 2),
+    x_end = rep(c(x_quantiles, p), 2),
     y_start = c(probs_pcnts, p_pcnt, rep(0, 3)),
-    y_end   = rep(c(probs_pcnts, p_pcnt), 2),
-    colour  = "cornflowerblue"
+    y_end = rep(c(probs_pcnts, p_pcnt), 2),
+    colour = "cornflowerblue"
   )
 
   lines_n <- nrow(line_guides)
@@ -180,13 +177,20 @@ mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
 #' model_results_distribution Server Functions
 #'
 #' @noRd
-mod_model_results_distribution_server <- function(id, selected_data, selected_site) {
+mod_model_results_distribution_server <- function(
+  id,
+  selected_data,
+  selected_site
+) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     aggregated_data <- shiny::reactive({
       selected_data() |>
-        mod_model_results_distribution_get_data(selected_measure(), selected_site()) |>
+        mod_model_results_distribution_get_data(
+          selected_measure(),
+          selected_site()
+        ) |>
         require_rows()
     })
 
@@ -204,7 +208,10 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         " is the principal value (",
         p,
         ") and the ",
-        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
+        htmltools::span(
+          "grey vertical continuous line",
+          style = "color:dimgrey"
+        ),
         " is the baseline value (",
         b,
         ")."
@@ -244,13 +251,15 @@ mod_model_results_distribution_server <- function(id, selected_data, selected_si
         " and ",
         p90_val,
         ") and the ",
-        htmltools::span("grey vertical continuous line", style = "color:dimgrey"),
+        htmltools::span(
+          "grey vertical continuous line",
+          style = "color:dimgrey"
+        ),
         " is the baseline value (",
         b_val,
         ")."
       )
     })
-
 
     # Plots ----
 

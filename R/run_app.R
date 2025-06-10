@@ -1,3 +1,5 @@
+# nolint start: nolint: object_name_linter
+
 #' Run the Shiny Application
 #'
 #' @param ... arguments to pass to golem_opts.
@@ -7,14 +9,16 @@
 #' @export
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
-run_app <- function(onStart = NULL, # nolint
-                    options = list(
-                      port = as.numeric(Sys.getenv("GOLEM_PORT", 8081)),
-                      host = Sys.getenv("GOLEM_HOST", "127.0.0.1")
-                    ),
-                    enableBookmarking = NULL, # nolint
-                    uiPattern = "/", # nolint
-                    ...) {
+run_app <- function(
+  onStart = NULL,
+  options = list(
+    port = as.numeric(Sys.getenv("GOLEM_PORT", 8081)),
+    host = Sys.getenv("GOLEM_HOST", "127.0.0.1")
+  ),
+  enableBookmarking = NULL,
+  uiPattern = "/",
+  ...
+) {
   if (getOption("golem.app.prod", FALSE)) {
     create_data_cache()
   }
@@ -31,3 +35,5 @@ run_app <- function(onStart = NULL, # nolint
     golem_opts = list(...)
   )
 }
+
+# nolint end

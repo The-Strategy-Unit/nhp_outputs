@@ -114,6 +114,8 @@ named_to_li <- function(list, class = NULL) {
   }
 }
 
+# nolint start: object_name_linter
+
 #' Remove a tag attribute
 #'
 #' @param tag the tag
@@ -125,13 +127,15 @@ named_to_li <- function(list, class = NULL) {
 #' @examples
 #' a <- shiny::tags$p(src = "plop", "pouet")
 #' tagRemoveAttributes(a, "src")
-tagRemoveAttributes <- function(tag, ...) { # nolint
+tagRemoveAttributes <- function(tag, ...) {
   attrs <- as.character(list(...))
   for (i in seq_along(attrs)) {
     tag$attribs[[attrs[i]]] <- NULL
   }
   tag
 }
+
+# nolint end
 
 #' Hide or display a tag
 #'
@@ -208,13 +212,13 @@ with_red_star <- function(text) {
       paste0(
         text,
         shiny::tags$span(
-          style = "color:red", "*"
+          style = "color:red",
+          "*"
         )
       )
     )
   )
 }
-
 
 
 #' Repeat tags$br
@@ -314,17 +318,24 @@ col_1 <- function(...) {
 #'
 #'   shinyApp(ui, server)
 #' }
-make_action_button <- function(tag, inputId = NULL) { # nolint
+make_action_button <- function(
+  tag,
+  inputId = NULL # nolint: object_name_linter
+) {
   # some obvious checks
-  if (!inherits(tag, "shiny.tag")) stop("Must provide a shiny tag.")
+  if (!inherits(tag, "shiny.tag")) {
+    stop("Must provide a shiny tag.")
+  }
   if (!is.null(tag$attribs$class)) {
     if (grep("action-button", tag$attribs$class)) {
       stop("tag is already an action button")
     }
   }
   if (is.null(inputId) && is.null(tag$attribs$id)) {
-    stop("tag does not have any id. Please use inputId to be able to
-           access it on the server side.")
+    stop(
+      "tag does not have any id. Please use inputId to be able to
+           access it on the server side."
+    )
   }
 
   # handle id

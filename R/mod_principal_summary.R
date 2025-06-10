@@ -15,17 +15,8 @@ mod_principal_summary_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      htmltools::p(
-        "Bed days are defined as the difference in days between discharge and admission, plus one day.",
-        "One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.",
-        "Bed-availability data is not available at site level.",
-        "See the",
-        htmltools::a(
-          href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html",
-          "model project information site"
-        ),
-        "for definitions of terms."
-      )
+      md_file_to_html("app", "text", "notes-beddays.md"),
+      htmltools::p("Bed-availability data is not available at site level.")
     ),
     bs4Dash::box(
       title = "Summary by point of delivery",
@@ -52,7 +43,11 @@ mod_principal_summary_data <- function(r, sites) {
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::filter(.data$pod_name != "Outpatient Procedure") |>
     dplyr::mutate(
-      "pod_name" = stringr::str_replace(.data$pod_name, "Attendance", "Tele-attendance")
+      "pod_name" = stringr::str_replace(
+        .data$pod_name,
+        "Attendance",
+        "Tele-attendance"
+      )
     )
 
   bed_days <- get_principal_high_level(r, "beddays", sites) |>
@@ -78,13 +73,13 @@ mod_principal_summary_data <- function(r, sites) {
       ),
       dplyr::across(
         "activity_type",
-        # ~ forcats::fct_relevel(.x, "Inpatient", "Outpatient", after = 0)
         ~ factor(.x, levels = c("Inpatient", "Outpatient", "A&E"))
       ),
       measure = dplyr::case_when(
         stringr::str_detect(.data$pod_name, "Admission$") ~ "admission",
         stringr::str_detect(.data$pod_name, "Attendance$") ~ "attendance",
-        stringr::str_detect(.data$pod_name, "Tele-attendance$") ~ "tele_attendance",
+        stringr::str_detect(.data$pod_name, "Tele-attendance$") ~
+          "tele_attendance",
         stringr::str_detect(.data$pod_name, "Procedure$") ~ "procedure",
         stringr::str_detect(.data$pod_name, "Bed Days$") ~ "bed_days"
       ),
@@ -105,15 +100,21 @@ mod_principal_summary_data <- function(r, sites) {
 mod_principal_summary_table <- function(data) {
   data |>
     dplyr::mutate(
-      dplyr::across("principal", \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")),
+      dplyr::across(
+        "principal",
+        \(.x) gt_bar(.x, scales::comma_format(1), "#686f73", "#686f73")
+      ),
       dplyr::across("change", \(.x) gt_bar(.x, scales::comma_format(1))),
       dplyr::across("change_pcnt", \(.x) gt_bar(.x, scales::percent_format(1)))
     ) |>
     dplyr::mutate(
       "activity_type" = as.character(.data$activity_type),
-      "activity_type" = dplyr::case_when( # include admissions/beddays in gt groupnames
-        stringr::str_detect(.data$pod_name, "Admission") ~ glue::glue("{.data$activity_type} Admissions"),
-        stringr::str_detect(.data$pod_name, "Bed Days") ~ glue::glue("{.data$activity_type} Bed Days"),
+      "activity_type" = dplyr::case_when(
+        # include admissions/beddays in gt groupnames
+        stringr::str_detect(.data$pod_name, "Admission") ~
+          glue::glue("{.data$activity_type} Admissions"),
+        stringr::str_detect(.data$pod_name, "Bed Days") ~
+          glue::glue("{.data$activity_type} Bed Days"),
         .default = .data$activity_type
       )
     ) |>

@@ -50,7 +50,10 @@ mod_info_params_ui <- function(id) {
       width = 12,
       shiny::tags$p(
         "Time Profile:",
-        shiny::textOutput(ns("time_profile_waiting_list_adjustment"), inline = TRUE)
+        shiny::textOutput(
+          ns("time_profile_waiting_list_adjustment"),
+          inline = TRUE
+        )
       ),
       gt::gt_output(ns("params_waiting_list_adjustment"))
     ),

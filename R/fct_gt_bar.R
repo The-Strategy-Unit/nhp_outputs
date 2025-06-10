@@ -5,7 +5,12 @@
 #' @return The return value, if any, from executing the function.
 #'
 #' @noRd
-gt_bar <- function(value, display_value_format = NULL, negative_colour = "#ec6555", positive_colour = "#f9bf07") {
+gt_bar <- function(
+  value,
+  display_value_format = NULL,
+  negative_colour = "#ec6555",
+  positive_colour = "#f9bf07"
+) {
   # find the range of value
   r <- range(value, na.rm = TRUE)
   # rescale the values:
@@ -32,23 +37,25 @@ gt_bar <- function(value, display_value_format = NULL, negative_colour = "#ec655
   )
 
   # Choose to display percent of total
-  # Begin Exclude Linting
+  # nolint start: object_usage_linter
   if (is.null(display_value_format)) {
     display_value <- "&nbsp;"
   } else {
     display_value <- display_value_format(value)
   }
-  # End Exclude Linting
+  # nolint end
 
   # paste color and value into the html string
+  # nolint start: line_length_linter
   glue::glue_data(
     bar_data,
     .sep = "\n",
     "<div>",
-    "  <span style=\"display: inline-block; direction: ltr; border: 0; background-color: transparent; width: {ebar}%\">&nbsp;</span>", # nolint
-    "  <span style=\"display: inline-block; direction: ltr; border: 0; background-color: {colour}; width: {vbar}%\">&nbsp;</span>", # nolint
+    "  <span style=\"display: inline-block; direction: ltr; border: 0; background-color: transparent; width: {ebar}%\">&nbsp;</span>",
+    "  <span style=\"display: inline-block; direction: ltr; border: 0; background-color: {colour}; width: {vbar}%\">&nbsp;</span>",
     "  <span style=\"width: 50%\" align=\"right\">{display_value}</span>",
     "</div>"
   ) |>
     purrr::map(purrr::compose(gt::html, as.character))
+  # nolint end
 }

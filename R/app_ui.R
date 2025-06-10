@@ -40,11 +40,6 @@ app_ui <- function(request) {
           text = "Impact of changes",
           tabName = "tab_pcf"
         ),
-        # Note: hidden due to ongoing time-profile discussions
-        # bs4Dash::menuSubItem(
-        #   text = "Summary by year",
-        #   tabName = "tab_phl"
-        # ),
         bs4Dash::menuSubItem(
           text = "Activity in detail",
           tabName = "tab_pd"
@@ -90,7 +85,9 @@ app_ui <- function(request) {
       ),
       bs4Dash::tabItem(
         tabName = "tab_pcf",
-        mod_principal_change_factor_effects_ui("principal_change_factor_effects")
+        mod_principal_change_factor_effects_ui(
+          "principal_change_factor_effects"
+        )
       ),
       bs4Dash::tabItem(
         tabName = "tab_pd",
@@ -136,7 +133,8 @@ app_ui <- function(request) {
 #' @noRd
 golem_add_external_resources <- function() {
   golem::add_resource_path(
-    "www", app_sys("app/www")
+    "www",
+    app_sys("app/www")
   )
 
   htmltools::tags$head(

@@ -224,11 +224,12 @@ get_available_aggregations <- function(r) {
   r$results |>
     purrr::keep(\(.x) "pod" %in% colnames(.x)) |>
     purrr::map(
-      \(.x)
+      \(.x) {
         .x |>
           dplyr::pull("pod") |>
           stringr::str_extract("^[a-z]*") |>
           unique()
+      }
     ) |>
     tibble::enframe() |>
     tidyr::unnest("value") |>
@@ -298,7 +299,7 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
   agg_type <- agg_col
 
   if (agg_col != "tretspef_raw") {
-    agg_type <- glue::glue("sex+{agg_col}") # nolint
+    agg_type <- glue::glue("sex+{agg_col}")
   }
 
   filtered_results <- r$results[[agg_type]] |>
