@@ -1,4 +1,7 @@
-encrypt_filename <- function(filename, key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")) {
+encrypt_filename <- function(
+  filename,
+  key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")
+) {
   key <- openssl::base64_decode(key_b64)
 
   f <- charToRaw(filename)
@@ -26,17 +29,24 @@ get_container <- function() {
   AzureStor::storage_container(ep, Sys.getenv("AZ_STORAGE_CONTAINER"))
 }
 
-get_result_sets <- function(allowed_datasets = get_user_allowed_datasets(NULL), folder = "dev") {
+get_result_sets <- function(
+  allowed_datasets = get_user_allowed_datasets(NULL),
+  folder = "dev"
+) {
   ds <- tibble::tibble(dataset = allowed_datasets)
 
   cont <- get_container()
 
-  cont |>
+  metadata_cache <- cachem::cache_disk(".cache")
+  get_metadata <- purrr::partial(AzureStor::get_storage_metadata, object = cont)
+  metadata <- memoise::memoise(get_metadata, cache = metadata_cache)
+
+  files <- cont |>
     AzureStor::list_blobs(folder, info = "all", recursive = TRUE) |>
     dplyr::filter(!.data[["isdir"]]) |>
     purrr::pluck("name") |>
     purrr::set_names() |>
-    purrr::map(\(name, ...) AzureStor::get_storage_metadata(cont, name)) |>
+    purrr::map(metadata) |>
     dplyr::bind_rows(.id = "file") |>
     dplyr::semi_join(ds, by = dplyr::join_by("dataset")) |>
     dplyr::mutate(
@@ -110,7 +120,11 @@ ui <- bs4Dash::bs4DashPage(
 
 server <- function(input, output, session) {
   # static data files ----
-  providers <- c("Synthetic" = "synthetic", "National" = "national", readRDS("providers.Rds"))
+  providers <- c(
+    "Synthetic" = "synthetic",
+    "National" = "national",
+    readRDS("providers.Rds")
+  )
 
   # reactives ----
   allowed_datasets <- shiny::reactive({
@@ -201,10 +215,12 @@ server <- function(input, output, session) {
   shiny::observe({
     cd <- shiny::req(create_datetimes())
 
-    labels <- \(.x) .x |>
-      lubridate::as_datetime("%Y%m%d_%H%M%S", tz = "UTC") |>
-      lubridate::with_tz() |>
-      format("%d/%m/%Y %H:%M:%S")
+    labels <- \(.x) {
+      .x |>
+        lubridate::as_datetime("%Y%m%d_%H%M%S", tz = "UTC") |>
+        lubridate::with_tz() |>
+        format("%d/%m/%Y %H:%M:%S")
+    }
 
     shiny::updateSelectInput(
       session,
