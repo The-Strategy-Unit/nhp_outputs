@@ -8,4 +8,14 @@ files <- c(
 
 files <- files[!files == "deploy.R"]
 
-rsconnect::deployApp(appId = 212, appFiles = files)
+rsconnect::deployApp(
+  server = "connect.strategunitwm.nhs.uk",
+  appId = 212,
+  appFiles = files
+)
+
+rsconnect::deployApp(
+  server = "connect.su.mlcsu.org",
+  appId = 128,
+  appFiles = files
+)
