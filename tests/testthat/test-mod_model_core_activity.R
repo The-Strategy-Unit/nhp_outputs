@@ -6,46 +6,18 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 atpmo_expected <- tibble::tribble(
-  ~activity_type,
-  ~activity_type_name,
-  ~pod,
-  ~pod_name,
-  ~measures,
-  "aae",
-  "A&E",
-  "aae_type-01",
-  "Type 1 Department",
-  "ambulance"
+  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
+  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
 )
 
 model_core_activity_expected <- tibble::tribble(
-  ~pod,
-  ~measure,
-  ~baseline,
-  ~median,
-  ~lwr_pi,
-  ~upr_pi,
-  "aae_type-01",
-  "ambulance",
-  30000,
-  35000,
-  34000,
-  36000
+  ~pod, ~measure, ~baseline, ~median, ~lwr_pi, ~upr_pi,
+  "aae_type-01", "ambulance", 30000, 35000, 34000, 36000
 )
 
 model_core_activity_principal_expected <- tibble::tribble(
-  ~pod,
-  ~measure,
-  ~baseline,
-  ~principal,
-  ~lwr_pi,
-  ~upr_pi,
-  "aae_type-01",
-  "ambulance",
-  30000,
-  35000,
-  34000,
-  36000
+  ~pod, ~measure, ~baseline, ~principal, ~lwr_pi, ~upr_pi,
+  "aae_type-01", "ambulance", 30000, 35000, 34000, 36000
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
