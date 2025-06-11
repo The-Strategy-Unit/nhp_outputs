@@ -15,6 +15,8 @@ atpmo_expected <- tibble::tribble(
   "op", "Outpatients", "op_first", "First Outpatient Attendance", "tele_attendances"
 )
 
+# nolint start: line_length_linter
+
 change_factors_expected <- list(
   aae = tibble::tribble(
     ~pod, ~sitetret, ~measure, ~change_factor, ~strategy, ~mitigator_name, ~value,
@@ -58,6 +60,8 @@ change_factors_expected <- list(
       )
     )
   )
+
+# nolint end
 
 change_factors_summarised_expected_inc_baseline <- tibble::tribble(
   ~change_factor, ~colour, ~name, ~value,
