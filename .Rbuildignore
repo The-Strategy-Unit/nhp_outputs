@@ -22,3 +22,4 @@ $run_dev.*
 ^remove_files_from_manifest.js$
 ^CODEOWNERS$
 ^results_selection_app/$
+^[\.]?air\.toml$

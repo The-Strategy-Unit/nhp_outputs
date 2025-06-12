@@ -11,26 +11,10 @@ selected_measure_expected <- c(
   measure = "ambulance"
 )
 model_run_distribution_expected <- tibble::tribble(
-  ~baseline,
-  ~principal,
-  ~model_run,
-  ~value,
-  ~variant,
-  30000,
-  31000,
-  1,
-  34000,
-  "principal",
-  30000,
-  31000,
-  2,
-  35000,
-  "high migration",
-  30000,
-  31000,
-  3,
-  36000,
-  "high migration"
+  ~baseline, ~principal, ~model_run, ~value, ~variant,
+  30000, 31000, 1, 34000, "principal",
+  30000, 31000, 2, 35000, "high migration",
+  30000, 31000, 3, 36000, "high migration"
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

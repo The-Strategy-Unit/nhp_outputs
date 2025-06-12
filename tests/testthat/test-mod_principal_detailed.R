@@ -18,51 +18,15 @@ available_aggregations_expected <- list(
 )
 
 aggregations_age_group_expected <- tibble::tribble(
-  ~sex,
-  ~age_group,
-  ~baseline,
-  ~principal,
-  ~median,
-  ~lwr_pi,
-  ~upr_pi,
-  1,
-  " 0- 4",
-  900,
-  800,
-  850,
-  825,
-  875,
-  1,
-  " 5-14",
-  650,
-  550,
-  600,
-  625,
-  650
+  ~sex, ~age_group, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi,
+  1, " 0- 4", 900, 800, 850, 825, 875,
+  1, " 5-14", 650, 550, 600, 625, 650
 )
 
 aggregations_tretspef_expected <- tibble::tribble(
-  ~sex,
-  ~tretspef,
-  ~baseline,
-  ~principal,
-  ~median,
-  ~lwr_pi,
-  ~upr_pi,
-  1,
-  "100: General Surgery",
-  900,
-  800,
-  850,
-  825,
-  875,
-  1,
-  "300: General Internal Medicine",
-  650,
-  550,
-  600,
-  625,
-  650
+  ~sex, ~tretspef, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi,
+  1, "100: General Surgery", 900, 800, 850, 825, 875,
+  1, "300: General Internal Medicine", 650, 550, 600, 625, 650
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
