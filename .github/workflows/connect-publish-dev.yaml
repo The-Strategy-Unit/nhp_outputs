@@ -12,11 +12,3 @@ jobs:
       namespace: "dev"
       environment: "production"
     secrets: inherit
-        
-  publish-new-production:
-    name: "Publish (to new production server)"
-    uses: ./.github/workflows/connect-publish-manual.yaml
-    with:
-      namespace: "dev"
-      environment: "new-production"
-    secrets: inherit

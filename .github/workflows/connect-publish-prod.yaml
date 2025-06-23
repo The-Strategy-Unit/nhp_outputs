@@ -32,12 +32,3 @@ jobs:
       namespace: ${{ needs.get-variables.outputs.NAMESPACE }}
       environment: "production"
     secrets: inherit
-        
-  publish-new-production:
-    name: "Publish (to new production server)"
-    uses: ./.github/workflows/connect-publish-manual.yaml
-    needs: [get-variables]
-    with:
-      namespace: ${{ needs.get-variables.outputs.NAMESPACE }}
-      environment: "new-production"
-    secrets: inherit
