@@ -13,8 +13,8 @@ selected_measure_expected <- c(
 
 available_aggregations_expected <- list(
   aae = c("default", "sex+age_group"),
-  ip = c("default", "sex+age_group", "mainspef", "sex+tretspef"),
-  op = c("default", "sex+age_group", "sex+tretspef")
+  ip = c("default", "sex+age_group", "mainspef", "sex+tretspef_grouped"),
+  op = c("default", "sex+age_group", "sex+tretspef_grouped")
 )
 
 aggregations_age_group_expected <- tibble::tribble(
@@ -24,7 +24,7 @@ aggregations_age_group_expected <- tibble::tribble(
 )
 
 aggregations_tretspef_expected <- tibble::tribble(
-  ~sex, ~tretspef, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi,
+  ~sex, ~tretspef_grouped, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi,
   1, "100: General Surgery", 900, 800, 850, 825, 875,
   1, "300: General Internal Medicine", 650, 550, 600, 625, 650
 )
@@ -177,7 +177,7 @@ test_that("it calls get_aggregation", {
       expected <- aggregations_tretspef_expected |>
         dplyr::transmute(
           sex,
-          agg = tretspef,
+          agg = tretspef_grouped,
           baseline,
           final = principal,
           change = final - baseline,
@@ -189,7 +189,7 @@ test_that("it calls get_aggregation", {
 
       expect_called(m, 2)
       expect_args(m, 1, 1, "aae_type-01", "ambulance", "age_group", "a")
-      expect_args(m, 2, 1, "aae_type-01", "ambulance", "tretspef", "a")
+      expect_args(m, 2, 1, "aae_type-01", "ambulance", "tretspef_grouped", "a")
     }
   )
 })

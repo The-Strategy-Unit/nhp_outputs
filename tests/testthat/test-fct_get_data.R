@@ -651,9 +651,9 @@ test_that("get_aggregation gets the results", {
 
   r <- list(
     results = list(
-      "sex+tretspef" = tibble::tibble(
+      "sex+tretspef_grouped" = tibble::tibble(
         "sex" = c(1, 1, 2, 2),
-        "tretspef" = c("a", "a", "a", "a"),
+        "tretspef_grouped" = c("a", "a", "a", "a"),
         "pod" = c("a", "a", "b", "b"),
         "measure" = c("a", "b", "a", "b")
       )
@@ -662,10 +662,10 @@ test_that("get_aggregation gets the results", {
 
   expected <- tibble::tibble(
     sex = "1",
-    tretspef = "a"
+    tretspef_grouped = "a"
   )
 
-  actual <- get_aggregation(r, "a", "a", "tretspef", "a")
+  actual <- get_aggregation(r, "a", "a", "tretspef_grouped", "a")
 
   expect_equal(actual, "tsa")
   expect_called(m, 1)
@@ -675,7 +675,7 @@ test_that("get_aggregation gets the results", {
 test_that("get_aggregation returns NULL if filter returns no rows", {
   r <- list(
     results = list(
-      "sex+tretspef" = tibble::tibble(
+      "sex+tretspef_grouped" = tibble::tibble(
         pod = "a",
         measure = "b",
         value = 1
@@ -683,8 +683,8 @@ test_that("get_aggregation returns NULL if filter returns no rows", {
     )
   )
 
-  expect_null(get_aggregation(r, "a", "x", "tretspef"))
-  expect_null(get_aggregation(r, "x", "b", "tretspef"))
+  expect_null(get_aggregation(r, "a", "x", "tretspef_grouped"))
+  expect_null(get_aggregation(r, "x", "b", "tretspef_grouped"))
 })
 
 test_that("get_principal_change_factors gets the results", {
