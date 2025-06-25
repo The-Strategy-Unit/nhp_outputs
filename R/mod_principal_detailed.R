@@ -109,7 +109,10 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
         # then remove the first word
         stringr::str_remove_all("^\\w+\\+")
 
-      an <- c("age_group" = "Age Group", "tretspef" = "Treatment Specialty")
+      an <- c(
+        "age_group" = "Age Group",
+        "tretspef_grouped" = "Treatment Specialty"
+      )
 
       agg_choices <- unname(an[a])
       agg_choices <- agg_choices[!is.na(agg_choices)]
