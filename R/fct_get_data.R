@@ -135,8 +135,8 @@ patch_results <- function(r) {
   r$results <- purrr::imap(r$results, patch_principal)
   r$results <- patch_step_counts(r$results)
 
-  r$results[["tretspef_raw+los_group"]] <- r$results[[
-    "tretspef_raw+los_group"
+  r$results[["tretspef+los_group"]] <- r$results[[
+    "tretspef+los_group"
   ]] |>
     dplyr::mutate(
       dplyr::across(
