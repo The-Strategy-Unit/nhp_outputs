@@ -298,7 +298,7 @@ get_model_run_distribution <- function(r, pod, measure, sites) {
 get_aggregation <- function(r, pod, measure, agg_col, sites) {
   agg_type <- agg_col
 
-  if (agg_col != "tretspef_raw") {
+  if (agg_col != "tretspef") {
     agg_type <- glue::glue("sex+{agg_col}")
   }
 
@@ -315,7 +315,7 @@ get_aggregation <- function(r, pod, measure, agg_col, sites) {
 
   filtered_results |>
     dplyr::mutate(
-      dplyr::across(dplyr::matches("sex|tretspef_raw"), as.character)
+      dplyr::across(dplyr::matches("sex|tretspef"), as.character)
     ) |>
     trust_site_aggregation(sites)
 }

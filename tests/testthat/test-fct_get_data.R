@@ -324,8 +324,8 @@ test_that("patch_results returns correct values", {
   # arrange
   r <- list(
     results = list(
-      "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
+      "tretspef" = tibble::tribble(
+        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
         "a", "op", "100", "s1", 1, 2, 3, 4, 5
       ),
       "tretspef+los_group" = tibble::tribble(
@@ -378,8 +378,8 @@ test_that("patch_results returns correct values", {
 
   expected <- list(
     results = list(
-      "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
+      "tretspef" = tibble::tribble(
+        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
         "a", "op", "100", "s1", 1, 2, 3, 4, 5
       ),
       "tretspef+los_group" = r$results[["tretspef+los_group"]] |>
@@ -450,7 +450,7 @@ test_that("patch_results returns correct values", {
   # assert
   expect_equal(actual, expected)
   expect_called(m, 4)
-  expect_args(m, 1, r$results[[1]], "tretspef_raw")
+  expect_args(m, 1, r$results[[1]], "tretspef")
   expect_args(m, 2, r$results[[2]], "tretspef+los_group")
   expect_args(m, 3, r$results[[3]], "sex+age_group")
   expect_args(m, 4, r$results)
