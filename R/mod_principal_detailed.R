@@ -109,7 +109,10 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
         # then remove the first word
         stringr::str_remove_all("^\\w+\\+")
 
-      an <- c("age_group" = "Age Group", "tretspef" = "Treatment Specialty")
+      an <- c(
+        "age_group" = "Age Group",
+        "tretspef_grouped" = "Treatment Specialty"
+      )
 
       agg_choices <- unname(an[a])
       agg_choices <- agg_choices[!is.na(agg_choices)]
@@ -124,7 +127,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       agg_col <- switch(
         shiny::req(input$aggregation),
         "Age Group" = "age_group",
-        "Treatment Specialty" = "tretspef"
+        "Treatment Specialty" = "tretspef_grouped"
       )
 
       dat <- selected_data() |>
@@ -139,7 +142,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
           change_pcnt = .data$change / .data$baseline
         )
 
-      if (agg_col == "tretspef") {
+      if (agg_col == "tretspef_grouped") {
         dat <- dat |>
           dplyr::left_join(
             tretspef_lookup,

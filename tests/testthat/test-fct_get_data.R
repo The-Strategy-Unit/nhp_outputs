@@ -324,12 +324,12 @@ test_that("patch_results returns correct values", {
   # arrange
   r <- list(
     results = list(
-      "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
+      "tretspef" = tibble::tribble(
+        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
         "a", "op", "100", "s1", 1, 2, 3, 4, 5
       ),
-      "tretspef_raw+los_group" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi, ~los_group,
+      "tretspef+los_group" = tibble::tribble(
+        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi, ~los_group,
         "a", "ip", "100", "s1", 1, 2, 3, 4, 5, "0 days",
         "b", "ip", "100", "s1", 2, 3, 4, 5, 6, "1 day",
         "a", "ip", "100", "s1", 3, 4, 5, 6, 7, "2 days",
@@ -378,11 +378,11 @@ test_that("patch_results returns correct values", {
 
   expected <- list(
     results = list(
-      "tretspef_raw" = tibble::tribble(
-        ~measure, ~pod, ~tretspef_raw, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
+      "tretspef" = tibble::tribble(
+        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
         "a", "op", "100", "s1", 1, 2, 3, 4, 5
       ),
-      "tretspef_raw+los_group" = r$results[["tretspef_raw+los_group"]] |>
+      "tretspef+los_group" = r$results[["tretspef+los_group"]] |>
         dplyr::mutate(
           dplyr::across(
             "los_group",
@@ -450,8 +450,8 @@ test_that("patch_results returns correct values", {
   # assert
   expect_equal(actual, expected)
   expect_called(m, 4)
-  expect_args(m, 1, r$results[[1]], "tretspef_raw")
-  expect_args(m, 2, r$results[[2]], "tretspef_raw+los_group")
+  expect_args(m, 1, r$results[[1]], "tretspef")
+  expect_args(m, 2, r$results[[2]], "tretspef+los_group")
   expect_args(m, 3, r$results[[3]], "sex+age_group")
   expect_args(m, 4, r$results)
 })
@@ -651,9 +651,9 @@ test_that("get_aggregation gets the results", {
 
   r <- list(
     results = list(
-      "sex+tretspef" = tibble::tibble(
+      "sex+tretspef_grouped" = tibble::tibble(
         "sex" = c(1, 1, 2, 2),
-        "tretspef" = c("a", "a", "a", "a"),
+        "tretspef_grouped" = c("a", "a", "a", "a"),
         "pod" = c("a", "a", "b", "b"),
         "measure" = c("a", "b", "a", "b")
       )
@@ -662,10 +662,10 @@ test_that("get_aggregation gets the results", {
 
   expected <- tibble::tibble(
     sex = "1",
-    tretspef = "a"
+    tretspef_grouped = "a"
   )
 
-  actual <- get_aggregation(r, "a", "a", "tretspef", "a")
+  actual <- get_aggregation(r, "a", "a", "tretspef_grouped", "a")
 
   expect_equal(actual, "tsa")
   expect_called(m, 1)
@@ -675,7 +675,7 @@ test_that("get_aggregation gets the results", {
 test_that("get_aggregation returns NULL if filter returns no rows", {
   r <- list(
     results = list(
-      "sex+tretspef" = tibble::tibble(
+      "sex+tretspef_grouped" = tibble::tibble(
         pod = "a",
         measure = "b",
         value = 1
@@ -683,8 +683,8 @@ test_that("get_aggregation returns NULL if filter returns no rows", {
     )
   )
 
-  expect_null(get_aggregation(r, "a", "x", "tretspef"))
-  expect_null(get_aggregation(r, "x", "b", "tretspef"))
+  expect_null(get_aggregation(r, "a", "x", "tretspef_grouped"))
+  expect_null(get_aggregation(r, "x", "b", "tretspef_grouped"))
 })
 
 test_that("get_principal_change_factors gets the results", {

@@ -51,9 +51,9 @@ mod_principal_los_pods <- function() {
 mod_principal_summary_los_data <- function(r, sites, measure) {
   pods <- mod_principal_los_pods()
 
-  summary_los <- r$results[["tretspef_raw+los_group"]] |>
+  summary_los <- r$results[["tretspef+los_group"]] |>
     dplyr::filter(.data$measure == .env$measure) |>
-    dplyr::select(-"tretspef_raw") |>
+    dplyr::select(-"tretspef") |>
     trust_site_aggregation(sites) |>
     dplyr::inner_join(pods, by = "pod") |>
     dplyr::mutate(

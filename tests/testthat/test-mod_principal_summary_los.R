@@ -21,8 +21,8 @@ test_that("ui is created correctly", {
 test_that("mod_principal_summary_los_data summarises the data", {
   data <- list(
     results = list(
-      "tretspef_raw+los_group" = tibble::tribble(
-        ~tretspef_raw, ~pod, ~measure, ~sitetret, ~los_group, ~baseline, ~principal,
+      "tretspef+los_group" = tibble::tribble(
+        ~tretspef, ~pod, ~measure, ~sitetret, ~los_group, ~baseline, ~principal,
         1, "a", "beddays", "trust", "0-day", 1, 2,
         2, "a", "beddays", "trust", "1-7 days", 3, 4,
         3, "a", "beddays", "trust", "8-14 days", 5, 6,
