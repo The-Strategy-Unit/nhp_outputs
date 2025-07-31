@@ -92,6 +92,15 @@ default:
     ambulance: Ambulance Arrivals
     arrivals: Arrivals
 
+  population_projections:
+    values:
+      migration_category: "Migration category"
+      var_proj_5_year_migration: "5 year migration trends"
+      var_proj_10_year_migration: "10 year migration trends"
+      var_proj_high_intl_migration: "High migration"
+      var_proj_low_intl_migration: "Low migration"
+      var_proj_zero_net_migration: "Zero net migration"
+
 production:
   app_prod: yes
 dev:

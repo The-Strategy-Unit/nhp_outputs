@@ -60,19 +60,24 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
 
+  variant_lookup <- get_golem_config("population_projections")[["values"]] |>
+    unlist() |>
+    tibble::enframe(name = "variant", value = "Population-projection variant")
+
   x_placeholder <- "100%" # dummy label to help line up beeswarm and ECDF plots
 
   data |>
     require_rows() |>
+    dplyr::left_join(variant_lookup, "variant") |>
     ggplot2::ggplot() +
     suppressWarnings(
       ggbeeswarm::geom_quasirandom(
         ggplot2::aes(
           x = x_placeholder,
           y = .data$value,
-          colour = .data$variant,
+          colour = .data$`Population-projection variant`,
           text = glue::glue(
-            "Value: {scales::comma(value, accuracy = 1)}\nVariant: {variant}"
+            "Value: {scales::comma(value, accuracy = 1)}\nVariant: {`Population-projection variant`}"
           )
         ),
         alpha = 0.5
