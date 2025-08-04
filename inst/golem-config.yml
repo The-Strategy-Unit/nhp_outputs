@@ -92,6 +92,17 @@ default:
     ambulance: Ambulance Arrivals
     arrivals: Arrivals
 
+  population_projections:
+    values:
+      migration_category: "Migration category"
+      var_proj_5_year_migration: "5 year migration trends"
+      var_proj_10_year_migration: "10 year migration trends"
+      var_proj_high_intl_migration: "High migration"
+      var_proj_low_intl_migration: "Low migration"
+      var_proj_zero_net_migration: "Zero net migration"
+      custom_projection_R0A66: "North Manchester Variant"
+      custom_projection_RD8: "Milton Keynes Variant"
+
 production:
   app_prod: yes
 dev:
