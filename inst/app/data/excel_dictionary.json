@@ -21,6 +21,10 @@
             "explanation": "High-level overview of baseline and projection"
         },
         {
+            "worksheet": "delivery_episode_in_spell",
+            "explanation": "Baseline and projection for delivery episodes in spell"
+        },
+        {
             "worksheet": "sex+age_group",
             "explanation": "Breakdown of baseline and projection by sex and age group"
         },
@@ -70,7 +74,7 @@
         {
             "field": "baseline",
             "explanation": "The value at baseline.",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
         },
         {
             "field": "change_factor",
@@ -85,17 +89,17 @@
         {
             "field": "lwr_pi",
             "explanation": "The lower limit of the prediction inverval. This is based on a 80% interval, so the 10th percentile of the value's distribution.",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
         },
         {
             "field": "measure",
             "explanation": "The measure of activity, e.g. for elective admissions, measure could be admissions, beddays, or procedures; for outpatient attendances, attendances or tele-attendances.",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group, step_counts"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group, step_counts"
         },
         {
             "field": "median",
             "explanation": "The median of the value's distribution.",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
         },
         {
             "field": "mitigator_code",
@@ -110,12 +114,12 @@
         {
             "field": "pod",
             "explanation": "The point of delivery, e.g. elective admissions (ip_elective_admission).",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group, step_counts"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group, step_counts"
         },
         {
             "field": "principal",
             "explanation": "The value under the principal projection.",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
         },
         {
             "field": "sex",
@@ -125,7 +129,7 @@
         {
             "field": "sitetret",
             "explanation": "The specific hospital site within the trust.",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group, step_counts"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group, step_counts"
         },
         {
             "field": "strategy",
@@ -145,7 +149,7 @@
         {
             "field": "upr_pi",
             "explanation": "The upper limit of the prediction inverval. This is based on a 80% interval, so the 90th percentile of the value's distribution.",
-            "tabs": "acuity, age, attendance_category, avoided_activity, default, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
+            "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
         },
         {
             "field": "value",
