@@ -37,11 +37,6 @@ test_that("it calls get_params correctly", {
   )
   stub(
     mod_info_params_server,
-    "info_params_table_covid_adjustment",
-    "covid_adjustment"
-  )
-  stub(
-    mod_info_params_server,
     "info_params_table_waiting_list_adjustment",
     "waiting_list_adjustment"
   )
@@ -90,7 +85,6 @@ test_that("outputs are set correctly", {
 
   stub(mod_info_params_server, "info_params_table_demographic_adjustment", m)
   stub(mod_info_params_server, "info_params_table_baseline_adjustment", m)
-  stub(mod_info_params_server, "info_params_table_covid_adjustment", m)
   stub(mod_info_params_server, "info_params_table_waiting_list_adjustment", m)
   stub(mod_info_params_server, "info_params_table_expat_repat_adjustment", m)
   stub(
@@ -111,17 +105,16 @@ test_that("outputs are set correctly", {
       expect_equal(output$time_profile_repat_local, "linear")
       expect_equal(output$time_profile_repat_nonlocal, "linear")
 
-      expect_called(m, 10)
+      expect_called(m, 9)
       expect_args(m, 1, expected_data)
       expect_args(m, 2, expected_data)
       expect_args(m, 3, expected_data)
-      expect_args(m, 4, expected_data)
-      expect_args(m, 5, expected_data, "expat")
-      expect_args(m, 6, expected_data, "repat_local")
-      expect_args(m, 7, expected_data, "repat_nonlocal")
+      expect_args(m, 4, expected_data, "expat")
+      expect_args(m, 5, expected_data, "repat_local")
+      expect_args(m, 6, expected_data, "repat_nonlocal")
+      expect_args(m, 7, expected_data)
       expect_args(m, 8, expected_data)
       expect_args(m, 9, expected_data)
-      expect_args(m, 10, expected_data)
     }
   )
 })

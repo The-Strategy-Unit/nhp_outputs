@@ -306,9 +306,6 @@ param_tables_to_list <- function(p) {
   possibly_table_baseline_adjustment <- purrr::possibly(
     info_params_table_baseline_adjustment
   )
-  possibly_table_covid_adjustment <- purrr::possibly(
-    info_params_table_covid_adjustment
-  )
 
   possibly_table_demographic_adjustment <- purrr::possibly(
     info_params_table_demographic_adjustment
@@ -334,7 +331,6 @@ param_tables_to_list <- function(p) {
 
   params_list <- list(
     "Baseline adjustment" = possibly_table_baseline_adjustment(p),
-    "Covid adjustment" = possibly_table_covid_adjustment(p),
     "Demographic adjustment" = possibly_table_demographic_adjustment(p),
     "Waiting list adjustment" = list(
       "Time profile" = time_profiles$waiting_list_adjustment,
