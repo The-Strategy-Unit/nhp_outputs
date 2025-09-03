@@ -55,22 +55,6 @@
       <div class="col-sm-12">
         <div class="card bs4Dash collapsed-card">
           <div class="card-header">
-            <h3 class="card-title">Covid adjustment</h3>
-            <div class="card-tools float-right">
-              <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
-                <i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>
-              </button>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_covid_adjustment"></div>
-          </div>
-        </div>
-        <script type="application/json">{"title":"Covid adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
-      </div>
-      <div class="col-sm-12">
-        <div class="card bs4Dash collapsed-card">
-          <div class="card-header">
             <h3 class="card-title">Waiting list adjustment</h3>
             <div class="card-tools float-right">
               <button class="btn btn-tool btn-sm" type="button" data-card-widget="collapse">
