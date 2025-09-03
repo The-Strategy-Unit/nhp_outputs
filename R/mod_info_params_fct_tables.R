@@ -100,22 +100,6 @@ info_params_table_baseline_adjustment <- function(p) {
     gt_theme()
 }
 
-info_params_table_covid_adjustment <- function(p) {
-  covid_adjustment <- p[["covid_adjustment"]]
-
-  shiny::validate(
-    shiny::need(covid_adjustment, "No parameters provided")
-  )
-
-  covid_adjustment |>
-    purrr::map(tibble::enframe, "pod") |>
-    dplyr::bind_rows(.id = "activity_type") |>
-    tidyr::unnest_wider("value") |>
-    info_params_fix_data() |>
-    gt::gt("pod", "activity_type_name") |>
-    gt_theme()
-}
-
 info_params_table_waiting_list_adjustment <- function(p) {
   waiting_list_adjustment <- p[["waiting_list_adjustment"]]
 

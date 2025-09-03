@@ -39,12 +39,6 @@ mod_info_params_ui <- function(id) {
       gt::gt_output(ns("params_baseline_adjustment"))
     ),
     bs4Dash::box(
-      title = "Covid adjustment",
-      collapsed = TRUE,
-      width = 12,
-      gt::gt_output(ns("params_covid_adjustment"))
-    ),
-    bs4Dash::box(
       title = "Waiting list adjustment",
       collapsed = TRUE,
       width = 12,
@@ -139,10 +133,6 @@ mod_info_params_server <- function(id, selected_data) {
 
     output$params_baseline_adjustment <- gt::render_gt({
       info_params_table_baseline_adjustment(params_data())
-    })
-
-    output$params_covid_adjustment <- gt::render_gt({
-      info_params_table_covid_adjustment(params_data())
     })
 
     output$params_waiting_list_adjustment <- gt::render_gt({
