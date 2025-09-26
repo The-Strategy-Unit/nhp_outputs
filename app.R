@@ -55,15 +55,16 @@ get_result_sets <- function(
 }
 
 get_user_allowed_datasets <- function(groups) {
-  p <- jsonlite::read_json("providers.json", simplifyVector = TRUE)
+  p <- jsonlite::read_json("datasets.json", simplifyVector = TRUE) |>
+    names()
 
   if (!(is.null(groups) || any(c("nhp_devs", "nhp_power_users") %in% groups))) {
     a <- groups |>
-      stringr::str_subset("^nhp_provider_") |>
-      stringr::str_remove("^nhp_provider_")
+      stringr::str_subset("^nhp_(national|icb|provider)_") |>
+      stringr::str_remove("^nhp_(national|icb|provider)_")
     intersect(p, a)
   } else {
-    c("synthetic", "national", p)
+    p
   }
 }
 
@@ -120,11 +121,8 @@ ui <- bs4Dash::bs4DashPage(
 
 server <- function(input, output, session) {
   # static data files ----
-  providers <- c(
-    "Synthetic" = "synthetic",
-    "National" = "national",
-    readRDS("providers.Rds")
-  )
+  datasets_list <- jsonlite::read_json("datasets.json", simplifyVector = TRUE)
+  datasets_list <- purrr::set_names(names(datasets_list), unname(datasets_list))
 
   # reactives ----
   allowed_datasets <- shiny::reactive({
@@ -153,7 +151,7 @@ server <- function(input, output, session) {
     rs <- shiny::req(result_sets())
     ds <- unique(rs$dataset)
 
-    providers[providers %in% ds]
+    datasets_list[providers %in% ds]
   })
 
   scenarios <- shiny::reactive({
