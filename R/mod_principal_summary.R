@@ -29,6 +29,19 @@ mod_principal_summary_ui <- function(id) {
   )
 }
 
+#' Prepare principal summary data
+#'
+#' @description Combines and formats high-level activity data including
+#'   admissions, attendances, tele-attendances, and bed days, with baseline
+#'   and principal projections.
+#'
+#' @param r List. Results object.
+#' @param sites Character vector. Site codes to filter by.
+#'
+#' @return Data frame. Principal summary with baseline, principal, change,
+#'   and change_pcnt by POD and activity type.
+#'
+#' @noRd
 mod_principal_summary_data <- function(r, sites) {
   pods <- mod_principal_los_pods() # uses same POD lookup as LoS summary
 
@@ -97,6 +110,18 @@ mod_principal_summary_data <- function(r, sites) {
     )
 }
 
+#' Create principal summary table
+#'
+#' @description Generates a formatted gt table showing principal projection
+#'   summary with baseline, principal, changes, and bar visualizations grouped
+#'   by activity type.
+#'
+#' @param data Data frame. Principal summary data with activity_type, pod_name,
+#'   baseline, principal, change, and change_pcnt columns.
+#'
+#' @return gt table object displaying principal summary grouped by activity type.
+#'
+#' @noRd
 mod_principal_summary_table <- function(data) {
   data |>
     dplyr::mutate(

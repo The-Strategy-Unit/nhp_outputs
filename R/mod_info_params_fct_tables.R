@@ -1,3 +1,14 @@
+#' Fix parameter table data with readable names
+#'
+#' @description Enriches parameter data frames by replacing codes with
+#'   human-readable names for activity types, specialties, and strategies.
+#'
+#' @param df Data frame. Parameter data that may contain activity_type,
+#'   specialty, and/or strategy columns.
+#'
+#' @return Data frame. Input data with codes replaced by descriptive names.
+#'
+#' @noRd
 info_params_fix_data <- function(df) {
   at <- get_activity_type_pod_measure_options() |>
     dplyr::distinct(
@@ -60,6 +71,16 @@ info_params_fix_data <- function(df) {
     fix_strategy()
 }
 
+#' Create demographic adjustment parameters table
+#'
+#' @description Generates a formatted gt table showing demographic variant
+#'   probabilities.
+#'
+#' @param p List. Model parameters containing demographic_factors element.
+#'
+#' @return gt table object displaying variant probabilities as percentages.
+#'
+#' @noRd
 info_params_table_demographic_adjustment <- function(p) {
   demographic_adjustment <- p[["demographic_factors"]]
 
@@ -76,6 +97,18 @@ info_params_table_demographic_adjustment <- function(p) {
     gt_theme()
 }
 
+#' Create baseline adjustment parameters table
+#'
+#' @description Generates a formatted gt table showing baseline adjustment
+#'   parameters by activity type, POD, and specialty. Handles special case
+#'   for A&E data which lacks specialty breakdown.
+#'
+#' @param p List. Model parameters containing baseline_adjustment element.
+#'
+#' @return gt table object displaying baseline adjustments grouped by
+#'   activity type and POD.
+#'
+#' @noRd
 info_params_table_baseline_adjustment <- function(p) {
   baseline_adjustment <- local({
     x <- p[["baseline_adjustment"]]
@@ -100,6 +133,17 @@ info_params_table_baseline_adjustment <- function(p) {
     gt_theme()
 }
 
+#' Create waiting list adjustment parameters table
+#'
+#' @description Generates a formatted gt table showing waiting list adjustment
+#'   parameters by specialty and activity type.
+#'
+#' @param p List. Model parameters containing waiting_list_adjustment element.
+#'
+#' @return gt table object displaying waiting list adjustments with activity
+#'   types as columns.
+#'
+#' @noRd
 info_params_table_waiting_list_adjustment <- function(p) {
   waiting_list_adjustment <- p[["waiting_list_adjustment"]]
 
@@ -118,6 +162,20 @@ info_params_table_waiting_list_adjustment <- function(p) {
     gt_theme()
 }
 
+#' Create expatriation/repatriation adjustment parameters table
+#'
+#' @description Generates a formatted gt table showing expatriation or
+#'   repatriation adjustment parameters by activity type, POD, and specialty.
+#'   Handles special cases for outpatient and A&E data structures.
+#'
+#' @param p List. Model parameters containing the specified type element.
+#' @param type Character. The parameter type to display (e.g., "expatriation",
+#'   "repatriation").
+#'
+#' @return gt table object displaying adjustment interval parameters grouped
+#'   by activity type and POD.
+#'
+#' @noRd
 info_params_table_expat_repat_adjustment <- function(p, type) {
   df <- local({
     x <- p[[type]]
@@ -145,6 +203,17 @@ info_params_table_expat_repat_adjustment <- function(p, type) {
     gt_theme()
 }
 
+#' Create non-demographic adjustment parameters table
+#'
+#' @description Generates a formatted gt table showing non-demographic
+#'   adjustment parameters by activity type and POD.
+#'
+#' @param p List. Model parameters containing non-demographic_adjustment element.
+#'
+#' @return gt table object displaying non-demographic adjustment intervals
+#'   grouped by activity type.
+#'
+#' @noRd
 info_params_table_non_demographic_adjustment <- function(p) {
   non_demographic_adjustment <- p[["non-demographic_adjustment"]][["values"]]
 
@@ -161,6 +230,19 @@ info_params_table_non_demographic_adjustment <- function(p) {
     gt_theme()
 }
 
+#' Create activity avoidance parameters table
+#'
+#' @description Generates a formatted gt table showing activity avoidance
+#'   parameters by activity type and mitigator strategy, including interval
+#'   values and time profile mappings.
+#'
+#' @param p List. Model parameters containing activity_avoidance and
+#'   time_profile_mappings elements.
+#'
+#' @return gt table object displaying activity avoidance parameters grouped
+#'   by activity type with mitigator rows.
+#'
+#' @noRd
 info_params_table_activity_avoidance <- function(p) {
   actitvity_avoidance <- p[["activity_avoidance"]]
 
@@ -188,6 +270,19 @@ info_params_table_activity_avoidance <- function(p) {
     gt_theme()
 }
 
+#' Create efficiencies parameters table
+#'
+#' @description Generates a formatted gt table showing efficiency
+#'   parameters by activity type and mitigator strategy, including interval
+#'   values and time profile mappings.
+#'
+#' @param p List. Model parameters containing efficiencies and
+#'   time_profile_mappings elements.
+#'
+#' @return gt table object displaying efficiency parameters grouped by
+#'   activity type with mitigator rows.
+#'
+#' @noRd
 info_params_table_efficiencies <- function(p) {
   efficiencies <- p[["efficiencies"]]
 
