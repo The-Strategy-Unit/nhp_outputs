@@ -4,7 +4,16 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_ui <- function(request) {
-  header <- bs4Dash::dashboardHeader(title = "NHP Model Results")
+  header <- bs4Dash::dashboardHeader(
+    title = "NHP Model Results",
+    shiny::actionButton(
+      inputId = "feedback",
+      label = "Give feedback",
+      onClick = glue::glue(
+        "window.open('{Sys.getenv(\"FEEDBACK_FORM_URL\")}', '_blank')"
+      )
+    )
+  )
 
   sidebar <- bs4Dash::dashboardSidebar(
     fixed = TRUE,

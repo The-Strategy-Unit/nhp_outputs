@@ -37,7 +37,12 @@ test_that("ui is created correctly", {
   stub(app_ui, "mod_info_params_ui", m)
 
   set.seed(1)
-  expect_snapshot(app_ui())
+  expect_snapshot(
+    withr::with_envvar(
+      c("FEEDBACK_FORM_URL" = "https://example.com/"),
+      app_ui()
+    )
+  )
 
   expect_called(m, 8)
   expect_args(m, 1, "home")

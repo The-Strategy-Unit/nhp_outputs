@@ -1,7 +1,7 @@
 # ui is created correctly
 
     Code
-      app_ui()
+      withr::with_envvar(c(FEEDBACK_FORM_URL = "https://example.com/"), app_ui())
     Output
       <body data-help="0" data-fullscreen="0" data-dark="0" data-scrollToTop="0" class="sidebar-mini">
         <div class="wrapper">
@@ -13,6 +13,7 @@
                 </a>
               </li>
             </ul>
+            <button id="feedback" type="button" class="btn btn-default action-button" onClick="window.open(&#39;https://example.com/&#39;, &#39;_blank&#39;)">Give feedback</button>
             <ul class="navbar-nav ml-auto navbar-right">
               <li class="nav-item">
                 <a id="controlbar-toggle" class="nav-link" data-widget="control-sidebar" href="#">
