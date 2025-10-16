@@ -151,7 +151,7 @@ server <- function(input, output, session) {
     rs <- shiny::req(result_sets())
     ds <- unique(rs$dataset)
 
-    datasets_list[providers %in% ds]
+    datasets_list[datasets_list %in% ds]
   })
 
   scenarios <- shiny::reactive({
