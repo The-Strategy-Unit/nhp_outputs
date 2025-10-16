@@ -34,12 +34,14 @@ deploy <- function(server, app_id) {
   )
 }
 
+# development
 deploy(
   server = "connect.strategyunitwm.nhs.uk",
-  app_id = 212
+  app_id = 199
 )
 
+# production
 deploy(
-  server = "connect.su.mlcsu.org",
+  server = "connect.strategyunitwm.nhs.uk",
   app_id = 128
 )
