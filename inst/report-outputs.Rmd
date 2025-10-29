@@ -55,7 +55,7 @@ This report provides the outputs (tables and charts) from the selected model sce
 
 Note that some tables and charts won't be generated if there was insufficient data to produce them, given the combination of trust and site selections (if any).
 
-See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview, user guide, mitigator lookup and methodology for the model and the outputs app.
+See [the project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview of the model and its methodology.
 
 # Metadata
 
