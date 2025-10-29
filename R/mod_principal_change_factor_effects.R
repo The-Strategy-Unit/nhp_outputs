@@ -64,6 +64,21 @@ mod_principal_change_factor_effects_ui <- function(id) {
   )
 }
 
+#' Summarize principal change factor effects data
+#'
+#' @description Aggregates change factor data by factor type, calculates
+#'   cumulative values for waterfall chart, and prepares data with hidden
+#'   segments and color coding.
+#'
+#' @param data Data frame. Change factor data with measure, change_factor,
+#'   and value columns.
+#' @param measure Character. Measure to filter by.
+#' @param include_baseline Logical. Whether to include baseline in the summary.
+#'
+#' @return Data frame. Summarized change factors in long format with hidden
+#'   values and colors for waterfall visualization.
+#'
+#' @noRd
 mod_principal_change_factor_effects_summarised <- function(
   data,
   measure,
@@ -132,6 +147,17 @@ mod_principal_change_factor_effects_summarised <- function(
     )
 }
 
+#' Create waterfall plot for principal change factors
+#'
+#' @description Generates an interactive waterfall chart showing the cumulative
+#'   impact of change factors from baseline to final estimate.
+#'
+#' @param data Data frame. Summarized change factor data from
+#'   mod_principal_change_factor_effects_summarised.
+#'
+#' @return plotly object. Interactive waterfall chart.
+#'
+#' @noRd
 mod_principal_change_factor_effects_cf_plot <- function(data) {
   # Reorient data for geom_segment
   data_reoriented <- data |>
@@ -169,6 +195,22 @@ mod_principal_change_factor_effects_cf_plot <- function(data) {
     ggplot2::labs(x = "", y = "")
 }
 
+#' Create individual change factor plot
+#'
+#' @description Generates a bar chart showing individual mitigator contributions
+#'   within a specific change factor category.
+#'
+#' @param data Data frame. Individual change factor data with mitigator_name
+#'   and value columns.
+#' @param change_factor Character. The change factor to plot (e.g.,
+#'   "activity_avoidance").
+#' @param colour Character. Bar color for the plot.
+#' @param title Character. Plot title.
+#' @param x_axis_label Character. Label for the x-axis.
+#'
+#' @return plotly object. Interactive bar chart of individual mitigators.
+#'
+#' @noRd
 mod_principal_change_factor_effects_ind_plot <- function(
   data,
   change_factor,

@@ -37,6 +37,21 @@ mod_principal_detailed_ui <- function(id) {
   )
 }
 
+#' Create principal detailed activity table
+#'
+#' @description Generates a formatted gt table showing detailed activity
+#'   projections by sex and aggregation dimension (age group or treatment
+#'   specialty), with baseline, final year, changes, and bar visualizations.
+#'
+#' @param data Data frame. Detailed activity data with sex, aggregation column,
+#'   baseline, final, change, and change_pcnt columns.
+#' @param aggregation Character. Name of the aggregation dimension
+#'   ("age_group" or "tretspef").
+#' @param final_year Integer. The final year for projections.
+#'
+#' @return gt table object displaying detailed activity grouped by sex.
+#'
+#' @noRd
 mod_principal_detailed_table <- function(data, aggregation, final_year) {
   data |>
     dplyr::mutate(

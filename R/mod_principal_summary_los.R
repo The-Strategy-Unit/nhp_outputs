@@ -36,6 +36,14 @@ mod_principal_summary_los_ui <- function(id) {
   )
 }
 
+#' Get POD lookup for length of stay summary
+#'
+#' @description Creates a lookup table of activity types, POD codes, and
+#'   POD names, including A&E which is handled specially.
+#'
+#' @return Data frame. POD lookup with activity_type, pod, and pod_name columns.
+#'
+#' @noRd
 mod_principal_los_pods <- function() {
   get_activity_type_pod_measure_options() |>
     dplyr::filter(.data$activity_type != "aae") |>
@@ -48,6 +56,19 @@ mod_principal_los_pods <- function() {
     dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
 }
 
+#' Prepare principal length of stay summary data
+#'
+#' @description Extracts and formats length of stay data from results,
+#'   aggregating by POD and length of stay group with baseline and principal
+#'   projections. Relabels POD names for bed days measure.
+#'
+#' @param r List. Results object containing tretspef+los_group element.
+#' @param sites Character vector. Site codes to filter by.
+#' @param measure Character. Measure to display ("admissions" or "beddays").
+#'
+#' @return Data frame. Length of stay summary sorted by POD and LoS group.
+#'
+#' @noRd
 mod_principal_summary_los_data <- function(r, sites, measure) {
   pods <- mod_principal_los_pods()
 
@@ -82,6 +103,18 @@ mod_principal_summary_los_data <- function(r, sites, measure) {
   summary_los[order(summary_los$pod_name, summary_los$los_group), ]
 }
 
+#' Create principal length of stay summary table
+#'
+#' @description Generates a formatted gt table showing length of stay
+#'   projections with baseline, principal, changes, and bar visualizations
+#'   grouped by POD.
+#'
+#' @param data Data frame. Length of stay summary data with pod_name, los_group,
+#'   baseline, principal, change, and change_pcnt columns.
+#'
+#' @return gt table object displaying LoS summary grouped by POD.
+#'
+#' @noRd
 mod_principal_summary_los_table <- function(data) {
   data |>
     dplyr::mutate(

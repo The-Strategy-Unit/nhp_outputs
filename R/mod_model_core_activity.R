@@ -43,6 +43,21 @@ mod_model_core_activity_ui <- function(id) {
   )
 }
 
+#' Create model core activity summary table
+#'
+#' @description Generates a formatted gt table showing model core activity
+#'   with baseline, projection values, changes, and prediction intervals.
+#'   Groups by activity type and POD.
+#'
+#' @param data Data frame. Core activity data with baseline and projection
+#'   columns.
+#' @param value_type Character. Type of projection value to display: "median"
+#'   or "principal". Defaults to "median".
+#'
+#' @return gt table object displaying activity summaries grouped by activity
+#'   type and POD.
+#'
+#' @noRd
 mod_model_core_activity_server_table <- function(
   data,
   value_type = c("median", "principal")
