@@ -21,7 +21,7 @@ set_names <- function(x) {
 
 test_that("ui is created correctly", {
   expect_snapshot(mod_measure_selection_ui("id"))
-  expect_snapshot(mod_measure_selection_ui("id"), 3)
+  expect_snapshot(mod_measure_selection_ui("id"))
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
