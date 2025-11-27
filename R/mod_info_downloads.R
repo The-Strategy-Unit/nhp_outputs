@@ -80,6 +80,17 @@ mod_info_downloads_ui <- function(id) {
   )
 }
 
+#' Create Excel download handler
+#'
+#' @description Generates a download handler function that exports results
+#'   data to Excel format, including metadata, data dictionary, and all
+#'   results tables with appropriate formatting.
+#'
+#' @param data Reactive. Results data containing params and results elements.
+#'
+#' @return Function. Download handler suitable for shiny::downloadHandler.
+#'
+#' @noRd
 mod_info_downloads_download_excel <- function(data) {
   function(file) {
     results_dfs <- data() |>
@@ -147,6 +158,16 @@ mod_info_downloads_download_excel <- function(data) {
   }
 }
 
+#' Create JSON download handler
+#'
+#' @description Generates a download handler function that exports results
+#'   data to JSON format with maximum precision.
+#'
+#' @param data Reactive. Results data to export.
+#'
+#' @return Function. Download handler suitable for shiny::downloadHandler.
+#'
+#' @noRd
 mod_info_downloads_download_json <- function(data) {
   function(file) {
     jsonlite::write_json(
@@ -159,6 +180,20 @@ mod_info_downloads_download_json <- function(data) {
   }
 }
 
+#' Create HTML report download handler
+#'
+#' @description Generates a download handler function that renders an R Markdown
+#'   report to HTML. Supports both parameters and outputs report types.
+#'   Shows notification during rendering.
+#'
+#' @param data Reactive. Results data to include in the report.
+#' @param sites Reactive or NULL. Selected sites for outputs report. Not used
+#'   for parameters report.
+#' @param report_type Character. Type of report: "parameters" or "outputs".
+#'
+#' @return Function. Download handler suitable for shiny::downloadHandler.
+#'
+#' @noRd
 mod_info_downloads_download_report_html <- function(
   data,
   sites = NULL,

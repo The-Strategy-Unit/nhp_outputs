@@ -46,6 +46,19 @@ mod_model_results_distribution_ui <- function(id) {
   )
 }
 
+#' Get data for model results distribution
+#'
+#' @description Retrieves model run distribution data for a selected measure,
+#'   unpacking the measure components and calling get_model_run_distribution.
+#'
+#' @param r List. Results object.
+#' @param selected_measure List. Contains activity_type, pod, and measure
+#'   elements.
+#' @param sites Character vector. Site codes to filter by.
+#'
+#' @return Data frame. Model run distribution data, or NULL if no data.
+#'
+#' @noRd
 mod_model_results_distribution_get_data <- function(
   r,
   selected_measure,
@@ -56,6 +69,18 @@ mod_model_results_distribution_get_data <- function(
   get_model_run_distribution(r, pod, measure, sites)
 }
 
+#' Create beeswarm plot for model results distribution
+#'
+#' @description Generates an interactive beeswarm plot showing the distribution
+#'   of model run projections with baseline and principal projection markers.
+#'
+#' @param data Data frame. Model run distribution data with baseline, principal,
+#'   value, and variant columns.
+#' @param show_origin Logical. Whether to show the origin (baseline) in the plot.
+#'
+#' @return plotly object. Interactive beeswarm plot.
+#'
+#' @noRd
 mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]
@@ -102,6 +127,19 @@ mod_model_results_distribution_beeswarm_plot <- function(data, show_origin) {
     )
 }
 
+#' Create ECDF plot for model results distribution
+#'
+#' @description Generates an interactive empirical cumulative distribution
+#'   function (ECDF) plot showing the probability distribution of model runs
+#'   with baseline and principal projection markers.
+#'
+#' @param data Data frame. Model run distribution data with baseline, principal,
+#'   and value columns.
+#' @param show_origin Logical. Whether to show the origin (baseline) in the plot.
+#'
+#' @return plotly object. Interactive ECDF plot.
+#'
+#' @noRd
 mod_model_results_distribution_ecdf_plot <- function(data, show_origin) {
   b <- data$baseline[[1]]
   p <- data$principal[[1]]

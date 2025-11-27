@@ -1,3 +1,13 @@
+#' Get activity type, POD, and measure options
+#'
+#' @description Reads the pod_measures configuration and transforms it into
+#'   a tibble with activity types, points of delivery (PODs), and their
+#'   associated measures.
+#'
+#' @return Tibble with columns: activity_type, activity_type_name, pod,
+#'   pod_name, and measures.
+#'
+#' @noRd
 get_activity_type_pod_measure_options <- function() {
   get_golem_config("pod_measures") |>
     purrr::map_dfr(
