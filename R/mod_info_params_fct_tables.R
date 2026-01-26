@@ -129,8 +129,8 @@ info_params_table_inequalities <- function(p) {
     purrr::map(\(choice) {
       choice |> unlist() |> sort() |> paste(collapse = ", ")
     }) |>
-    tibble::enframe("Choice", "Selected HRG codes") |>
-    dplyr::mutate(`HRG codes` = unlist(`Selected HRG codes`)) |>
+    tibble::enframe("Option", "HRG codes") |>
+    dplyr::mutate(`HRG codes` = unlist(`HRG codes`)) |>
     gt::gt() |>
     gt_theme()
 }
