@@ -130,7 +130,7 @@ info_params_table_inequalities <- function(p) {
       choice |> unlist() |> sort() |> paste(collapse = ", ")
     }) |>
     tibble::enframe("Option", "HRG codes") |>
-    dplyr::mutate(`HRG codes` = unlist(`HRG codes`)) |>
+    dplyr::mutate("HRG codes" = unlist(.data$`HRG codes`)) |>
     gt::gt() |>
     gt_theme()
 }
