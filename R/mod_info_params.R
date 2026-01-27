@@ -52,6 +52,12 @@ mod_info_params_ui <- function(id) {
       gt::gt_output(ns("params_waiting_list_adjustment"))
     ),
     bs4Dash::box(
+      title = "Inequalities",
+      collapsed = TRUE,
+      width = 12,
+      gt::gt_output(ns("params_inequalities"))
+    ),
+    bs4Dash::box(
       title = "Expatriation",
       collapsed = TRUE,
       width = 12,
@@ -137,6 +143,10 @@ mod_info_params_server <- function(id, selected_data) {
 
     output$params_waiting_list_adjustment <- gt::render_gt({
       info_params_table_waiting_list_adjustment(params_data())
+    })
+
+    output$params_inequalities <- gt::render_gt({
+      info_params_table_inequalities(params_data())
     })
 
     output$params_expat <- gt::render_gt({

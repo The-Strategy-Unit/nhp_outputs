@@ -118,6 +118,23 @@ info_params_table_waiting_list_adjustment <- function(p) {
     gt_theme()
 }
 
+info_params_table_inequalities <- function(p) {
+  inequalities <- p[["inequalities"]]
+
+  shiny::validate(
+    shiny::need(inequalities, "No parameters provided")
+  )
+
+  inequalities |>
+    purrr::map(\(choice) {
+      choice |> unlist() |> sort() |> paste(collapse = ", ")
+    }) |>
+    tibble::enframe("Option", "HRG codes") |>
+    dplyr::mutate("HRG codes" = unlist(.data$`HRG codes`)) |>
+    gt::gt() |>
+    gt_theme()
+}
+
 info_params_table_expat_repat_adjustment <- function(p, type) {
   df <- local({
     x <- p[[type]]

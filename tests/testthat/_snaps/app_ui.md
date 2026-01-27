@@ -13,7 +13,9 @@
                 </a>
               </li>
             </ul>
-            <button id="feedback" type="button" class="btn btn-default action-button" onClick="window.open(&#39;https://example.com/&#39;, &#39;_blank&#39;)">Give feedback</button>
+            <button id="feedback" type="button" class="btn btn-default action-button" onClick="window.open(&#39;https://example.com/&#39;, &#39;_blank&#39;)">
+              <span class="action-label">Give feedback</span>
+            </button>
             <ul class="navbar-nav ml-auto navbar-right">
               <li class="nav-item">
                 <a id="controlbar-toggle" class="nav-link" data-widget="control-sidebar" href="#">
