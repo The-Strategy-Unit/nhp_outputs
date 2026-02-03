@@ -70,9 +70,9 @@
           </div>
           <div class="card-body">
             <div id="id-beeswarm_text" class="shiny-html-output"></div>
-            <div data-spinner-id="spinner-5096125134745c938fcb784237b4fc5f" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-e8d2bea3df321ca29487657b216db973" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-5096125134745c938fcb784237b4fc5f" class="loader">Loading...</div>
+                <div id="spinner-e8d2bea3df321ca29487657b216db973" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-beeswarm" style="width:100%;height:400px;"></div>
             </div>
@@ -87,9 +87,9 @@
           </div>
           <div class="card-body">
             <div id="id-ecdf_text" class="shiny-html-output"></div>
-            <div data-spinner-id="spinner-38f304dc046a4e120f7add4378ad6a45" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-557e7ee33f80720133557e7a5fd9fc4b" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-38f304dc046a4e120f7add4378ad6a45" class="loader">Loading...</div>
+                <div id="spinner-557e7ee33f80720133557e7a5fd9fc4b" class="loader">Loading...</div>
               </div>
               <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-ecdf" style="width:100%;height:400px;"></div>
             </div>
