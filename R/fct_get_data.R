@@ -72,16 +72,24 @@ get_result_sets <- function(
 
 get_results_from_azure <- function(filename) {
   cont <- get_container()
-  tf <- withr::local_tempfile()
-  AzureStor::download_blob(cont, filename, tf)
 
-  readBin(tf, raw(), n = file.size(tf)) |>
-    jsonlite::parse_gzjson_raw(simplifyVector = FALSE) |>
+  AzureStor::download_blob(cont, filename, NULL) |>
+    memDecompress(type = "gzip") |>
+    yyjsonr::read_json_raw(
+      yyjsonr::opts_read_json(
+        obj_of_arrs_to_df = FALSE
+      )
+    ) |>
     parse_results()
 }
 
 get_results_from_local <- function(filename) {
-  jsonlite::read_json(filename, simplifyVector = FALSE) |>
+  filename |>
+    yyjsonr::read_json_file(
+      yyjsonr::opts_read_json(
+        obj_of_arrs_to_df = FALSE
+      )
+    ) |>
     parse_results()
 }
 
@@ -90,13 +98,24 @@ parse_results <- function(r) {
 
   r$results <- purrr::map(
     r$results,
-    purrr::map_dfr,
-    purrr::modify_at,
-    c("model_runs"),
-    purrr::compose(list, as.numeric)
+    tibble::as_tibble
   )
 
+  r$params <- patch_params(r$params)
+
   patch_results(r)
+}
+
+patch_params <- function(r) {
+  if (is.list(r)) {
+    return(purrr::map(r, patch_params))
+  }
+
+  if (is.numeric(r) && length(r) == 2) {
+    return(as.list(r))
+  }
+
+  r
 }
 
 patch_principal <- function(results, name) {
@@ -199,9 +218,8 @@ patch_results <- function(r) {
 }
 
 get_user_allowed_datasets <- function(groups) {
-  p <- jsonlite::read_json(
-    app_sys("app", "data", "providers.json"),
-    simplifyVector = TRUE
+  p <- yyjsonr::read_json_file(
+    app_sys("app", "data", "providers.json")
   )
 
   if (!(is.null(groups) || any(c("nhp_devs", "nhp_power_users") %in% groups))) {

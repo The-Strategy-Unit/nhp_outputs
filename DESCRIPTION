@@ -29,7 +29,6 @@ Imports:
     gt,
     htmltools,
     httr,
-    jsonlite,
     lubridate,
     markdown,
     openssl,
@@ -49,6 +48,7 @@ Imports:
     uuid,
     withr,
     writexl,
+    yyjsonr,
     zeallot
 Suggests:
     covr,

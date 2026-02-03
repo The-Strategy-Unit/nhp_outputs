@@ -93,7 +93,7 @@ get_mitigator_lookup <- function(
   mitigator_lookup = app_sys("app", "data", "mitigators.json")
 ) {
   mitigator_lookup |>
-    jsonlite::read_json(simplifyVector = TRUE) |>
+    yyjsonr::read_json_file() |>
     purrr::simplify() |>
     tibble::enframe("strategy", "mitigator_name") |>
     dplyr::mutate(

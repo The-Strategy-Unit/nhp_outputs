@@ -417,7 +417,7 @@ expand_reasons_to_rmd <- function(reasons_list) {
   mitigators_json_path <- app_sys("app", "data", "mitigators.json")
 
   lookup <- c(
-    jsonlite::read_json(mitigators_json_path) |> unlist(),
+    yyjsonr::read_json_file(mitigators_json_path) |> unlist(),
     "baseline_adjustment" = "Baseline adjustment",
     "demographic_factors" = "Demographic factors",
     "waiting_list_adjustment" = "Waiting list adjustment",
