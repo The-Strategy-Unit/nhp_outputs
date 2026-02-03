@@ -72,12 +72,17 @@ get_result_sets <- function(
 
 get_results_from_azure <- function(filename) {
   cont <- get_container()
-  tf <- withr::local_tempfile()
-  AzureStor::download_blob(cont, filename, tf)
 
-  readBin(tf, raw(), n = file.size(tf)) |>
-    jsonlite::parse_gzjson_raw(simplifyVector = FALSE) |>
-    parse_results()
+  r <- AzureStor::download_blob(cont, filename, NULL) |>
+    jsonlite::parse_gzjson_raw(simplifyVector = FALSE)
+
+  # the raw data can linger in memory, make sure to free when this function exits
+  withr::defer({
+    rm(r)
+    gc()
+  })
+
+  parse_results(r)
 }
 
 get_results_from_local <- function(filename) {

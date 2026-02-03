@@ -123,18 +123,14 @@ test_that("get_result_sets returns files", {
 
 test_that("get_results_from_azure returns data from azure", {
   # arrange
-  m1 <- mock()
-  m2 <- mock("binary_data")
-  m3 <- mock("json_data")
-  m4 <- mock("parsed_data")
+  m1 <- mock("binary_data")
+  m2 <- mock("json_data")
+  m3 <- mock("parsed_data")
 
   stub(get_results_from_azure, "get_container", "container")
-  stub(get_results_from_azure, "withr::local_tempfile", "tf")
   stub(get_results_from_azure, "AzureStor::download_blob", m1)
-  stub(get_results_from_azure, "readBin", m2)
-  stub(get_results_from_azure, "jsonlite::parse_gzjson_raw", m3)
-  stub(get_results_from_azure, "file.size", 10)
-  stub(get_results_from_azure, "parse_results", m4)
+  stub(get_results_from_azure, "jsonlite::parse_gzjson_raw", m2)
+  stub(get_results_from_azure, "parse_results", m3)
 
   # act
   actual <- get_results_from_azure("file")
@@ -143,12 +139,10 @@ test_that("get_results_from_azure returns data from azure", {
   expect_called(m1, 1)
   expect_called(m2, 1)
   expect_called(m3, 1)
-  expect_called(m4, 1)
 
-  expect_args(m1, 1, "container", "file", "tf")
-  expect_args(m2, 1, "tf", raw(), 10)
-  expect_args(m3, 1, "binary_data", simplifyVector = FALSE)
-  expect_args(m4, 1, "json_data")
+  expect_args(m1, 1, "container", "file", NULL)
+  expect_args(m2, 1, "binary_data", simplifyVector = FALSE)
+  expect_args(m3, 1, "json_data")
 
   expect_equal(actual, "parsed_data")
 })
