@@ -123,18 +123,19 @@ test_that("get_result_sets returns files", {
 
 test_that("get_results_from_azure returns data from azure", {
   # arrange
-  m1 <- mock()
-  m2 <- mock("binary_data")
+  m1 <- mock("binary_data")
+  m2 <- mock("decompressed_data")
   m3 <- mock("json_data")
-  m4 <- mock("parsed_data")
+  m4 <- mock("json_options")
+  m5 <- mock("parsed_data")
 
   stub(get_results_from_azure, "get_container", "container")
   stub(get_results_from_azure, "withr::local_tempfile", "tf")
   stub(get_results_from_azure, "AzureStor::download_blob", m1)
-  stub(get_results_from_azure, "readBin", m2)
-  stub(get_results_from_azure, "jsonlite::parse_gzjson_raw", m3)
-  stub(get_results_from_azure, "file.size", 10)
-  stub(get_results_from_azure, "parse_results", m4)
+  stub(get_results_from_azure, "memDecompress", m2)
+  stub(get_results_from_azure, "yyjsonr::read_json_raw", m3)
+  stub(get_results_from_azure, "yyjsonr::opts_read_json", m4)
+  stub(get_results_from_azure, "parse_results", m5)
 
   # act
   actual <- get_results_from_azure("file")
@@ -144,11 +145,13 @@ test_that("get_results_from_azure returns data from azure", {
   expect_called(m2, 1)
   expect_called(m3, 1)
   expect_called(m4, 1)
+  expect_called(m5, 1)
 
-  expect_args(m1, 1, "container", "file", "tf")
-  expect_args(m2, 1, "tf", raw(), 10)
-  expect_args(m3, 1, "binary_data", simplifyVector = FALSE)
-  expect_args(m4, 1, "json_data")
+  expect_args(m1, 1, "container", "file", NULL)
+  expect_args(m2, 1, "binary_data", type = "gzip")
+  expect_args(m3, 1, "decompressed_data", "json_options")
+  expect_args(m4, 1, "obj_of_arrs_to_df" = FALSE)
+  expect_args(m5, 1, "json_data")
 
   expect_equal(actual, "parsed_data")
 })
@@ -156,65 +159,48 @@ test_that("get_results_from_azure returns data from azure", {
 test_that("get_results_from_local returns data from local storage", {
   # arrange
   m1 <- mock("json_data")
-  m2 <- mock("parsed_data")
+  m2 <- mock("json_options")
+  m3 <- mock("parsed_data")
 
-  stub(get_results_from_local, "jsonlite::read_json", m1)
-  stub(get_results_from_local, "parse_results", m2)
-
+  stub(get_results_from_local, "yyjsonr::read_json_file", m1)
+  stub(get_results_from_local, "yyjsonr::opts_read_json", m2)
+  stub(get_results_from_local, "parse_results", m3)
   # act
   actual <- get_results_from_local("file")
 
   # assert
   expect_called(m1, 1)
   expect_called(m2, 1)
+  expect_called(m3, 1)
 
-  expect_args(m1, 1, "file", simplifyVector = FALSE)
-  expect_args(m2, 1, "json_data")
+  expect_args(m1, 1, "file", "json_options")
+  expect_args(m2, 1, "obj_of_arrs_to_df" = FALSE)
+  expect_args(m3, 1, "json_data")
 
   expect_equal(actual, "parsed_data")
 })
 
 test_that("parse_results converts results correctly", {
-  m <- mock("patched_results")
-  stub(parse_results, "patch_results", m)
+  m1 <- mock("patched_results")
+  m2 <- mock("patched_params")
+  stub(parse_results, "patch_results", m1)
+  stub(parse_results, "patch_params", m2)
 
   data <- list(
+    params = list(param1 = c(1, 2), param2 = list(param3 = c(3, 4))),
     population_variants = list("a", "b"),
     results = list(
-      "a" = list(
-        list(
-          x = 1,
-          model_runs = list(1, 2, 3)
-        ),
-        list(
-          x = 2,
-          model_runs = list(2, 3, 4)
-        )
-      ),
-      b = list(
-        list(
-          x = 3,
-          model_runs = list(3, 4, 5)
-        ),
-        list(
-          x = 4,
-          model_runs = list(4, 5, 6)
-        )
-      )
+      "a" = data.frame(x = c(1, 2)),
+      "b" = data.frame(x = c(3, 4))
     )
   )
 
   expected <- list(
+    params = "patched_params",
     population_variants = c("a", "b"),
     results = list(
-      "a" = tibble::tibble(
-        x = 1:2,
-        model_runs = c(list(1:3), list(2:4))
-      ),
-      "b" = tibble::tibble(
-        x = 3:4,
-        model_runs = c(list(3:5), list(4:6))
-      )
+      "a" = tibble::tibble(x = 1:2),
+      "b" = tibble::tibble(x = 3:4)
     )
   )
 
@@ -222,10 +208,30 @@ test_that("parse_results converts results correctly", {
   actual <- parse_results(data)
 
   # assert
-  expect_called(m, 1)
-  expect_args(m, 1, expected)
+  expect_called(m1, 1)
+  expect_args(m1, 1, expected)
+
+  expect_called(m2, 1)
+  expect_args(m2, 1, data$params)
 
   expect_equal(actual, "patched_results")
+})
+
+test_that("patch_params returns correct values", {
+  # arrange
+  params <- list(
+    param1 = c(1, 2),
+    param2 = list(
+      param3 = c(3, 4)
+    )
+  )
+  expected <- list(param1 = list(1, 2), param2 = list(param3 = list(3, 4)))
+
+  # act
+  actual <- patch_params(params)
+
+  # assert
+  expect_equal(actual, expected)
 })
 
 test_that("patch_principal returns correct values (not step_counts)", {
