@@ -3,11 +3,11 @@ library(mockery)
 
 get_sample_params <- \() {
   list(
-    params = jsonlite::read_json(
-      app_sys("sample_params.json"),
-      simplifyVector = FALSE
+    params = yyjsonr::read_json_file(
+      app_sys("sample_params.json")
     )
   ) |>
+    patch_params() |>
     get_params()
 }
 

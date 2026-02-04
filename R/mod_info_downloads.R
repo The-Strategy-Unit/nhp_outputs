@@ -137,9 +137,8 @@ mod_info_downloads_download_excel <- function(data) {
 
     params_df <- params_list |> unlist() |> tibble::enframe()
 
-    data_dictionary <- jsonlite::read_json(
-      app_sys("app", "data", "excel_dictionary.json"),
-      simplifyVector = TRUE
+    data_dictionary <- yyjsonr::read_json_file(
+      app_sys("app", "data", "excel_dictionary.json")
     )
 
     c(list(metadata = params_df), data_dictionary, results_dfs) |>
@@ -148,6 +147,8 @@ mod_info_downloads_download_excel <- function(data) {
 }
 
 mod_info_downloads_download_json <- function(data) {
+  # TODO: should we just save the json file to disk when we download it, and
+  # avoid re-serializing it here?
   function(file) {
     jsonlite::write_json(
       data(),

@@ -7,14 +7,14 @@ info_params_fix_data <- function(df) {
     )
 
   specs <- app_sys("app", "data", "tx-lookup.json") |>
-    jsonlite::read_json(simplifyVector = TRUE) |>
+    yyjsonr::read_json_file() |>
     dplyr::select(
       "specialty" = "Code",
       "specialty_name" = "Description"
     )
 
   strategies <- app_sys("app", "data", "mitigators.json") |>
-    jsonlite::read_json(simplifyVector = TRUE) |>
+    yyjsonr::read_json_file() |>
     unlist() |>
     tibble::enframe("strategy", "mitigator_name")
 

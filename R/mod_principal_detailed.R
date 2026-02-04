@@ -81,9 +81,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
-    tretspef_lookup <- jsonlite::read_json(
-      app_sys("app", "data", "tx-lookup.json"),
-      simplifyVector = TRUE
+    tretspef_lookup <- yyjsonr::read_json_file(
+      app_sys("app", "data", "tx-lookup.json")
     ) |>
       dplyr::mutate(
         dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),

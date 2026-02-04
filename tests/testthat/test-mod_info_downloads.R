@@ -14,9 +14,8 @@ set_names <- function(x) {
   purrr::set_names(x[[1]], x[[2]])
 }
 
-data_dictionary <- jsonlite::read_json(
-  app_sys("app", "data", "excel_dictionary.json"),
-  simplifyVector = TRUE
+data_dictionary <- yyjsonr::read_json_file(
+  app_sys("app", "data", "excel_dictionary.json")
 )
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

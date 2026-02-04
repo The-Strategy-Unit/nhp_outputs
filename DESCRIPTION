@@ -49,6 +49,7 @@ Imports:
     uuid,
     withr,
     writexl,
+    yyjsonr,
     zeallot
 Suggests:
     covr,

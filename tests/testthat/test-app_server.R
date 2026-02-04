@@ -266,7 +266,7 @@ test_that("it updates the site selection drop down", {
   stub(app_server, "mod_info_downloads_server", "mod_info_downloads_server")
   stub(app_server, "mod_info_params_server", "mod_info_params_server")
 
-  stub(app_server, "jsonlite::read_json", list("a" = "A", "b" = "B"))
+  stub(app_server, "yyjsonr::read_json_file", list("a" = "A", "b" = "B"))
   stub(app_server, "shiny::updateSelectInput", m)
 
   session <- MockShinySession$new()

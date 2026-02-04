@@ -224,7 +224,7 @@ mod_principal_change_factor_effects_server <- function(
       at <- shiny::req(input$activity_type)
 
       mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
-        jsonlite::read_json(simplifyVector = TRUE) |>
+        yyjsonr::read_json_file() |>
         purrr::simplify() |>
         tibble::enframe("strategy", "mitigator_name")
 
