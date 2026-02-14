@@ -147,12 +147,13 @@ mod_principal_summary_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     summary_data <- shiny::reactive({
       selected_data() |>
-        mod_principal_summary_data(selected_site())
+        shim_default() |>
+        reskit::compile_principal_pod_data(sites = selected_site())
     })
 
     output$summary_table <- gt::render_gt({
       summary_data() |>
-        mod_principal_summary_table()
+        reskit::make_principal_pod_table()
     })
   })
 }
