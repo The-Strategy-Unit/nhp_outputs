@@ -59,6 +59,7 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     utils,
+<<<<<<< HEAD
     watchr (>= 0.0.0.9000),
     withr
 Remotes:
@@ -66,6 +67,13 @@ Remotes:
     github::tomjemmett/watchr,
     github::the-strategy-unit/azkit,
     reskit=github::The-Strategy-Unit/nhp_reskit
+=======
+    watchr (>= 0.0.0.9000)
+Remotes: 
+    github::ManuelHentschel/vscDebugger,
+    github::tomjemmett/watchr,
+    The-Strategy-Unit/nhp_reskit
+>>>>>>> 15aa704 (:heavy_plus_sign: Add reskit as a dependency)
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
