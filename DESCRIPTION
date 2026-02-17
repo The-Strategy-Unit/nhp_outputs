@@ -35,6 +35,7 @@ Imports:
     openssl,
     plotly,
     purrr,
+    reskit (>= 0.1.99),
     rlang,
     rmarkdown,
     scales,
@@ -62,9 +63,10 @@ Suggests:
     usethis,
     utils,
     watchr (>= 0.0.0.9000)
-Remotes:
+Remotes: 
     github::ManuelHentschel/vscDebugger,
-    github::tomjemmett/watchr
+    github::tomjemmett/watchr,
+    The-Strategy-Unit/nhp_reskit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
