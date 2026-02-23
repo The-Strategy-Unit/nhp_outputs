@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 URL: https://github.com/The-Strategy-Unit/nhp_model
 BugReports: https://github.com/The-Strategy-Unit/nhp_model/issues
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.5.0)
 Imports: 
     AzureAuth,
     AzureStor,
