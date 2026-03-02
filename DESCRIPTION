@@ -66,11 +66,6 @@ Remotes:
     github::tomjemmett/watchr,
     github::the-strategy-unit/azkit,
     reskit=github::The-Strategy-Unit/nhp_reskit,
-    watchr (>= 0.0.0.9000)
-Remotes: 
-    github::ManuelHentschel/vscDebugger,
-    github::tomjemmett/watchr,
-    reskit=github::The-Strategy-Unit/nhp_reskit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
