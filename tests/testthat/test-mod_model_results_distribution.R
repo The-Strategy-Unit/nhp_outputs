@@ -23,7 +23,18 @@ model_run_distribution_expected <- tibble::tribble(
 
 test_that("ui is created correctly", {
   set.seed(123)
-  expect_snapshot(mod_model_results_distribution_ui("id"))
+  expect_snapshot(
+    mod_model_results_distribution_ui("id"),
+    transform = \(lines) {
+      # Mask both id and data-spinner-id attributes
+      lines <- gsub("id=\"spinner-[0-9a-f]+\"", "id=\"spinner-<id>\"", lines)
+      gsub(
+        "data-spinner-id=\"spinner-[0-9a-f]+\"",
+        "data-spinner-id=\"spinner-<id>\"",
+        lines
+      )
+    }
+  )
 })
 
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

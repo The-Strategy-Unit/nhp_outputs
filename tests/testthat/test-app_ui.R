@@ -41,7 +41,15 @@ test_that("ui is created correctly", {
     withr::with_envvar(
       c("FEEDBACK_FORM_URL" = "https://example.com/"),
       app_ui()
-    )
+    ),
+    transform = \(lines) {
+      # Normalise whitespace around <button> and <span>
+      gsub(
+        "\\s*<span class=\"action-label\">(.*?)</span>\\s*",
+        "<span class=\"action-label\">\\1</span>",
+        lines
+      )
+    }
   )
 
   expect_called(m, 8)
