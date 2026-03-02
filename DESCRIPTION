@@ -66,7 +66,7 @@ Suggests:
 Remotes: 
     github::ManuelHentschel/vscDebugger,
     github::tomjemmett/watchr,
-    github::The-Strategy-Unit/nhp_reskit
+    reskit=github::The-Strategy-Unit/nhp_reskit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
