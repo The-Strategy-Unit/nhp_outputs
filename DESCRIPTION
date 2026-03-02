@@ -48,7 +48,6 @@ Imports:
     tidyr,
     tidyselect,
     uuid,
-    withr,
     writexl,
     yyjsonr,
     zeallot
@@ -62,7 +61,8 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     utils,
-    watchr (>= 0.0.0.9000)
+    watchr (>= 0.0.0.9000),
+    withr
 Remotes: 
     github::ManuelHentschel/vscDebugger,
     github::tomjemmett/watchr,
