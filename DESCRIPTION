@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 URL: https://github.com/The-Strategy-Unit/nhp_outputs
 BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.5.0)
 Imports: 
     azkit,
     AzureStor,
@@ -34,6 +34,7 @@ Imports:
     markdown,
     plotly,
     purrr,
+    reskit (>= 0.4.0),
     rlang,
     rmarkdown,
     scales,
@@ -64,7 +65,8 @@ Suggests:
 Remotes:
     github::ManuelHentschel/vscDebugger,
     github::tomjemmett/watchr,
-    github::the-strategy-unit/azkit
+    github::the-strategy-unit/azkit,
+    reskit=github::The-Strategy-Unit/nhp_reskit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
