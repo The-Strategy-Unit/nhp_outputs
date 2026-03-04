@@ -1,5 +1,5 @@
 Package: outputs
-Title: NHP Model Outputs
+Title: NHP Model Outputs is fab
 Version: 4.4.1
 Authors@R: c(
     person("Tom", "Jemmett", , "thomas.jemmett@nhs.net", role = c("cre", "aut")),
