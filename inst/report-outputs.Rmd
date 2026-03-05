@@ -633,12 +633,13 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 ```{r}
 #| label: dop-activity-summary
 
-atpmo <- get_activity_type_pod_measure_options()
-
 params$r |>
-  get_model_core_activity(params$sites) |>
-  dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |>
-  mod_model_core_activity_server_table() |>
+  shim_default() |>
+  reskit::compile_distribution_summary_data(
+    value_type = "median",
+    sites = params$sites
+  ) |>
+  reskit::make_distribution_summary_table() |>
   gt::tab_options(table.width = gt::pct(100))
 ```
 
