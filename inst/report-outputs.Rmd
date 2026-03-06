@@ -634,7 +634,7 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 #| label: dop-activity-summary
 
 params$r |>
-  shim_default() |>
+  reskit::shim_results() |>
   reskit::compile_distribution_summary_data(
     value_type = "median",
     sites = params$sites
