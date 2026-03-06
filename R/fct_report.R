@@ -271,7 +271,7 @@ plot_activity_distributions <- function(
   measure
 ) {
   aggregated_data <- data |>
-    shim_default() |>
+    reskit::shim_results() |>
     reskit::compile_distribution_plot_data(
       measure = measure,
       activity_type = activity_type,

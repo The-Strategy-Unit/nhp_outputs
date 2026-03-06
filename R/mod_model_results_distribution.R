@@ -59,7 +59,7 @@ mod_model_results_distribution_server <- function(
 
     aggregated_data <- shiny::reactive({
       selected_data() |>
-        shim_default() |>
+        reskit::shim_results() |>
         reskit::compile_distribution_plot_data(
           measure = selected_measure()$measure,
           activity_type = selected_measure()$activity_type,
