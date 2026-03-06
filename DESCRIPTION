@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 URL: https://github.com/The-Strategy-Unit/nhp_model
 BugReports: https://github.com/The-Strategy-Unit/nhp_model/issues
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.5.0)
 Imports: 
     AzureAuth,
     AzureStor,
@@ -22,7 +22,6 @@ Imports:
     config (>= 0.3.1),
     dplyr,
     forcats,
-    ggbeeswarm,
     ggplot2,
     glue,
     golem (>= 0.3.1),
@@ -35,6 +34,7 @@ Imports:
     openssl,
     plotly,
     purrr,
+    reskit (>= 0.4.0),
     rlang,
     rmarkdown,
     scales,
@@ -47,7 +47,6 @@ Imports:
     tidyr,
     tidyselect,
     uuid,
-    withr,
     writexl,
     yyjsonr,
     zeallot
@@ -61,10 +60,12 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     utils,
-    watchr (>= 0.0.0.9000)
+    watchr (>= 0.0.0.9000),
+    withr
 Remotes:
     github::ManuelHentschel/vscDebugger,
-    github::tomjemmett/watchr
+    github::tomjemmett/watchr,
+    reskit=github::The-Strategy-Unit/nhp_reskit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
