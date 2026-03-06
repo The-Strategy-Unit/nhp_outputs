@@ -74,7 +74,7 @@ Bed-availability data is not available at site level. See [the model project inf
 #| label: pp-summary
 
 params$r |>
-  shim_default() |>
+  reskit::shim_results() |>
   reskit::compile_principal_pod_data(sites = params$sites) |>
   reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
