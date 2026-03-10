@@ -656,12 +656,7 @@ In 'S-curve' plots (showing empirical cumulative distribution function), the red
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
 atpmo_simplified <- get_activity_type_pod_measure_options() |>
-  dplyr::select("activity_type", "pod", "measure" = "measures") |>
-  dplyr::mutate(
-    activity_type = dplyr::case_match(
-      activity_type, "ip" ~ "inpatients", "op" ~ "outpatients", "aae" ~ "aae"
-    )
-  )
+  dplyr::select("activity_type", "pod", "measure" = "measures") 
 
 activity_distribution_table_names <- atpmo_simplified |>
   dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>

@@ -270,20 +270,24 @@ plot_activity_distributions <- function(
   pod,
   measure
 ) {
-  selected_measure <- c(activity_type, pod, measure)
-
   aggregated_data <- data |>
-    mod_model_results_distribution_get_data(selected_measure, sites) |>
+    reskit::shim_results() |>
+    reskit::compile_distribution_plot_data(
+      measure = measure,
+      activity_type = activity_type,
+      pods = pod,
+      sites = sites
+    ) |>
     require_rows()
 
-  beeswarm_plot <- mod_model_results_distribution_beeswarm_plot(
+  beeswarm_plot <- reskit::make_beeswarm_distrib_plot(
     aggregated_data,
-    show_origin = FALSE
+    show_zero = FALSE
   )
 
-  ecdf_plot <- mod_model_results_distribution_ecdf_plot(
+  ecdf_plot <- reskit::make_cumulative_distrib_plot(
     aggregated_data,
-    show_origin = FALSE
+    show_zero = FALSE
   )
 
   dplyr::lst(beeswarm_plot, ecdf_plot)
