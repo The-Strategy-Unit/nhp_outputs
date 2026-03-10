@@ -34,7 +34,7 @@ Imports:
     openssl,
     plotly,
     purrr,
-    reskit (>= 0.4.0),
+    reskit (>= 0.4.1),
     rlang,
     rmarkdown,
     scales,
