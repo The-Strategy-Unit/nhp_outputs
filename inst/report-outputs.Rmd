@@ -106,44 +106,19 @@ The results should be regarded as rough, high-level estimates of the number of r
 
 ```{r}
 #| label: pp-impact-of-changes-setup
-
-mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
-  yyjsonr::read_json_file() |>
-  purrr::simplify() |>
-  tibble::enframe("strategy", "mitigator_name")
-
-possibly_prep_principal_change_factors <-
+#| 
+possibly_compile_change_factor_data <-
   purrr::possibly(
-    prep_principal_change_factors,
+    reskit::compile_change_factor_data,
     "Insufficient data"
   )
 
-pods <- get_activity_type_pod_measure_options() |>
-  dplyr::distinct(activity_type, pod)
+possibly_compile_indiv_change_factor_data <-
+  purrr::possibly(
+    reskit::compile_indiv_change_factor_data,
+    "Insufficient data"
+  )
 
-ip_pcf <- possibly_prep_principal_change_factors(
-  data = params$r,
-  sites = params$sites,
-  mitigators = mitigator_lookup,
-  at = "ip",
-  pods = pods |> dplyr::filter(activity_type == "ip") |> dplyr::pull(pod)
-)
-
-op_pcf <- possibly_prep_principal_change_factors(
-  data = params$r,
-  sites = params$sites,
-  mitigators = mitigator_lookup,
-  at = "op",
-  pods = pods |> dplyr::filter(activity_type == "op") |> dplyr::pull(pod)
-)
-
-aae_pcf <- possibly_prep_principal_change_factors(
-  data = params$r,
-  sites = params$sites,
-  mitigators = mitigator_lookup,
-  at = "aae",
-  pods = pods |> dplyr::filter(activity_type == "aae") |> dplyr::pull(pod)
-)
 ```
 
 ### Inpatients
@@ -153,7 +128,26 @@ aae_pcf <- possibly_prep_principal_change_factors(
 ```{r}
 #| label: pp-impact-of-changes-ip-bed-days
 
-plot_impact_and_individual_change(ip_pcf, "beddays") |> purrr::walk(print)
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_change_factor_data(
+          measure = "beddays",
+          activity_type = "ip",
+          sites = params$sites,
+        ) |>
+        reskit::make_overall_cf_plot()
+
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_indiv_change_factor_data(
+          measure = "beddays",
+          activity_type = "ip",
+          sites = params$sites,
+          sort_by = "value"
+        ) |>
+        reskit::make_individual_cf_plot(
+          x_axis_label = snakecase::to_title_case("beddays")
+        )
 ```
 
 #### Admissions
@@ -161,7 +155,26 @@ plot_impact_and_individual_change(ip_pcf, "beddays") |> purrr::walk(print)
 ```{r}
 #| label: pp-impact-of-changes-ip-admissions
 
-plot_impact_and_individual_change(ip_pcf, "admissions") |> purrr::walk(print)
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_change_factor_data(
+          measure = "admissions",
+          activity_type = "ip",
+          sites = params$sites,
+        ) |>
+        reskit::make_overall_cf_plot()
+
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_indiv_change_factor_data(
+          measure = "admissions",
+          activity_type = "ip",
+          sites = params$sites,
+          sort_by = "value"
+        ) |>
+        reskit::make_individual_cf_plot(
+          x_axis_label = snakecase::to_title_case("admissions")
+        )
 ```
 
 ### Outpatients
@@ -171,7 +184,27 @@ plot_impact_and_individual_change(ip_pcf, "admissions") |> purrr::walk(print)
 ```{r}
 #| label: pp-impact-of-changes-op-attendances
 
-plot_impact_and_individual_change(op_pcf, "attendances") |> purrr::walk(print)
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_change_factor_data(
+          measure = "attendances",
+          activity_type = "op",
+          sites = params$sites,
+        ) |>
+        reskit::make_overall_cf_plot()
+
+
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_indiv_change_factor_data(
+          measure = "attendances",
+          activity_type = "op",
+          sites = params$sites,
+          sort_by = "value"
+        ) |>
+        reskit::make_individual_cf_plot(
+          x_axis_label = snakecase::to_title_case("attendances")
+        )
 ```
 
 #### Tele-attendances
@@ -179,8 +212,27 @@ plot_impact_and_individual_change(op_pcf, "attendances") |> purrr::walk(print)
 ```{r}
 #| label: pp-impact-of-changes-op-tele-attendances
 
-plot_impact_and_individual_change(op_pcf, "tele_attendances") |>
-  purrr::walk(print)
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_change_factor_data(
+          measure = "tele_attendances",
+          activity_type = "op",
+          sites = params$sites,
+        ) |>
+        reskit::make_overall_cf_plot()
+
+
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_indiv_change_factor_data(
+          measure = "tele_attendances",
+          activity_type = "op",
+          sites = params$sites,
+          sort_by = "value"
+        ) |>
+        reskit::make_individual_cf_plot(
+          x_axis_label = snakecase::to_title_case("tele_attendances")
+        )
 ```
 
 ### A&E
@@ -190,7 +242,27 @@ plot_impact_and_individual_change(op_pcf, "tele_attendances") |>
 ```{r}
 #| label: pp-impact-of-changes-aae-arrivals
 
-plot_impact_and_individual_change(aae_pcf, "arrivals") |> purrr::walk(print)
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_change_factor_data(
+          measure = "arrivals",
+          activity_type = "aae",
+          sites = params$sites,
+        ) |>
+        reskit::make_overall_cf_plot()
+
+
+params$r |>
+        reskit::shim_results() |>
+        possibly_compile_indiv_change_factor_data(
+          measure = "arrivals",
+          activity_type = "aae",
+          sites = params$sites,
+          sort_by = "value"
+        ) |>
+        reskit::make_individual_cf_plot(
+          x_axis_label = snakecase::to_title_case("arrivals")
+        )
 ```
 
 ## Activity in detail
