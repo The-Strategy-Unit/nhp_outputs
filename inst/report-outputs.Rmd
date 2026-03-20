@@ -115,7 +115,7 @@ The results should be regarded as rough, high-level estimates of the number of r
 
 ```{r}
 #| label: pp-impact-of-changes-setup
-#| 
+#|
 possibly_compile_change_factor_data <-
   purrr::possibly(
     reskit::compile_change_factor_data,
@@ -127,7 +127,6 @@ possibly_compile_indiv_change_factor_data <-
     reskit::compile_indiv_change_factor_data,
     "Insufficient data"
   )
-
 ```
 
 ### Inpatients
@@ -138,25 +137,25 @@ possibly_compile_indiv_change_factor_data <-
 #| label: pp-impact-of-changes-ip-bed-days
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_change_factor_data(
-          measure = "beddays",
-          activity_type = "ip",
-          sites = params$sites,
-        ) |>
-        reskit::make_overall_cf_plot()
+  reskit::shim_results() |>
+  possibly_compile_change_factor_data(
+    measure = "beddays",
+    activity_type = "ip",
+    sites = params$sites,
+  ) |>
+  reskit::make_overall_cf_plot()
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_indiv_change_factor_data(
-          measure = "beddays",
-          activity_type = "ip",
-          sites = params$sites,
-          sort_by = "value"
-        ) |>
-        reskit::make_individual_cf_plot(
-          x_axis_label = snakecase::to_title_case("beddays")
-        )
+  reskit::shim_results() |>
+  possibly_compile_indiv_change_factor_data(
+    measure = "beddays",
+    activity_type = "ip",
+    sites = params$sites,
+    sort_by = "value"
+  ) |>
+  reskit::make_individual_cf_plot(
+    x_axis_label = snakecase::to_title_case("beddays")
+  )
 ```
 
 #### Admissions
@@ -165,25 +164,25 @@ params$r |>
 #| label: pp-impact-of-changes-ip-admissions
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_change_factor_data(
-          measure = "admissions",
-          activity_type = "ip",
-          sites = params$sites,
-        ) |>
-        reskit::make_overall_cf_plot()
+  reskit::shim_results() |>
+  possibly_compile_change_factor_data(
+    measure = "admissions",
+    activity_type = "ip",
+    sites = params$sites,
+  ) |>
+  reskit::make_overall_cf_plot()
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_indiv_change_factor_data(
-          measure = "admissions",
-          activity_type = "ip",
-          sites = params$sites,
-          sort_by = "value"
-        ) |>
-        reskit::make_individual_cf_plot(
-          x_axis_label = snakecase::to_title_case("admissions")
-        )
+  reskit::shim_results() |>
+  possibly_compile_indiv_change_factor_data(
+    measure = "admissions",
+    activity_type = "ip",
+    sites = params$sites,
+    sort_by = "value"
+  ) |>
+  reskit::make_individual_cf_plot(
+    x_axis_label = snakecase::to_title_case("admissions")
+  )
 ```
 
 ### Outpatients
@@ -194,26 +193,26 @@ params$r |>
 #| label: pp-impact-of-changes-op-attendances
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_change_factor_data(
-          measure = "attendances",
-          activity_type = "op",
-          sites = params$sites,
-        ) |>
-        reskit::make_overall_cf_plot()
+  reskit::shim_results() |>
+  possibly_compile_change_factor_data(
+    measure = "attendances",
+    activity_type = "op",
+    sites = params$sites,
+  ) |>
+  reskit::make_overall_cf_plot()
 
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_indiv_change_factor_data(
-          measure = "attendances",
-          activity_type = "op",
-          sites = params$sites,
-          sort_by = "value"
-        ) |>
-        reskit::make_individual_cf_plot(
-          x_axis_label = snakecase::to_title_case("attendances")
-        )
+  reskit::shim_results() |>
+  possibly_compile_indiv_change_factor_data(
+    measure = "attendances",
+    activity_type = "op",
+    sites = params$sites,
+    sort_by = "value"
+  ) |>
+  reskit::make_individual_cf_plot(
+    x_axis_label = snakecase::to_title_case("attendances")
+  )
 ```
 
 #### Tele-attendances
@@ -222,26 +221,26 @@ params$r |>
 #| label: pp-impact-of-changes-op-tele-attendances
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_change_factor_data(
-          measure = "tele_attendances",
-          activity_type = "op",
-          sites = params$sites,
-        ) |>
-        reskit::make_overall_cf_plot()
+  reskit::shim_results() |>
+  possibly_compile_change_factor_data(
+    measure = "tele_attendances",
+    activity_type = "op",
+    sites = params$sites,
+  ) |>
+  reskit::make_overall_cf_plot()
 
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_indiv_change_factor_data(
-          measure = "tele_attendances",
-          activity_type = "op",
-          sites = params$sites,
-          sort_by = "value"
-        ) |>
-        reskit::make_individual_cf_plot(
-          x_axis_label = snakecase::to_title_case("tele_attendances")
-        )
+  reskit::shim_results() |>
+  possibly_compile_indiv_change_factor_data(
+    measure = "tele_attendances",
+    activity_type = "op",
+    sites = params$sites,
+    sort_by = "value"
+  ) |>
+  reskit::make_individual_cf_plot(
+    x_axis_label = snakecase::to_title_case("tele_attendances")
+  )
 ```
 
 ### A&E
@@ -252,26 +251,26 @@ params$r |>
 #| label: pp-impact-of-changes-aae-arrivals
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_change_factor_data(
-          measure = "arrivals",
-          activity_type = "aae",
-          sites = params$sites,
-        ) |>
-        reskit::make_overall_cf_plot()
+  reskit::shim_results() |>
+  possibly_compile_change_factor_data(
+    measure = "arrivals",
+    activity_type = "aae",
+    sites = params$sites,
+  ) |>
+  reskit::make_overall_cf_plot()
 
 
 params$r |>
-        reskit::shim_results() |>
-        possibly_compile_indiv_change_factor_data(
-          measure = "arrivals",
-          activity_type = "aae",
-          sites = params$sites,
-          sort_by = "value"
-        ) |>
-        reskit::make_individual_cf_plot(
-          x_axis_label = snakecase::to_title_case("arrivals")
-        )
+  reskit::shim_results() |>
+  possibly_compile_indiv_change_factor_data(
+    measure = "arrivals",
+    activity_type = "aae",
+    sites = params$sites,
+    sort_by = "value"
+  ) |>
+  reskit::make_individual_cf_plot(
+    x_axis_label = snakecase::to_title_case("arrivals")
+  )
 ```
 
 ## Activity in detail
@@ -738,7 +737,7 @@ In 'S-curve' plots (showing empirical cumulative distribution function), the red
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
 atpmo_simplified <- get_activity_type_pod_measure_options() |>
-  dplyr::select("activity_type", "pod", "measure" = "measures") 
+  dplyr::select("activity_type", "pod", "measure" = "measures")
 
 activity_distribution_table_names <- atpmo_simplified |>
   dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>
