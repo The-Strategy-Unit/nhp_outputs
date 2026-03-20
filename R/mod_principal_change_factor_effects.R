@@ -121,20 +121,6 @@ mod_principal_change_factor_effects_server <- function(
         tidyr::replace_na(list("mitigator_name" = "-"))
     })
 
-    principal_change_factors <- shiny::reactive({
-      pods <- shiny::req(input$pods)
-
-      principal_change_factors_raw() |>
-        require_rows() |>
-        dplyr::filter(.data[["pod"]] %in% pods) |>
-        dplyr::select(-"pod") |>
-        dplyr::count(
-          dplyr::across(-"value"),
-          wt = .data[["value"]],
-          name = "value"
-        )
-    })
-
     shiny::observe({
       at <- shiny::req(input$activity_type)
       pcf <- shiny::req(principal_change_factors_raw())
