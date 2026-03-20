@@ -79,7 +79,7 @@
               <div class="load-container shiny-spinner-hidden load1">
                 <div id="spinner-<id>" class="loader">Loading...</div>
               </div>
-              <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
+              <div class="shiny-plot-output html-fill-item" id="id-change_factors" style="width:100%;height:600px;"></div>
             </div>
           </div>
         </div>
@@ -94,8 +94,8 @@
             <div class="form-group shiny-input-container">
               <label class="control-label" id="id-sort_type-label" for="id-sort_type">Sort By</label>
               <div>
-                <select id="id-sort_type" class="shiny-input-select"><option value="Descending value" selected>Descending value</option>
-      <option value="Alphabetical">Alphabetical</option></select>
+                <select id="id-sort_type" class="shiny-input-select"><option value="value" selected>Descending value</option>
+      <option value="tpma_label">Alphabetical</option></select>
                 <script type="application/json" data-for="id-sort_type" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
               </div>
             </div>
@@ -104,8 +104,7 @@
                 <div id="spinner-<id>" class="loader">Loading...</div>
               </div>
               <div class="row">
-                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-activity_avoidance" style="width:100%;height:600px;"></div>
-                <div class="plotly html-widget html-widget-output shiny-report-size shiny-report-theme html-fill-item" id="id-efficiencies" style="width:100%;height:600px;"></div>
+                <div class="shiny-plot-output html-fill-item" id="id-individual_change_factors" style="width:100%;height:1200px;"></div>
               </div>
             </div>
           </div>
