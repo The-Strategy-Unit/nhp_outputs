@@ -197,44 +197,22 @@ plot_impact_and_individual_change <- function(
 generate_activity_in_detail_table <- function(
   data,
   sites,
-  tretspefs,
   activity_type,
   pod,
   measure,
   agg_col
 ) {
   aggregated_data <- data |>
-    get_aggregation(pod, measure, agg_col, sites)
+    reskit::shim_results() |>
+    reskit::compile_detailed_activity_data(measure = measure,
+                                           activity_type = activity_type,
+                                           aggregation = agg_col,
+                                           pods = pod,
+                                           sites = sites)
 
   # if a site is selected then there are no rows for A&E
   if (nrow(aggregated_data) == 0) {
     stop("No data")
-  }
-
-  aggregated_data <- aggregated_data |>
-    dplyr::transmute(
-      .data$sex,
-      agg = .data[[agg_col]],
-      .data$baseline,
-      final = .data$principal,
-      change = .data$final - .data$baseline,
-      change_pcnt = .data$change / .data$baseline
-    )
-
-  if (agg_col == "tretspef") {
-    aggregated_data <- aggregated_data |>
-      dplyr::left_join(
-        tretspefs,
-        by = dplyr::join_by("agg" == "Code")
-      ) |>
-      dplyr::mutate(
-        dplyr::across(
-          "Description",
-          \(x) dplyr::if_else(is.na(x), .data$agg, .data$Description)
-        ),
-      ) |>
-      dplyr::select("sex", "Description", dplyr::everything(), -"agg") |>
-      dplyr::rename("agg" = "Description")
   }
 
   end_year <- data[["params"]][["end_year"]]
@@ -245,10 +223,7 @@ generate_activity_in_detail_table <- function(
   )
 
   aggregated_data |>
-    mod_principal_detailed_table(
-      aggregation = agg_col,
-      final_year = end_fyear
-    ) |>
+    reskit::make_detailed_activity_table(final_year = end_year)|>
     gt::tab_options(table.align = "left")
 }
 
