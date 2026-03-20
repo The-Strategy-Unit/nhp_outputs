@@ -73,8 +73,10 @@ Bed-availability data is not available at site level. See [the model project inf
 ```{r}
 #| label: pp-summary
 
-mod_principal_summary_data(params$r, params$sites) |>
-  mod_principal_summary_table() |>
+params$r |>
+  reskit::shim_results() |>
+  reskit::compile_principal_pod_data(sites = params$sites) |>
+  reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
 ```
 
@@ -85,8 +87,10 @@ mod_principal_summary_data(params$r, params$sites) |>
 ```{r}
 #| label: pp-summary-los-beddays
 
-mod_principal_summary_los_data(params$r, params$sites, "beddays") |>
-  mod_principal_summary_los_table() |>
+params$r |>
+  reskit::shim_results() |>
+  reskit::compile_principal_los_data(measure = "beddays", sites = params$sites) |>
+  reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
 ```
 
@@ -95,8 +99,13 @@ mod_principal_summary_los_data(params$r, params$sites, "beddays") |>
 ```{r}
 #| label: pp-summary-los-admissions
 
-mod_principal_summary_los_data(params$r, params$sites, "admissions") |>
-  mod_principal_summary_los_table() |>
+params$r |>
+  reskit::shim_results() |>
+  reskit::compile_principal_los_data(
+    measure = "admissions",
+    sites = params$sites
+  ) |>
+  reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
 ```
 
@@ -633,12 +642,13 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 ```{r}
 #| label: dop-activity-summary
 
-atpmo <- get_activity_type_pod_measure_options()
-
 params$r |>
-  get_model_core_activity(params$sites) |>
-  dplyr::inner_join(atpmo, by = c("pod", "measure" = "measures")) |>
-  mod_model_core_activity_server_table() |>
+  reskit::shim_results() |>
+  reskit::compile_distribution_summary_data(
+    value_type = "median",
+    sites = params$sites
+  ) |>
+  reskit::make_distribution_summary_table() |>
   gt::tab_options(table.width = gt::pct(100))
 ```
 
