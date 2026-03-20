@@ -87,8 +87,10 @@ params$r |>
 ```{r}
 #| label: pp-summary-los-beddays
 
-mod_principal_summary_los_data(params$r, params$sites, "beddays") |>
-  mod_principal_summary_los_table() |>
+params$r |>
+  reskit::shim_results() |>
+  reskit::compile_principal_los_data(measure = "beddays", sites = params$sites) |>
+  reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
 ```
 
@@ -97,8 +99,13 @@ mod_principal_summary_los_data(params$r, params$sites, "beddays") |>
 ```{r}
 #| label: pp-summary-los-admissions
 
-mod_principal_summary_los_data(params$r, params$sites, "admissions") |>
-  mod_principal_summary_los_table() |>
+params$r |>
+  reskit::shim_results() |>
+  reskit::compile_principal_los_data(
+    measure = "admissions",
+    sites = params$sites
+  ) |>
+  reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
 ```
 
