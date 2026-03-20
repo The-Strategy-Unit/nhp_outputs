@@ -85,6 +85,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
     output$results <- gt::render_gt({
 
+      shiny::req(input$aggregation)
+
       end_year <- selected_data()[["params"]][["end_year"]]
       end_fyear <- paste0(
         end_year,
