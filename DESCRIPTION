@@ -10,8 +10,8 @@ Authors@R: c(
   )
 Description: A shiny app for showing outputs of the NHP model.
 License: MIT + file LICENSE
-URL: https://github.com/The-Strategy-Unit/nhp_model
-BugReports: https://github.com/The-Strategy-Unit/nhp_model/issues
+URL: https://github.com/The-Strategy-Unit/nhp_outputs
+BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
 Depends:
     R (>= 4.5.0)
 Imports: 
