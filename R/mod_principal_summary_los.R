@@ -36,19 +36,6 @@ mod_principal_summary_los_ui <- function(id) {
   )
 }
 
-mod_principal_los_pods <- function() {
-  get_activity_type_pod_measure_options() |>
-    dplyr::filter(.data$activity_type != "aae") |>
-    dplyr::distinct(.data$activity_type, .data$pod, .data$pod_name) |>
-    dplyr::bind_rows(data.frame(
-      activity_type = "aae",
-      pod = "aae",
-      pod_name = "A&E Attendance"
-    )) |>
-    dplyr::mutate(dplyr::across("pod_name", forcats::fct_inorder))
-}
-
-
 #' principal_summary Server Functions
 #'
 #' @noRd
