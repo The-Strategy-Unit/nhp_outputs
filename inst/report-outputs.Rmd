@@ -280,16 +280,6 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 ```{r}
 #| label: pp-activity-in-detail-setup
 
-tretspef_lookup <- yyjsonr::read_json_file(
-  app_sys("app", "data", "tx-lookup.json")
-) |>
-  dplyr::mutate(
-    dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
-    dplyr::across("Description", \(x) paste0(.data$Code, ": ", .data$Description)),
-  ) |>
-  dplyr::select(-"Group") |>
-  dplyr::add_row(Code = "&", Description = "Not known") # as per HES dictionary
-
 # Function to prepare data and table
 
 possibly_generate_activity_in_detail_table <- purrr::possibly(
@@ -301,15 +291,7 @@ possibly_generate_activity_in_detail_table <- purrr::possibly(
 
 atpmo_agg <- get_activity_type_pod_measure_options() |>
   dplyr::select("activity_type", "pod", "measure" = "measures") |>
-  tidyr::crossing(agg_col = c("age_group", "tretspef")) |>
-  dplyr::mutate(
-    activity_type = dplyr::case_match(
-      activity_type,
-      "ip" ~ "inpatients",
-      "op" ~ "outpatients",
-      "aae" ~ "aae"
-    )
-  )
+  tidyr::crossing(agg_col = c("age_group", "tretspef_grouped"))
 
 activity_in_detail_table_names <- atpmo_agg |>
   dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
@@ -323,7 +305,6 @@ activity_in_detail_tables <- purrr::pmap(
     possibly_generate_activity_in_detail_table(
       data = params$r,
       sites = params$sites,
-      tretspefs = tretspef_lookup,
       activity_type,
       pod,
       measure,
