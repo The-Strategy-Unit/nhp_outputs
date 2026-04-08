@@ -175,10 +175,20 @@ server <- function(input, output, session) {
         .data[["dataset"]] == ds,
         .data[["scenario"]] == sc
       ) |>
-      dplyr::pull(.data[["create_datetime"]]) |>
-      unique() |>
+      dplyr::mutate(
+        create_datetime_dt = create_datetime |>
+          lubridate::as_datetime("%Y%m%d_%H%M%S", tz = "UTC") |>
+          lubridate::with_tz() |>
+          format("%d/%m/%Y %H:%M:%S"),
+        create_datetime_label = as.character(glue::glue(
+          "{.data[['create_datetime_dt']]} ({.data[['app_version']]})",
+        ))
+      ) |>
+      dplyr::select(create_datetime_label, create_datetime) |>
+      dplyr::distinct() |>
+      tibble::deframe() |> # a vector where names are user-facing labels
       sort() |>
-      rev()
+      rev() # most recent first
   })
 
   selected_file <- shiny::reactive({
@@ -213,17 +223,10 @@ server <- function(input, output, session) {
   shiny::observe({
     cd <- shiny::req(create_datetimes())
 
-    labels <- \(.x) {
-      .x |>
-        lubridate::as_datetime("%Y%m%d_%H%M%S", tz = "UTC") |>
-        lubridate::with_tz() |>
-        format("%d/%m/%Y %H:%M:%S")
-    }
-
     shiny::updateSelectInput(
       session,
       "create_datetime",
-      choices = purrr::set_names(cd, labels)
+      choices = cd
     )
   })
 
