@@ -180,9 +180,9 @@ server <- function(input, output, session) {
           lubridate::as_datetime("%Y%m%d_%H%M%S", tz = "UTC") |>
           lubridate::with_tz() |>
           format("%d/%m/%Y %H:%M:%S"),
-        create_datetime_label = as.character(glue::glue(
+        create_datetime_label = glue::glue(
           "{.data[['create_datetime_dt']]} ({.data[['app_version']]})",
-        ))
+        )
       ) |>
       dplyr::select(create_datetime_label, create_datetime) |>
       dplyr::distinct() |>
