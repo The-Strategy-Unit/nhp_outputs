@@ -74,7 +74,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
       an <- c(
         "Age Group" = "age_group",
-         "Treatment Specialty" = "tretspef_grouped"
+        "Treatment Specialty" = "tretspef_grouped"
       )
 
       agg_choices <- an[an %in% a]
@@ -82,9 +82,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       shiny::updateSelectInput(session, "aggregation", choices = agg_choices)
     })
 
-
     output$results <- gt::render_gt({
-
       shiny::req(input$aggregation)
 
       end_year <- selected_data()[["params"]][["end_year"]]
@@ -95,12 +93,14 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       )
 
       selected_data() |>
-      reskit::shim_results() |>
-        reskit::compile_detailed_activity_data(measure = selected_measure()$measure,
-                                               activity_type = selected_measure()$activity_type,
-                                               aggregation = input$aggregation,
-                                               pods = selected_measure()$pods,
-                                               sites = selected_site()) |>
+        reskit::shim_results() |>
+        reskit::compile_detailed_activity_data(
+          measure = selected_measure()$measure,
+          activity_type = selected_measure()$activity_type,
+          aggregation = input$aggregation,
+          pods = selected_measure()$pods,
+          sites = selected_site()
+        ) |>
         require_rows() |>
         reskit::make_detailed_activity_table(final_year = end_year)
     })
