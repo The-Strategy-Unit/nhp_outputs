@@ -74,11 +74,6 @@ generate_activity_in_detail_table <- function(
   }
 
   end_year <- data[["params"]][["end_year"]]
-  end_fyear <- paste0(
-    end_year,
-    "/",
-    as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
-  )
 
   aggregated_data |>
     reskit::make_detailed_activity_table(final_year = end_year) |>
