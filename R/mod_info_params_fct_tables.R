@@ -179,10 +179,10 @@ info_params_table_non_demographic_adjustment <- function(p) {
 }
 
 info_params_table_activity_avoidance <- function(p) {
-  actitvity_avoidance <- p[["activity_avoidance"]]
+  activity_avoidance <- p[["activity_avoidance"]]
 
   shiny::validate(
-    shiny::need(actitvity_avoidance, "No parameters provided")
+    shiny::need(activity_avoidance, "No parameters provided")
   )
 
   time_profiles <- p[["time_profile_mappings"]][["activity_avoidance"]] |>
@@ -190,7 +190,7 @@ info_params_table_activity_avoidance <- function(p) {
     purrr::map(tibble::enframe, "strategy", "time_profile") |>
     dplyr::bind_rows(.id = "activity_type")
 
-  actitvity_avoidance |>
+  activity_avoidance |>
     purrr::map_depth(2, "interval") |>
     purrr::map(tibble::enframe, "strategy") |>
     dplyr::bind_rows(.id = "activity_type") |>
