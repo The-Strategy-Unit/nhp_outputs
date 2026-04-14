@@ -45,19 +45,6 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     selected_measure <- mod_measure_selection_server("measure_selection")
 
-    tretspef_lookup <- yyjsonr::read_json_file(
-      app_sys("app", "data", "tx-lookup.json")
-    ) |>
-      dplyr::mutate(
-        dplyr::across("Description", \(x) stringr::str_remove(x, " Service$")),
-        dplyr::across(
-          "Description",
-          \(x) paste0(.data$Code, ": ", .data$Description)
-        ),
-      ) |>
-      dplyr::select(-"Group") |>
-      dplyr::add_row(Code = "&", Description = "Not known") # as per HES dictionary
-
     available_aggregations <- shiny::reactive({
       selected_data() |>
         get_available_aggregations()
@@ -86,11 +73,6 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
       shiny::req(input$aggregation)
 
       end_year <- selected_data()[["params"]][["end_year"]]
-      end_fyear <- paste0(
-        end_year,
-        "/",
-        as.numeric(stringr::str_extract(end_year, "\\d{2}$")) + 1
-      )
 
       selected_data() |>
         reskit::shim_results() |>
