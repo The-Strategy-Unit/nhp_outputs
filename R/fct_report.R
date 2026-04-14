@@ -246,7 +246,6 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
 #'     string describing the reason for a given parameter selection.
 #' @noRd
 expand_reasons_to_rmd <- function(reasons_list) {
-
   lookup <- c(
     get_tpma_lookup()$tpma_label,
     "baseline_adjustment" = "Baseline adjustment",

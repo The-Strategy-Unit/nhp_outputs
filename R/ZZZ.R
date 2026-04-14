@@ -90,7 +90,7 @@ server_get_results <- function(session) {
 }
 
 get_tpma_lookup <- function(
-    tpma_lookup = reskit::get_tpma_label_lookup()
+  tpma_lookup = reskit::get_tpma_label_lookup()
 ) {
   tpma_lookup |>
     dplyr::mutate(
