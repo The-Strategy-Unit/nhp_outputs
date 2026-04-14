@@ -153,9 +153,7 @@ params$r |>
     sites = params$sites,
     sort_by = "value"
   ) |>
-  reskit::make_individual_cf_plot(
-    x_axis_label = snakecase::to_title_case("beddays")
-  )
+  reskit::make_individual_cf_plot()
 ```
 
 #### Admissions
@@ -180,9 +178,7 @@ params$r |>
     sites = params$sites,
     sort_by = "value"
   ) |>
-  reskit::make_individual_cf_plot(
-    x_axis_label = snakecase::to_title_case("admissions")
-  )
+  reskit::make_individual_cf_plot()
 ```
 
 ### Outpatients
@@ -210,9 +206,7 @@ params$r |>
     sites = params$sites,
     sort_by = "value"
   ) |>
-  reskit::make_individual_cf_plot(
-    x_axis_label = snakecase::to_title_case("attendances")
-  )
+  reskit::make_individual_cf_plot()
 ```
 
 #### Tele-attendances
@@ -238,9 +232,7 @@ params$r |>
     sites = params$sites,
     sort_by = "value"
   ) |>
-  reskit::make_individual_cf_plot(
-    x_axis_label = snakecase::to_title_case("tele_attendances")
-  )
+  reskit::make_individual_cf_plot()
 ```
 
 ### A&E
@@ -268,9 +260,7 @@ params$r |>
     sites = params$sites,
     sort_by = "value"
   ) |>
-  reskit::make_individual_cf_plot(
-    x_axis_label = snakecase::to_title_case("arrivals")
-  )
+  reskit::make_individual_cf_plot()
 ```
 
 ## Activity in detail

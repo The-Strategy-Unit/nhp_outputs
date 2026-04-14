@@ -181,9 +181,7 @@ mod_principal_change_factor_effects_server <- function(
           sort_by = input$sort_type
         ) |>
         require_rows() |>
-        reskit::make_individual_cf_plot(
-          x_axis_label = snakecase::to_title_case(input$measure)
-        ) +
+        reskit::make_individual_cf_plot() +
         ggplot2::theme(text = ggplot2::element_text(size = 16))
     })
   })
