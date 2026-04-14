@@ -60,11 +60,13 @@ generate_activity_in_detail_table <- function(
 ) {
   aggregated_data <- data |>
     reskit::shim_results() |>
-    reskit::compile_detailed_activity_data(measure = measure,
-                                           activity_type = activity_type,
-                                           aggregation = agg_col,
-                                           pods = pod,
-                                           sites = sites)
+    reskit::compile_detailed_activity_data(
+      measure = measure,
+      activity_type = activity_type,
+      aggregation = agg_col,
+      pods = pod,
+      sites = sites
+    )
 
   # if a site is selected then there are no rows for A&E
   if (nrow(aggregated_data) == 0) {
@@ -79,7 +81,7 @@ generate_activity_in_detail_table <- function(
   )
 
   aggregated_data |>
-    reskit::make_detailed_activity_table(final_year = end_year)|>
+    reskit::make_detailed_activity_table(final_year = end_year) |>
     gt::tab_options(table.align = "left")
 }
 
