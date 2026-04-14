@@ -246,10 +246,9 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
 #'     string describing the reason for a given parameter selection.
 #' @noRd
 expand_reasons_to_rmd <- function(reasons_list) {
-  mitigators_json_path <- app_sys("app", "data", "mitigators.json")
 
   lookup <- c(
-    yyjsonr::read_json_file(mitigators_json_path) |> unlist(),
+    get_tpma_lookup()$tpma_label,
     "baseline_adjustment" = "Baseline adjustment",
     "demographic_factors" = "Demographic factors",
     "waiting_list_adjustment" = "Waiting list adjustment",

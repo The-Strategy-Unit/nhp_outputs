@@ -19,7 +19,7 @@ atpmo_expected <- tibble::tribble(
 
 change_factors_expected <- list(
   aae = tibble::tribble(
-    ~pod, ~sitetret, ~measure, ~change_factor, ~strategy, ~mitigator_name, ~value,
+    ~pod, ~sitetret, ~measure, ~change_factor, ~strategy, ~tpma_label, ~value,
     "aae_type-01", "R00", "arrivals", "baseline", "-", "-", 100000,
     "aae_type-01", "R00", "arrivals", "frequent_attenders", "-", "-", -4000,
     "aae_type-01", "R00", "arrivals", "health_status_adjustment", "-", "-", -1000,
@@ -28,7 +28,7 @@ change_factors_expected <- list(
     "aae_type-01", "R00", "arrivals", "demographic_adjustment", "-", "-", 14000
   ),
   ip = tibble::tribble(
-    ~pod, ~sitetret, ~measure, ~change_factor, ~strategy, ~mitigator_name, ~value,
+    ~pod, ~sitetret, ~measure, ~change_factor, ~strategy, ~tpma_label, ~value,
     "ip_elective_admission", "R00", "admissions", "baseline", "-", "-", 100000,
     "ip_elective_admission", "R00", "admissions", "demographic_adjustment", "-", "-", 15000,
     "ip_elective_admission", "R00", "admissions", "health_status_adjustment", "-", "-", -1000,
@@ -188,7 +188,7 @@ test_that("it sets up the activity_type dropdown", {
 
 test_that("it loads the data from when the activity_type or id changes", {
   m <- mock(
-    dplyr::select(change_factors_expected$aae, -"mitigator_name"),
+    dplyr::select(change_factors_expected$aae, -"tpma_label"),
     cycle = TRUE
   )
 
@@ -232,7 +232,7 @@ test_that("it updates the measures dropdown when the change factors updates", {
   m <- mock()
   cfe <- \(id, at, ...) {
     change_factors_expected[[at]] |>
-      dplyr::select(-"mitigator_name")
+      dplyr::select(-"tpma_label")
   }
 
   stub(

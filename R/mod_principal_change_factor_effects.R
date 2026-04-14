@@ -92,11 +92,6 @@ mod_principal_change_factor_effects_server <- function(
     principal_change_factors_raw <- shiny::reactive({
       at <- shiny::req(input$activity_type)
 
-      mitigator_lookup <- app_sys("app", "data", "mitigators.json") |>
-        yyjsonr::read_json_file() |>
-        purrr::simplify() |>
-        tibble::enframe("strategy", "mitigator_name")
-
       selected_data() |>
         get_principal_change_factors(at, selected_site()) |>
         require_rows() |>
@@ -115,10 +110,11 @@ mod_principal_change_factor_effects_server <- function(
           )
         ) |>
         dplyr::left_join(
-          mitigator_lookup,
+          get_tpma_lookup(),
           by = dplyr::join_by("strategy")
         ) |>
-        tidyr::replace_na(list("mitigator_name" = "-"))
+        dplyr::select(-"tpma_code") |>
+        tidyr::replace_na(list("tpma_label" = "-"))
     })
 
     shiny::observe({

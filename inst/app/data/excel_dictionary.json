@@ -102,13 +102,13 @@
             "tabs": "acuity, age, attendance_category, avoided_activity, default, delivery_episode_in_spell, sex+age_group, sex+tretspef_grouped, tretspef, tretspef+los_group"
         },
         {
-            "field": "mitigator_code",
-            "explanation": "The unique 7-character code for each mitigator, with four capital letters followed by two numbers, for example \"AE-AA-001\"",
+            "field": "tpma_code",
+            "explanation": "The unique 7-character code for each TPMA, with four capital letters followed by two numbers, for example \"AE-AA-001\"",
             "tabs": "step_counts"
         },
         {
-            "field": "mitigator_name",
-            "explanation": "The mitigator's plain English description.",
+            "field": "tpma_label",
+            "explanation": "The TPMA's plain English description.",
             "tabs": "step_counts"
         },
         {
@@ -133,7 +133,7 @@
         },
         {
             "field": "strategy",
-            "explanation": "The mitigator's coding name.",
+            "explanation": "The TPMA's coding name.",
             "tabs": "step_counts"
         },
         {

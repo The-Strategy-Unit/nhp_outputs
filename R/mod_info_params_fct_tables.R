@@ -12,11 +12,6 @@ info_params_fix_data <- function(df) {
       "specialty_name" = "tretspef"
     )
 
-  strategies <- app_sys("app", "data", "mitigators.json") |>
-    yyjsonr::read_json_file() |>
-    unlist() |>
-    tibble::enframe("strategy", "mitigator_name")
-
   fix_activity_type <- function(df) {
     if (!"activity_type" %in% colnames(df)) {
       return(df)
@@ -49,8 +44,8 @@ info_params_fix_data <- function(df) {
     }
 
     df |>
-      dplyr::left_join(strategies, by = dplyr::join_by("strategy")) |>
-      dplyr::select(-"strategy")
+      dplyr::left_join(get_tpma_lookup(), by = dplyr::join_by("strategy")) |>
+      dplyr::select(-c("strategy", "tpma_code"))
   }
 
   df |>
@@ -199,8 +194,8 @@ info_params_table_activity_avoidance <- function(p) {
       by = dplyr::join_by("activity_type", "strategy")
     ) |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
-    gt::gt("mitigator_name", "activity_type_name") |>
+    dplyr::arrange("activity_type_name", "tpma_label") |>
+    gt::gt("tpma_label", "activity_type_name") |>
     gt_theme()
 }
 
@@ -226,7 +221,7 @@ info_params_table_efficiencies <- function(p) {
       by = dplyr::join_by("activity_type", "strategy")
     ) |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
-    gt::gt("mitigator_name", "activity_type_name") |>
+    dplyr::arrange("activity_type_name", "tpma_label") |>
+    gt::gt("tpma_label", "activity_type_name") |>
     gt_theme()
 }
