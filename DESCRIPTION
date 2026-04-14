@@ -41,7 +41,6 @@ Imports:
     shiny (>= 1.7.1),
     shinycssloaders,
     shinyjs,
-    snakecase,
     stringr,
     tibble,
     tidyr,
