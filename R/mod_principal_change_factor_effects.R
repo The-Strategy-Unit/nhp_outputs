@@ -162,7 +162,8 @@ mod_principal_change_factor_effects_server <- function(
           activity_type = input$activity_type,
           pods = input$pods,
           sites = selected_site(),
-          include_baseline = input$include_baseline
+          include_baseline = input$include_baseline,
+          tpma_lookup = get_tpma_lookup()
         ) |>
         require_rows() |>
         reskit::make_overall_cf_plot() +
@@ -178,7 +179,8 @@ mod_principal_change_factor_effects_server <- function(
           activity_type = input$activity_type,
           pods = input$pods,
           sites = selected_site(),
-          sort_by = input$sort_type
+          sort_by = input$sort_type,
+          tpma_lookup = get_tpma_lookup()
         ) |>
         require_rows() |>
         reskit::make_individual_cf_plot() +
