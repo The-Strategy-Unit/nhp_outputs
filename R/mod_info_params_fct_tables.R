@@ -6,11 +6,10 @@ info_params_fix_data <- function(df) {
       )
     )
 
-  specs <- app_sys("app", "data", "tx-lookup.json") |>
-    yyjsonr::read_json_file() |>
+  specs <- get_tretspef_lookup() |>
     dplyr::select(
-      "specialty" = "Code",
-      "specialty_name" = "Description"
+      "specialty" = "code",
+      "specialty_name" = "tretspef"
     )
 
   strategies <- app_sys("app", "data", "mitigators.json") |>

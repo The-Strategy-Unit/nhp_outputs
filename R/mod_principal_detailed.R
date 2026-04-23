@@ -81,7 +81,8 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
           activity_type = selected_measure()$activity_type,
           aggregation = input$aggregation,
           pods = selected_measure()$pods,
-          sites = selected_site()
+          sites = selected_site(),
+          tretspef_lookup = get_tretspef_lookup()
         ) |>
         require_rows() |>
         reskit::make_detailed_activity_table(final_year = end_year)
