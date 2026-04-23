@@ -142,6 +142,7 @@ params$r |>
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -151,7 +152,8 @@ params$r |>
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
-    sort_by = "value"
+    sort_by = "value",
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -167,6 +169,7 @@ params$r |>
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -176,7 +179,8 @@ params$r |>
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
-    sort_by = "value"
+    sort_by = "value",
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -194,9 +198,9 @@ params$r |>
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_overall_cf_plot()
-
 
 params$r |>
   reskit::shim_results() |>
@@ -204,7 +208,8 @@ params$r |>
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
-    sort_by = "value"
+    sort_by = "value",
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -220,9 +225,9 @@ params$r |>
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_overall_cf_plot()
-
 
 params$r |>
   reskit::shim_results() |>
@@ -230,7 +235,8 @@ params$r |>
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
-    sort_by = "value"
+    sort_by = "value",
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -248,9 +254,9 @@ params$r |>
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_overall_cf_plot()
-
 
 params$r |>
   reskit::shim_results() |>
@@ -258,7 +264,8 @@ params$r |>
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
-    sort_by = "value"
+    sort_by = "value",
+    tpma_lookup = get_tpma_lookup()
   ) |>
   reskit::make_individual_cf_plot()
 ```
