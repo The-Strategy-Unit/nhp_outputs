@@ -76,6 +76,17 @@ user_requested_cache_reset <- function(session) {
   !is.null(u$reset_cache)
 }
 
+get_tretspef_lookup <- function(
+  tretspef_lookup = app_sys("app", "data", "tx-lookup.json")
+) {
+  tretspef_lookup |>
+    yyjsonr::read_json_file() |>
+    dplyr::select(
+      "code" = "Code",
+      "tretspef" = "Description"
+    )
+}
+
 get_tpma_lookup <- function(
   tpma_lookup = app_sys("app", "data", "mitigators.json")
 ) {
