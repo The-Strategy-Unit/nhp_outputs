@@ -6,11 +6,10 @@ info_params_fix_data <- function(df) {
       )
     )
 
-  specs <- app_sys("app", "data", "tx-lookup.json") |>
-    yyjsonr::read_json_file() |>
+  specs <- get_tretspef_lookup() |>
     dplyr::select(
-      "specialty" = "Code",
-      "specialty_name" = "Description"
+      "specialty" = "code",
+      "specialty_name" = "tretspef"
     )
 
   strategies <- app_sys("app", "data", "mitigators.json") |>
@@ -179,10 +178,10 @@ info_params_table_non_demographic_adjustment <- function(p) {
 }
 
 info_params_table_activity_avoidance <- function(p) {
-  actitvity_avoidance <- p[["activity_avoidance"]]
+  activity_avoidance <- p[["activity_avoidance"]]
 
   shiny::validate(
-    shiny::need(actitvity_avoidance, "No parameters provided")
+    shiny::need(activity_avoidance, "No parameters provided")
   )
 
   time_profiles <- p[["time_profile_mappings"]][["activity_avoidance"]] |>
@@ -190,7 +189,7 @@ info_params_table_activity_avoidance <- function(p) {
     purrr::map(tibble::enframe, "strategy", "time_profile") |>
     dplyr::bind_rows(.id = "activity_type")
 
-  actitvity_avoidance |>
+  activity_avoidance |>
     purrr::map_depth(2, "interval") |>
     purrr::map(tibble::enframe, "strategy") |>
     dplyr::bind_rows(.id = "activity_type") |>

@@ -95,21 +95,21 @@ mod_info_downloads_download_excel <- function(data) {
       "attendance_category"
     ]] |>
       dplyr::mutate(
-        attendance_category = dplyr::case_match(
+        attendance_category = dplyr::recode_values(
           .data[["attendance_category"]],
           "1" ~ "unplanned_first_attendance",
           "2" ~ "unplanned_follow-up_attendance_this_department",
           "3" ~ "unplanned_follow-up_attendance_another_department",
           "4" ~ "planned_follow-up_attendance",
           "X" ~ "not_applicable",
-          .default = "unknown"
+          default = "unknown"
         )
       )
 
     # Add the mitigator reference numbers
     results_dfs[["step_counts"]] <- results_dfs[["step_counts"]] |>
-      dplyr::left_join(get_mitigator_lookup(), by = "strategy") |>
-      dplyr::relocate("mitigator_name", "mitigator_code", .after = "strategy")
+      dplyr::left_join(get_tpma_lookup(), by = "strategy") |>
+      dplyr::relocate("tpma_label", "tpma_code", .after = "strategy")
 
     params_list <- data() |>
       purrr::pluck("params") |>
