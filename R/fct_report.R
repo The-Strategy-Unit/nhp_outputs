@@ -65,7 +65,8 @@ generate_activity_in_detail_table <- function(
       activity_type = activity_type,
       aggregation = agg_col,
       pods = pod,
-      sites = sites
+      sites = sites,
+      tretspef_lookup = get_tretspef_lookup()
     )
 
   # if a site is selected then there are no rows for A&E

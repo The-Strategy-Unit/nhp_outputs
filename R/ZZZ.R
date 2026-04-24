@@ -89,16 +89,28 @@ server_get_results <- function(session) {
   )
 }
 
-get_mitigator_lookup <- function(
-  mitigator_lookup = app_sys("app", "data", "mitigators.json")
+
+get_tretspef_lookup <- function(
+  tretspef_lookup = app_sys("app", "data", "tx-lookup.json")
 ) {
-  mitigator_lookup |>
+  tretspef_lookup |>
+    yyjsonr::read_json_file() |>
+    dplyr::select(
+      "code" = "Code",
+      "tretspef" = "Description"
+    )
+}
+
+get_tpma_lookup <- function(
+  tpma_lookup = app_sys("app", "data", "mitigators.json")
+) {
+  tpma_lookup |>
     yyjsonr::read_json_file() |>
     purrr::simplify() |>
-    tibble::enframe("strategy", "mitigator_name") |>
+    tibble::enframe("strategy", "tpma_label") |>
     dplyr::mutate(
-      mitigator_code = stringr::str_extract(
-        .data[["mitigator_name"]],
+      tpma_code = stringr::str_extract(
+        .data[["tpma_label"]],
         "[:upper:]{2}-[:upper:]{2}-[:digit:]{3}"
       )
     )
