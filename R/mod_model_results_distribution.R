@@ -16,6 +16,11 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
+      md_file_to_html(
+        "app",
+        "text",
+        "distribution_activity-distribution_notes.md"
+      ),
       md_file_to_html("app", "text", "notes_beddays.md")
     ),
     bs4Dash::box(

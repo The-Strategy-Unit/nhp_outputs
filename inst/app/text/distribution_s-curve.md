@@ -1,3 +1,3 @@
 The S-curve tells us the proportion of model runs where the result was less than or equal to a given level of activity.
 This tells us the probability that the future level of activity will be equal or less than a given value.
-For more information on how to read the s-curve, please see [the project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html#empirical-cumulative-distribution-function-ecdf-curve-s-curve).
+For more information on how to read the S-curve, please see [the project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html#empirical-cumulative-distribution-function-ecdf-curve-s-curve).
