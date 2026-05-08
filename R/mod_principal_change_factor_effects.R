@@ -50,6 +50,11 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Individual change factors",
       collapsible = FALSE,
       width = 12,
+      md_file_to_html(
+        "app",
+        "text",
+        "principal_impact_individual-change-factors.md"
+      ),
       shiny::selectInput(
         ns("sort_type"),
         "Sort By",
