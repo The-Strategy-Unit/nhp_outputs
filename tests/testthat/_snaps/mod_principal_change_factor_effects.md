@@ -67,6 +67,16 @@
             <h3 class="card-title">Impact of changes</h3>
           </div>
           <div class="card-body">
+            <p>This chart shows the impacts of different factors on activity changes between the model baseline and in the model horizon years based on the principal projection.
+      Note that:</p>
+      <ul>
+      <li>yellow bars are used to indicate the impact of factors which are increasing projected activity relative to the baseline year</li>
+      <li>black bars are used to indicate the impact of factors which are reducing projected activity relative to the baseline year</li>
+      <li>the red bar at the bottom of the chart shows the principal projection of activity in the horizon year</li>
+      <li>the ‘model interaction term’ shows the effects of factors compounding within the model</li>
+      </ul>
+      <p>Note that the decomposition of activity changes over the model factors impact of changes should be viewed as indicative rather than precise exact figures.</p>
+      
             <div class="form-group shiny-input-container">
               <div class="checkbox">
                 <label>
@@ -91,6 +101,11 @@
             <h3 class="card-title">Individual change factors</h3>
           </div>
           <div class="card-body">
+            <p>These bar charts display the estimated impact at the model horizon of each TPMA on avoiding activity.
+      However they do not account for interaction effects between TPMAs caused by overlaps between some activity avoidance TPMA cohorts.
+      This means that the impact attributed to each individual mitigator may be slightly overstated.
+      The overall size of this interaction effect can be viewed in the ‘step_counts’ sheet of the Excel download of the results (see ‘Downloads’ in the sidebar).</p>
+      
             <div class="form-group shiny-input-container">
               <label class="control-label" id="id-sort_type-label" for="id-sort_type">Sort By</label>
               <div>
