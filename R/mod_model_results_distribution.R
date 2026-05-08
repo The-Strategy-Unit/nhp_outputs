@@ -16,7 +16,7 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      md_file_to_html("app", "text", "notes-beddays.md")
+      md_file_to_html("app", "text", "notes_beddays.md")
     ),
     bs4Dash::box(
       title = "Make selections",
@@ -38,7 +38,7 @@ mod_model_results_distribution_ui <- function(id) {
       title = "S-curve (empirical cumulative distribution function)",
       collapsible = FALSE,
       width = 12,
-      md_file_to_html("app", "text", "s-curve-notes.md"),
+      md_file_to_html("app", "text", "distribution_s-curve.md"),
       shiny::htmlOutput(ns("ecdf_text")),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("ecdf"), height = "400px")

@@ -18,13 +18,13 @@ mod_info_home_ui <- function(id) {
           title = "About",
           collapsible = FALSE,
           width = 12,
-          md_file_to_html("app", "text", "home-about.md")
+          md_file_to_html("app", "text", "home_about.md")
         ),
         bs4Dash::box(
           title = "App notes",
           collapsible = FALSE,
           width = 12,
-          md_file_to_html("app", "text", "home-app-notes.md")
+          md_file_to_html("app", "text", "home_app-notes.md")
         )
       ),
       bs4Dash::column(
