@@ -40,6 +40,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Impact of changes",
       collapsible = FALSE,
       width = 12,
+      md_file_to_html("app", "text", "principal_impact_waterfall.md"),
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("change_factors"), height = "600px")
