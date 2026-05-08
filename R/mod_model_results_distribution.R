@@ -34,6 +34,7 @@ mod_model_results_distribution_ui <- function(id) {
       title = "Beeswarm (model-run distribution)",
       collapsible = FALSE,
       width = 12,
+      md_file_to_html("app", "text", "distribution_beeswarm.md"),
       shiny::htmlOutput(ns("beeswarm_text")),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("beeswarm"), height = "400px")
