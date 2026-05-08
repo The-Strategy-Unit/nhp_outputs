@@ -50,11 +50,11 @@ mod_principal_detailed_table <- function(data, aggregation, final_year) {
     ) |>
     gt::gt(groupname_col = "sex") |>
     gt::cols_label(
-      agg = dplyr::case_match(
+      agg = dplyr::recode_values(
         aggregation,
         "age_group" ~ "Age Group",
         "tretspef" ~ "Treatment Specialty",
-        .default = aggregation
+        default = aggregation
       ),
       baseline = "Baseline",
       final = paste0("Final (", final_year, ")"),
