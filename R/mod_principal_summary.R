@@ -64,7 +64,7 @@ mod_principal_summary_data <- function(r, sites) {
     dplyr::mutate(
       dplyr::across(
         "activity_type",
-        ~ dplyr::case_match(
+        ~ dplyr::recode_values(
           .data$activity_type,
           "ip" ~ "Inpatient",
           "op" ~ "Outpatient",

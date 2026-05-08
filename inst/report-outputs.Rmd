@@ -223,7 +223,7 @@ atpmo_agg <- get_activity_type_pod_measure_options() |>
   dplyr::select("activity_type", "pod", "measure" = "measures") |>
   tidyr::crossing(agg_col = c("age_group", "tretspef")) |>
   dplyr::mutate(
-    activity_type = dplyr::case_match(
+    activity_type = dplyr::recode_values(
       activity_type,
       "ip" ~ "inpatients",
       "op" ~ "outpatients",
@@ -658,8 +658,11 @@ In 'S-curve' plots (showing empirical cumulative distribution function), the red
 atpmo_simplified <- get_activity_type_pod_measure_options() |>
   dplyr::select("activity_type", "pod", "measure" = "measures") |>
   dplyr::mutate(
-    activity_type = dplyr::case_match(
-      activity_type, "ip" ~ "inpatients", "op" ~ "outpatients", "aae" ~ "aae"
+    activity_type = dplyr::recode_values(
+      activity_type,
+      "ip" ~ "inpatients",
+      "op" ~ "outpatients",
+      "aae" ~ "aae"
     )
   )
 
