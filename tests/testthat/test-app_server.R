@@ -4,6 +4,7 @@ library(mockery)
 test_that("it loads the modules correctly", {
   m <- mock()
 
+  stub(app_server, "get_metadata", "metadata")
   stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
@@ -47,9 +48,52 @@ test_that("it loads the modules correctly", {
   })
 })
 
+test_that("model_metadata calls get_metadata", {
+  m <- mock("metadata")
+
+  stub(app_server, "get_metadata", m)
+  stub(app_server, "server_get_results", "results")
+  stub(app_server, "get_trust_sites", "trust_sites")
+
+  stub(app_server, "mod_info_home_server", "mod_info_home_server")
+
+  stub(
+    app_server,
+    "mod_principal_summary_server",
+    "mod_principal_summary_server"
+  )
+  stub(
+    app_server,
+    "mod_principal_detailed_server",
+    "mod_principal_detailed_server"
+  )
+
+  stub(
+    app_server,
+    "mod_model_core_activity_server",
+    "mod_model_core_activity_server"
+  )
+  stub(
+    app_server,
+    "mod_model_results_distribution_server",
+    "mod_model_results_distribution_server"
+  )
+
+  stub(app_server, "mod_info_downloads_server", "mod_info_downloads_server")
+  stub(app_server, "mod_info_params_server", "mod_info_params_server")
+
+  testServer(app_server, {
+    expect_equal(model_metadata(), "metadata")
+
+    expect_called(m, 1)
+    expect_call(m, 1, get_model_run(url_search))
+  })
+})
+
 test_that("selected_data calls server_get_results", {
   m <- mock("results")
 
+  stub(app_server, "get_metadata", "metadata")
   stub(app_server, "server_get_results", m)
   stub(app_server, "get_trust_sites", "trust_sites")
 
@@ -84,7 +128,7 @@ test_that("selected_data calls server_get_results", {
     expect_equal(selected_data(), "results")
 
     expect_called(m, 1)
-    expect_call(m, 1, server_get_results(session))
+    expect_args(m, 1, "metadata")
   })
 })
 

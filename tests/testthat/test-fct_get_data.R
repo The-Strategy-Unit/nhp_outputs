@@ -1,152 +1,39 @@
 library(shiny)
 library(mockery)
 
-test_that("get_container uses managed token", {
-  m0 <- mock("t0")
-  m1 <- mock("t1")
-  m2 <- mock("t2")
-  m3 <- mock("ep")
-  m4 <- mock("container")
-
-  withr::local_envvar(
-    "AZ_STORAGE_EP" = "url/results",
-    "AZ_APP_ID" = "",
-    "AZ_STORAGE_CONTAINER" = "results"
-  )
-
-  stub(get_container, "AzureAuth::get_azure_token", m0)
-  stub(get_container, "AzureAuth::get_managed_token", m1)
-  stub(get_container, "AzureAuth::extract_jwt", m2)
-  stub(get_container, "AzureStor::blob_endpoint", m3)
-  stub(get_container, "AzureStor::storage_container", m4)
-
-  expect_equal(get_container(), "container")
-
-  expect_called(m0, 0)
-  expect_called(m1, 1)
-  expect_called(m2, 1)
-  expect_called(m3, 1)
-  expect_called(m4, 1)
-
-  expect_args(m1, 1, "https://storage.azure.com/")
-  expect_args(m2, 1, "t1")
-  expect_args(m3, 1, "url/results", token = "t2")
-  expect_args(m4, 1, "ep", "results")
-})
-
-test_that("get_container uses azure app id if present", {
-  m0 <- mock("t0")
-  m1 <- mock("t1")
-  m2 <- mock("t2")
-  m3 <- mock("ep")
-  m4 <- mock("container")
-
-  withr::local_envvar(
-    "AZ_STORAGE_EP" = "url/results",
-    "AZ_TENANT_ID" = "tenant_id",
-    "AZ_APP_ID" = "app_id",
-    "AZ_STORAGE_CONTAINER" = "results"
-  )
-
-  stub(get_container, "AzureAuth::get_azure_token", m0)
-  stub(get_container, "AzureAuth::get_managed_token", m1)
-  stub(get_container, "AzureAuth::extract_jwt", m2)
-  stub(get_container, "AzureStor::blob_endpoint", m3)
-  stub(get_container, "AzureStor::storage_container", m4)
-
-  expect_equal(get_container(), "container")
-
-  expect_called(m0, 1)
-  expect_called(m1, 0)
-  expect_called(m2, 0)
-  expect_called(m3, 1)
-  expect_called(m4, 1)
-
-  expect_args(
-    m0,
-    1,
-    "https://storage.azure.com",
-    tenant = "tenant_id",
-    app = "app_id",
-    auth_type = "device_code",
-    use_cache = TRUE
-  )
-  expect_args(m3, 1, "url/results", token = "t0")
-  expect_args(m4, 1, "ep", "results")
-})
-
-test_that("get_result_sets returns files", {
-  withr::local_envvar("RESULTS_PATH" = "results")
-
-  m1 <- mock(
-    tibble::tribble(
-      ~name, ~isdir,
-      "d", TRUE,
-      "1", FALSE,
-      "2", FALSE,
-      "3", FALSE,
-      "4", FALSE
-    )
-  )
-  m2 <- mock(
-    list(dataset = "a", viewable = "true"),
-    list(dataset = "b", viewable = "false"),
-    list(dataset = "a", viewable = "false"),
-    list(dataset = "c", viewable = "true")
-  )
-
-  stub(get_result_sets, "get_container", "container")
-  stub(get_result_sets, "AzureStor::list_blobs", m1)
-  stub(get_result_sets, "AzureStor::get_storage_metadata", m2)
-
-  expected <- tibble::tribble(
-    ~file, ~dataset, ~viewable,
-    "1", "a", TRUE,
-    "2", "b", FALSE,
-    "3", "a", FALSE
-  )
-
-  result <- get_result_sets(c("a", "b"), "dev")
-
-  expect_equal(result, expected)
-
-  expect_called(m1, 1)
-  expect_called(m2, 4)
-
-  expect_args(m1, 1, "container", "dev", "all", TRUE)
-
-  expect_args(m2, 1, "container", "1")
-  expect_args(m2, 2, "container", "2")
-  expect_args(m2, 3, "container", "3")
-  expect_args(m2, 4, "container", "4")
-})
-
 test_that("get_results_from_azure returns data from azure", {
   # arrange
+  m0 <- mock("container")
   m1 <- mock("binary_data")
   m2 <- mock("decompressed_data")
   m3 <- mock("json_data")
   m4 <- mock("json_options")
   m5 <- mock("parsed_data")
 
-  stub(get_results_from_azure, "get_container", "container")
-  stub(get_results_from_azure, "withr::local_tempfile", "tf")
+  stub(get_results_from_azure, "azkit::get_container", m0)
   stub(get_results_from_azure, "AzureStor::download_blob", m1)
   stub(get_results_from_azure, "memDecompress", m2)
   stub(get_results_from_azure, "yyjsonr::read_json_raw", m3)
   stub(get_results_from_azure, "yyjsonr::opts_read_json", m4)
   stub(get_results_from_azure, "parse_results", m5)
 
+  withr::local_envvar(
+    "AZ_STORAGE_CONTAINER" = "container",
+    "AZ_STORAGE_EP" = "ep"
+  )
+
   # act
   actual <- get_results_from_azure("file")
 
   # assert
+  expect_called(m0, 1)
   expect_called(m1, 1)
   expect_called(m2, 1)
   expect_called(m3, 1)
   expect_called(m4, 1)
   expect_called(m5, 1)
 
+  expect_args(m0, 1, container_name = "container", endpoint_url = "ep")
   expect_args(m1, 1, "container", "file", NULL)
   expect_args(m2, 1, "binary_data", type = "gzip")
   expect_args(m3, 1, "decompressed_data", "json_options")

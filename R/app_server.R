@@ -4,10 +4,11 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
-  selected_data <- shiny::reactive({
+  model_metadata <- shiny::reactive({
     tryCatch(
       {
-        server_get_results(session)
+        url_search <- utils::URLdecode(session$clientData$url_search)
+        get_model_run(url_search)
       },
       error = \(e) {
         session$allowReconnect(FALSE)
@@ -27,6 +28,33 @@ app_server <- function(input, output, session) {
       }
     )
   }) |>
+    shiny::bindCache(session$clientData$url_search)
+
+  selected_data <- shiny::reactive({
+    tryCatch(
+      {
+        file <- model_metadata()$results_json_gz_path
+        get_results_from_azure(file)
+      },
+      error = \(e) {
+        session$allowReconnect(FALSE)
+
+        shiny::showModal(
+          shiny::modalDialog(
+            title = "Error",
+            footer = NULL,
+            shiny::tagList(
+              e$message,
+              "Please return to",
+              shiny::tags$a("result selection", href = "/nhp/outputs")
+            )
+          )
+        )
+        session$close()
+      }
+    )
+  }) |>
+    # bind on same key as model_metadata()
     shiny::bindCache(session$clientData$url_search)
 
   # handle site selection ----
