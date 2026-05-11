@@ -4,7 +4,7 @@ library(mockery)
 test_that("it loads the modules correctly", {
   m <- mock()
 
-  stub(app_server, "get_metadata", "metadata")
+  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
   stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
@@ -48,10 +48,10 @@ test_that("it loads the modules correctly", {
   })
 })
 
-test_that("model_metadata calls get_metadata", {
-  m <- mock("metadata")
+test_that("model_metadata calls get_model_run", {
+  m <- mock(list(results_json_gz_path = "file"))
 
-  stub(app_server, "get_metadata", m)
+  stub(app_server, "get_model_run", m)
   stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
@@ -83,18 +83,18 @@ test_that("model_metadata calls get_metadata", {
   stub(app_server, "mod_info_params_server", "mod_info_params_server")
 
   testServer(app_server, {
-    expect_equal(model_metadata(), "metadata")
+    expect_equal(model_metadata(), list(results_json_gz_path = "file"))
 
     expect_called(m, 1)
     expect_call(m, 1, get_model_run(url_search))
   })
 })
 
-test_that("selected_data calls server_get_results", {
+test_that("selected_data calls get_results_from_azure", {
   m <- mock("results")
 
-  stub(app_server, "get_metadata", "metadata")
-  stub(app_server, "server_get_results", m)
+  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_results_from_azure", m)
   stub(app_server, "get_trust_sites", "trust_sites")
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -128,14 +128,15 @@ test_that("selected_data calls server_get_results", {
     expect_equal(selected_data(), "results")
 
     expect_called(m, 1)
-    expect_args(m, 1, "metadata")
+    expect_args(m, 1, "file")
   })
 })
 
-test_that("if server_get_results errors the app exits", {
+test_that("if get_results_from_azure errors the app exits", {
   m <- mock()
 
-  stub(app_server, "server_get_results", \(...) stop("error occured"))
+  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_results_from_azure", \(...) stop("error occured"))
   stub(app_server, "get_trust_sites", "trust_sites")
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -183,7 +184,8 @@ test_that("if server_get_results errors the app exits", {
 })
 
 test_that("selected_site uses the inputs values", {
-  stub(app_server, "server_get_results", "results")
+  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -228,7 +230,8 @@ test_that("selected_site uses the inputs values", {
 test_that("it gets the trust sites from the results", {
   m <- mock("trust_sites")
 
-  stub(app_server, "server_get_results", "results")
+  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_results", "results")
   stub(app_server, "get_trust_sites", m)
 
@@ -275,7 +278,8 @@ test_that("it gets the trust sites from the results", {
 test_that("it updates the site selection drop down", {
   m <- mock()
 
-  stub(app_server, "server_get_results", "results")
+  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_trust_sites", c("a", "b", "c"))
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -333,7 +337,8 @@ test_that("it updates the site selection drop down", {
 })
 
 test_that("it can reset the cache", {
-  stub(app_server, "server_get_results", "results")
+  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_trust_sites", c("a", "b", "c"))
 
   stub(app_server, "mod_info_home_server", "mod_info_home_server")

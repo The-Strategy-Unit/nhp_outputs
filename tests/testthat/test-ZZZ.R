@@ -29,31 +29,6 @@ test_that("lookup_ods_org_code_name returns correct names", {
   expect_equal(lookup_ods_org_code_name("RL400"), "Unknown")
 })
 
-test_that("get_selected_file_from_url decodes the filename correctly", {
-  # act
-  expected <- "test/file.json.gz"
-
-  key <- openssl::aes_keygen()
-  key_b64 <- openssl::base64_encode(key)
-
-  ct <- openssl::aes_cbc_encrypt(charToRaw(expected), key, NULL)
-  hm <- openssl::sha256(ct, key)
-
-  us <- openssl::base64_encode(c(hm, ct))
-
-  session <- list(
-    clientData = list(
-      url_search = paste0("?", us)
-    )
-  )
-
-  # act
-  actual <- get_selected_file_from_url(session, key_b64)
-
-  # assert
-  expect_equal(actual, expected)
-})
-
 test_that("dev user can request cache reset", {
   session <- list(
     groups = "nhp_devs",
