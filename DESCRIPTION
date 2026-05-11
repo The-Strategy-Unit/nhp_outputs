@@ -15,6 +15,7 @@ BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
 Depends:
     R (>= 4.1.0)
 Imports: 
+    azkit,
     AzureAuth,
     AzureStor,
     bs4Dash,
@@ -29,6 +30,7 @@ Imports:
     gt,
     htmltools,
     httr,
+    httr2,
     jsonlite,
     lubridate,
     markdown,
@@ -65,6 +67,7 @@ Suggests:
 Remotes:
     github::ManuelHentschel/vscDebugger,
     github::tomjemmett/watchr
+    github::the-strategy-unit/azkit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
