@@ -9,10 +9,18 @@
           <div class="card-header">
             <h3 class="card-title">Notes</h3>
           </div>
-          <div class="card-body"><p>Bed days are defined as the difference in days between discharge and admission, plus one day.
+          <div class="card-body">
+            <p>The NHP demand and capacity model is probabilistic and each model run comprises of many simulations.
+      For each of the (default) 256 simulations, parameter values are randomly sampled from the prediction intervals (TPMA assumption ranges) supplied as the model inputs.
+      This results in 256 potential future outputs.
+      The principal projection is the average (mean) of all of these outputs.
+      The beeswarm and S-curve plots below are both visualisations of the distributions of those 256 potential future activity levels.</p>
+      
+            <p>Bed days are defined as the difference in days between discharge and admission, plus one day.
       One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.
       See the <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a> for definitions of terms.</p>
-      </div>
+      
+          </div>
         </div>
         <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
       </div>
@@ -69,6 +77,8 @@
             <h3 class="card-title">Beeswarm (model-run distribution)</h3>
           </div>
           <div class="card-body">
+            <p>Each red circle plotted on the beeswarm represents the result of a single simulation of the model and therefore a possible future based on the uncertainty in the input assumptions provided.</p>
+      
             <div id="id-beeswarm_text" class="shiny-html-output"></div>
             <div data-spinner-id="spinner-<id>" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
@@ -86,6 +96,10 @@
             <h3 class="card-title">S-curve (empirical cumulative distribution function)</h3>
           </div>
           <div class="card-body">
+            <p>The S-curve tells us the proportion of model runs where the result was less than or equal to a given level of activity.
+      This tells us the probability that the future level of activity will be equal or less than a given value.
+      For more information on how to read the S-curve, please see <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html#empirical-cumulative-distribution-function-ecdf-curve-s-curve">the project information site</a>.</p>
+      
             <div id="id-ecdf_text" class="shiny-html-output"></div>
             <div data-spinner-id="spinner-<id>" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">

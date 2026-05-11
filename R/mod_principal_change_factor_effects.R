@@ -15,7 +15,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      md_file_to_html("app", "text", "notes-beddays.md"),
+      md_file_to_html("app", "text", "notes_beddays.md"),
       htmltools::p(
         "Regard these results as rough, high-level estimates of the number of",
         "rows added/removed due to each parameter."
@@ -40,6 +40,7 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Impact of changes",
       collapsible = FALSE,
       width = 12,
+      md_file_to_html("app", "text", "principal_impact_waterfall.md"),
       shiny::checkboxInput(ns("include_baseline"), "Include baseline?", TRUE),
       shinycssloaders::withSpinner(
         plotly::plotlyOutput(ns("change_factors"), height = "600px")
@@ -49,6 +50,11 @@ mod_principal_change_factor_effects_ui <- function(id) {
       title = "Individual change factors",
       collapsible = FALSE,
       width = 12,
+      md_file_to_html(
+        "app",
+        "text",
+        "principal_impact_individual-change-factors.md"
+      ),
       shiny::selectInput(
         ns("sort_type"),
         "Sort By",

@@ -15,7 +15,7 @@ mod_principal_summary_los_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
-      md_file_to_html("app", "text", "notes-beddays.md")
+      md_file_to_html("app", "text", "notes_beddays.md")
     ),
     bs4Dash::box(
       title = "Bed days summary by length of stay and point of delivery",
