@@ -66,7 +66,7 @@ Suggests:
     watchr (>= 0.0.0.9000)
 Remotes:
     github::ManuelHentschel/vscDebugger,
-    github::tomjemmett/watchr
+    github::tomjemmett/watchr,
     github::the-strategy-unit/azkit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
