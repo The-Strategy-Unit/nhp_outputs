@@ -13,12 +13,13 @@ app_server <- function(input, output, session) {
       error = \(e) {
         session$allowReconnect(FALSE)
 
+        print(e)
         shiny::showModal(
           shiny::modalDialog(
             title = "Error",
             footer = NULL,
             shiny::tagList(
-              e$message,
+              "Error loading model run metadata",
               "Please return to",
               shiny::tags$a("result selection", href = "/nhp/outputs")
             )
