@@ -7,7 +7,12 @@ get_result_sets <- function(
   }
 
   app_url <- config::get("app_url")
-  build_app_url <- function(version, dataset, model_run_id, outputs_app_uri) {
+  build_app_url <- function(
+    app_version,
+    dataset,
+    model_run_id,
+    outputs_app_uri
+  ) {
     glue::glue(app_url)
   }
 
