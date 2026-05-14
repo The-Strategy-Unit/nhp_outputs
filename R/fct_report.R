@@ -66,7 +66,8 @@ generate_activity_in_detail_table <- function(
       aggregation = agg_col,
       pods = pod,
       sites = sites,
-      tretspef_lookup = get_tretspef_lookup()
+      tretspef_lookup = get_tretspef_lookup(),
+      pod_lookup = get_pod_lookup()
     )
 
   # if a site is selected then there are no rows for A&E
@@ -105,7 +106,8 @@ plot_activity_distributions <- function(
       measure = measure,
       activity_type = activity_type,
       pods = pod,
-      sites = sites
+      sites = sites,
+      pod_lookup = get_pod_lookup()
     ) |>
     require_rows()
 
