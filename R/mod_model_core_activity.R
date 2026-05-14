@@ -53,7 +53,8 @@ mod_model_core_activity_server <- function(id, selected_data, selected_site) {
         reskit::shim_results() |>
         reskit::compile_distribution_summary_data(
           value_type = "median",
-          sites = selected_site()
+          sites = selected_site(),
+          pod_lookup = get_pod_lookup()
         ) |>
         reskit::make_distribution_summary_table()
     })
@@ -63,7 +64,8 @@ mod_model_core_activity_server <- function(id, selected_data, selected_site) {
         reskit::shim_results() |>
         reskit::compile_distribution_summary_data(
           value_type = "principal",
-          sites = selected_site()
+          sites = selected_site(),
+          pod_lookup = get_pod_lookup()
         ) |>
         reskit::make_distribution_summary_table()
     })

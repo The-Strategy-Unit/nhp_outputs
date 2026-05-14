@@ -37,7 +37,10 @@ mod_principal_summary_server <- function(id, selected_data, selected_site) {
     summary_data <- shiny::reactive({
       selected_data() |>
         reskit::shim_results() |>
-        reskit::compile_principal_pod_data(sites = selected_site())
+        reskit::compile_principal_pod_data(
+          sites = selected_site(),
+          pod_lookup = get_pod_lookup()
+        )
     })
 
     output$summary_table <- gt::render_gt({
