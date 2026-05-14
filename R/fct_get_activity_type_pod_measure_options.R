@@ -14,3 +14,24 @@ get_activity_type_pod_measure_options <- function() {
       .id = "activity_type"
     )
 }
+
+#' This reshapes the output of get_activity_type_pod_measure_options to
+#' match the format required for reskit functions.
+#' Ideally we shouldn't need this in future (issue #406)
+get_pod_lookup <- function() {
+  get_activity_type_pod_measure_options() |>
+    dplyr::select(
+      activity_type_label = activity_type_name,
+      pod,
+      pod_label = pod_name
+    ) |>
+    dplyr::distinct() |>
+    dplyr::mutate(
+      activity_type_label = dplyr::replace_values(
+        activity_type_label,
+        "Inpatients" ~ "Inpatient",
+        "Outpatients" ~ "Outpatient"
+      )
+    ) |>
+    dplyr::mutate(dplyr::across(c(activity_type_label, pod_label), factor))
+}
