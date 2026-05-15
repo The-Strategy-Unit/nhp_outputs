@@ -28,22 +28,12 @@ get_params <- function(r) {
 }
 
 get_model_run_from_ats <- function(dataset, model_run_id) {
-  token <- azkit::get_auth_token()
-
-  table_endpoint <- Sys.getenv("AZ_TABLE_EP")
-  table_name <- glue::glue(
-    "{Sys.getenv('AZ_TABLE_NAME')}(PartitionKey='{dataset}',RowKey='{model_run_id}')"
+  azkit::read_azure_table_single_entity(
+    Sys.getenv("AZ_TABLE_NAME"),
+    dataset,
+    model_run_id,
+    Sys.getenv("AZ_TABLE_EP"),
   )
-
-  httr2::request(table_endpoint) |>
-    httr2::req_url_path(table_name) |>
-    httr2::req_auth_bearer_token(token$credentials$access_token) |>
-    httr2::req_headers(
-      Accept = "application/json;odata=nometadata",
-      `x-ms-version` = "2019-02-02"
-    ) |>
-    httr2::req_perform() |>
-    httr2::resp_body_json()
 }
 
 get_results_from_azure <- function(filename) {
