@@ -16,7 +16,6 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     azkit,
-    AzureAuth,
     AzureStor,
     bs4Dash,
     cachem,
@@ -33,7 +32,6 @@ Imports:
     jsonlite,
     lubridate,
     markdown,
-    openssl,
     plotly,
     purrr,
     rlang,
