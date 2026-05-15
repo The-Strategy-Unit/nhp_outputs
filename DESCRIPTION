@@ -15,7 +15,7 @@ BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
 Depends:
     R (>= 4.5.0)
 Imports: 
-    azkit,
+    azkit (>= 0.3.0),
     AzureStor,
     bs4Dash,
     cachem,
