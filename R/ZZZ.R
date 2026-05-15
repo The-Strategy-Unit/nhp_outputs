@@ -30,12 +30,23 @@ require_rows <- function(x) {
 }
 
 lookup_ods_org_code_name <- function(org_code) {
-  req <- httr::GET(
-    "https://uat.directory.spineservices.nhs.uk",
-    path = c("ORD", "2-0-0", "organisations", org_code)
+  tryCatch(
+    {
+      httr2::request("https://uat.directory.spineservices.nhs.uk") |>
+        httr2::req_url_path_append(
+          "ORD",
+          "2-0-0",
+          "organisations",
+          org_code
+        ) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json() |>
+        purrr::pluck("Organisation", "Name", .default = "Unknown")
+    },
+    error = function(e) {
+      "Unknown"
+    }
   )
-
-  httr::content(req)$Organisation$Name %||% "Unknown"
 }
 
 get_model_run <- function(url_search) {

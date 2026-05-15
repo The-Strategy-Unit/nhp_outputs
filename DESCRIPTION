@@ -29,7 +29,6 @@ Imports:
     golem (>= 0.3.1),
     gt,
     htmltools,
-    httr,
     httr2,
     jsonlite,
     lubridate,
