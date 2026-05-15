@@ -21,17 +21,20 @@ get_activity_type_pod_measure_options <- function() {
 get_pod_lookup <- function() {
   get_activity_type_pod_measure_options() |>
     dplyr::select(
-      activity_type_label = activity_type_name,
-      pod,
-      pod_label = pod_name
+      activity_type_label = .data$activity_type_name,
+      .data$pod,
+      pod_label = .data$pod_name
     ) |>
     dplyr::distinct() |>
     dplyr::mutate(
       activity_type_label = dplyr::replace_values(
-        activity_type_label,
+        .data$activity_type_label,
         "Inpatients" ~ "Inpatient",
         "Outpatients" ~ "Outpatient"
       )
     ) |>
-    dplyr::mutate(dplyr::across(c(activity_type_label, pod_label), factor))
+    dplyr::mutate(dplyr::across(
+      c(.data$activity_type_label, .data$pod_label),
+      factor
+    ))
 }
