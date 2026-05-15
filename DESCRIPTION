@@ -33,7 +33,7 @@ Imports:
     markdown,
     plotly,
     purrr,
-    reskit (>= 0.4.9),
+    reskit (>= 1.0.0),
     rlang,
     rmarkdown,
     scales,
