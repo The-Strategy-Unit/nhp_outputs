@@ -1,56 +1,50 @@
-encrypt_filename <- function(
-  filename,
-  key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")
-) {
-  key <- openssl::base64_decode(key_b64)
-
-  f <- charToRaw(filename)
-
-  ct <- openssl::aes_cbc_encrypt(f, key, NULL)
-  hm <- as.raw(openssl::sha256(ct, key))
-
-  openssl::base64_encode(c(hm, ct)) |>
-    # connect does something weird if it encounters strings of the form /w==, where / can be any special character
-    URLencode(reserved = TRUE)
-}
-
-get_container <- function() {
-  ep_uri <- Sys.getenv("AZ_STORAGE_EP")
-  sa_key <- Sys.getenv("AZ_STORAGE_KEY")
-
-  ep <- if (sa_key != "") {
-    AzureStor::blob_endpoint(ep_uri, key = sa_key)
-  } else {
-    token <- AzureAuth::get_managed_token("https://storage.azure.com/") |>
-      AzureAuth::extract_jwt()
-
-    AzureStor::blob_endpoint(ep_uri, token = token)
-  }
-  AzureStor::storage_container(ep, Sys.getenv("AZ_STORAGE_CONTAINER"))
-}
-
 get_result_sets <- function(
-  allowed_datasets = get_user_allowed_datasets(NULL),
-  folder = "dev"
+  allowed_datasets = get_user_allowed_datasets(NULL)
 ) {
-  ds <- tibble::tibble(dataset = allowed_datasets)
+  token <- azkit::get_auth_token()
+  if (!token$validate()) {
+    token$refresh()
+  }
 
-  cont <- get_container()
+  app_url <- config::get("app_url")
+  build_app_url <- function(
+    app_version,
+    dataset,
+    model_run_id,
+    outputs_app_uri
+  ) {
+    glue::glue(app_url)
+  }
 
-  metadata_cache <- cachem::cache_disk(".cache")
-  get_metadata <- purrr::partial(AzureStor::get_storage_metadata, object = cont)
-  metadata <- memoise::memoise(get_metadata, cache = metadata_cache)
-
-  files <- cont |>
-    AzureStor::list_blobs(folder, info = "all", recursive = TRUE) |>
-    dplyr::filter(!.data[["isdir"]]) |>
-    purrr::pluck("name") |>
-    purrr::set_names() |>
-    purrr::map(metadata) |>
-    dplyr::bind_rows(.id = "file") |>
-    dplyr::semi_join(ds, by = dplyr::join_by("dataset")) |>
+  azkit::read_azure_table(
+    table_name = Sys.getenv("AZ_TABLE_NAME"),
+    table_endpoint = Sys.getenv("AZ_TABLE_EP"),
+    token = token,
+    filter = "status eq 'complete'"
+  ) |>
+    dplyr::filter(.data[["dataset"]] %in% allowed_datasets) |>
     dplyr::mutate(
-      dplyr::across("viewable", as.logical)
+      dplyr::across(
+        "app_version",
+        \(.x) {
+          ifelse(
+            stringr::str_starts(.x, "v"),
+            stringr::str_replace(.x, "\\.", "-"),
+            "dev"
+          )
+        }
+      ),
+      dplyr::across(
+        "outputs_app_uri",
+        \(.x) {
+          build_app_url(
+            .data[["app_version"]],
+            .data[["dataset"]],
+            .data[["RowKey"]],
+            .x
+          )
+        }
+      )
     )
 }
 
@@ -131,12 +125,11 @@ server <- function(input, output, session) {
 
   result_sets <- shiny::reactive({
     rs <- get_result_sets(
-      allowed_datasets(),
-      config::get("folder")
+      allowed_datasets()
     )
 
     # if a user isn't in the nhp_dev group, then do not display un-viewable/dev results
-    if (any(c("nhp_devs") %in% session$groups)) {
+    if (any(c("nhp_devs") %in% session$groups) || is.null(session$user)) {
       return(rs)
     }
 
@@ -176,8 +169,8 @@ server <- function(input, output, session) {
         .data[["scenario"]] == sc
       ) |>
       dplyr::mutate(
-        create_datetime_dt = create_datetime |>
-          lubridate::as_datetime("%Y%m%d_%H%M%S", tz = "UTC") |>
+        create_datetime_dt = .data[["create_datetime"]] |>
+          lubridate::as_datetime(tz = "UTC") |>
           lubridate::with_tz() |>
           format("%d/%m/%Y %H:%M:%S"),
         create_datetime_label = glue::glue(
@@ -232,15 +225,10 @@ server <- function(input, output, session) {
 
   output$view_results <- shiny::renderUI({
     f <- shiny::req(selected_file())
-    version <- stringr::str_replace(f$app_version, "\\.", "-") # nolint
-
-    file <- encrypt_filename(f$file) # nolint
-
-    url <- glue::glue(config::get("app_url"), "?{file}")
 
     shiny::tags$a(
       "View Results",
-      href = url,
+      href = f$outputs_app_uri,
       target = "_blank",
       class = "btn btn-primary",
       role = "button"

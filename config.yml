@@ -1,11 +1,8 @@
 default:
-  folder: "prod"
-  app_url: "http://localhost:8081/"
+  app_url: "http://localhost:8081/?{dataset}/{model_run_id}"
 
 development:
-  folder: "dev"
-  app_url: "/nhp/dev/outputs/"
+  app_url: "/nhp/dev/outputs/?{dataset}/{model_run_id}"
 
 production:
-  folder: "prod"
-  app_url: "/nhp/{version}/outputs/"
+  app_url: "/nhp/{app_version}/outputs/?{outputs_app_uri}"
