@@ -32,7 +32,7 @@ get_model_run_from_ats <- function(dataset, model_run_id) {
     Sys.getenv("AZ_TABLE_NAME"),
     dataset,
     model_run_id,
-    Sys.getenv("AZ_TABLE_EP"),
+    Sys.getenv("AZ_TABLE_EP")
   )
 }
 
