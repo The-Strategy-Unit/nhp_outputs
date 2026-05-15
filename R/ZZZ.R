@@ -30,37 +30,41 @@ require_rows <- function(x) {
 }
 
 lookup_ods_org_code_name <- function(org_code) {
-  req <- httr::GET(
-    "https://uat.directory.spineservices.nhs.uk",
-    path = c("ORD", "2-0-0", "organisations", org_code)
-  )
-
-  httr::content(req)$Organisation$Name %||% "Unknown"
-}
-
-get_selected_file_from_url <- function(
-  session,
-  key_b64 = Sys.getenv("NHP_ENCRYPT_KEY")
-) {
-  f <- session$clientData$url_search |>
-    stringr::str_sub(2L) |>
-    utils::URLdecode()
-
-  key <- openssl::base64_decode(key_b64)
-
   tryCatch(
     {
-      fd <- openssl::base64_decode(f)
-
-      hm <- fd[1:32]
-      ct <- fd[-(1:32)]
-
-      stopifnot("invalid hmac" = all(openssl::sha256(ct, key) == hm))
-
-      rawToChar(openssl::aes_cbc_decrypt(ct, key, NULL))
+      httr2::request("https://uat.directory.spineservices.nhs.uk") |>
+        httr2::req_url_path_append(
+          "ORD",
+          "2-0-0",
+          "organisations",
+          org_code
+        ) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json() |>
+        purrr::pluck("Organisation", "Name", .default = "Unknown")
     },
-    error = \(e) NULL
+    error = function(e) {
+      "Unknown"
+    }
   )
+}
+
+get_model_run <- function(url_search) {
+  dataset_pattern <- "[a-z0-9]+"
+  uuid_pattern <- "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
+
+  regex <- stringr::regex(
+    as.character(glue::glue("^\\?({dataset_pattern})/({uuid_pattern})$")),
+    ignore_case = TRUE
+  )
+
+  c(f, dataset, model_run_id) %<-% stringr::str_match(url_search, regex)
+
+  stopifnot(
+    "URL does not match expected pattern" = !is.na(f)
+  )
+
+  get_model_run_from_ats(dataset, model_run_id)
 }
 
 user_requested_cache_reset <- function(session) {
@@ -70,23 +74,6 @@ user_requested_cache_reset <- function(session) {
   u <- shiny::parseQueryString(session$clientData$url_search)
 
   !is.null(u$reset_cache)
-}
-
-server_get_results <- function(session) {
-  file <- get_selected_file_from_url(session, Sys.getenv("NHP_ENCRYPT_KEY"))
-
-  if (is.null(file)) {
-    stop("No/Invalid file was requested.")
-  }
-
-  tryCatch(
-    {
-      get_results_from_azure(file)
-    },
-    error = \(e) {
-      stop("Results not found.")
-    }
-  )
 }
 
 get_mitigator_lookup <- function(

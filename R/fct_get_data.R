@@ -1,25 +1,3 @@
-get_container <- function() {
-  ep_uri <- Sys.getenv("AZ_STORAGE_EP")
-  app_id <- Sys.getenv("AZ_APP_ID")
-
-  token <- if (app_id != "") {
-    AzureAuth::get_azure_token(
-      "https://storage.azure.com",
-      tenant = Sys.getenv("AZ_TENANT_ID"),
-      app = app_id,
-      auth_type = "device_code",
-      use_cache = TRUE
-    )
-  } else {
-    AzureAuth::get_managed_token("https://storage.azure.com/") |>
-      AzureAuth::extract_jwt()
-  }
-
-  ep_uri |>
-    AzureStor::blob_endpoint(token = token) |>
-    AzureStor::storage_container(Sys.getenv("AZ_STORAGE_CONTAINER"))
-}
-
 get_params <- function(r) {
   is_scalar_numeric <- \(x) rlang::is_scalar_atomic(x) && is.numeric(x)
 
@@ -49,29 +27,30 @@ get_params <- function(r) {
   recursive_discard(r$params)
 }
 
-get_result_sets <- function(
-  allowed_datasets = get_user_allowed_datasets(NULL),
-  folder = "prod"
-) {
-  ds <- tibble::tibble(dataset = allowed_datasets)
+get_model_run_from_ats <- function(dataset, model_run_id) {
+  token <- azkit::get_auth_token()
 
-  cont <- get_container()
+  table_endpoint <- Sys.getenv("AZ_TABLE_EP")
+  table_name <- glue::glue(
+    "{Sys.getenv('AZ_TABLE_NAME')}(PartitionKey='{dataset}',RowKey='{model_run_id}')"
+  )
 
-  cont |>
-    AzureStor::list_blobs(folder, info = "all", recursive = TRUE) |>
-    dplyr::filter(!.data[["isdir"]]) |>
-    purrr::pluck("name") |>
-    purrr::set_names() |>
-    purrr::map(\(name, ...) AzureStor::get_storage_metadata(cont, name)) |>
-    dplyr::bind_rows(.id = "file") |>
-    dplyr::semi_join(ds, by = dplyr::join_by("dataset")) |>
-    dplyr::mutate(
-      dplyr::across("viewable", as.logical)
-    )
+  httr2::request(table_endpoint) |>
+    httr2::req_url_path(table_name) |>
+    httr2::req_auth_bearer_token(token$credentials$access_token) |>
+    httr2::req_headers(
+      Accept = "application/json;odata=nometadata",
+      `x-ms-version` = "2019-02-02"
+    ) |>
+    httr2::req_perform() |>
+    httr2::resp_body_json()
 }
 
 get_results_from_azure <- function(filename) {
-  cont <- get_container()
+  cont <- azkit::get_container(
+    container_name = Sys.getenv("AZ_STORAGE_CONTAINER"),
+    endpoint_url = Sys.getenv("AZ_STORAGE_EP")
+  )
 
   AzureStor::download_blob(cont, filename, NULL) |>
     memDecompress(type = "gzip") |>

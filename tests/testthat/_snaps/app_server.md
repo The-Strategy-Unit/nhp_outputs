@@ -1,4 +1,4 @@
-# if server_get_results errors the app exits
+# if get_results_from_azure errors the app exits
 
     Code
       mock_args(m)[[1]][[1]]

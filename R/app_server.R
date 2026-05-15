@@ -4,10 +4,38 @@
 #'     DO NOT REMOVE.
 #' @noRd
 app_server <- function(input, output, session) {
+  model_metadata <- shiny::reactive({
+    tryCatch(
+      {
+        url_search <- utils::URLdecode(session$clientData$url_search)
+        get_model_run(url_search)
+      },
+      error = \(e) {
+        session$allowReconnect(FALSE)
+
+        print(e)
+        shiny::showModal(
+          shiny::modalDialog(
+            title = "Error",
+            footer = NULL,
+            shiny::tagList(
+              "Error loading model run metadata",
+              "Please return to",
+              shiny::tags$a("result selection", href = "/nhp/outputs")
+            )
+          )
+        )
+        session$close()
+      }
+    )
+  }) |>
+    shiny::bindCache(session$clientData$url_search)
+
   selected_data <- shiny::reactive({
     tryCatch(
       {
-        server_get_results(session)
+        file <- model_metadata()$results_json_gz_path
+        get_results_from_azure(file)
       },
       error = \(e) {
         session$allowReconnect(FALSE)
@@ -27,6 +55,7 @@ app_server <- function(input, output, session) {
       }
     )
   }) |>
+    # bind on same key as model_metadata()
     shiny::bindCache(session$clientData$url_search)
 
   # handle site selection ----

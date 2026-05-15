@@ -15,7 +15,7 @@ BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
 Depends:
     R (>= 4.1.0)
 Imports: 
-    AzureAuth,
+    azkit,
     AzureStor,
     bs4Dash,
     cachem,
@@ -28,11 +28,10 @@ Imports:
     golem (>= 0.3.1),
     gt,
     htmltools,
-    httr,
+    httr2,
     jsonlite,
     lubridate,
     markdown,
-    openssl,
     plotly,
     purrr,
     rlang,
@@ -64,7 +63,8 @@ Suggests:
     watchr (>= 0.0.0.9000)
 Remotes:
     github::ManuelHentschel/vscDebugger,
-    github::tomjemmett/watchr
+    github::tomjemmett/watchr,
+    github::the-strategy-unit/azkit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
