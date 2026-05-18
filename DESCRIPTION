@@ -13,7 +13,7 @@ License: MIT + file LICENSE
 URL: https://github.com/The-Strategy-Unit/nhp_outputs
 BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
 Depends:
-    R (>= 4.1.0)
+    R (>= 4.5.0)
 Imports: 
     azkit (>= 0.3.0),
     AzureStor,
@@ -22,7 +22,6 @@ Imports:
     config (>= 0.3.1),
     dplyr,
     forcats,
-    ggbeeswarm,
     ggplot2,
     glue,
     golem (>= 0.3.1),
@@ -34,19 +33,18 @@ Imports:
     markdown,
     plotly,
     purrr,
+    reskit (>= 1.0.0),
     rlang,
     rmarkdown,
     scales,
     shiny (>= 1.7.1),
     shinycssloaders,
     shinyjs,
-    snakecase,
     stringr,
     tibble,
     tidyr,
     tidyselect,
     uuid,
-    withr,
     writexl,
     yyjsonr,
     zeallot
@@ -60,11 +58,13 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     utils,
-    watchr (>= 0.0.0.9000)
+    watchr (>= 0.0.0.9000),
+    withr
 Remotes:
     github::ManuelHentschel/vscDebugger,
     github::tomjemmett/watchr,
-    github::the-strategy-unit/azkit
+    github::the-strategy-unit/azkit,
+    reskit=github::The-Strategy-Unit/nhp_reskit,
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
