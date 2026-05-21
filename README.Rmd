@@ -39,7 +39,7 @@ The app is built primarily with [Shiny](https://shiny.posit.co/) and [the {golem
 ### Run locally
 
 Packages used in the app are listed in `DESCRIPTION`, and can be
-installed with `pak::local_install_deps(dependencies = TRUE)`.`.
+installed with `pak::local_install_deps(dependencies = TRUE)`.
 
 Add an `.Renviron` file to the project root that contains the required environment variables. You can get these from a member of the Data Science team.
 
