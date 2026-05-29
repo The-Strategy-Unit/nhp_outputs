@@ -77,7 +77,7 @@ params$r |>
   reskit::shim_results() |>
   reskit::compile_principal_pod_data(
     sites = params$sites,
-    pod_lookup = get_pod_lookup()
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
@@ -93,7 +93,8 @@ params$r |>
 params$r |>
   reskit::shim_results() |>
   reskit::compile_principal_los_data(
-    measure = "beddays", sites = params$sites,
+    measure = "beddays",
+    sites = params$sites,
     pod_lookup = get_pod_lookup()
   ) |>
   reskit::make_principal_los_table() |>
