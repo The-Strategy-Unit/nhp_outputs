@@ -77,7 +77,7 @@ params$r |>
   reskit::shim_results() |>
   reskit::compile_principal_pod_data(
     sites = params$sites,
-    pod_lookup = get_pod_lookup()
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
@@ -93,7 +93,8 @@ params$r |>
 params$r |>
   reskit::shim_results() |>
   reskit::compile_principal_los_data(
-    measure = "beddays", sites = params$sites,
+    measure = "beddays",
+    sites = params$sites,
     pod_lookup = get_pod_lookup()
   ) |>
   reskit::make_principal_los_table() |>
@@ -122,7 +123,7 @@ The results should be regarded as rough, high-level estimates of the number of r
 
 ```{r}
 #| label: pp-impact-of-changes-setup
-#|
+
 possibly_compile_change_factor_data <-
   purrr::possibly(
     reskit::compile_change_factor_data,
@@ -149,8 +150,8 @@ params$r |>
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -161,8 +162,8 @@ params$r |>
     activity_type = "ip",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -178,8 +179,8 @@ params$r |>
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -190,8 +191,8 @@ params$r |>
     activity_type = "ip",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -209,8 +210,8 @@ params$r |>
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -221,8 +222,8 @@ params$r |>
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -238,8 +239,8 @@ params$r |>
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -250,8 +251,8 @@ params$r |>
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_individual_cf_plot()
 ```
@@ -269,8 +270,8 @@ params$r |>
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -281,8 +282,8 @@ params$r |>
     activity_type = "aae",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = get_tpma_lookup(),
-    pod_lookup = get_pod_lookup()
+    tpma_lookup = reskit::get_tpma_label_lookup(),
+    pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_individual_cf_plot()
 ```
