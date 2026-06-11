@@ -133,8 +133,6 @@ plot_activity_distributions <- function(
 #'     [expand_param_tables_to_rmd].
 #' @noRd
 param_tables_to_list <- function(p) {
-  time_profiles <- p$time_profile_mappings
-
   # We can use some functions developed for the app but need to catch
   # shiny::need() errors as NULLs.
 
@@ -168,19 +166,15 @@ param_tables_to_list <- function(p) {
     "Baseline adjustment" = possibly_table_baseline_adjustment(p),
     "Demographic adjustment" = possibly_table_demographic_adjustment(p),
     "Waiting list adjustment" = list(
-      "Time profile" = time_profiles$waiting_list_adjustment,
       "Table" = possibly_table_waiting_list_adjustment(p)
     ),
     "Expatriation" = list(
-      "Time profile" = time_profiles$expat,
       "Table" = possibly_table_expat_repat_adjustment(p, "expat")
     ),
     "Repatriation (local)" = list(
-      "Time profile" = time_profiles$repat_local,
       "Table" = possibly_table_expat_repat_adjustment(p, "repat_local")
     ),
     "Repatriation (non-local)" = list(
-      "Time profile" = time_profiles$repat_nonlocal,
       "Table" = possibly_table_expat_repat_adjustment(p, "repat_nonlocal")
     ),
     "Non-demographic adjustment" = list(
