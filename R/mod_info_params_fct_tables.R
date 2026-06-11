@@ -184,20 +184,11 @@ info_params_table_activity_avoidance <- function(p) {
     shiny::need(activity_avoidance, "No parameters provided")
   )
 
-  time_profiles <- p[["time_profile_mappings"]][["activity_avoidance"]] |>
-    purrr::map(unlist) |>
-    purrr::map(tibble::enframe, "strategy", "time_profile") |>
-    dplyr::bind_rows(.id = "activity_type")
-
   activity_avoidance |>
     purrr::map_depth(2, "interval") |>
     purrr::map(tibble::enframe, "strategy") |>
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
-    dplyr::left_join(
-      time_profiles,
-      by = dplyr::join_by("activity_type", "strategy")
-    ) |>
     info_params_fix_data() |>
     dplyr::arrange("activity_type_name", "mitigator_name") |>
     gt::gt("mitigator_name", "activity_type_name") |>
@@ -211,20 +202,11 @@ info_params_table_efficiencies <- function(p) {
     shiny::need(efficiencies, "No parameters provided")
   )
 
-  time_profiles <- p[["time_profile_mappings"]][["efficiencies"]] |>
-    purrr::map(unlist) |>
-    purrr::map(tibble::enframe, "strategy", "time_profile") |>
-    dplyr::bind_rows(.id = "activity_type")
-
   efficiencies |>
     purrr::map_depth(2, "interval") |>
     purrr::map(tibble::enframe, "strategy") |>
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
-    dplyr::left_join(
-      time_profiles,
-      by = dplyr::join_by("activity_type", "strategy")
-    ) |>
     info_params_fix_data() |>
     dplyr::arrange("activity_type_name", "mitigator_name") |>
     gt::gt("mitigator_name", "activity_type_name") |>
