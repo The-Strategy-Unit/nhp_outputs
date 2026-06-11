@@ -42,13 +42,6 @@ mod_info_params_ui <- function(id) {
       title = "Waiting list adjustment",
       collapsed = TRUE,
       width = 12,
-      shiny::tags$p(
-        "Time Profile:",
-        shiny::textOutput(
-          ns("time_profile_waiting_list_adjustment"),
-          inline = TRUE
-        )
-      ),
       gt::gt_output(ns("params_waiting_list_adjustment"))
     ),
     bs4Dash::box(
@@ -61,30 +54,18 @@ mod_info_params_ui <- function(id) {
       title = "Expatriation",
       collapsed = TRUE,
       width = 12,
-      shiny::tags$p(
-        "Time Profile:",
-        shiny::textOutput(ns("time_profile_expat"), inline = TRUE)
-      ),
       gt::gt_output(ns("params_expat"))
     ),
     bs4Dash::box(
       title = "Repatriation (local)",
       collapsed = TRUE,
       width = 12,
-      shiny::tags$p(
-        "Time Profile:",
-        shiny::textOutput(ns("time_profile_repat_local"), inline = TRUE)
-      ),
       gt::gt_output(ns("params_repat_local"))
     ),
     bs4Dash::box(
       title = "Repatriation (non-local)",
       collapsed = TRUE,
       width = 12,
-      shiny::tags$p(
-        "Time Profile:",
-        shiny::textOutput(ns("time_profile_repat_nonlocal"), inline = TRUE)
-      ),
       gt::gt_output(ns("params_repat_nonlocal"))
     ),
     bs4Dash::box(
@@ -171,24 +152,6 @@ mod_info_params_server <- function(id, selected_data) {
 
     output$params_efficiencies <- gt::render_gt({
       info_params_table_efficiencies(params_data())
-    })
-
-    # time profiles
-
-    output$time_profile_waiting_list_adjustment <- shiny::renderText({
-      params_data()[["time_profile_mappings"]][["waiting_list_adjustment"]]
-    })
-
-    output$time_profile_expat <- shiny::renderText({
-      params_data()[["time_profile_mappings"]][["expat"]]
-    })
-
-    output$time_profile_repat_local <- shiny::renderText({
-      params_data()[["time_profile_mappings"]][["repat_local"]]
-    })
-
-    output$time_profile_repat_nonlocal <- shiny::renderText({
-      params_data()[["time_profile_mappings"]][["repat_nonlocal"]]
     })
 
     # NDG
