@@ -67,7 +67,7 @@ mod_info_downloads_ui <- function(id) {
         width = 12,
         htmltools::p(
           "Download a file containing the outputs (charts and tables) for the",
-          "selected model run and selected sites. This will take a moment.",
+          "selected model run and selected sites. This will take a moment."
         ),
         shinyjs::disabled(
           shiny::downloadButton(
