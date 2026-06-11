@@ -63,10 +63,6 @@
             </div>
           </div>
           <div class="card-body">
-            <p>
-              Time Profile:
-              <span id="id-time_profile_waiting_list_adjustment" class="shiny-text-output"></span>
-            </p>
             <div class="shiny-html-output gt_shiny" id="id-params_waiting_list_adjustment"></div>
           </div>
         </div>
@@ -99,10 +95,6 @@
             </div>
           </div>
           <div class="card-body">
-            <p>
-              Time Profile:
-              <span id="id-time_profile_expat" class="shiny-text-output"></span>
-            </p>
             <div class="shiny-html-output gt_shiny" id="id-params_expat"></div>
           </div>
         </div>
@@ -119,10 +111,6 @@
             </div>
           </div>
           <div class="card-body">
-            <p>
-              Time Profile:
-              <span id="id-time_profile_repat_local" class="shiny-text-output"></span>
-            </p>
             <div class="shiny-html-output gt_shiny" id="id-params_repat_local"></div>
           </div>
         </div>
@@ -139,10 +127,6 @@
             </div>
           </div>
           <div class="card-body">
-            <p>
-              Time Profile:
-              <span id="id-time_profile_repat_nonlocal" class="shiny-text-output"></span>
-            </p>
             <div class="shiny-html-output gt_shiny" id="id-params_repat_nonlocal"></div>
           </div>
         </div>
