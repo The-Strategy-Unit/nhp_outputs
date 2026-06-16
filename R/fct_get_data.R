@@ -36,154 +36,43 @@ get_model_run_from_ats <- function(dataset, model_run_id) {
   )
 }
 
-get_results_from_azure <- function(filename) {
-  cont <- azkit::get_container(
+get_results_from_azure <- function(directory) {
+  container <- azkit::get_container(
     container_name = Sys.getenv("AZ_STORAGE_CONTAINER"),
     endpoint_url = Sys.getenv("AZ_STORAGE_EP")
   )
 
-  AzureStor::download_blob(cont, filename, NULL) |>
-    memDecompress(type = "gzip") |>
-    yyjsonr::read_json_raw(
-      yyjsonr::opts_read_json(
-        obj_of_arrs_to_df = FALSE
-      )
-    ) |>
-    parse_results()
+  blobs <- AzureStor::list_blobs(container, directory) |> dplyr::pull(name)
+  params_file <- blobs[grepl("params\\.json$", blobs)]
+  variants_file <- blobs[grepl("variants\\.json$", blobs)]
+  parquet_files <- blobs[grepl("\\.parquet$", blobs)]
+  results_names <- parquet_files |> basename() |> tools::file_path_sans_ext()
+
+  params <- azkit::read_azure_json(container, params_file)
+  population_variants <- azkit::read_azure_json(container, variants_file)
+  results <- purrr::map(
+    parquet_files,
+    \(file) azkit::read_azure_parquet(container, file)
+  ) |>
+    purrr::set_names(results_names)
+
+  dplyr::lst(params, population_variants, results)
 }
 
-get_results_from_local <- function(filename) {
-  filename |>
-    yyjsonr::read_json_file(
-      yyjsonr::opts_read_json(
-        obj_of_arrs_to_df = FALSE
-      )
-    ) |>
-    parse_results()
-}
+get_results_from_local <- function(directory) {
+  files <- list.files(directory, full.names = TRUE)
+  params_file <- files[grepl("params\\.json$", files)]
+  variants_file <- files[grepl("variants\\.json$", files)]
+  parquet_files <- files[grepl("\\.parquet$", files)]
+  results_names <- parquet_files |> basename() |> tools::file_path_sans_ext()
 
-parse_results <- function(r) {
-  r$population_variants <- as.character(r$population_variants)
+  params <- yyjsonr::read_json_file(params_file)
+  population_variants <- yyjsonr::read_json_file(variants_file)
+  results <- parquet_files |>
+    purrr::map(arrow::read_parquet) |>
+    purrr::set_names(results_names)
 
-  r$results <- purrr::map(
-    r$results,
-    tibble::as_tibble
-  )
-
-  r$params <- patch_params(r$params)
-
-  patch_results(r)
-}
-
-patch_params <- function(r) {
-  if (is.list(r)) {
-    return(purrr::map(r, patch_params))
-  }
-
-  if (is.numeric(r) && length(r) == 2) {
-    return(as.list(r))
-  }
-
-  r
-}
-
-patch_principal <- function(results, name) {
-  if (name == "step_counts") {
-    return(patch_principal_step_counts(results))
-  }
-
-  dplyr::mutate(
-    results,
-    principal = purrr::map_dbl(.data[["model_runs"]], mean),
-    median = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.5),
-    lwr_pi = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.1),
-    upr_pi = purrr::map_dbl(.data[["model_runs"]], stats::quantile, 0.9)
-  )
-}
-
-patch_principal_step_counts <- function(results) {
-  dplyr::mutate(
-    results,
-    value = purrr::map_dbl(.data[["model_runs"]], mean)
-  )
-}
-
-patch_step_counts <- function(results) {
-  if (!"strategy" %in% colnames(results$step_counts)) {
-    results$step_counts <- dplyr::mutate(
-      results$step_counts,
-      strategy = NA_character_,
-      .after = "change_factor"
-    )
-  }
-  results
-}
-
-patch_results <- function(r) {
-  r$results <- purrr::imap(r$results, patch_principal)
-  r$results <- patch_step_counts(r$results)
-
-  r$results[["tretspef+los_group"]] <- r$results[[
-    "tretspef+los_group"
-  ]] |>
-    dplyr::mutate(
-      dplyr::across(
-        "los_group",
-        \(.x) {
-          forcats::lvls_expand(
-            # order and include potentially missing levels
-            .x,
-            c(
-              "0 days",
-              "1 day",
-              "2 days",
-              "3 days",
-              "4-7 days",
-              "8-14 days",
-              "15-21 days",
-              "22+ days"
-            )
-          )
-        }
-      )
-    ) |>
-    dplyr::arrange(.data$pod, .data$measure, .data$sitetret, .data$los_group)
-
-  r$results[["sex+age_group"]] <- r$results[["sex+age_group"]] |>
-    dplyr::mutate(
-      dplyr::across(
-        "age_group",
-        \(.x) {
-          forcats::lvls_expand(
-            # order and include potentially missing levels
-            .x,
-            c(
-              "0",
-              "1-4",
-              "5-9",
-              "10-15",
-              "16-17",
-              "18-34",
-              "35-49",
-              "50-64",
-              "65-74",
-              "75-84",
-              "85+",
-              "Unknown"
-            )
-          )
-        }
-      )
-    ) |>
-    dplyr::arrange(
-      .data$pod,
-      .data$measure,
-      .data$sitetret,
-      .data$sex,
-      .data$age_group
-    )
-
-  r
+  dplyr::lst(params, population_variants, results)
 }
 
 get_user_allowed_datasets <- function(groups) {
