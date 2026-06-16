@@ -89,8 +89,7 @@ mod_principal_change_factor_effects_server <- function(
 
     output$change_factors <- shiny::renderPlot({
       shiny::req(input$pods)
-      selected_data() |>
-        reskit::shim_results() |>
+      selected_data()[["results"]] |>
         reskit::compile_change_factor_data(
           measure = input$measure,
           activity_type = input$activity_type,
@@ -107,8 +106,7 @@ mod_principal_change_factor_effects_server <- function(
 
     output$individual_change_factors <- shiny::renderPlot({
       shiny::req(input$pods)
-      selected_data() |>
-        reskit::shim_results() |>
+      selected_data()[["results"]] |>
         reskit::compile_indiv_change_factor_data(
           measure = input$measure,
           activity_type = input$activity_type,
