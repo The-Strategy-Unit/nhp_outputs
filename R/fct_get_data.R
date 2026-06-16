@@ -48,7 +48,7 @@ get_results_from_azure <- function(directory) {
   parquet_files <- blobs[grepl("\\.parquet$", blobs)]
   results_names <- parquet_files |> basename() |> tools::file_path_sans_ext()
 
-  params <- azkit::read_azure_json(container, params_file)
+  params <- azkit::read_azure_json(container, params_file) |> patch_params()
   population_variants <- azkit::read_azure_json(container, variants_file)
   results <- purrr::map(
     parquet_files,
@@ -66,7 +66,7 @@ get_results_from_local <- function(directory) {
   parquet_files <- files[grepl("\\.parquet$", files)]
   results_names <- parquet_files |> basename() |> tools::file_path_sans_ext()
 
-  params <- yyjsonr::read_json_file(params_file)
+  params <- yyjsonr::read_json_file(params_file) |> patch_params()
   population_variants <- yyjsonr::read_json_file(variants_file)
   results <- parquet_files |>
     purrr::map(arrow::read_parquet) |>
@@ -88,6 +88,18 @@ get_user_allowed_datasets <- function(groups) {
   }
 
   c("synthetic", p)
+}
+
+patch_params <- function(r) {
+  if (is.list(r)) {
+    return(purrr::map(r, patch_params))
+  }
+
+  if (is.numeric(r) && length(r) == 2) {
+    return(as.list(r))
+  }
+
+  r
 }
 
 get_trust_sites <- function(r) {
