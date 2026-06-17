@@ -42,28 +42,20 @@ get_results_from_azure <- function(directory) {
     endpoint_url = Sys.getenv("AZ_STORAGE_EP")
   )
 
-  blobs <- AzureStor::list_blobs(container, directory) |> dplyr::pull(name)
-  params_file <- blobs[grepl("params\\.json$", blobs)]
-  variants_file <- blobs[grepl("variants\\.json$", blobs)]
-  parquet_files <- blobs[grepl("\\.parquet$", blobs)]
-  results_names <- parquet_files |> basename() |> tools::file_path_sans_ext()
+  params_file <- file.path(directory, "params.json")
+  variants_file <- file.path(directory, "variants.json")
 
   params <- azkit::read_azure_json(container, params_file) |> patch_params()
   population_variants <- azkit::read_azure_json(container, variants_file)
-  results <- purrr::map(
-    parquet_files,
-    \(file) azkit::read_azure_parquet(container, file)
-  ) |>
-    purrr::set_names(results_names)
+  results <- reskit::read_results_parquet_files(container, directory)
 
   dplyr::lst(params, population_variants, results)
 }
 
-get_results_from_local <- function(directory) {
-  files <- list.files(directory, full.names = TRUE)
-  params_file <- files[grepl("params\\.json$", files)]
-  variants_file <- files[grepl("variants\\.json$", files)]
-  parquet_files <- files[grepl("\\.parquet$", files)]
+get_results_from_local <- function(directory = "inst/sample_results") {
+  params_file <- file.path(directory, "params.json")
+  variants_file <- file.path(directory, "variants.json")
+  parquet_files <- list.files(directory, "\\.parquet$", full.names = TRUE)
   results_names <- parquet_files |> basename() |> tools::file_path_sans_ext()
 
   params <- yyjsonr::read_json_file(params_file) |> patch_params()
