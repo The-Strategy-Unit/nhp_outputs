@@ -58,16 +58,15 @@ generate_activity_in_detail_table <- function(
   measure,
   agg_col
 ) {
-  aggregated_data <- data |>
-    reskit::shim_results() |>
+  aggregated_data <- data$results |>
     reskit::compile_detailed_activity_data(
       measure = measure,
       activity_type = activity_type,
       aggregation = agg_col,
       pods = pod,
       sites = sites,
-      tretspef_lookup = get_tretspef_lookup(),
-      pod_lookup = get_pod_lookup()
+      tretspef_lookup = reskit::get_tretspef_lookup(),
+      pod_lookup = reskit::get_detailed_pods()
     )
 
   # if a site is selected then there are no rows for A&E
@@ -100,14 +99,13 @@ plot_activity_distributions <- function(
   pod,
   measure
 ) {
-  aggregated_data <- data |>
-    reskit::shim_results() |>
+  aggregated_data <- data$results |>
     reskit::compile_distribution_plot_data(
       measure = measure,
       activity_type = activity_type,
       pods = pod,
       sites = sites,
-      pod_lookup = get_pod_lookup()
+      pod_lookup = reskit::get_detailed_pods()
     ) |>
     require_rows()
 
@@ -195,23 +193,19 @@ param_tables_to_list <- function(p) {
 #'     object `p` to [param_tables_to_list]. Each element is a parameter group
 #'     ('baseline adjustment', etc) and contains a 'gt' table object
 #'     describing the parameter selections, or a further list with elements for
-#'     a 'gt' object and a character value (the time profile mapping).
+#'     a 'gt' object and a character value.
 #' @noRd
 expand_param_tables_to_rmd <- function(param_tables_list) {
   l1_names <- names(param_tables_list) # 'l1' as in 'level 1' of the list
 
   for (l1 in l1_names) {
     cat("##", l1, "\n\n")
-
     l1_object <- param_tables_list[[l1]]
     l1_is_gt <- inherits(l1_object, "gt_tbl")
     l1_is_list <- is.list(l1_object)
 
     if (l1_is_gt) {
-      l1_object |>
-        gt::tab_options(table.align = "left") |>
-        htmltools::tagList() |>
-        print()
+      render_params_gt(l1_object)
     }
 
     if (!l1_is_gt && l1_is_list) {
@@ -221,20 +215,34 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
         l2_object <- l1_object[[l2]]
         l2_is_char <- is.character(l2_object)
         l2_is_gt <- inherits(l2_object, "gt_tbl")
+        l2_is_empty <- is.null(l2_object)
+
+        if (l2_is_empty) {
+          cat("No parameters were selected.\n\n")
+        }
 
         if (l2_is_char) {
           cat(paste0(l2, ":"), l2_object, "\n\n")
         }
 
         if (l2_is_gt) {
-          l2_object |>
-            gt::tab_options(table.align = "left") |>
-            htmltools::tagList() |>
-            print()
+          render_params_gt(l2_object)
         }
       }
     }
   }
+}
+
+#' Render a 'gt' Table of Parameter Selections as Raw HTML
+#' @param param_table A data.frame. Contains parameter selections made in the
+#'     inputs app. The data.frame is an element of `param_tables_list` provided
+#'     to [expand_param_tables_to_rmd].
+#' @noRd
+render_params_gt <- function(param_table) {
+  param_table |>
+    gt::tab_options(table.align = "left") |>
+    gt::as_raw_html() |>
+    cat()
 }
 
 #' Expand a List of Parameter-Selection Reasons to R Markdown
