@@ -1,3 +1,48 @@
+mod_info_downloads_reformat_all_results <- function(r) {
+  r$results <- purrr::imap(
+    r$results,
+    \(dat, dat_name) {
+      if (dat_name == "step_counts") {
+        mod_info_downloads_reformat_step_counts(dat)
+      } else {
+        mod_info_downloads_reformat_results(dat)
+      }
+    }
+  )
+  r
+}
+
+mod_info_downloads_reformat_step_counts <- function(dat) {
+  dat |>
+    dplyr::summarise(
+      .by = -c(.data$model_run, .data$value),
+      model_runs = list(.data$value),
+      value = purrr::map_dbl(.data$model_runs, mean)
+    )
+}
+
+mod_info_downloads_reformat_results <- function(dat) {
+  baseline <- dat |>
+    dplyr::filter(.data$model_run == 0) |>
+    dplyr::select(-.data$model_run) |>
+    dplyr::rename(baseline = .data$value)
+
+  summaries <- dat |>
+    dplyr::filter(.data$model_run != 0) |>
+    dplyr::summarise(
+      .by = -c(.data$model_run, .data$value),
+      principal = mean(.data$value),
+      model_runs = list(.data$value),
+      median = stats::quantile(.data$value, 0.5),
+      lwr_pi = stats::quantile(.data$value, 0.1),
+      upr_pi = stats::quantile(.data$value, 0.9)
+    )
+
+  # Join by all common cols
+  join_cols <- intersect(names(baseline), names(summaries))
+  dplyr::left_join(baseline, summaries, by = join_cols)
+}
+
 mod_info_downloads_download_excel <- function(data) {
   function(file) {
     results_dfs <- data() |>
