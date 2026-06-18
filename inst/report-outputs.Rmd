@@ -73,8 +73,7 @@ Bed-availability data is not available at site level. See [the model project inf
 ```{r}
 #| label: pp-summary
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   reskit::compile_principal_pod_data(
     sites = params$sites,
     pod_lookup = reskit::get_principal_pods()
@@ -90,8 +89,7 @@ params$r |>
 ```{r}
 #| label: pp-summary-los-beddays
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   reskit::compile_principal_los_data(
     measure = "beddays",
     sites = params$sites,
@@ -106,8 +104,7 @@ params$r |>
 ```{r}
 #| label: pp-summary-los-admissions
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   reskit::compile_principal_los_data(
     measure = "admissions",
     sites = params$sites,
@@ -144,8 +141,7 @@ possibly_compile_indiv_change_factor_data <-
 ```{r}
 #| label: pp-impact-of-changes-ip-bed-days
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_change_factor_data(
     measure = "beddays",
     activity_type = "ip",
@@ -155,8 +151,7 @@ params$r |>
   ) |>
   reskit::make_overall_cf_plot()
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_indiv_change_factor_data(
     measure = "beddays",
     activity_type = "ip",
@@ -173,8 +168,7 @@ params$r |>
 ```{r}
 #| label: pp-impact-of-changes-ip-admissions
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_change_factor_data(
     measure = "admissions",
     activity_type = "ip",
@@ -184,8 +178,7 @@ params$r |>
   ) |>
   reskit::make_overall_cf_plot()
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_indiv_change_factor_data(
     measure = "admissions",
     activity_type = "ip",
@@ -204,8 +197,7 @@ params$r |>
 ```{r}
 #| label: pp-impact-of-changes-op-attendances
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_change_factor_data(
     measure = "attendances",
     activity_type = "op",
@@ -215,8 +207,7 @@ params$r |>
   ) |>
   reskit::make_overall_cf_plot()
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_indiv_change_factor_data(
     measure = "attendances",
     activity_type = "op",
@@ -233,8 +224,7 @@ params$r |>
 ```{r}
 #| label: pp-impact-of-changes-op-tele-attendances
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_change_factor_data(
     measure = "tele_attendances",
     activity_type = "op",
@@ -244,8 +234,7 @@ params$r |>
   ) |>
   reskit::make_overall_cf_plot()
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_indiv_change_factor_data(
     measure = "tele_attendances",
     activity_type = "op",
@@ -264,8 +253,7 @@ params$r |>
 ```{r}
 #| label: pp-impact-of-changes-aae-arrivals
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_change_factor_data(
     measure = "arrivals",
     activity_type = "aae",
@@ -275,8 +263,7 @@ params$r |>
   ) |>
   reskit::make_overall_cf_plot()
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   possibly_compile_indiv_change_factor_data(
     measure = "arrivals",
     activity_type = "aae",
@@ -709,8 +696,7 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 ```{r}
 #| label: dop-activity-summary
 
-params$r |>
-  reskit::shim_results() |>
+params$r$results |>
   reskit::compile_distribution_summary_data(
     value_type = "median",
     sites = params$sites,
