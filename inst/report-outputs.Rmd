@@ -16,8 +16,16 @@ params:
 #| label: setup
 #| echo: false
 
-knitr::opts_chunk$set(error = TRUE, echo = FALSE)
+knitr::opts_chunk$set(error = TRUE, echo = FALSE, out.width = "100%")
 pkgload::load_all(params$wd, quiet = TRUE)
+```
+
+```{r}
+#| label: chunk_vars
+#| echo: false
+
+icf_fig_height <- 7
+icf_font_size <- 10
 ```
 
 ```{r}
@@ -50,6 +58,9 @@ subtitle: "Scenario: `r params$r$params$scenario` (`r site_status`)"
 This report provides the outputs (tables and charts) from the selected model scenario (`r params$r$params$scenario`) for the following sites combined: `r selected_sites`.
 
 Note that some tables and charts won't be generated if there was insufficient data to produce them, given the combination of trust and site selections (if any).
+
+This document is produced dynamically and so plots may not be produced at optimal size. 
+Please [contact The Strategy Unit Data Science team](mailto:mlcsu.su.datascience@nhs.net) if this is a problem.
 
 See [the project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview of the model and its methodology.
 
@@ -139,7 +150,7 @@ possibly_compile_indiv_change_factor_data <-
 #### Bed days
 
 ```{r}
-#| label: pp-impact-of-changes-ip-bed-days
+#| label: pp-impact-of-changes-overall-ip-bed-days
 
 params$r$results |>
   possibly_compile_change_factor_data(
@@ -150,6 +161,10 @@ params$r$results |>
     pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
+```
+
+```{r, fig.height=icf_fig_height}
+#| label: pp-impact-of-changes-individual-ip-bed-days
 
 params$r$results |>
   possibly_compile_indiv_change_factor_data(
@@ -160,13 +175,14 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot()
+  reskit::make_individual_cf_plot() +
+  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
 ```
 
 #### Admissions
 
 ```{r}
-#| label: pp-impact-of-changes-ip-admissions
+#| label: pp-impact-of-changes-overall-ip-admissions
 
 params$r$results |>
   possibly_compile_change_factor_data(
@@ -177,6 +193,10 @@ params$r$results |>
     pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
+```
+
+```{r, fig.height=icf_fig_height}
+#| label: pp-impact-of-changes-individual-ip-admissions
 
 params$r$results |>
   possibly_compile_indiv_change_factor_data(
@@ -187,7 +207,8 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot()
+  reskit::make_individual_cf_plot() +
+  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
 ```
 
 ### Outpatients
@@ -195,7 +216,7 @@ params$r$results |>
 #### Attendances
 
 ```{r}
-#| label: pp-impact-of-changes-op-attendances
+#| label: pp-impact-of-changes-overall-op-attendances
 
 params$r$results |>
   possibly_compile_change_factor_data(
@@ -206,6 +227,10 @@ params$r$results |>
     pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
+```
+
+```{r, fig.height=icf_fig_height}
+#| label: pp-impact-of-changes-individual-op-attendances
 
 params$r$results |>
   possibly_compile_indiv_change_factor_data(
@@ -216,13 +241,14 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot()
+  reskit::make_individual_cf_plot() +
+  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
 ```
 
 #### Tele-attendances
 
 ```{r}
-#| label: pp-impact-of-changes-op-tele-attendances
+#| label: pp-impact-of-changes-overall-op-tele-attendances
 
 params$r$results |>
   possibly_compile_change_factor_data(
@@ -233,6 +259,10 @@ params$r$results |>
     pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
+```
+
+```{r, fig.height=icf_fig_height}
+#| label: pp-impact-of-changes-individual-op-tele-attendances
 
 params$r$results |>
   possibly_compile_indiv_change_factor_data(
@@ -243,7 +273,8 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot()
+  reskit::make_individual_cf_plot() +
+  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
 ```
 
 ### A&E
@@ -251,7 +282,7 @@ params$r$results |>
 #### Arrivals
 
 ```{r}
-#| label: pp-impact-of-changes-aae-arrivals
+#| label: pp-impact-of-changes-overall-aae-arrivals
 
 params$r$results |>
   possibly_compile_change_factor_data(
@@ -262,6 +293,10 @@ params$r$results |>
     pod_lookup = reskit::get_principal_pods()
   ) |>
   reskit::make_overall_cf_plot()
+```
+
+```{r, fig.height=icf_fig_height}
+#| label: pp-impact-of-changes-individual-aae-arrivals
 
 params$r$results |>
   possibly_compile_indiv_change_factor_data(
@@ -272,7 +307,8 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot()
+  reskit::make_individual_cf_plot() +
+  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
 ```
 
 ## Activity in detail
