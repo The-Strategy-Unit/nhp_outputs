@@ -92,13 +92,10 @@ test_that("model_metadata calls get_model_run", {
 
 test_that("selected_data calls get_results_from_azure", {
   m <- mock("results")
-
-  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_model_run", list(aggregated_results_path = "file"))
   stub(app_server, "get_results_from_azure", m)
   stub(app_server, "get_trust_sites", "trust_sites")
-
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
-
   stub(
     app_server,
     "mod_principal_summary_server",
@@ -109,7 +106,6 @@ test_that("selected_data calls get_results_from_azure", {
     "mod_principal_detailed_server",
     "mod_principal_detailed_server"
   )
-
   stub(
     app_server,
     "mod_model_core_activity_server",
@@ -120,13 +116,10 @@ test_that("selected_data calls get_results_from_azure", {
     "mod_model_results_distribution_server",
     "mod_model_results_distribution_server"
   )
-
   stub(app_server, "mod_info_downloads_server", "mod_info_downloads_server")
   stub(app_server, "mod_info_params_server", "mod_info_params_server")
-
   testServer(app_server, {
     expect_equal(selected_data(), "results")
-
     expect_called(m, 1)
     expect_args(m, 1, "file")
   })

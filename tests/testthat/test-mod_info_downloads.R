@@ -6,8 +6,16 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 atpmo_expected <- tibble::tribble(
-  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
-  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
+  ~activity_type,
+  ~activity_type_name,
+  ~pod,
+  ~pod_name,
+  ~measures,
+  "aae",
+  "A&E",
+  "aae_type-01",
+  "Type 1 Department",
+  "ambulance"
 )
 
 set_names <- function(x) {
@@ -138,8 +146,8 @@ test_that("it sets up download handlers", {
     {
       session$private$flush()
       expect_called(m, 2)
-      expect_args(m, 1, selected_data)
-      expect_args(m, 2, selected_data)
+      expect_args(m, 1, reshaped_data)
+      expect_args(m, 2, reshaped_data)
     }
   )
 })

@@ -4,104 +4,74 @@ library(mockery)
 test_that("get_results_from_azure returns data from azure", {
   # arrange
   m0 <- mock("container")
-  m1 <- mock("binary_data")
-  m2 <- mock("decompressed_data")
-  m3 <- mock("json_data")
-  m4 <- mock("json_options")
-  m5 <- mock("parsed_data")
-
+  m1 <- mock("raw_params", "raw_variants")
+  m2 <- mock("patched_params")
+  m3 <- mock("results_data")
   stub(get_results_from_azure, "azkit::get_container", m0)
-  stub(get_results_from_azure, "AzureStor::download_blob", m1)
-  stub(get_results_from_azure, "memDecompress", m2)
-  stub(get_results_from_azure, "yyjsonr::read_json_raw", m3)
-  stub(get_results_from_azure, "yyjsonr::opts_read_json", m4)
-  stub(get_results_from_azure, "parse_results", m5)
-
+  stub(get_results_from_azure, "azkit::read_azure_json", m1)
+  stub(get_results_from_azure, "patch_params", m2)
+  stub(get_results_from_azure, "reskit::read_results_parquet_files", m3)
   withr::local_envvar(
     "AZ_STORAGE_CONTAINER" = "container",
     "AZ_STORAGE_EP" = "ep"
   )
 
   # act
-  actual <- get_results_from_azure("file")
+  actual <- get_results_from_azure("dir")
 
   # assert
   expect_called(m0, 1)
-  expect_called(m1, 1)
+  expect_called(m1, 2)
   expect_called(m2, 1)
   expect_called(m3, 1)
-  expect_called(m4, 1)
-  expect_called(m5, 1)
-
   expect_args(m0, 1, container_name = "container", endpoint_url = "ep")
-  expect_args(m1, 1, "container", "file", NULL)
-  expect_args(m2, 1, "binary_data", type = "gzip")
-  expect_args(m3, 1, "decompressed_data", "json_options")
-  expect_args(m4, 1, "obj_of_arrs_to_df" = FALSE)
-  expect_args(m5, 1, "json_data")
-
-  expect_equal(actual, "parsed_data")
+  expect_args(m1, 1, "container", file.path("dir", "params.json"))
+  expect_args(m1, 2, "container", file.path("dir", "variants.json"))
+  expect_args(m2, 1, "raw_params")
+  expect_args(m3, 1, "container", "dir")
+  expect_equal(
+    actual,
+    list(
+      params = "patched_params",
+      population_variants = "raw_variants",
+      results = "results_data"
+    )
+  )
 })
 
 test_that("get_results_from_local returns data from local storage", {
   # arrange
-  m1 <- mock("json_data")
-  m2 <- mock("json_options")
-  m3 <- mock("parsed_data")
+  m1 <- mock("raw_params", "raw_variants")
+  m2 <- mock("patched_params")
+  m3 <- mock(c("file/a.parquet", "file/b.parquet"))
+  m4 <- mock("parquet_data_a", "parquet_data_b")
 
   stub(get_results_from_local, "yyjsonr::read_json_file", m1)
-  stub(get_results_from_local, "yyjsonr::opts_read_json", m2)
-  stub(get_results_from_local, "parse_results", m3)
+  stub(get_results_from_local, "patch_params", m2)
+  stub(get_results_from_local, "list.files", m3)
+  stub(get_results_from_local, "arrow::read_parquet", m4)
   # act
   actual <- get_results_from_local("file")
 
   # assert
-  expect_called(m1, 1)
+  expect_called(m1, 2)
   expect_called(m2, 1)
   expect_called(m3, 1)
-
-  expect_args(m1, 1, "file", "json_options")
-  expect_args(m2, 1, "obj_of_arrs_to_df" = FALSE)
-  expect_args(m3, 1, "json_data")
-
-  expect_equal(actual, "parsed_data")
-})
-
-test_that("parse_results converts results correctly", {
-  m1 <- mock("patched_results")
-  m2 <- mock("patched_params")
-  stub(parse_results, "patch_results", m1)
-  stub(parse_results, "patch_params", m2)
-
-  data <- list(
-    params = list(param1 = c(1, 2), param2 = list(param3 = c(3, 4))),
-    population_variants = list("a", "b"),
-    results = list(
-      "a" = data.frame(x = c(1, 2)),
-      "b" = data.frame(x = c(3, 4))
+  expect_called(m4, 2)
+  expect_args(m1, 1, file.path("file", "params.json"))
+  expect_args(m1, 2, file.path("file", "variants.json"))
+  expect_args(m2, 1, "raw_params")
+  expect_args(m3, 1, "file", "\\.parquet$", full.names = TRUE)
+  expect_args(m4, 1, "file/a.parquet")
+  expect_args(m4, 2, "file/b.parquet")
+  expect_equal(
+    actual,
+    list(
+      params = "patched_params",
+      population_variants = "raw_variants",
+      results = list(a = "parquet_data_a", b = "parquet_data_b")
     )
   )
-
-  expected <- list(
-    params = "patched_params",
-    population_variants = c("a", "b"),
-    results = list(
-      "a" = tibble::tibble(x = 1:2),
-      "b" = tibble::tibble(x = 3:4)
-    )
-  )
-
-  # act
-  actual <- parse_results(data)
-
-  # assert
-  expect_called(m1, 1)
-  expect_args(m1, 1, expected)
-
-  expect_called(m2, 1)
-  expect_args(m2, 1, data$params)
-
-  expect_equal(actual, "patched_results")
 })
 
 test_that("patch_params returns correct values", {
@@ -119,234 +89,6 @@ test_that("patch_params returns correct values", {
 
   # assert
   expect_equal(actual, expected)
-})
-
-test_that("patch_principal returns correct values (not step_counts)", {
-  # arrange
-  m <- mock()
-
-  stub(patch_principal, "patch_principal_step_counts", m)
-
-  results <- tibble::tibble(
-    model_runs = list(c(1:100))
-  )
-  expected <- dplyr::mutate(
-    results,
-    principal = 50.5,
-    median = 50.5,
-    lwr_pi = 10.9,
-    upr_pi = 90.1
-  )
-
-  # act
-  actual <- patch_principal(results, "x")
-
-  # assert
-  expect_called(m, 0)
-  expect_equal(actual, expected)
-})
-
-test_that("patch_principal returns correct values (step_counts)", {
-  # arrange
-  m <- mock("patch_principal_step_counts")
-
-  stub(patch_principal, "patch_principal_step_counts", m)
-
-  # act
-  actual <- patch_principal("results", "step_counts")
-
-  # assert
-  expect_called(m, 1)
-  expect_args(m, 1, "results")
-  expect_equal(actual, "patch_principal_step_counts")
-})
-
-test_that("patch_principal_step_counts returns correct values", {
-  # arrange
-  results <- tibble::tibble(
-    change_factor = c("baseline", "x"),
-    model_runs = list(1, 2:4)
-  )
-  expected <- results |>
-    dplyr::mutate(value = c(1, 3))
-
-  # act
-  actual <- patch_principal_step_counts(results)
-
-  # assert
-  expect_equal(actual, expected)
-})
-
-test_that("patch_step_counts returns correct values (no strategy)", {
-  # arrange
-  expected <- tibble::tibble(
-    change_factor = "a",
-    strategy = NA_character_,
-    value = 1
-  )
-  r <- list(
-    step_counts = dplyr::select(expected, -"strategy")
-  )
-
-  # act
-  actual <- patch_step_counts(r)
-
-  # assert
-  expect_equal(actual$step_counts, expected)
-})
-
-test_that("patch_step_counts returns correct values (has strategy)", {
-  # arrange
-  expected <- tibble::tibble(
-    change_factor = "a",
-    strategy = "b",
-    value = 1
-  )
-  r <- list(
-    step_counts = expected
-  )
-
-  # act
-  actual <- patch_step_counts(r)
-
-  # assert
-  expect_equal(actual$step_counts, expected)
-})
-
-test_that("patch_results returns correct values", {
-  # arrange
-  r <- list(
-    results = list(
-      "tretspef" = tibble::tribble(
-        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
-        "a", "op", "100", "s1", 1, 2, 3, 4, 5
-      ),
-      "tretspef+los_group" = tibble::tribble(
-        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi, ~los_group,
-        "a", "ip", "100", "s1", 1, 2, 3, 4, 5, "0 days",
-        "b", "ip", "100", "s1", 2, 3, 4, 5, 6, "1 day",
-        "a", "ip", "100", "s1", 3, 4, 5, 6, 7, "2 days",
-        "b", "ip", "100", "s1", 4, 5, 6, 7, 8, "3 days",
-        "a", "ip", "200", "s1", 2, 1, 4, 5, 3, "4-7 days",
-        "a", "ip", "200", "s1", 1, 2, 3, 4, 5, "8-14 days",
-        "a", "ip", "200", "s1", 2, 3, 4, 5, 6, "15-21 days",
-        "a", "ip", "200", "s1", 3, 4, 5, 6, 7, "22+ days",
-        "b", "ip", "200", "s1", 3, 2, 5, 6, 4, "0 days",
-        "a", "ip", "200", "s1", 4, 3, 6, 7, 5, "1 day",
-        "b", "ip", "200", "s1", 5, 4, 7, 8, 6, "2 days",
-        "a", "ip", "100", "s2", 5, 4, 4, 5, 3, "3 days",
-        "b", "ip", "100", "s2", 4, 3, 5, 6, 4, "4-7 days",
-        "b", "ip", "100", "s2", 3, 2, 5, 6, 4, "8-14 days",
-        "b", "ip", "100", "s2", 4, 3, 6, 7, 5, "15-21 days",
-        "b", "ip", "100", "s2", 5, 4, 7, 8, 6, "22+ days",
-        "a", "ip", "100", "s2", 3, 2, 6, 7, 5, "0 days",
-        "b", "ip", "100", "s2", 2, 1, 7, 8, 6, "1 day",
-        "a", "ip", "200", "s2", 4, 5, 5, 6, 1, "2 days",
-        "b", "ip", "200", "s2", 3, 4, 6, 7, 2, "3 days",
-        "a", "ip", "200", "s2", 2, 3, 7, 8, 3, "4-7 days",
-        "a", "ip", "200", "s2", 3, 2, 6, 7, 5, "8-14 days",
-        "a", "ip", "200", "s2", 2, 1, 7, 8, 6, "15-21 days",
-        "a", "ip", "200", "s2", 4, 5, 5, 6, 1, "22+ days",
-      ),
-      "sex+age_group" = tibble::tribble(
-        ~sitetret, ~pod, ~sex, ~age_group, ~measure, ~baseline, ~principal, ~median, ~lwr_pi, ~upr_pi,
-        "s1", "ip", 1, "0", "a", 1, 2, 4, 3, 5,
-        "s1", "ip", 1, "85+", "b", 2, 3, 5, 4, 6,
-        "s1", "ip", 1, "65-74", "a", 4, 5, 7, 6, 8,
-        "s1", "ip", 1, "16-17", "b", 2, 1, 5, 4, 3,
-        "s1", "ip", 1, "18-34", "a", 3, 2, 6, 5, 4,
-        "s1", "ip", 1, "35-49", "b", 4, 3, 7, 6, 5,
-        "s1", "ip", 1, "5-9", "a", 3, 4, 6, 5, 7,
-        "s1", "ip", 1, "50-64", "b", 5, 4, 8, 7, 6,
-        "s2", "ip", 1, "10-15", "a", 5, 4, 5, 4, 3,
-        "s2", "ip", 1, "75-84", "b", 4, 3, 6, 5, 4,
-        "s2", "ip", 1, "1-4", "a", 3, 2, 7, 6, 5,
-        "s2", "ip", 1, "Unknown", "b", 2, 1, 8, 7, 6
-      )
-    )
-  )
-  m <- mock(r$results[[1]], r$results[[2]], r$results[[3]], r$results)
-  stub(patch_results, "patch_principal", m)
-  stub(patch_results, "patch_step_counts", m)
-
-  expected <- list(
-    results = list(
-      "tretspef" = tibble::tribble(
-        ~measure, ~pod, ~tretspef, ~sitetret, ~baseline, ~principal, ~lwr_pi, ~median, ~upr_pi,
-        "a", "op", "100", "s1", 1, 2, 3, 4, 5
-      ),
-      "tretspef+los_group" = r$results[["tretspef+los_group"]] |>
-        dplyr::mutate(
-          dplyr::across(
-            "los_group",
-            \(.x) {
-              forcats::fct_relevel(
-                .x,
-                c(
-                  "0 days",
-                  "1 day",
-                  "2 days",
-                  "3 days",
-                  "4-7 days",
-                  "8-14 days",
-                  "15-21 days",
-                  "22+ days"
-                )
-              )
-            }
-          )
-        ) |>
-        dplyr::arrange(
-          .data$pod,
-          .data$measure,
-          .data$sitetret,
-          .data$los_group
-        ),
-      "sex+age_group" = r$results[["sex+age_group"]] |>
-        dplyr::mutate(
-          dplyr::across(
-            "age_group",
-            \(.x) {
-              forcats::lvls_expand(
-                .x,
-                c(
-                  "0",
-                  "1-4",
-                  "5-9",
-                  "10-15",
-                  "16-17",
-                  "18-34",
-                  "35-49",
-                  "50-64",
-                  "65-74",
-                  "75-84",
-                  "85+",
-                  "Unknown"
-                )
-              )
-            }
-          )
-        ) |>
-        dplyr::arrange(
-          .data$pod,
-          .data$measure,
-          .data$sitetret,
-          .data$sex,
-          .data$age_group
-        )
-    )
-  )
-
-  # act
-  actual <- patch_results(r)
-
-  # assert
-  expect_equal(actual, expected)
-  expect_called(m, 4)
-  expect_args(m, 1, r$results[[1]], "tretspef")
-  expect_args(m, 2, r$results[[2]], "tretspef+los_group")
-  expect_args(m, 3, r$results[[3]], "sex+age_group")
-  expect_args(m, 4, r$results)
 })
 
 test_that("user_allowed_datasets returns correct values", {
@@ -424,23 +166,67 @@ test_that("get_principal_high_level gets the results", {
   r <- list(
     results = list(
       default = tibble::tribble(
-        ~pod, ~sitetret, ~baseline, ~principal, ~measure,
-        "aae_1", "a", 1, 2, "attendances",
-        "aae_2", "a", 2, 4, "attendances",
-        "ip_1", "a", 5, 6, "admissions",
-        "ip_2", "a", 7, 8, "beddays",
-        "ip_3", "a", 9, 10, "procedures",
-        "op_1", "a", 9, 10, "attendances",
-        "op_2", "a", 11, 12, "tele_attendances"
+        ~pod,
+        ~sitetret,
+        ~baseline,
+        ~principal,
+        ~measure,
+        "aae_1",
+        "a",
+        1,
+        2,
+        "attendances",
+        "aae_2",
+        "a",
+        2,
+        4,
+        "attendances",
+        "ip_1",
+        "a",
+        5,
+        6,
+        "admissions",
+        "ip_2",
+        "a",
+        7,
+        8,
+        "beddays",
+        "ip_3",
+        "a",
+        9,
+        10,
+        "procedures",
+        "op_1",
+        "a",
+        9,
+        10,
+        "attendances",
+        "op_2",
+        "a",
+        11,
+        12,
+        "tele_attendances"
       )
     )
   )
 
   expected <- tibble::tribble(
-    ~pod, ~sitetret, ~baseline, ~principal,
-    "aae", "a", 3, 6,
-    "ip_1", "a", 5, 6,
-    "op_1", "a", 9, 10
+    ~pod,
+    ~sitetret,
+    ~baseline,
+    ~principal,
+    "aae",
+    "a",
+    3,
+    6,
+    "ip_1",
+    "a",
+    5,
+    6,
+    "op_1",
+    "a",
+    9,
+    10
   )
 
   actual <- get_principal_high_level(
@@ -497,20 +283,65 @@ test_that("get_model_run_distribution gets the results", {
   r <- list(
     results = list(
       default = tibble::tribble(
-        ~sitetret, ~baseline, ~principal, ~model_runs, ~pod, ~measure,
-        "a", 100, 110, c(100, 200, 300), "a", "a",
-        "a", 101, 111, c(101, 201, 301), "a", "b",
-        "a", 102, 112, c(102, 202, 302), "b", "a",
-        "a", 103, 113, c(103, 203, 303), "b", "b"
+        ~sitetret,
+        ~baseline,
+        ~principal,
+        ~model_runs,
+        ~pod,
+        ~measure,
+        "a",
+        100,
+        110,
+        c(100, 200, 300),
+        "a",
+        "a",
+        "a",
+        101,
+        111,
+        c(101, 201, 301),
+        "a",
+        "b",
+        "a",
+        102,
+        112,
+        c(102, 202, 302),
+        "b",
+        "a",
+        "a",
+        103,
+        113,
+        c(103, 203, 303),
+        "b",
+        "b"
       )
     )
   )
 
   expected <- tibble::tribble(
-    ~sitetret, ~baseline, ~principal, ~model_run, ~value, ~variant,
-    "a", 100, 110, 1, 100, "a",
-    "a", 100, 110, 2, 200, "a",
-    "a", 100, 110, 3, 300, "b"
+    ~sitetret,
+    ~baseline,
+    ~principal,
+    ~model_run,
+    ~value,
+    ~variant,
+    "a",
+    100,
+    110,
+    1,
+    100,
+    "a",
+    "a",
+    100,
+    110,
+    2,
+    200,
+    "a",
+    "a",
+    100,
+    110,
+    3,
+    300,
+    "b"
   )
 
   actual <- get_model_run_distribution(r, "a", "a", "a")
@@ -599,19 +430,37 @@ test_that("get_principal_change_factors validates the arguments", {
 
 test_that("trust_site_aggregation adds in a trust level aggregatrion", {
   df <- tibble::tribble(
-    ~sitetret, ~x, ~v,
-    "x", "a", 1,
-    "x", "b", 2,
-    "y", "b", 3,
-    "x", "c", 4,
-    "y", "c", 5
+    ~sitetret,
+    ~x,
+    ~v,
+    "x",
+    "a",
+    1,
+    "x",
+    "b",
+    2,
+    "y",
+    "b",
+    3,
+    "x",
+    "c",
+    4,
+    "y",
+    "c",
+    5
   )
 
   expected <- dplyr::bind_rows(
     tibble::tribble(
-      ~sitetret, ~x, ~v,
-      "trust", "b", 5,
-      "trust", "c", 9
+      ~sitetret,
+      ~x,
+      ~v,
+      "trust",
+      "b",
+      5,
+      "trust",
+      "c",
+      9
     ),
     df
   ) |>
