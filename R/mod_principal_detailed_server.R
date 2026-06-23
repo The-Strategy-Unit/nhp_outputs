@@ -34,8 +34,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
       end_year <- selected_data()[["params"]][["end_year"]]
 
-      selected_data() |>
-        reskit::shim_results() |>
+      selected_data()[["results"]] |>
         reskit::compile_detailed_activity_data(
           measure = selected_measure()$measure,
           activity_type = selected_measure()$activity_type,

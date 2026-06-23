@@ -4,8 +4,7 @@
 mod_principal_summary_los_server <- function(id, selected_data, selected_site) {
   shiny::moduleServer(id, function(input, output, session) {
     output$summary_los_table_beddays <- gt::render_gt({
-      selected_data() |>
-        reskit::shim_results() |>
+      selected_data()[["results"]] |>
         reskit::compile_principal_los_data(
           measure = "beddays",
           sites = selected_site(),
@@ -16,8 +15,7 @@ mod_principal_summary_los_server <- function(id, selected_data, selected_site) {
     })
 
     output$summary_los_table_admissions <- gt::render_gt({
-      selected_data() |>
-        reskit::shim_results() |>
+      selected_data()[["results"]] |>
         reskit::compile_principal_los_data(
           measure = "admissions",
           sites = selected_site(),

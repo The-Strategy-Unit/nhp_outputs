@@ -9,7 +9,7 @@ mockery::stub(
   run_app,
   "server_get_results",
   depth = 2,
-  \(...) get_results_from_local("inst/sample_results.json")
+  \(...) get_results_from_local("inst/sample_results")
 )
 
 # need to explicitly print for VS Code debugger to work

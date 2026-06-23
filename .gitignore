@@ -53,9 +53,6 @@ rsconnect/
 # ignore config files
 config*.py
 
-__PYCACHE__
-__pycache__
-
 # ignore any potential data/artifacts
 *.zip
 *.parquet
@@ -68,6 +65,12 @@ coverage.xml
 # worktrees
 results_selection_app/
 
+# sample results
 inst/sample_results.json
+inst/sample_results/params.json
+inst/sample_results/variants.json
 
+# caching
+__PYCACHE__
+__pycache__
 .cache

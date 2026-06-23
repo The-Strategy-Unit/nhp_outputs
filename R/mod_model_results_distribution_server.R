@@ -10,8 +10,7 @@ mod_model_results_distribution_server <- function(
     selected_measure <- mod_measure_selection_server("measure_selection")
 
     aggregated_data <- shiny::reactive({
-      selected_data() |>
-        reskit::shim_results() |>
+      selected_data()[["results"]] |>
         reskit::compile_distribution_plot_data(
           measure = selected_measure()$measure,
           activity_type = selected_measure()$activity_type,

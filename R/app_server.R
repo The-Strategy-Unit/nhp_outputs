@@ -34,8 +34,8 @@ app_server <- function(input, output, session) {
   selected_data <- shiny::reactive({
     tryCatch(
       {
-        file <- model_metadata()$results_json_gz_path
-        get_results_from_azure(file)
+        results_dir <- model_metadata()$aggregated_results_path
+        get_results_from_azure(results_dir)
       },
       error = \(e) {
         session$allowReconnect(FALSE)

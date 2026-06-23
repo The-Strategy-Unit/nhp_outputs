@@ -15,8 +15,8 @@ BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
 Depends:
     R (>= 4.5.0)
 Imports:
+    arrow,
     azkit (>= 0.3.1),
-    AzureStor,
     bs4Dash,
     cachem,
     config (>= 0.3.1),
@@ -33,7 +33,7 @@ Imports:
     markdown,
     plotly,
     purrr,
-    reskit (>= 1.0.0),
+    reskit (>= 1.0.1),
     rlang,
     rmarkdown,
     scales,
@@ -49,6 +49,7 @@ Imports:
     yyjsonr,
     zeallot
 Suggests:
+    AzureStor,
     covr,
     devtools,
     languageserver,
