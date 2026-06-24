@@ -159,7 +159,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-    reskit::make_overall_cf_plot()
+  reskit::make_overall_cf_plot()
 ```
 
 ##### Individual change-factors
@@ -176,7 +176,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-    make_icf_chart_or_msg()
+  make_icf_chart_or_msg()
 ```
 
 #### Admissions
@@ -211,7 +211,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-    make_icf_chart_or_msg()
+  make_icf_chart_or_msg()
 ```
 
 ### Outpatients
@@ -248,7 +248,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-    make_icf_chart_or_msg()
+  make_icf_chart_or_msg()
 ```
 
 #### Tele-attendances
@@ -283,7 +283,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-    make_icf_chart_or_msg()
+  make_icf_chart_or_msg()
 ```
 
 ### A&E
@@ -320,7 +320,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-    make_icf_chart_or_msg()
+  make_icf_chart_or_msg()
 ```
 
 ## Activity in detail
