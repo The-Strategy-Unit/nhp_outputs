@@ -3713,7 +3713,7 @@
       "checksum": "cd8f4f810a6750de0e20420cd85749d5"
     },
     "DESCRIPTION": {
-      "checksum": "08a39a22612d5d8f43943b5f2da44cb2"
+      "checksum": "3f03e02b260aa8c1754fe5caf0b7fe01"
     },
     "inst/app/data/excel_dictionary.json": {
       "checksum": "10c1f3ba35a58152dd950f16c5aed1b9"
@@ -3767,7 +3767,7 @@
       "checksum": "79fee045c0be360b170324d3fb6c1a69"
     },
     "inst/report-outputs.Rmd": {
-      "checksum": "4fed24db38b238069afce45e58553620"
+      "checksum": "ccf1e4b7a62059acd5ed533e83685b97"
     },
     "inst/report-parameters.Rmd": {
       "checksum": "747834287190b4857b8563f4da2c5aaf"
@@ -3779,42 +3779,81 @@
       "checksum": "66150b0fe66144adb09e45c9b1d629a8"
     },
     "inst/sample_results/acuity.parquet": {
-      "checksum": "e05bae1b80886908564552c319b0cb8e"
+      "checksum": "1fd71c228cdbaf93f5ddc40f03b997d6"
     },
     "inst/sample_results/age.parquet": {
-      "checksum": "8e8e340b4e6d04ba3055631739098604"
+      "checksum": "0f2c08d517f2ebfbf298cce7de1377f6"
     },
     "inst/sample_results/attendance_category.parquet": {
-      "checksum": "5c8670adc179d42a81bce48ad900fa18"
+      "checksum": "5064334124f9c326344653194ba325a6"
     },
     "inst/sample_results/avoided_activity.parquet": {
-      "checksum": "71c9bc9c51954d7a9b520529e54db44a"
+      "checksum": "cd8aa3adcc6bf4a2ef201aef4275be05"
     },
     "inst/sample_results/default.parquet": {
-      "checksum": "0cfdfd7b0a3a4bf41b4828ad93faf227"
+      "checksum": "d832e393d39be0ecd897afb800578187"
     },
     "inst/sample_results/delivery_episode_in_spell.parquet": {
-      "checksum": "747340c20a313bdf00b92b1e27d09209"
+      "checksum": "839e734aef2057c1b09d4b83c77dfeb4"
     },
     "inst/sample_results/params.json": {
-      "checksum": "b26d1eb4bc6c182ac5a514897174e156"
+      "checksum": "a4a03416daeb4f716ff3cf1823c5ebef"
     },
     "inst/sample_results/sex+age_group.parquet": {
-      "checksum": "41eb5defb5501a28f2a442d45f42a007"
+      "checksum": "c9b4e915a84e5c4e5986aac2245a5c23"
     },
     "inst/sample_results/sex+tretspef_grouped.parquet": {
-      "checksum": "2e4ad33beac056d00754753d66354979"
+      "checksum": "ea75f0ddd023e622e3a518aebacdd56a"
     },
     "inst/sample_results/step_counts.parquet": {
-      "checksum": "9c2982d8ba4dad1c518cfaea68399b08"
+      "checksum": "11974af0268c5cad3596031d80b09ba0"
     },
     "inst/sample_results/tretspef.parquet": {
-      "checksum": "49120bfa34fa69e9769246519c0f4ead"
+      "checksum": "2a3410391cba6f730a5f44efceda84e1"
     },
     "inst/sample_results/tretspef+los_group.parquet": {
-      "checksum": "dfda07559f8fe8be520946aee2723ca6"
+      "checksum": "ce34023c0101873101a5dbb6e949e47d"
     },
     "inst/sample_results/variants.json": {
+      "checksum": "46138713502e7e76504aa649acb1cd01"
+    },
+    "inst/sample_results_old/acuity.parquet": {
+      "checksum": "e05bae1b80886908564552c319b0cb8e"
+    },
+    "inst/sample_results_old/age.parquet": {
+      "checksum": "8e8e340b4e6d04ba3055631739098604"
+    },
+    "inst/sample_results_old/attendance_category.parquet": {
+      "checksum": "5c8670adc179d42a81bce48ad900fa18"
+    },
+    "inst/sample_results_old/avoided_activity.parquet": {
+      "checksum": "71c9bc9c51954d7a9b520529e54db44a"
+    },
+    "inst/sample_results_old/default.parquet": {
+      "checksum": "0cfdfd7b0a3a4bf41b4828ad93faf227"
+    },
+    "inst/sample_results_old/delivery_episode_in_spell.parquet": {
+      "checksum": "747340c20a313bdf00b92b1e27d09209"
+    },
+    "inst/sample_results_old/params.json": {
+      "checksum": "b26d1eb4bc6c182ac5a514897174e156"
+    },
+    "inst/sample_results_old/sex+age_group.parquet": {
+      "checksum": "41eb5defb5501a28f2a442d45f42a007"
+    },
+    "inst/sample_results_old/sex+tretspef_grouped.parquet": {
+      "checksum": "2e4ad33beac056d00754753d66354979"
+    },
+    "inst/sample_results_old/step_counts.parquet": {
+      "checksum": "9c2982d8ba4dad1c518cfaea68399b08"
+    },
+    "inst/sample_results_old/tretspef.parquet": {
+      "checksum": "49120bfa34fa69e9769246519c0f4ead"
+    },
+    "inst/sample_results_old/tretspef+los_group.parquet": {
+      "checksum": "dfda07559f8fe8be520946aee2723ca6"
+    },
+    "inst/sample_results_old/variants.json": {
       "checksum": "46138713502e7e76504aa649acb1cd01"
     },
     "NAMESPACE": {
