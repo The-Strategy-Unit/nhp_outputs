@@ -21,14 +21,6 @@ pkgload::load_all(params$wd, quiet = TRUE)
 ```
 
 ```{r}
-#| label: chunk_vars
-#| echo: false
-
-icf_fig_height <- 7
-icf_font_size <- 10
-```
-
-```{r}
 #| label: site-selections
 #| echo: false
 
@@ -59,7 +51,7 @@ This report provides the outputs (tables and charts) from the selected model sce
 
 Note that some tables and charts won't be generated if there was insufficient data to produce them, given the combination of trust and site selections (if any).
 
-This document is produced dynamically and so plots may not be produced at optimal size. 
+This document is produced dynamically and so plots may not be produced at optimal size.
 Please [contact The Strategy Unit Data Science team](mailto:mlcsu.su.datascience@nhs.net) if this is a problem.
 
 See [the project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview of the model and its methodology.
@@ -132,28 +124,35 @@ The results should be regarded as rough, high-level estimates of the number of r
 ```{r}
 #| label: pp-impact-of-changes-setup
 
-possibly_compile_change_factor_data <-
-  purrr::possibly(
-    reskit::compile_change_factor_data,
-    "Insufficient data"
-  )
+# Stopgap values so the ICF chart content is visible, see:
+# https://github.com/The-Strategy-Unit/nhp_outputs/issues/427
+icf_fig_height <- 7
+icf_font_size <- 10
 
-possibly_compile_indiv_change_factor_data <-
-  purrr::possibly(
-    reskit::compile_indiv_change_factor_data,
-    "Insufficient data"
-  )
+# Return a useful message if the data is empty, see:
+# https://github.com/The-Strategy-Unit/nhp_outputs/issues/441
+make_icf_chart_or_msg <- function(icf_data) {
+  if (nrow(icf_data) == 0) {
+    "Insufficient information to produce this chart."
+  } else {
+    icf_data |>
+      reskit::make_individual_cf_plot() +
+      ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
+  }
+}
 ```
 
 ### Inpatients
 
 #### Bed days
 
+##### Overall change-factors
+
 ```{r}
 #| label: pp-impact-of-changes-overall-ip-bed-days
 
 params$r$results |>
-  possibly_compile_change_factor_data(
+  reskit::compile_change_factor_data(
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
@@ -162,12 +161,14 @@ params$r$results |>
   ) |>
   reskit::make_overall_cf_plot()
 ```
+
+##### Individual change-factors
 
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-ip-bed-days
 
 params$r$results |>
-  possibly_compile_indiv_change_factor_data(
+  reskit::compile_indiv_change_factor_data(
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
@@ -175,17 +176,18 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot() +
-  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
+  make_icf_chart_or_msg()
 ```
 
 #### Admissions
+
+##### Overall change-factors
 
 ```{r}
 #| label: pp-impact-of-changes-overall-ip-admissions
 
 params$r$results |>
-  possibly_compile_change_factor_data(
+  reskit::compile_change_factor_data(
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
@@ -195,11 +197,13 @@ params$r$results |>
   reskit::make_overall_cf_plot()
 ```
 
+##### Individual change-factors
+
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-ip-admissions
 
 params$r$results |>
-  possibly_compile_indiv_change_factor_data(
+  reskit::compile_indiv_change_factor_data(
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
@@ -207,19 +211,20 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot() +
-  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
+  make_icf_chart_or_msg()
 ```
 
 ### Outpatients
 
 #### Attendances
 
+##### Overall change-factors
+
 ```{r}
 #| label: pp-impact-of-changes-overall-op-attendances
 
 params$r$results |>
-  possibly_compile_change_factor_data(
+  reskit::compile_change_factor_data(
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
@@ -228,12 +233,14 @@ params$r$results |>
   ) |>
   reskit::make_overall_cf_plot()
 ```
+
+##### Individual change-factors
 
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-op-attendances
 
 params$r$results |>
-  possibly_compile_indiv_change_factor_data(
+  reskit::compile_indiv_change_factor_data(
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
@@ -241,17 +248,18 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot() +
-  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
+  make_icf_chart_or_msg()
 ```
 
 #### Tele-attendances
+
+##### Overall change-factors
 
 ```{r}
 #| label: pp-impact-of-changes-overall-op-tele-attendances
 
 params$r$results |>
-  possibly_compile_change_factor_data(
+  reskit::compile_change_factor_data(
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
@@ -261,11 +269,13 @@ params$r$results |>
   reskit::make_overall_cf_plot()
 ```
 
+##### Individual change-factors
+
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-op-tele-attendances
 
 params$r$results |>
-  possibly_compile_indiv_change_factor_data(
+  reskit::compile_indiv_change_factor_data(
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
@@ -273,19 +283,20 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot() +
-  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
+  make_icf_chart_or_msg()
 ```
 
 ### A&E
 
 #### Arrivals
 
+##### Overall change-factors
+
 ```{r}
 #| label: pp-impact-of-changes-overall-aae-arrivals
 
 params$r$results |>
-  possibly_compile_change_factor_data(
+  reskit::compile_change_factor_data(
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
@@ -295,11 +306,13 @@ params$r$results |>
   reskit::make_overall_cf_plot()
 ```
 
+##### Individual change-factors
+
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-aae-arrivals
 
 params$r$results |>
-  possibly_compile_indiv_change_factor_data(
+  reskit::compile_indiv_change_factor_data(
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
@@ -307,8 +320,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = reskit::get_principal_pods()
   ) |>
-  reskit::make_individual_cf_plot() +
-  ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
+  make_icf_chart_or_msg()
 ```
 
 ## Activity in detail
