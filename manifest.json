@@ -412,24 +412,27 @@
         "Roxygen": "list(markdown = TRUE)",
         "Depends": "R (>= 4.5.0)",
         "Imports": "arrow, AzureAuth, AzureRMR, AzureStor, cli, dplyr, glue,\nhttr2, purrr, rlang, tibble, withr, yyjsonr",
-        "Suggests": "httpuv, readr, testthat (>= 3.0.0)",
+        "Suggests": "httpuv, knitr, readr, rmarkdown, testthat (>= 3.0.0)",
         "Config/roxygen2/version": "8.0.0",
+        "VignetteBuilder": "knitr",
+        "URL": "https://the-strategy-unit.github.io/azkit/,\nhttps://github.com/The-Strategy-Unit/azkit",
+        "BugReports": "https://github.com/The-Strategy-Unit/azkit/issues",
         "RemoteType": "github",
         "RemoteHost": "api.github.com",
         "RemoteRepo": "azkit",
         "RemoteUsername": "The-Strategy-Unit",
         "RemotePkgRef": "The-Strategy-Unit/azkit",
         "RemoteRef": "HEAD",
-        "RemoteSha": "1801fc6af1d9bf0f95e253cc620036374c3a1d58",
+        "RemoteSha": "d8c370f548624090f7eead120bdfff9d4e40ad10",
         "GithubRepo": "azkit",
         "GithubUsername": "The-Strategy-Unit",
         "GithubRef": "HEAD",
-        "GithubSHA1": "1801fc6af1d9bf0f95e253cc620036374c3a1d58",
+        "GithubSHA1": "d8c370f548624090f7eead120bdfff9d4e40ad10",
         "NeedsCompilation": "no",
-        "Packaged": "2026-06-12 08:43:59 UTC; Matt.Dray",
+        "Packaged": "2026-06-24 09:51:27 UTC; Matt.Dray",
         "Author": "Fran Barton [aut, cre] (ORCID: <https://orcid.org/0000-0002-5650-1176>),\n  Tom Jemmett [ctb]",
         "Maintainer": "Fran Barton <francis.barton@nhs.net>",
-        "Built": "R 4.5.3; ; 2026-06-12 08:44:00 UTC; windows"
+        "Built": "R 4.5.3; ; 2026-06-24 09:51:30 UTC; windows"
       }
     },
     "base64enc": {
@@ -2634,7 +2637,7 @@
       "description": {
         "Package": "reskit",
         "Title": "Nice selection box of goodies for hobnobbing with NHP model\nresults",
-        "Version": "1.0.1",
+        "Version": "1.0.2",
         "Authors@R": "\n    c(person(\n        \"Fran\", \"Barton\",\n        email = \"francis.barton@nhs.net\",\n        role = c(\"aut\", \"cre\"),\n        comment = c(ORCID = \"0000-0002-5650-1176\")\n    ),\n    person(\n        \"Matt\", \"Dray\",\n        email = \"matt.dray@nhs.net\",\n        role = \"ctb\"\n    ),\n    person(\n        \"Rhian\", \"Davies\",\n        email = \"rhian.davies25@nhs.net\",\n        role = \"ctb\"\n    ))",
         "Description": "'Wafer' goodbye to crumbly code, and dunk a sturdy reskit\n    function in your data cuppa instead. We've clustered the cream of our\n    results code here - it's a cracker!",
         "License": "MIT + file LICENSE",
@@ -2650,18 +2653,18 @@
         "RemoteHost": "api.github.com",
         "RemoteRepo": "nhp_reskit",
         "RemoteUsername": "The-Strategy-Unit",
-        "RemotePkgRef": "The-Strategy-Unit/nhp_reskit",
+        "RemotePkgRef": "reskit=github::The-Strategy-Unit/nhp_reskit",
         "RemoteRef": "HEAD",
-        "RemoteSha": "6e923c2f36aca9b00b85ce1c6dfab9b82615e2a8",
+        "RemoteSha": "ff0d0c01a3a72761c7790247058f27d4154db721",
         "GithubRepo": "nhp_reskit",
         "GithubUsername": "The-Strategy-Unit",
         "GithubRef": "HEAD",
-        "GithubSHA1": "6e923c2f36aca9b00b85ce1c6dfab9b82615e2a8",
+        "GithubSHA1": "ff0d0c01a3a72761c7790247058f27d4154db721",
         "NeedsCompilation": "no",
-        "Packaged": "2026-06-16 15:33:02 UTC; Matt.Dray",
+        "Packaged": "2026-06-24 09:51:35 UTC; Matt.Dray",
         "Author": "Fran Barton [aut, cre] (ORCID: <https://orcid.org/0000-0002-5650-1176>),\n  Matt Dray [ctb],\n  Rhian Davies [ctb]",
         "Maintainer": "Fran Barton <francis.barton@nhs.net>",
-        "Built": "R 4.5.3; ; 2026-06-16 15:33:04 UTC; windows"
+        "Built": "R 4.5.3; ; 2026-06-24 09:51:36 UTC; windows"
       }
     },
     "rlang": {
@@ -3767,7 +3770,7 @@
       "checksum": "79fee045c0be360b170324d3fb6c1a69"
     },
     "inst/report-outputs.Rmd": {
-      "checksum": "ccf1e4b7a62059acd5ed533e83685b97"
+      "checksum": "e087c165d2ad8b893fcc7658d03e0629"
     },
     "inst/report-parameters.Rmd": {
       "checksum": "747834287190b4857b8563f4da2c5aaf"
