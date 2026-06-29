@@ -350,7 +350,8 @@ possibly_generate_activity_in_detail_table <- purrr::possibly(
 
 atpmo_agg <- get_activity_type_pod_measure_options() |>
   dplyr::select("activity_type", "pod", "measure" = "measures") |>
-  tidyr::crossing(agg_col = c("age_group", "tretspef_grouped"))
+  tidyr::crossing(agg_col = c("age_group", "tretspef_grouped")) |>
+  dplyr::filter(!(activity_type == "aae" & agg_col == "tretspef_grouped"))
 
 activity_in_detail_table_names <- atpmo_agg |>
   dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
