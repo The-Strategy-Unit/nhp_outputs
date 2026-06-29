@@ -584,7 +584,7 @@ activity_in_detail_tables$ip_regular_night_attender_admissions_tretspef
 
 ### Outpatients
 
-#### First oupatient attendance
+#### First outpatient attendance
 
 ##### Attendances by age group
 
