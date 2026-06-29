@@ -686,7 +686,7 @@ activity_in_detail_tables$`aae_type-01_ambulance_age_group`
 ##### Walk-in arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-3
+#| label: pp-activity-in-detail-aae-2
 
 activity_in_detail_tables$`aae_type-01_walk-in_age_group`
 ```
@@ -696,7 +696,7 @@ activity_in_detail_tables$`aae_type-01_walk-in_age_group`
 ##### Ambulance arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-5
+#| label: pp-activity-in-detail-aae-3
 
 activity_in_detail_tables$`aae_type-02_ambulance_age_group`
 ```
@@ -704,7 +704,7 @@ activity_in_detail_tables$`aae_type-02_ambulance_age_group`
 ##### Walk-in arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-7
+#| label: pp-activity-in-detail-aae-4
 
 activity_in_detail_tables$`aae_type-02_walk-in_age_group`
 ```
@@ -714,7 +714,7 @@ activity_in_detail_tables$`aae_type-02_walk-in_age_group`
 ##### Ambulance arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-9
+#| label: pp-activity-in-detail-aae-5
 
 activity_in_detail_tables$`aae_type-03_ambulance_age_group`
 ```
@@ -722,7 +722,7 @@ activity_in_detail_tables$`aae_type-03_ambulance_age_group`
 ##### Walk-in arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-11
+#| label: pp-activity-in-detail-aae-6
 
 activity_in_detail_tables$`aae_type-03_walk-in_age_group`
 ```
@@ -732,7 +732,7 @@ activity_in_detail_tables$`aae_type-03_walk-in_age_group`
 ##### Ambulance arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-13
+#| label: pp-activity-in-detail-aae-7
 
 activity_in_detail_tables$`aae_type-04_ambulance_age_group`
 ```
@@ -740,7 +740,7 @@ activity_in_detail_tables$`aae_type-04_ambulance_age_group`
 ##### Walk-in arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-15
+#| label: pp-activity-in-detail-aae-8
 
 activity_in_detail_tables$`aae_type-04_walk-in_age_group`
 ```
@@ -750,7 +750,7 @@ activity_in_detail_tables$`aae_type-04_walk-in_age_group`
 ##### Ambulance arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-13
+#| label: pp-activity-in-detail-aae-9
 
 activity_in_detail_tables$`aae_type-05_ambulance_age_group`
 ```
@@ -758,7 +758,7 @@ activity_in_detail_tables$`aae_type-05_ambulance_age_group`
 ##### Walk-in arrivals by age group
 
 ```{r}
-#| label: pp-activity-in-detail-aae-15
+#| label: pp-activity-in-detail-aae-10
 
 activity_in_detail_tables$`aae_type-05_walk-in_age_group`
 ```
