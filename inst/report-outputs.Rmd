@@ -21,6 +21,15 @@ pkgload::load_all(params$wd, quiet = TRUE)
 ```
 
 ```{r}
+#| label: preload-lookups
+#| echo: false
+
+pod_lookup <- get_pod_lookup()
+principal_pods <- reskit::get_principal_pods()
+tpma_lookup <- reskit::get_tpma_label_lookup()
+```
+
+```{r}
 #| label: site-selections
 #| echo: false
 
@@ -79,7 +88,7 @@ Bed-availability data is not available at site level. See [the model project inf
 params$r$results |>
   reskit::compile_principal_pod_data(
     sites = params$sites,
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = principal_pods
   ) |>
   reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
@@ -96,7 +105,7 @@ params$r$results |>
   reskit::compile_principal_los_data(
     measure = "beddays",
     sites = params$sites,
-    pod_lookup = get_pod_lookup()
+    pod_lookup = pod_lookup
   ) |>
   reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
@@ -111,7 +120,7 @@ params$r$results |>
   reskit::compile_principal_los_data(
     measure = "admissions",
     sites = params$sites,
-    pod_lookup = get_pod_lookup()
+    pod_lookup = pod_lookup
   ) |>
   reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
@@ -156,8 +165,8 @@ params$r$results |>
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -173,8 +182,8 @@ params$r$results |>
     activity_type = "ip",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -191,8 +200,8 @@ params$r$results |>
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -208,8 +217,8 @@ params$r$results |>
     activity_type = "ip",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -228,8 +237,8 @@ params$r$results |>
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -245,8 +254,8 @@ params$r$results |>
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -263,8 +272,8 @@ params$r$results |>
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -280,8 +289,8 @@ params$r$results |>
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -300,8 +309,8 @@ params$r$results |>
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -317,8 +326,8 @@ params$r$results |>
     activity_type = "aae",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    tpma_lookup = tpma_lookup,
+    pod_lookup = principal_pods
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -748,7 +757,7 @@ params$r$results |>
   reskit::compile_distribution_summary_data(
     value_type = "median",
     sites = params$sites,
-    pod_lookup = get_pod_lookup()
+    pod_lookup = pod_lookup
   ) |>
   reskit::make_distribution_summary_table() |>
   gt::tab_options(table.width = gt::pct(100))
