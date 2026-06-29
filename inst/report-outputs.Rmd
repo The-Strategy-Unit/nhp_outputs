@@ -744,6 +744,24 @@ activity_in_detail_tables$`aae_type-04_ambulance_age_group`
 activity_in_detail_tables$`aae_type-04_walk-in_age_group`
 ```
 
+#### Type 5 department (SDEC)
+
+##### Ambulance arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-13
+
+activity_in_detail_tables$`aae_type-05_ambulance_age_group`
+```
+
+##### Walk-in arrivals by age group
+
+```{r}
+#| label: pp-activity-in-detail-aae-15
+
+activity_in_detail_tables$`aae_type-05_walk-in_age_group`
+```
+
 # Distribution of projections
 
 ## Activity summary
