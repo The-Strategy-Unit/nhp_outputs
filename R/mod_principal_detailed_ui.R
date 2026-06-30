@@ -31,7 +31,7 @@ mod_principal_detailed_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
-        gt::gt_output(ns("results"))
+        shiny::htmlOutput(ns("results"))
       )
     )
   )

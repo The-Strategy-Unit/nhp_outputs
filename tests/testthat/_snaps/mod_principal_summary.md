@@ -10,6 +10,7 @@
             <h3 class="card-title">Notes</h3>
           </div>
           <div class="card-body">
+            noot noot
             <p>Bed days are defined as the difference in days between discharge and admission, plus one day.
       One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.
       See the <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a> for definitions of terms.</p>
@@ -25,12 +26,12 @@
             <h3 class="card-title">Summary by point of delivery</h3>
           </div>
           <div class="card-body">
-            <div data-spinner-id="spinner-46fc03e74e82de292a3ae28234e2c826" class="shiny-spinner-output-container shiny-spinner-hideui">
+            <div data-spinner-id="spinner-bca61015a8656c8b633239e1f4c01396" class="shiny-spinner-output-container shiny-spinner-hideui">
               <div class="load-container shiny-spinner-hidden load1">
-                <div id="spinner-46fc03e74e82de292a3ae28234e2c826" class="loader">Loading...</div>
+                <div id="spinner-bca61015a8656c8b633239e1f4c01396" class="loader">Loading...</div>
               </div>
               <div style="height:400px" class="shiny-spinner-placeholder"></div>
-              <div class="shiny-html-output gt_shiny" id="id-summary_table"></div>
+              <div id="id-summary_table" class="shiny-html-output"></div>
             </div>
           </div>
         </div>

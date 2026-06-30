@@ -22,7 +22,7 @@ mod_principal_summary_los_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
-        gt::gt_output(ns("summary_los_table_beddays"))
+        shiny::htmlOutput(ns("summary_los_table_beddays"))
       )
     ),
     bs4Dash::box(
@@ -30,7 +30,7 @@ mod_principal_summary_los_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
-        gt::gt_output(ns("summary_los_table_admissions"))
+        shiny::htmlOutput(ns("summary_los_table_admissions"))
       )
     )
   )

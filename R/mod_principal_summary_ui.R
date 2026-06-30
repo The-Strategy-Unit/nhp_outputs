@@ -15,6 +15,7 @@ mod_principal_summary_ui <- function(id) {
       title = "Notes",
       collapsible = FALSE,
       width = 12,
+      "noot noot",
       md_file_to_html("app", "text", "notes_beddays.md"),
       htmltools::p("Bed-availability data is not available at site level.")
     ),
@@ -23,7 +24,7 @@ mod_principal_summary_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
-        gt::gt_output(ns("summary_table"))
+        shiny::htmlOutput(ns("summary_table"))
       )
     )
   )

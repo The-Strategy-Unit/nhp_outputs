@@ -37,7 +37,7 @@ mod_info_home_ui <- function(id) {
             "This is a reminder of the metadata for the model run you selected."
           ),
           shinycssloaders::withSpinner(
-            gt::gt_output(ns("params_model_run"))
+            shiny::htmlOutput(ns("params_model_run"))
           )
         )
       )
