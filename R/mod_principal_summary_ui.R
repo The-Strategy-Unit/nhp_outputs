@@ -23,7 +23,7 @@ mod_principal_summary_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       shinycssloaders::withSpinner(
-        gt::gt_output(ns("summary_table"))
+        shiny::htmlOutput(ns("summary_table"))
       )
     )
   )

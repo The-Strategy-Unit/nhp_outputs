@@ -31,7 +31,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_demographic_factors"></div>
+            <div id="id-params_demographic_factors" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Demographic factors","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_baseline_adjustment"></div>
+            <div id="id-params_baseline_adjustment" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Baseline adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -63,7 +63,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_waiting_list_adjustment"></div>
+            <div id="id-params_waiting_list_adjustment" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Waiting list adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -79,7 +79,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_inequalities"></div>
+            <div id="id-params_inequalities" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Inequalities","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -95,7 +95,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_expat"></div>
+            <div id="id-params_expat" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Expatriation","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -111,7 +111,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_repat_local"></div>
+            <div id="id-params_repat_local" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Repatriation (local)","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -127,7 +127,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_repat_nonlocal"></div>
+            <div id="id-params_repat_nonlocal" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Repatriation (non-local)","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -151,7 +151,7 @@
               Value type:
               <span id="id-value_type_non_demographic_adjustment" class="shiny-text-output"></span>
             </p>
-            <div class="shiny-html-output gt_shiny" id="id-params_non_demographic_adjustment"></div>
+            <div id="id-params_non_demographic_adjustment" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Non-demographic adjustment","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -167,7 +167,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_activity_avoidance"></div>
+            <div id="id-params_activity_avoidance" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Activity avoidance","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -183,7 +183,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div class="shiny-html-output gt_shiny" id="id-params_efficiencies"></div>
+            <div id="id-params_efficiencies" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Efficiencies","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>

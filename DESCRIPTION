@@ -37,7 +37,7 @@ Imports:
     rlang,
     rmarkdown,
     scales,
-    shiny (>= 1.7.1),
+    shiny (>= 1.14.0),
     shinycssloaders,
     shinyjs,
     stringr,
@@ -49,23 +49,19 @@ Imports:
     yyjsonr,
     zeallot
 Suggests:
-    AzureStor,
     covr,
     devtools,
-    languageserver,
     mockery,
     rcmdcheck,
     rsconnect,
     testthat (>= 3.0.0),
     usethis,
     utils,
-    watchr (>= 0.0.0.9000),
+    watcher,
     withr
 Remotes:
-    github::ManuelHentschel/vscDebugger,
-    github::tomjemmett/watchr,
     github::the-strategy-unit/azkit,
-    reskit=github::The-Strategy-Unit/nhp_reskit,
+    reskit=github::The-Strategy-Unit/nhp_reskit
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8

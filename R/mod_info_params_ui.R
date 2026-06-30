@@ -30,43 +30,43 @@ mod_info_params_ui <- function(id) {
       title = "Demographic factors",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_demographic_factors"))
+      shiny::htmlOutput(ns("params_demographic_factors"))
     ),
     bs4Dash::box(
       title = "Baseline adjustment",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_baseline_adjustment"))
+      shiny::htmlOutput(ns("params_baseline_adjustment"))
     ),
     bs4Dash::box(
       title = "Waiting list adjustment",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_waiting_list_adjustment"))
+      shiny::htmlOutput(ns("params_waiting_list_adjustment"))
     ),
     bs4Dash::box(
       title = "Inequalities",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_inequalities"))
+      shiny::htmlOutput(ns("params_inequalities"))
     ),
     bs4Dash::box(
       title = "Expatriation",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_expat"))
+      shiny::htmlOutput(ns("params_expat"))
     ),
     bs4Dash::box(
       title = "Repatriation (local)",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_repat_local"))
+      shiny::htmlOutput(ns("params_repat_local"))
     ),
     bs4Dash::box(
       title = "Repatriation (non-local)",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_repat_nonlocal"))
+      shiny::htmlOutput(ns("params_repat_nonlocal"))
     ),
     bs4Dash::box(
       title = "Non-demographic adjustment",
@@ -86,19 +86,19 @@ mod_info_params_ui <- function(id) {
           inline = TRUE
         )
       ),
-      gt::gt_output(ns("params_non_demographic_adjustment"))
+      shiny::htmlOutput(ns("params_non_demographic_adjustment"))
     ),
     bs4Dash::box(
       title = "Activity avoidance",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_activity_avoidance"))
+      shiny::htmlOutput(ns("params_activity_avoidance"))
     ),
     bs4Dash::box(
       title = "Efficiencies",
       collapsed = TRUE,
       width = 12,
-      gt::gt_output(ns("params_efficiencies"))
+      shiny::htmlOutput(ns("params_efficiencies"))
     )
   )
 }

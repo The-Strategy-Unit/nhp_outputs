@@ -27,13 +27,13 @@ mod_model_core_activity_ui <- function(id) {
           shiny::tabPanel(
             "Median",
             shinycssloaders::withSpinner(
-              gt::gt_output(ns("core_activity_median"))
+              shiny::htmlOutput(ns("core_activity_median"))
             )
           ),
           shiny::tabPanel(
             "Principal",
             shinycssloaders::withSpinner(
-              gt::gt_output(ns("core_activity_principal"))
+              shiny::htmlOutput(ns("core_activity_principal"))
             )
           )
         )
