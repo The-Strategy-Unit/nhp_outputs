@@ -57,6 +57,7 @@ Suggests:
     testthat (>= 3.0.0),
     usethis,
     utils,
+    watcher,
     withr
 Remotes:
     github::the-strategy-unit/azkit,
