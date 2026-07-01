@@ -37,6 +37,7 @@ jobs:
           extra-packages: |
             any::rsconnect
             any::cpp11
+            any::fs
       - name: Generate manifest
         run: Rscript dev/generate_manifest.R
 
