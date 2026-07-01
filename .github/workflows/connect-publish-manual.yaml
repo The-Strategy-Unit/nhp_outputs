@@ -8,11 +8,7 @@ on:
       environment:
         description: "The environment to deploy to"
         required: true
-        type: choice
-        default: "development"
-        options:
-          - "development"
-          - "production"
+        type: string
   workflow_call:
     inputs:
       namespace:
