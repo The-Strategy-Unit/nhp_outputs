@@ -9,8 +9,9 @@ on:
         description: "The environment to deploy to"
         required: true
         type: choice
-        default: "production"
+        default: "development"
         options:
+          - "development"
           - "production"
   workflow_call:
     inputs:
@@ -21,7 +22,7 @@ on:
         description: "The environment to deploy to"
         required: true
         type: string
-        default: "production"
+        default: "development"
 
 jobs:
   connect-publish:
