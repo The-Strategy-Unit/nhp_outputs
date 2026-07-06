@@ -9,7 +9,6 @@ output:
 params:
   r: NA
   sites: NA
-  wd: ".."
 ---
 
 ```{r}
@@ -17,7 +16,8 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE, out.width = "100%")
-pkgload::load_all(params$wd, quiet = TRUE)
+
+library(reskit)
 ```
 
 ```{r}
@@ -330,39 +330,72 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 ```{r}
 #| label: pp-activity-in-detail-setup
 
-# Function to prepare data and table
-
-possibly_generate_activity_in_detail_table <- purrr::possibly(
-  generate_activity_in_detail_table,
-  otherwise = "Insufficient information to produce this table"
-)
-
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
-atpmo_agg <- get_activity_type_pod_measure_options() |>
-  dplyr::select("activity_type", "pod", "measure" = "measures") |>
-  tidyr::crossing(agg_col = c("age_group", "tretspef_grouped"))
+pod_lookup <- reskit::get_detailed_pods()
+end_year <- params[["end_year"]]
 
-activity_in_detail_table_names <- atpmo_agg |>
-  dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
-  dplyr::pull()
+params <- list(r = r, sites = NULL)
 
-# Prepare a list with each set of input combos
-
-activity_in_detail_tables <- purrr::pmap(
-  atpmo_agg,
-  \(activity_type, pod, measure, agg_col) {
-    possibly_generate_activity_in_detail_table(
-      data = params$r,
-      sites = params$sites,
-      activity_type,
-      pod,
-      measure,
-      agg_col
+age_group_data <- list(
+  "sex+age_group" = params$r$results[["sex+age_group"]] |>
+    reskit:::filter_to_selected_sites(params$sites) |>
+    dplyr::mutate(
+      value_type = ifelse(.data[["model_run"]] == 0, "baseline", "principal")
+    ) |>
+    dplyr::summarise(
+      dplyr::across("value", mean),
+      .by = -c("model_run", "value", "sitetret")
+    ) |>
+    tidyr::pivot_wider(
+      names_from = "value_type",
+      values_from = "value"
     )
-  }
 ) |>
-  purrr::set_names(activity_in_detail_table_names)
+  reskit:::prepare_age_group_data()
+
+tretspef_data <- list(
+  "sex+tretspef_grouped" = params$r$results[["sex+tretspef_grouped"]] |>
+    reskit:::filter_to_selected_sites(params$sites) |>
+    dplyr::mutate(
+      value_type = ifelse(.data[["model_run"]] == 0, "baseline", "principal")
+    ) |>
+    dplyr::summarise(
+      dplyr::across("value", mean),
+      .by = -c("model_run", "value", "sitetret")
+    ) |>
+    tidyr::pivot_wider(
+      names_from = "value_type",
+      values_from = "value"
+    )
+) |>
+  reskit:::prepare_tretspef_data(reskit::get_tretspef_lookup())
+
+activity_in_detail_tables <- list("age_group" = age_group_data, "tretspef" = tretspef_data) |>
+  purrr::imap(\(.x, .i) {
+    .x |>
+      dplyr::mutate(dplyr::across("sex", \(.x) forcats::fct(ifelse(.x == 1, "Male", "Female")))) |>
+      dplyr::group_nest(measure, pod) |>
+      reskit:::get_activity_type_from_pod() |>
+      reskit:::inner_join_for_labels(pod_lookup) |>
+      reskit:::relabel_pods() |>
+      dplyr::mutate(agg_col = .i) |>
+      dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
+      dplyr::select("table_name", "data") |>
+      tibble::deframe()
+  }) |>
+  purrr::list_flatten() |>
+  purrr::map(
+    \(.x) {
+      .x |>
+        dplyr::mutate(
+          change = .data[["principal"]] - .data[["baseline"]],
+          change_pct = .data[["change"]] / .data[["baseline"]]
+        ) |>
+        reskit::make_detailed_activity_table(final_year = end_year) |>
+        gt::tab_options(table.align = "left")
+    }
+  )
 ```
 
 ### Inpatients
