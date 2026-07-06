@@ -335,8 +335,6 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 pod_lookup <- reskit::get_detailed_pods()
 end_year <- params[["end_year"]]
 
-params <- list(r = r, sites = NULL)
-
 age_group_data <- list(
   "sex+age_group" = params$r$results[["sex+age_group"]] |>
     reskit:::filter_to_selected_sites(params$sites) |>
