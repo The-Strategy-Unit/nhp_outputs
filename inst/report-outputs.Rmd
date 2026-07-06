@@ -333,7 +333,7 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
 pod_lookup <- reskit::get_detailed_pods()
-end_year <- params[["end_year"]]
+end_year <- params$r$params[["end_year"]]
 
 age_group_data <- list(
   "sex+age_group" = params$r$results[["sex+age_group"]] |>
