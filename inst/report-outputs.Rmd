@@ -9,6 +9,7 @@ output:
 params:
   r: NA
   sites: NA
+  wd: ".."
 ---
 
 ```{r}
@@ -18,6 +19,7 @@ params:
 knitr::opts_chunk$set(error = TRUE, echo = FALSE, out.width = "100%")
 
 library(reskit)
+pkgload::load_all(params$wd, quiet = TRUE)
 ```
 
 ```{r}
@@ -369,7 +371,7 @@ tretspef_data <- list(
 ) |>
   reskit:::prepare_tretspef_data(reskit::get_tretspef_lookup())
 
-activity_in_detail_tables <- list("age_group" = age_group_data, "tretspef" = tretspef_data) |>
+activity_in_detail_data <- list("age_group" = age_group_data, "tretspef" = tretspef_data) |>
   purrr::imap(\(.x, .i) {
     .x |>
       dplyr::mutate(dplyr::across("sex", \(.x) forcats::fct(ifelse(.x == 1, "Male", "Female")))) |>
@@ -382,18 +384,35 @@ activity_in_detail_tables <- list("age_group" = age_group_data, "tretspef" = tre
       dplyr::select("table_name", "data") |>
       tibble::deframe()
   }) |>
-  purrr::list_flatten() |>
-  purrr::map(
-    \(.x) {
-      .x |>
-        dplyr::mutate(
-          change = .data[["principal"]] - .data[["baseline"]],
-          change_pct = .data[["change"]] / .data[["baseline"]]
-        ) |>
-        reskit::make_detailed_activity_table(final_year = end_year) |>
-        gt::tab_options(table.align = "left")
+  unname() |>
+  purrr::list_flatten()
+
+activity_in_detail_tables <- purrr::map(
+  activity_in_detail_data,
+  \(.x) {
+    if (sum(.x$baseline + .x$principal) == 0) {
+      return("Insufficient information to produce this table.")
     }
-  )
+
+    .x |>
+      dplyr::mutate(
+        change = .data[["principal"]] - .data[["baseline"]],
+        change_pct = .data[["change"]] / .data[["baseline"]]
+      ) |>
+      reskit::make_detailed_activity_table(final_year = end_year) |>
+      gt::tab_options(table.align = "left")
+  }
+)
+
+get_activity_in_detail_table <- function(pod, measure, agg_col) {
+  table_name <- paste(pod, measure, agg_col, sep = "_")
+
+  if (!table_name %in% names(activity_in_detail_tables)) {
+    return("Insufficient information to produce this table.")
+  }
+
+  activity_in_detail_tables[[table_name]]
+}
 ```
 
 ### Inpatients
@@ -404,32 +423,36 @@ activity_in_detail_tables <- list("age_group" = age_group_data, "tretspef" = tre
 
 ```{r}
 #| label: pp-activity-in-detail-ip-1
+#| results: asis
 
-activity_in_detail_tables$`ip_non-elective_admission_beddays_age_group`
+get_activity_in_detail_table("ip", "non-elective_admission", "beddays_age_group")
 ```
 
 ##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-2
+#| results: asis
 
-activity_in_detail_tables$`ip_non-elective_admission_beddays_tretspef`
+get_activity_in_detail_table("ip", "non-elective_admission", "beddays_tretspef")
 ```
 
 ##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-3
+#| results: asis
 
-activity_in_detail_tables$`ip_non-elective_admission_admissions_age_group`
+get_activity_in_detail_table("ip", "non-elective_admission", "admissions_age_group")
 ```
 
 ##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-4
+#| results: asis
 
-activity_in_detail_tables$`ip_non-elective_admission_admissions_tretspef`
+get_activity_in_detail_table("ip", "non-elective_admission", "admissions_tretspef")
 ```
 
 #### Elective admission
@@ -438,32 +461,36 @@ activity_in_detail_tables$`ip_non-elective_admission_admissions_tretspef`
 
 ```{r}
 #| label: pp-activity-in-detail-ip-5
+#| results: asis
 
-activity_in_detail_tables$ip_elective_admission_beddays_age_group
+get_activity_in_detail_table("ip", "elective_admission", "beddays_age_group")
 ```
 
 ##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-6
+#| results: asis
 
-activity_in_detail_tables$ip_elective_admission_beddays_tretspef
+get_activity_in_detail_table("ip", "elective_admission", "beddays_tretspef")
 ```
 
 ##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-7
+#| results: asis
 
-activity_in_detail_tables$ip_elective_admission_admissions_age_group
+get_activity_in_detail_table("ip", "elective_admission", "admissions_age_group")
 ```
 
 ##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-8
+#| results: asis
 
-activity_in_detail_tables$ip_elective_admission_admissions_tretspef
+get_activity_in_detail_table("ip", "elective_admission", "admissions_tretspef")
 ```
 
 #### Daycase admission
@@ -472,32 +499,36 @@ activity_in_detail_tables$ip_elective_admission_admissions_tretspef
 
 ```{r}
 #| label: pp-activity-in-detail-ip-9
+#| results: asis
 
-activity_in_detail_tables$ip_elective_daycase_beddays_age_group
+get_activity_in_detail_table("ip", "elective_daycase", "beddays_age_group")
 ```
 
 ##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-10
+#| results: asis
 
-activity_in_detail_tables$ip_elective_daycase_beddays_tretspef
+get_activity_in_detail_table("ip", "elective_daycase", "beddays_tretspef")
 ```
 
 ##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-11
+#| results: asis
 
-activity_in_detail_tables$ip_elective_daycase_admissions_age_group
+get_activity_in_detail_table("ip", "elective_daycase", "admissions_age_group")
 ```
 
 ##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-12
+#| results: asis
 
-activity_in_detail_tables$ip_elective_daycase_admissions_tretspef
+get_activity_in_detail_table("ip", "elective_daycase", "admissions_tretspef")
 ```
 
 #### Maternity admission
@@ -506,32 +537,36 @@ activity_in_detail_tables$ip_elective_daycase_admissions_tretspef
 
 ```{r}
 #| label: pp-activity-in-detail-ip-13
+#| results: asis
 
-activity_in_detail_tables$ip_maternity_admission_beddays_age_group
+get_activity_in_detail_table("ip", "maternity_admission", "beddays_age_group")
 ```
 
 ##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-14
+#| results: asis
 
-activity_in_detail_tables$ip_maternity_admission_beddays_tretspef
+get_activity_in_detail_table("ip", "maternity_admission", "beddays_tretspef")
 ```
 
 ##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-15
+#| results: asis
 
-activity_in_detail_tables$ip_maternity_admission_admissions_age_group
+get_activity_in_detail_table("ip", "maternity_admission", "admissions_age_group")
 ```
 
 ##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-16
+#| results: asis
 
-activity_in_detail_tables$ip_maternity_admission_admissions_tretspef
+get_activity_in_detail_table("ip", "maternity_admission", "admissions_tretspef")
 ```
 
 #### Regular day attender admission
@@ -540,32 +575,36 @@ activity_in_detail_tables$ip_maternity_admission_admissions_tretspef
 
 ```{r}
 #| label: pp-activity-in-detail-ip-17
+#| results: asis
 
-activity_in_detail_tables$ip_regular_day_attender_beddays_age_group
+get_activity_in_detail_table("ip", "regular_day_attender", "beddays_age_group")
 ```
 
 ##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-18
+#| results: asis
 
-activity_in_detail_tables$ip_regular_day_attender_beddays_tretspef
+get_activity_in_detail_table("ip", "regular_day_attender", "beddays_tretspef")
 ```
 
 ##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-19
+#| results: asis
 
-activity_in_detail_tables$ip_regular_day_attender_admissions_age_group
+get_activity_in_detail_table("ip", "regular_day_attender", "admissions_age_group")
 ```
 
 ##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-20
+#| results: asis
 
-activity_in_detail_tables$ip_regular_day_attender_admissions_tretspef
+get_activity_in_detail_table("ip", "regular_day_attender", "admissions_tretspef")
 ```
 
 #### Regular night attender admission
@@ -574,32 +613,36 @@ activity_in_detail_tables$ip_regular_day_attender_admissions_tretspef
 
 ```{r}
 #| label: pp-activity-in-detail-ip-21
+#| results: asis
 
-activity_in_detail_tables$ip_regular_night_attender_beddays_age_group
+get_activity_in_detail_table("ip", "regular_night_attender", "beddays_age_group")
 ```
 
 ##### Bed days by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-22
+#| results: asis
 
-activity_in_detail_tables$ip_regular_night_attender_beddays_tretspef
+get_activity_in_detail_table("ip", "regular_night_attender", "beddays_tretspef")
 ```
 
 ##### Admissions by age group
 
 ```{r}
 #| label: pp-activity-in-detail-ip-23
+#| results: asis
 
-activity_in_detail_tables$ip_regular_night_attender_admissions_age_group
+get_activity_in_detail_table("ip", "regular_night_attender", "admissions_age_group")
 ```
 
 ##### Admissions by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-ip-24
+#| results: asis
 
-activity_in_detail_tables$ip_regular_night_attender_admissions_tretspef
+get_activity_in_detail_table("ip", "regular_night_attender", "admissions_tretspef")
 ```
 
 
@@ -612,32 +655,36 @@ activity_in_detail_tables$ip_regular_night_attender_admissions_tretspef
 
 ```{r}
 #| label: pp-activity-in-detail-op-1
+#| results: asis
 
-activity_in_detail_tables$op_first_attendances_age_group
+get_activity_in_detail_table("op", "first_attendances", "age_group")
 ```
 
 ##### Attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-2
+#| results: asis
 
-activity_in_detail_tables$op_first_attendances_tretspef
+get_activity_in_detail_table("op", "first_attendances", "tretspef")
 ```
 
 ##### Tele-attendances by age group
 
 ```{r}
 #| label: pp-activity-in-detail-op-3
+#| results: asis
 
-activity_in_detail_tables$op_first_tele_attendances_age_group
+get_activity_in_detail_table("op", "first_attendances", "age_group")
 ```
 
 ##### Tele-attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-4
+#| results: asis
 
-activity_in_detail_tables$op_first_tele_attendances_tretspef
+get_activity_in_detail_table("op", "first_attendances", "tretspef")
 ```
 
 #### Follow-up outpatient attendance
@@ -646,32 +693,36 @@ activity_in_detail_tables$op_first_tele_attendances_tretspef
 
 ```{r}
 #| label: pp-activity-in-detail-op-5
+#| results: asis
 
-activity_in_detail_tables$`op_follow-up_attendances_age_group`
+get_activity_in_detail_table("op", "follow-up_attendances", "age_group")
 ```
 
 ##### Attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-6
+#| results: asis
 
-activity_in_detail_tables$`op_follow-up_attendances_tretspef`
+get_activity_in_detail_table("op", "follow-up_attendances", "tretspef")
 ```
 
 ##### Tele-attendances by age group
 
 ```{r}
 #| label: pp-activity-in-detail-op-7
+#| results: asis
 
-activity_in_detail_tables$`op_follow-up_tele_attendances_age_group`
+get_activity_in_detail_table("op", "follow-up_attendances", "age_group")
 ```
 
 ##### Tele-attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-8
+#| results: asis
 
-activity_in_detail_tables$`op_follow-up_tele_attendances_tretspef`
+get_activity_in_detail_table("op", "follow-up_attendances", "tretspef")
 ```
 
 #### Outpatient procedure
@@ -680,16 +731,18 @@ activity_in_detail_tables$`op_follow-up_tele_attendances_tretspef`
 
 ```{r}
 #| label: pp-activity-in-detail-op-9
+#| results: asis
 
-activity_in_detail_tables$op_procedure_attendances_age_group
+get_activity_in_detail_table("op", "procedure_attendances", "age_group")
 ```
 
 ##### Attendances by treatment specialty
 
 ```{r}
 #| label: pp-activity-in-detail-op-10
+#| results: asis
 
-activity_in_detail_tables$op_procedure_attendances_tretspef
+get_activity_in_detail_table("op", "procedure_attendances", "tretspef")
 ```
 
 ### A&E
@@ -700,16 +753,18 @@ activity_in_detail_tables$op_procedure_attendances_tretspef
 
 ```{r}
 #| label: pp-activity-in-detail-aae-1
+#| results: asis
 
-activity_in_detail_tables$`aae_type-01_ambulance_age_group`
+get_activity_in_detail_table("aae", "type-01", "ambulance_age_group")
 ```
 
 ##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-3
+#| results: asis
 
-activity_in_detail_tables$`aae_type-01_walk-in_age_group`
+get_activity_in_detail_table("aae", "type-01", "walk-in_age_group")
 ```
 
 #### Type 2 department
@@ -718,16 +773,18 @@ activity_in_detail_tables$`aae_type-01_walk-in_age_group`
 
 ```{r}
 #| label: pp-activity-in-detail-aae-5
+#| results: asis
 
-activity_in_detail_tables$`aae_type-02_ambulance_age_group`
+get_activity_in_detail_table("aae", "type-02", "ambulance_age_group")
 ```
 
 ##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-7
+#| results: asis
 
-activity_in_detail_tables$`aae_type-02_walk-in_age_group`
+get_activity_in_detail_table("aae", "type-02", "walk-in_age_group")
 ```
 
 #### Type 3 department
@@ -736,16 +793,18 @@ activity_in_detail_tables$`aae_type-02_walk-in_age_group`
 
 ```{r}
 #| label: pp-activity-in-detail-aae-9
+#| results: asis
 
-activity_in_detail_tables$`aae_type-03_ambulance_age_group`
+get_activity_in_detail_table("aae", "type-03", "ambulance_age_group")
 ```
 
 ##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-11
+#| results: asis
 
-activity_in_detail_tables$`aae_type-03_walk-in_age_group`
+get_activity_in_detail_table("aae", "type-03", "walk-in_age_group")
 ```
 
 #### Type 4 department
@@ -754,16 +813,18 @@ activity_in_detail_tables$`aae_type-03_walk-in_age_group`
 
 ```{r}
 #| label: pp-activity-in-detail-aae-13
+#| results: asis
 
-activity_in_detail_tables$`aae_type-04_ambulance_age_group`
+get_activity_in_detail_table("aae", "type-04", "ambulance_age_group")
 ```
 
 ##### Walk-in arrivals by age group
 
 ```{r}
 #| label: pp-activity-in-detail-aae-15
+#| results: asis
 
-activity_in_detail_tables$`aae_type-04_walk-in_age_group`
+get_activity_in_detail_table("aae", "type-04", "walk-in_age_group")
 ```
 
 # Distribution of projections

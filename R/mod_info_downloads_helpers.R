@@ -150,11 +150,16 @@ mod_info_downloads_download_report_html <- function(
 
     on.exit(shiny::removeNotification(download_notification), add = TRUE)
 
+    params$wd <- getwd()
+
+    env <- new.env(parent = globalenv())
+    source(app_sys("report-helpers.R"), local = env)
+
     rmarkdown::render(
       temp_report,
       output_file = file,
       params = params,
-      envir = new.env(parent = globalenv())
+      envir = env
     )
   }
 }

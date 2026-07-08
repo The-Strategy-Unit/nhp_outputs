@@ -1,3 +1,4 @@
+# TODO: move to reskit
 get_params <- function(r) {
   is_scalar_numeric <- \(x) rlang::is_scalar_atomic(x) && is.numeric(x)
 
