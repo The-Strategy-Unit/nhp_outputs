@@ -344,8 +344,12 @@ age_group_data <- list(
       value_type = ifelse(.data[["model_run"]] == 0, "baseline", "principal")
     ) |>
     dplyr::summarise(
+      dplyr::across("value", sum),
+      .by = -c("value", "sitetret")
+    ) |>
+    dplyr::summarise(
       dplyr::across("value", mean),
-      .by = -c("model_run", "value", "sitetret")
+      .by = -c("model_run", "value")
     ) |>
     tidyr::pivot_wider(
       names_from = "value_type",
@@ -367,8 +371,12 @@ tretspef_data <- list(
       value_type = ifelse(.data[["model_run"]] == 0, "baseline", "principal")
     ) |>
     dplyr::summarise(
+      dplyr::across("value", sum),
+      .by = -c("value", "sitetret")
+    ) |>
+    dplyr::summarise(
       dplyr::across("value", mean),
-      .by = -c("model_run", "value", "sitetret")
+      .by = -c("model_run", "value")
     ) |>
     tidyr::pivot_wider(
       names_from = "value_type",
