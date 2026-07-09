@@ -352,7 +352,13 @@ age_group_data <- list(
       values_from = "value"
     )
 ) |>
-  reskit:::prepare_age_group_data()
+  reskit:::prepare_age_group_data() |>
+  dplyr::arrange(
+    .data[["pod"]],
+    .data[["sex"]],
+    .data[["measure"]],
+    .data[["age_group"]]
+  )
 
 tretspef_data <- list(
   "sex+tretspef_grouped" = params$r$results[["sex+tretspef_grouped"]] |>
@@ -369,7 +375,14 @@ tretspef_data <- list(
       values_from = "value"
     )
 ) |>
-  reskit:::prepare_tretspef_data(reskit::get_tretspef_lookup())
+  reskit:::prepare_tretspef_data(reskit::get_tretspef_lookup()) |>
+  dplyr::relocate("tretspef", .before = tidyselect::everything()) |>
+  dplyr::arrange(
+    .data[["pod"]],
+    .data[["sex"]],
+    .data[["measure"]],
+    .data[["tretspef"]]
+  )
 
 activity_in_detail_data <- list("age_group" = age_group_data, "tretspef" = tretspef_data) |>
   purrr::imap(\(.x, .i) {
