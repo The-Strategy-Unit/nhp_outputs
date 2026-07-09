@@ -39,7 +39,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
           measure = selected_measure()$measure,
           activity_type = selected_measure()$activity_type,
           aggregation = input$aggregation,
-          pods = selected_measure()$pods,
+          pods = selected_measure()$pod,
           sites = selected_site(),
           tretspef_lookup = get_tretspef_lookup(),
           pod_lookup = get_pod_lookup()
