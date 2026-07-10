@@ -17,7 +17,9 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-pkgload::load_all(params$wd, quiet = TRUE)
+
+library(reskit)
+
 p <- get_params(params$r)
 ```
 
@@ -42,7 +44,9 @@ tabulate_model_run_info(p)
 ```{r echo=F, results='asis'}
 #| label: params-expand
 
-p |> param_tables_to_list() |> expand_param_tables_to_rmd()
+p |>
+  param_tables_to_list() |>
+  expand_param_tables_to_rmd()
 ```
 
 # Rationale
