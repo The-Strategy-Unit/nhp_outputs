@@ -670,7 +670,7 @@ get_activity_in_detail_table("ip", "regular_night_attender", "admissions_tretspe
 
 ### Outpatients
 
-#### First oupatient attendance
+#### First outpatient attendance
 
 ##### Attendances by age group
 
