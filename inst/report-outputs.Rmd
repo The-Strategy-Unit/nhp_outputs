@@ -151,7 +151,7 @@ params$r |>
     activity_type = "ip",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = reskit::get_detailed_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -180,7 +180,7 @@ params$r |>
     activity_type = "ip",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = reskit::get_detailed_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -211,7 +211,7 @@ params$r |>
     activity_type = "op",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = reskit::get_detailed_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -240,7 +240,7 @@ params$r |>
     activity_type = "op",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = reskit::get_detailed_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
@@ -271,7 +271,7 @@ params$r |>
     activity_type = "aae",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = reskit::get_detailed_pods()
   ) |>
   reskit::make_overall_cf_plot()
 
