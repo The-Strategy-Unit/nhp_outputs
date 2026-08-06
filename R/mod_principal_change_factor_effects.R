@@ -170,7 +170,8 @@ mod_principal_change_factor_effects_server <- function(
           sites = selected_site(),
           include_baseline = input$include_baseline,
           tpma_lookup = get_tpma_lookup(),
-          pod_lookup = get_pod_lookup()
+          # detailed PODs because we need all A&E types for the waterfall
+          pod_lookup = reskit::get_detailed_pods()
         ) |>
         require_rows() |>
         reskit::make_overall_cf_plot() +

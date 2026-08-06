@@ -39,7 +39,7 @@ mod_principal_summary_server <- function(id, selected_data, selected_site) {
         reskit::shim_results() |>
         reskit::compile_principal_pod_data(
           sites = selected_site(),
-          pod_lookup = get_pod_lookup()
+          pod_lookup = reskit::get_principal_pods()
         )
     })
 
