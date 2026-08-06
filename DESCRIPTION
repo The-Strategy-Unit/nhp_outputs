@@ -1,6 +1,6 @@
 Package: outputs
 Title: NHP Model Outputs
-Version: 5.2.0
+Version: 5.2.2
 Authors@R: c(
     person("Tom", "Jemmett", , "thomas.jemmett@nhs.net", role = c("cre", "aut")),
     person("Matt", "Dray", , "matt.dray@nhs.net", role = "aut"),
@@ -33,7 +33,7 @@ Imports:
     markdown,
     plotly,
     purrr,
-    reskit (== 1.0.2),
+    reskit (== 1.0.3),
     rlang,
     rmarkdown,
     scales,
@@ -65,4 +65,4 @@ Remotes:
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
