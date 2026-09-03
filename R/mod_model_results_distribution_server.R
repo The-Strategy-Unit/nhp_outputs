@@ -15,8 +15,8 @@ mod_model_results_distribution_server <- function(
           measure = selected_measure()$measure,
           activity_type = selected_measure()$activity_type,
           pods = selected_measure()$pod,
-          sites = selected_site(),
-          pod_lookup = get_pod_lookup()
+          pod_lookup = get_pod_lookup(),
+          sites = selected_site()
         ) |>
         require_rows()
     })
