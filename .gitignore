@@ -69,3 +69,4 @@ coverage.xml
 .cache
 
 *.code-workspace
+.vscode/settings.json
