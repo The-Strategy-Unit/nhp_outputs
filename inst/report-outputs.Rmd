@@ -154,14 +154,14 @@ make_icf_chart_or_msg <- function(icf_data) {
 #| label: pp-impact-of-changes-overall-ip-bed-days
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -170,7 +170,7 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-ip-bed-days
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
@@ -178,7 +178,7 @@ params$r$results |>
     tpma_lookup = reskit::get_tpma_label_lookup(),
     sort_by = "value"
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 #### Admissions
@@ -189,14 +189,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-ip-admissions
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -205,7 +205,7 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-ip-admissions
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
@@ -213,7 +213,7 @@ params$r$results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 ### Outpatients
@@ -226,14 +226,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-op-attendances
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -242,7 +242,7 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-op-attendances
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
@@ -250,7 +250,7 @@ params$r$results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 #### Tele-attendances
@@ -261,14 +261,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-op-tele-attendances
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -277,7 +277,7 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-op-tele-attendances
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
@@ -285,7 +285,7 @@ params$r$results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 ### A&E
@@ -298,14 +298,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-aae-arrivals
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
     pod_lookup = get_pod_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -314,7 +314,7 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-aae-arrivals
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
@@ -322,7 +322,7 @@ params$r$results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 ## Activity in detail
