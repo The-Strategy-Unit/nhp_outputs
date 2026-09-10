@@ -81,7 +81,7 @@ Bed-availability data is not available at site level. See [the model project inf
 params$r$results |>
   reskit::compile_principal_pod_data(
     sites = params$sites,
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_condensed_pod_lookup()
   ) |>
   reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
@@ -158,8 +158,8 @@ params$r$results |>
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -174,9 +174,9 @@ params$r$results |>
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
-    sort_by = "value",
+    pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    sort_by = "value"
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -193,8 +193,8 @@ params$r$results |>
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -210,8 +210,8 @@ params$r$results |>
     activity_type = "ip",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -230,8 +230,8 @@ params$r$results |>
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -247,8 +247,8 @@ params$r$results |>
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -265,8 +265,8 @@ params$r$results |>
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -282,8 +282,8 @@ params$r$results |>
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -303,7 +303,7 @@ params$r$results |>
     activity_type = "aae",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup()
   ) |>
   reskit::make_overall_cf_plot()
 ```
@@ -319,8 +319,8 @@ params$r$results |>
     activity_type = "aae",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
   make_icf_chart_or_msg()
 ```
@@ -334,7 +334,7 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
-pod_lookup <- reskit::get_detailed_pods()
+pod_lookup <- get_pod_lookup()
 end_year <- params$r$params[["end_year"]]
 
 age_group_data <- list(
