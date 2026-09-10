@@ -1,3 +1,10 @@
+get_tpma_name_lookup <- function() {
+  app_sys("app", "data", "mitigators.json") |>
+    yyjsonr::read_json_file() |>
+    unlist() |>
+    tibble::enframe("strategy", "mitigator_name")
+}
+
 info_params_fix_data <- function(df) {
   at <- get_activity_type_pod_measure_options() |>
     dplyr::distinct(
