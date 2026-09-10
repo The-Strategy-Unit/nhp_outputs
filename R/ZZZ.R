@@ -102,6 +102,27 @@ get_tpma_lookup <- function(
     )
 }
 
+# Params' create_datetime is expected to be a "%Y%m%d_%H%M%S" character
+# string, but older/malformed model runs may have it missing or of the
+# wrong type, so guard against that rather than erroring out of
+# lubridate::fast_strptime()'s underlying parse_dt().
+format_create_datetime <- function(x, fmt = "%Y%m%d_%H%M%S") {
+  if (is.null(x) || length(x) != 1 || !is.character(x) || is.na(x)) {
+    return(NA_character_)
+  }
+
+  parsed <- tryCatch(
+    lubridate::fast_strptime(x, fmt),
+    error = function(e) NA
+  )
+
+  if (is.na(parsed)) {
+    return(NA_character_)
+  }
+
+  format(parsed, "%d-%b-%Y %H:%M:%S")
+}
+
 md_file_to_html <- function(...) {
   file <- app_sys(...)
 

@@ -23,9 +23,9 @@ mod_info_home_server <- function(id, selected_data, selected_site) {
         decimal.mark = "/"
       )
 
-      p_model_run[["create_datetime"]] <- p_model_run[["create_datetime"]] |>
-        lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
-        format("%d-%b-%Y %H:%M:%S")
+      p_model_run[["create_datetime"]] <- format_create_datetime(
+        p_model_run[["create_datetime"]]
+      )
 
       p_model_run |>
         unlist() |>
