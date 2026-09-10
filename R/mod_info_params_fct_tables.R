@@ -111,7 +111,7 @@ info_params_table_waiting_list_adjustment <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest("value") |>
     info_params_fix_data() |>
-    tidyr::pivot_wider(names_from = "activity_type_name") |>
+    tidyr::pivot_wider(names_from = "activity_type_label") |>
     gt::gt("specialty_name") |>
     gt::sub_missing(missing_text = "") |>
     gt_theme()

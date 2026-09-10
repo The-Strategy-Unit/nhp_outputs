@@ -23,4 +23,5 @@ $run_dev.*
 ^CODEOWNERS$
 ^results_selection_app/$
 ^[\.]?air\.toml$
+^.*[.]code-workspace$
 ^\.git-blame-ignore-revs$

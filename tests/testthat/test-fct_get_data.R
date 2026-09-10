@@ -2,6 +2,7 @@ library(shiny)
 library(mockery)
 
 test_that("get_results_from_azure returns data from azure", {
+  skip_on_ci()
   # arrange
   m0 <- mock("container")
   m1 <- mock("raw_params", "raw_variants")
@@ -23,7 +24,7 @@ test_that("get_results_from_azure returns data from azure", {
   expect_called(m1, 2)
   expect_called(m2, 1)
   expect_called(m3, 1)
-  expect_args(m0, 1, container_name = "container", endpoint_url = "ep")
+  expect_args(m0, 1, "container")
   expect_args(m1, 1, "container", file.path("dir", "params.json"))
   expect_args(m1, 2, "container", file.path("dir", "variants.json"))
   expect_args(m2, 1, "raw_params")

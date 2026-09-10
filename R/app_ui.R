@@ -154,3 +154,8 @@ golem_add_external_resources <- function() {
     )
   )
 }
+
+
+# Copied from golem inst/
+col_3 <- \(...) bs4Dash::column(3, ...)
+col_4 <- \(...) bs4Dash::column(4, ...)
