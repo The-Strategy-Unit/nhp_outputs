@@ -7,11 +7,7 @@ get_tpma_name_lookup <- function() {
 
 info_params_fix_data <- function(df) {
   at <- get_activity_type_pod_measure_options() |>
-    dplyr::distinct(
-      dplyr::across(
-        tidyselect::starts_with("activity_type")
-      )
-    )
+    dplyr::distinct(dplyr::across(tidyselect::starts_with("activity_type")))
 
   specs <- get_tretspef_lookup() |>
     dplyr::select(
@@ -19,45 +15,39 @@ info_params_fix_data <- function(df) {
       "specialty_name" = "tretspef"
     )
 
-  strategies <- app_sys("app", "data", "mitigators.json") |>
-    yyjsonr::read_json_file() |>
-    unlist() |>
-    tibble::enframe("strategy", "mitigator_name")
+  tpma_name_lookup <- get_tpma_name_lookup()
 
   fix_activity_type <- function(df) {
     if (!"activity_type" %in% colnames(df)) {
-      return(df)
+      df
+    } else {
+      df |>
+        dplyr::inner_join(at, "activity_type") |>
+        dplyr::select(!"activity_type")
     }
-
-    df |>
-      dplyr::inner_join(at, by = dplyr::join_by("activity_type")) |>
-      dplyr::select(-"activity_type")
   }
 
   fix_specialty <- function(df) {
     if (!"specialty" %in% colnames(df)) {
-      return(df)
+      df
+    } else {
+      df |>
+        dplyr::left_join(specs, "specialty") |>
+        dplyr::mutate(dplyr::across("specialty_name", \(x) {
+          dplyr::if_else(is.na(x), .data[["specialty"]], x)
+        })) |>
+        dplyr::select(!"specialty")
     }
-
-    df |>
-      dplyr::left_join(specs, by = dplyr::join_by("specialty")) |>
-      dplyr::mutate(
-        dplyr::across(
-          "specialty_name",
-          \(.x) ifelse(is.na(.x), .data[["specialty"]], .x)
-        )
-      ) |>
-      dplyr::select(-"specialty")
   }
 
   fix_strategy <- function(df) {
     if (!"strategy" %in% colnames(df)) {
-      return(df)
+      df
+    } else {
+      df |>
+        dplyr::left_join(tpma_name_lookup, "strategy") |>
+        dplyr::select(!"strategy")
     }
-
-    df |>
-      dplyr::left_join(strategies, by = dplyr::join_by("strategy")) |>
-      dplyr::select(-"strategy")
   }
 
   df |>
