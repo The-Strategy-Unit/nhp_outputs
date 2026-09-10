@@ -13,12 +13,9 @@ importFrom(rlang,
   .env
 )
 importFrom(shiny,
-  HTML,
   NS,
   shinyApp,
-  tagAppendAttributes,
-  tagList,
-  tags
+  tagList
 )
 importFrom(stats,
   approx,

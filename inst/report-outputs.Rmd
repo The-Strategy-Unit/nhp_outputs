@@ -380,10 +380,15 @@ tretspef_data <- list(
     .data[["tretspef"]]
   )
 
-activity_in_detail_data <- list("age_group" = age_group_data, "tretspef" = tretspef_data) |>
+activity_in_detail_data <- list(
+  "age_group" = age_group_data,
+  "tretspef" = tretspef_data
+) |>
   purrr::imap(\(.x, .i) {
     .x |>
-      dplyr::mutate(dplyr::across("sex", \(.x) forcats::fct(ifelse(.x == 1, "Male", "Female")))) |>
+      dplyr::mutate(dplyr::across("sex", \(.x) {
+        forcats::fct(ifelse(.x == 1, "Male", "Female"))
+      })) |>
       dplyr::group_nest(measure, pod) |>
       reskit:::get_activity_type_from_pod() |>
       reskit:::inner_join_for_labels(pod_lookup) |>
@@ -434,7 +439,11 @@ get_activity_in_detail_table <- function(pod, measure, agg_col) {
 #| label: pp-activity-in-detail-ip-1
 #| results: asis
 
-get_activity_in_detail_table("ip", "non-elective_admission", "beddays_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "non-elective_admission",
+  "beddays_age_group"
+)
 ```
 
 ##### Bed days by treatment specialty
@@ -452,7 +461,11 @@ get_activity_in_detail_table("ip", "non-elective_admission", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-3
 #| results: asis
 
-get_activity_in_detail_table("ip", "non-elective_admission", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "non-elective_admission",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -461,7 +474,11 @@ get_activity_in_detail_table("ip", "non-elective_admission", "admissions_age_gro
 #| label: pp-activity-in-detail-ip-4
 #| results: asis
 
-get_activity_in_detail_table("ip", "non-elective_admission", "admissions_tretspef")
+get_activity_in_detail_table(
+  "ip",
+  "non-elective_admission",
+  "admissions_tretspef"
+)
 ```
 
 #### Elective admission
@@ -566,7 +583,11 @@ get_activity_in_detail_table("ip", "maternity_admission", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-15
 #| results: asis
 
-get_activity_in_detail_table("ip", "maternity_admission", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "maternity_admission",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -604,7 +625,11 @@ get_activity_in_detail_table("ip", "regular_day_attender", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-19
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_day_attender", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "regular_day_attender",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -613,7 +638,11 @@ get_activity_in_detail_table("ip", "regular_day_attender", "admissions_age_group
 #| label: pp-activity-in-detail-ip-20
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_day_attender", "admissions_tretspef")
+get_activity_in_detail_table(
+  "ip",
+  "regular_day_attender",
+  "admissions_tretspef"
+)
 ```
 
 #### Regular night attender admission
@@ -624,7 +653,11 @@ get_activity_in_detail_table("ip", "regular_day_attender", "admissions_tretspef"
 #| label: pp-activity-in-detail-ip-21
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_night_attender", "beddays_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "regular_night_attender",
+  "beddays_age_group"
+)
 ```
 
 ##### Bed days by treatment specialty
@@ -642,7 +675,11 @@ get_activity_in_detail_table("ip", "regular_night_attender", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-23
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_night_attender", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "regular_night_attender",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -651,7 +688,11 @@ get_activity_in_detail_table("ip", "regular_night_attender", "admissions_age_gro
 #| label: pp-activity-in-detail-ip-24
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_night_attender", "admissions_tretspef")
+get_activity_in_detail_table(
+  "ip",
+  "regular_night_attender",
+  "admissions_tretspef"
+)
 ```
 
 
@@ -886,7 +927,11 @@ activity_distributions <- atpmo_simplified |>
   purrr::pmap(
     \(activity_type, pod, measure) {
       possibly_plot_activity_distributions(
-        data = params$r, sites = params$sites, activity_type, pod, measure
+        data = params$r,
+        sites = params$sites,
+        activity_type,
+        pod,
+        measure
       )
     }
   ) |>
@@ -983,7 +1028,8 @@ activity_distributions$`ip_regular_day_attender_beddays` |> purrr::walk(print)
 ```{r}
 #| label: pp-activity-distribution-ip-10
 
-activity_distributions$`ip_regular_day_attender_admissions` |> purrr::walk(print)
+activity_distributions$`ip_regular_day_attender_admissions` |>
+  purrr::walk(print)
 ```
 
 #### Regular night attender admission
@@ -1001,7 +1047,8 @@ activity_distributions$`ip_regular_night_attender_beddays` |> purrr::walk(print)
 ```{r}
 #| label: pp-activity-distribution-ip-12
 
-activity_distributions$`ip_regular_night_attender_admissions` |> purrr::walk(print)
+activity_distributions$`ip_regular_night_attender_admissions` |>
+  purrr::walk(print)
 ```
 
 ### Outpatients

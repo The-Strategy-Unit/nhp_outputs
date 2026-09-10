@@ -32,16 +32,12 @@ get_model_run_from_ats <- function(dataset, model_run_id) {
   azkit::read_azure_table_single_entity(
     Sys.getenv("AZ_TABLE_NAME"),
     dataset,
-    model_run_id,
-    Sys.getenv("AZ_TABLE_EP")
+    model_run_id
   )
 }
 
 get_results_from_azure <- function(directory) {
-  container <- azkit::get_container(
-    container_name = Sys.getenv("AZ_STORAGE_CONTAINER"),
-    endpoint_url = Sys.getenv("AZ_STORAGE_EP")
-  )
+  container <- azkit::get_container(Sys.getenv("AZ_STORAGE_CONTAINER"))
 
   params_file <- file.path(directory, "params.json")
   variants_file <- file.path(directory, "variants.json")

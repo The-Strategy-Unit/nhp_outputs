@@ -12,8 +12,7 @@ test_that("get_results_from_azure returns data from azure", {
   stub(get_results_from_azure, "patch_params", m2)
   stub(get_results_from_azure, "reskit::read_results_parquet_files", m3)
   withr::local_envvar(
-    "AZ_STORAGE_CONTAINER" = "container",
-    "AZ_STORAGE_EP" = "ep"
+    "AZ_STORAGE_CONTAINER" = "container"
   )
 
   # act
