@@ -44,7 +44,6 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
           pods = selected_measure()$pod,
           sites = selected_site()
         ) |>
-        require_rows() |>
         reskit::make_detailed_activity_table(final_year = end_year)
     })
   })

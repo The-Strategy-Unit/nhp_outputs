@@ -130,18 +130,6 @@ The results should be regarded as rough, high-level estimates of the number of r
 # https://github.com/The-Strategy-Unit/nhp_outputs/issues/427
 icf_fig_height <- 7
 icf_font_size <- 10
-
-# Return a useful message if the data is empty, see:
-# https://github.com/The-Strategy-Unit/nhp_outputs/issues/441
-make_icf_chart_or_msg <- function(icf_data) {
-  if (nrow(icf_data) == 0) {
-    "Insufficient information to produce this chart."
-  } else {
-    icf_data |>
-      reskit::make_individual_cf_plot() +
-      ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
-  }
-}
 ```
 
 ### Inpatients

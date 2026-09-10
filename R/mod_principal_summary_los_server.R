@@ -10,7 +10,6 @@ mod_principal_summary_los_server <- function(id, selected_data, selected_site) {
           pod_lookup = get_pod_lookup(),
           sites = selected_site()
         ) |>
-        require_rows() |>
         reskit::make_principal_los_table()
     })
 
@@ -21,7 +20,6 @@ mod_principal_summary_los_server <- function(id, selected_data, selected_site) {
           pod_lookup = get_pod_lookup(),
           sites = selected_site()
         ) |>
-        require_rows() |>
         reskit::make_principal_los_table()
     })
   })
