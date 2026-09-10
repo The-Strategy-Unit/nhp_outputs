@@ -92,7 +92,7 @@ info_params_table_baseline_adjustment <- function(p) {
     info_params_fix_data() |>
     dplyr::relocate("value", .after = tidyselect::everything()) |>
     tidyr::unnest("value") |>
-    gt::gt("specialty_name", c("activity_type_name", "pod")) |>
+    gt::gt("specialty_name", c("activity_type_label", "pod")) |>
     gt_theme()
 }
 
@@ -154,7 +154,7 @@ info_params_table_expat_repat_adjustment <- function(p, type) {
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
     dplyr::relocate("lo", "hi", .after = tidyselect::everything()) |>
-    gt::gt("specialty_name", c("activity_type_name", "pod")) |>
+    gt::gt("specialty_name", c("activity_type_label", "pod")) |>
     gt_theme()
 }
 
@@ -170,7 +170,7 @@ info_params_table_non_demographic_adjustment <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     info_params_fix_data() |>
     tidyr::unnest_wider("value") |>
-    gt::gt("pod", "activity_type_name") |>
+    gt::gt("pod", "activity_type_label") |>
     gt_theme()
 }
 
@@ -187,8 +187,8 @@ info_params_table_activity_avoidance <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
-    gt::gt("mitigator_name", "activity_type_name") |>
+    dplyr::arrange(.data[["activity_type_label"]], .data[["mitigator_name"]]) |>
+    gt::gt("mitigator_name", "activity_type_label") |>
     gt_theme()
 }
 
@@ -205,7 +205,7 @@ info_params_table_efficiencies <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
-    gt::gt("mitigator_name", "activity_type_name") |>
+    dplyr::arrange(.data[["activity_type_label"]], .data[["mitigator_name"]]) |>
+    gt::gt("mitigator_name", "activity_type_label") |>
     gt_theme()
 }

@@ -45,7 +45,7 @@ mod_measure_selection_server <- function(id) {
 
       measures <- atpmo |>
         dplyr::filter(.data$activity_type == at, .data$pod %in% p) |>
-        purrr::pluck("measures")
+        purrr::pluck("measure")
 
       shiny::updateSelectInput(
         session,
@@ -62,7 +62,7 @@ mod_measure_selection_server <- function(id) {
 
       # ensure a valid set of pod/measure has been selected. If activity type changes we may end up with invalid options
       shiny::req(
-        nrow(dplyr::filter(atpmo, .data$pod %in% p, .data$measures == m)) > 0
+        nrow(dplyr::filter(atpmo, .data$pod %in% p, .data$measure == m)) > 0
       )
 
       list(activity_type = at, pod = p, measure = m)

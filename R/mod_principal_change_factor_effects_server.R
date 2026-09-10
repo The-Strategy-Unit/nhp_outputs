@@ -61,7 +61,7 @@ mod_principal_change_factor_effects_server <- function(
 
       pod_names <- get_activity_type_pod_measure_options() |>
         dplyr::filter(.data[["activity_type"]] == at) |>
-        dplyr::distinct(.data[["pod_name"]], .data[["pod"]]) |>
+        dplyr::distinct(.data[["pod_label"]], .data[["pod"]]) |>
         tibble::deframe()
 
       measure_names <- get_golem_config("measures")
