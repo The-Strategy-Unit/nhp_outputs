@@ -2,11 +2,7 @@ library(shiny)
 library(mockery)
 
 get_sample_params <- \() {
-  list(
-    params = yyjsonr::read_json_file(
-      app_sys("sample_params.json")
-    )
-  ) |>
+  list(params = yyjsonr::read_json_file(app_sys("sample_params.json"))) |>
     patch_params() |>
     get_params()
 }

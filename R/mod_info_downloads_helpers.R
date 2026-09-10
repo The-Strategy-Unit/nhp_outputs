@@ -98,7 +98,7 @@ mod_info_downloads_download_excel <- function(data) {
       params_list[["create_datetime"]]
     )
 
-    params_df <- params_list |> unlist() |> tibble::enframe()
+    params_df <- tibble::enframe(unlist(params_list))
 
     data_dictionary <- yyjsonr::read_json_file(
       app_sys("app", "data", "excel_dictionary.json")

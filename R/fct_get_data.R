@@ -53,9 +53,9 @@ get_results_from_local <- function(directory = "inst/sample_results") {
   params_file <- file.path(directory, "params.json")
   variants_file <- file.path(directory, "variants.json")
   parquet_files <- list.files(directory, "\\.parquet$", full.names = TRUE)
-  results_names <- parquet_files |> basename() |> tools::file_path_sans_ext()
+  results_names <- tools::file_path_sans_ext(basename(parquet_files))
 
-  params <- yyjsonr::read_json_file(params_file) |> patch_params()
+  params <- patch_params(yyjsonr::read_json_file(params_file))
   population_variants <- yyjsonr::read_json_file(variants_file)
   results <- parquet_files |>
     purrr::map(arrow::read_parquet) |>
@@ -123,16 +123,13 @@ get_principal_high_level <- function(r, measures, sites) {
   r$results$default |>
     dplyr::filter(.data$measure %in% measures) |>
     dplyr::select("pod", "sitetret", "baseline", "principal") |>
-    dplyr::mutate(dplyr::across(
-      "pod",
-      ~ ifelse(
-        stringr::str_starts(.x, "aae"),
-        "aae",
-        .x
-      )
-    )) |>
-    dplyr::group_by(.data$pod, .data$sitetret) |>
-    dplyr::summarise(dplyr::across(where(is.numeric), sum), .groups = "drop") |>
+    dplyr::mutate(dplyr::across("pod", \(x) {
+      dplyr::if_else(grepl("^aae", x), "aae", x)
+    })) |>
+    dplyr::summarise(
+      dplyr::across(tidyselect::where(is.numeric), sum),
+      .by = c("pod", "sitetret")
+    ) |>
     trust_site_aggregation(sites)
 }
 
@@ -179,11 +176,8 @@ get_principal_change_factors <- function(r, activity_type, sites) {
 
   r$results$step_counts |>
     dplyr::filter(.data$activity_type == .env$activity_type) |>
-    dplyr::select(-where(is.list)) |>
-    dplyr::mutate(dplyr::across(
-      "strategy",
-      \(.x) tidyr::replace_na(.x, "-")
-    )) |>
+    dplyr::select(!tidyselect::where(is.list)) |>
+    dplyr::mutate(dplyr::across("strategy", \(x) tidyr::replace_na(x, "-"))) |>
     trust_site_aggregation(sites)
 }
 
@@ -195,18 +189,13 @@ trust_site_aggregation <- function(data, sites) {
   }
 
   data_filtered |>
-    dplyr::group_by(
-      dplyr::across(
-        c(
-          tidyselect::where(is.character),
-          tidyselect::where(is.factor),
-          tidyselect::any_of(c("model_run", "year")),
-          -"sitetret"
-        )
-      )
-    ) |>
     dplyr::summarise(
-      dplyr::across(where(is.numeric), \(.x) sum(.x, na.rm = TRUE)),
-      .groups = "drop"
+      dplyr::across(tidyselect::where(is.numeric), \(x) sum(x, na.rm = TRUE)),
+      .by = c(
+        tidyselect::where(is.character),
+        tidyselect::where(is.factor),
+        tidyselect::any_of(c("model_run", "year")),
+        -"sitetret"
+      )
     )
 }

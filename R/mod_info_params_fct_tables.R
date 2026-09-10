@@ -1,7 +1,7 @@
 get_tpma_name_lookup <- function() {
   app_sys("app", "data", "mitigators.json") |>
     yyjsonr::read_json_file() |>
-    unlist() |>
+    purrr::simplify() |>
     tibble::enframe("strategy", "mitigator_name")
 }
 
@@ -122,11 +122,9 @@ info_params_table_inequalities <- function(p) {
   )
 
   inequalities |>
-    purrr::map(\(choice) {
-      choice |> unlist() |> sort() |> paste(collapse = ", ")
-    }) |>
+    purrr::map(\(choice) paste(sort(unlist(choice)), collapse = ", ")) |>
     tibble::enframe("Option", "HRG codes") |>
-    dplyr::mutate("HRG codes" = unlist(.data$`HRG codes`)) |>
+    dplyr::mutate(dplyr::across("HRG codes", unlist)) |>
     gt::gt() |>
     gt_theme()
 }

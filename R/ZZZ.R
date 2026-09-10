@@ -1,20 +1,9 @@
 #' @importFrom zeallot %<-%
 #' @importFrom rlang .data .env
-#' @importFrom uuid UUIDgenerate
-#' @importFrom stats approx density
 NULL
 
-# converts a two column tibble into a named list suitable for shiny selectInput choices
-set_names <- function(.x) {
-  purrr::set_names(.x[[1]], .x[[2]])
-}
-
-utils::globalVariables(c(
-  "where", # source: https://github.com/r-lib/tidyselect/issues/201#issuecomment-650547846
-  "ds",
-  "sc",
-  "cd" # because of the use of %<-%
-))
+# converts a 2-column tibble to a named list suitable for selectInput choices
+set_names <- \(x) rlang::set_names(x[[1]], x[[2]])
 
 `__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint: object_name_linter
 `__STORAGE_EP__` <- "https://storage.azure.com/" # nolint: object_name_linter
@@ -87,10 +76,8 @@ get_tretspef_lookup <- function(
     )
 }
 
-get_tpma_lookup <- function(
-  tpma_lookup = app_sys("app", "data", "mitigators.json")
-) {
-  tpma_lookup |>
+get_tpma_lookup <- function() {
+  app_sys("app", "data", "mitigators.json") |>
     yyjsonr::read_json_file() |>
     purrr::simplify() |>
     tibble::enframe("strategy", "tpma_label") |>
