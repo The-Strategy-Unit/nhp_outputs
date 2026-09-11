@@ -1,12 +1,8 @@
 #' info_home UI Function
 #'
 #' @description A shiny Module.
-#'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#'
 #' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_info_home_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(

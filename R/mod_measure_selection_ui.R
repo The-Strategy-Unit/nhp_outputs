@@ -1,12 +1,8 @@
 #' measure_selection UI Function
 #'
 #' @description A shiny Module.
-#'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#'
 #' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_measure_selection_ui <- function(id, width = 4) {
   ns <- shiny::NS(id)
 

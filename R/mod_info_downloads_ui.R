@@ -1,12 +1,8 @@
 #' info_downloads UI Function
 #'
 #' @description A shiny Module.
-#'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#'
 #' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_info_downloads_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
