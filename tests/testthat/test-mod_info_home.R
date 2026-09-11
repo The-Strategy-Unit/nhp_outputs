@@ -66,6 +66,40 @@ test_that("it gets the model run information from params", {
   )
 })
 
+test_that("it handles a missing create_datetime without erroring", {
+  selected_data <- reactive({
+    list(
+      params = list(
+        id = "test-synthetic",
+        scenario = "test",
+        dataset = "synthetic",
+        start_year = 2020,
+        end_year = 2040,
+        stuff = list(1, 2, 3)
+      )
+    )
+  })
+
+  testServer(
+    mod_info_home_server,
+    args = list(selected_data = selected_data),
+    {
+      expected <- tibble::tribble(
+        ~name, ~value,
+        "id", "test-synthetic",
+        "scenario", "test",
+        "dataset", "synthetic",
+        "start_year", "2020/21",
+        "end_year", "2040/41",
+        "create_datetime", NA_character_
+      )
+
+      actual <- params_model_run()
+      expect_equal(actual, expected)
+    }
+  )
+})
+
 test_that("it generates a gt table", {
   selected_data <- reactive({
     list(

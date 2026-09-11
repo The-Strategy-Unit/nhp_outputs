@@ -7,10 +7,9 @@ mod_principal_summary_los_server <- function(id, selected_data, selected_site) {
       selected_data()[["results"]] |>
         reskit::compile_principal_los_data(
           measure = "beddays",
-          sites = selected_site(),
-          pod_lookup = get_pod_lookup()
+          pod_lookup = get_pod_lookup(),
+          sites = selected_site()
         ) |>
-        require_rows() |>
         reskit::make_principal_los_table()
     })
 
@@ -18,10 +17,9 @@ mod_principal_summary_los_server <- function(id, selected_data, selected_site) {
       selected_data()[["results"]] |>
         reskit::compile_principal_los_data(
           measure = "admissions",
-          sites = selected_site(),
-          pod_lookup = get_pod_lookup()
+          pod_lookup = get_pod_lookup(),
+          sites = selected_site()
         ) |>
-        require_rows() |>
         reskit::make_principal_los_table()
     })
   })

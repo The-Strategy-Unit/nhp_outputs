@@ -1,17 +1,13 @@
 get_activity_type_pod_measure_options <- function() {
   get_golem_config("pod_measures") |>
-    purrr::map_dfr(
-      \(.x) {
-        .x$pods |>
-          purrr::map_dfr(tibble::as_tibble, .id = "pod") |>
-          dplyr::transmute(
-            activity_type_name = .x$name,
-            .data$pod,
-            pod_name = .data$name,
-            .data$measures
-          )
-      },
-      .id = "activity_type"
+    purrr::map(list_to_tbl) |>
+    purrr::list_rbind(names_to = "activity_type") |>
+    dplyr::mutate(
+      dplyr::across("pod_label", forcats::fct_inorder),
+      dplyr::across("activity_type_label", \(x) {
+        x <- sub("s$", "", x)
+        forcats::fct(x, levels = c("Inpatient", "Outpatient", "A&E"))
+      })
     )
 }
 
@@ -20,21 +16,35 @@ get_activity_type_pod_measure_options <- function() {
 #' Ideally we shouldn't need this in future (issue #406)
 get_pod_lookup <- function() {
   get_activity_type_pod_measure_options() |>
-    dplyr::select(
-      activity_type_label = .data$activity_type_name,
-      .data$pod,
-      pod_label = .data$pod_name
+    dplyr::select(!c("activity_type", "measure")) |>
+    dplyr::distinct()
+}
+
+get_condensed_pod_lookup <- function() {
+  get_pod_lookup() |>
+    dplyr::filter(dplyr::if_any("activity_type_label", \(x) x != "A&E")) |>
+    dplyr::add_row(
+      activity_type_label = "A&E",
+      pod = "aae",
+      pod_label = "A&E Arrivals"
     ) |>
-    dplyr::distinct() |>
     dplyr::mutate(
-      activity_type_label = dplyr::replace_values(
-        .data$activity_type_label,
-        "Inpatients" ~ "Inpatient",
-        "Outpatients" ~ "Outpatient"
-      )
-    ) |>
-    dplyr::mutate(dplyr::across(
-      c(.data$activity_type_label, .data$pod_label),
-      factor
-    ))
+      dplyr::across("pod_label", forcats::fct_inorder),
+      dplyr::across("activity_type_label", \(x) {
+        forcats::fct(x, levels = c("Inpatient", "Outpatient", "A&E"))
+      })
+    )
+}
+
+
+#' Helper function to extract the required data fields from a list (from YAML)
+#' @keywords internal
+list_to_tbl <- function(lst) {
+  tibble::tibble(
+    activity_type_label = lst[["name"]],
+    pod = names(lst[["pods"]]),
+    pod_label = purrr::map_chr(unname(lst[["pods"]]), "name"),
+    measure = purrr::map(unname(lst[["pods"]]), "measures")
+  ) |>
+    tidyr::unnest_longer("measure")
 }

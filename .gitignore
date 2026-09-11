@@ -74,3 +74,5 @@ inst/sample_results/variants.json
 __PYCACHE__
 __pycache__
 .cache
+
+*.code-workspace

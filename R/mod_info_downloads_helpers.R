@@ -94,11 +94,11 @@ mod_info_downloads_download_excel <- function(data) {
       decimal.mark = "/"
     )
 
-    params_list[["create_datetime"]] <- params_list[["create_datetime"]] |>
-      lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
-      format("%d-%b-%Y %H:%M:%S")
+    params_list[["create_datetime"]] <- format_create_datetime(
+      params_list[["create_datetime"]]
+    )
 
-    params_df <- params_list |> unlist() |> tibble::enframe()
+    params_df <- tibble::enframe(unlist(params_list))
 
     data_dictionary <- yyjsonr::read_json_file(
       app_sys("app", "data", "excel_dictionary.json")

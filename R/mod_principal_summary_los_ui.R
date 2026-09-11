@@ -1,12 +1,8 @@
 #' principal_summary_los UI Function
 #'
 #' @description A shiny Module.
-#'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#'
 #' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_principal_summary_los_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(

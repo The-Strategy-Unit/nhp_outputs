@@ -6,8 +6,8 @@ mod_principal_summary_server <- function(id, selected_data, selected_site) {
     summary_data <- shiny::reactive({
       selected_data()[["results"]] |>
         reskit::compile_principal_pod_data(
-          sites = selected_site(),
-          pod_lookup = reskit::get_principal_pods()
+          pod_lookup = get_condensed_pod_lookup(),
+          sites = selected_site()
         )
     })
 

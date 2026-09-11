@@ -21,6 +21,8 @@ $run_dev.*
 ^update_manifest.js$
 ^remove_files_from_manifest.js$
 ^CODEOWNERS$
-^results_selection_app/$
+^results_selection_app/.*$
+^sample_results/.*$
 ^[\.]?air\.toml$
+^.*[.]code-workspace$
 ^\.git-blame-ignore-revs$

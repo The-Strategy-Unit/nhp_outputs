@@ -1,12 +1,8 @@
 #' model_core_activity UI Function
 #'
 #' @description A shiny Module.
-#'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#'
 #' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_model_core_activity_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(

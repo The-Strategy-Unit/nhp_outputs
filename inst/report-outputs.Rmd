@@ -81,7 +81,7 @@ Bed-availability data is not available at site level. See [the model project inf
 params$r$results |>
   reskit::compile_principal_pod_data(
     sites = params$sites,
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_condensed_pod_lookup()
   ) |>
   reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
@@ -130,18 +130,6 @@ The results should be regarded as rough, high-level estimates of the number of r
 # https://github.com/The-Strategy-Unit/nhp_outputs/issues/427
 icf_fig_height <- 7
 icf_font_size <- 10
-
-# Return a useful message if the data is empty, see:
-# https://github.com/The-Strategy-Unit/nhp_outputs/issues/441
-make_icf_chart_or_msg <- function(icf_data) {
-  if (nrow(icf_data) == 0) {
-    "Insufficient information to produce this chart."
-  } else {
-    icf_data |>
-      reskit::make_individual_cf_plot() +
-      ggplot2::theme(text = ggplot2::element_text(size = icf_font_size))
-  }
-}
 ```
 
 ### Inpatients
@@ -154,14 +142,14 @@ make_icf_chart_or_msg <- function(icf_data) {
 #| label: pp-impact-of-changes-overall-ip-bed-days
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -170,15 +158,15 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-ip-bed-days
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "beddays",
     activity_type = "ip",
     sites = params$sites,
-    sort_by = "value",
+    pod_lookup = get_pod_lookup(),
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    sort_by = "value"
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 #### Admissions
@@ -189,14 +177,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-ip-admissions
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -205,15 +193,15 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-ip-admissions
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "admissions",
     activity_type = "ip",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 ### Outpatients
@@ -226,14 +214,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-op-attendances
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -242,15 +230,15 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-op-attendances
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "attendances",
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 #### Tele-attendances
@@ -261,14 +249,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-op-tele-attendances
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -277,15 +265,15 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-op-tele-attendances
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "tele_attendances",
     activity_type = "op",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 ### A&E
@@ -298,14 +286,14 @@ params$r$results |>
 #| label: pp-impact-of-changes-overall-aae-arrivals
 
 params$r$results |>
-  reskit::compile_change_factor_data(
+  reskit::compile_grouped_impact_data(
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
     tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_detailed_pods()
+    pod_lookup = get_pod_lookup()
   ) |>
-  reskit::make_overall_cf_plot()
+  reskit::make_grouped_impact_plot()
 ```
 
 ##### Individual change-factors
@@ -314,15 +302,15 @@ params$r$results |>
 #| label: pp-impact-of-changes-individual-aae-arrivals
 
 params$r$results |>
-  reskit::compile_indiv_change_factor_data(
+  reskit::compile_tpma_impact_data(
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
     sort_by = "value",
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = reskit::get_principal_pods()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = reskit::get_tpma_label_lookup()
   ) |>
-  make_icf_chart_or_msg()
+  reskit::make_tpma_impact_plot()
 ```
 
 ## Activity in detail
@@ -334,7 +322,7 @@ See [the model project information site](https://connect.strategyunitwm.nhs.uk/n
 
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
-pod_lookup <- reskit::get_detailed_pods()
+pod_lookup <- get_pod_lookup()
 end_year <- params$r$params[["end_year"]]
 
 age_group_data <- list(
@@ -392,10 +380,15 @@ tretspef_data <- list(
     .data[["tretspef"]]
   )
 
-activity_in_detail_data <- list("age_group" = age_group_data, "tretspef" = tretspef_data) |>
+activity_in_detail_data <- list(
+  "age_group" = age_group_data,
+  "tretspef" = tretspef_data
+) |>
   purrr::imap(\(.x, .i) {
     .x |>
-      dplyr::mutate(dplyr::across("sex", \(.x) forcats::fct(ifelse(.x == 1, "Male", "Female")))) |>
+      dplyr::mutate(dplyr::across("sex", \(.x) {
+        forcats::fct(ifelse(.x == 1, "Male", "Female"))
+      })) |>
       dplyr::group_nest(measure, pod) |>
       reskit:::get_activity_type_from_pod() |>
       reskit:::inner_join_for_labels(pod_lookup) |>
@@ -446,7 +439,11 @@ get_activity_in_detail_table <- function(pod, measure, agg_col) {
 #| label: pp-activity-in-detail-ip-1
 #| results: asis
 
-get_activity_in_detail_table("ip", "non-elective_admission", "beddays_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "non-elective_admission",
+  "beddays_age_group"
+)
 ```
 
 ##### Bed days by treatment specialty
@@ -464,7 +461,11 @@ get_activity_in_detail_table("ip", "non-elective_admission", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-3
 #| results: asis
 
-get_activity_in_detail_table("ip", "non-elective_admission", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "non-elective_admission",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -473,7 +474,11 @@ get_activity_in_detail_table("ip", "non-elective_admission", "admissions_age_gro
 #| label: pp-activity-in-detail-ip-4
 #| results: asis
 
-get_activity_in_detail_table("ip", "non-elective_admission", "admissions_tretspef")
+get_activity_in_detail_table(
+  "ip",
+  "non-elective_admission",
+  "admissions_tretspef"
+)
 ```
 
 #### Elective admission
@@ -578,7 +583,11 @@ get_activity_in_detail_table("ip", "maternity_admission", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-15
 #| results: asis
 
-get_activity_in_detail_table("ip", "maternity_admission", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "maternity_admission",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -616,7 +625,11 @@ get_activity_in_detail_table("ip", "regular_day_attender", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-19
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_day_attender", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "regular_day_attender",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -625,7 +638,11 @@ get_activity_in_detail_table("ip", "regular_day_attender", "admissions_age_group
 #| label: pp-activity-in-detail-ip-20
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_day_attender", "admissions_tretspef")
+get_activity_in_detail_table(
+  "ip",
+  "regular_day_attender",
+  "admissions_tretspef"
+)
 ```
 
 #### Regular night attender admission
@@ -636,7 +653,11 @@ get_activity_in_detail_table("ip", "regular_day_attender", "admissions_tretspef"
 #| label: pp-activity-in-detail-ip-21
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_night_attender", "beddays_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "regular_night_attender",
+  "beddays_age_group"
+)
 ```
 
 ##### Bed days by treatment specialty
@@ -654,7 +675,11 @@ get_activity_in_detail_table("ip", "regular_night_attender", "beddays_tretspef")
 #| label: pp-activity-in-detail-ip-23
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_night_attender", "admissions_age_group")
+get_activity_in_detail_table(
+  "ip",
+  "regular_night_attender",
+  "admissions_age_group"
+)
 ```
 
 ##### Admissions by treatment specialty
@@ -663,7 +688,11 @@ get_activity_in_detail_table("ip", "regular_night_attender", "admissions_age_gro
 #| label: pp-activity-in-detail-ip-24
 #| results: asis
 
-get_activity_in_detail_table("ip", "regular_night_attender", "admissions_tretspef")
+get_activity_in_detail_table(
+  "ip",
+  "regular_night_attender",
+  "admissions_tretspef"
+)
 ```
 
 
@@ -881,7 +910,7 @@ In 'S-curve' plots (showing empirical cumulative distribution function), the red
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
 
 atpmo_simplified <- get_activity_type_pod_measure_options() |>
-  dplyr::select("activity_type", "pod", "measure" = "measures")
+  dplyr::select("activity_type", "pod", "measure")
 
 activity_distribution_table_names <- atpmo_simplified |>
   dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>
@@ -898,7 +927,11 @@ activity_distributions <- atpmo_simplified |>
   purrr::pmap(
     \(activity_type, pod, measure) {
       possibly_plot_activity_distributions(
-        data = params$r, sites = params$sites, activity_type, pod, measure
+        data = params$r,
+        sites = params$sites,
+        activity_type,
+        pod,
+        measure
       )
     }
   ) |>
@@ -995,7 +1028,8 @@ activity_distributions$`ip_regular_day_attender_beddays` |> purrr::walk(print)
 ```{r}
 #| label: pp-activity-distribution-ip-10
 
-activity_distributions$`ip_regular_day_attender_admissions` |> purrr::walk(print)
+activity_distributions$`ip_regular_day_attender_admissions` |>
+  purrr::walk(print)
 ```
 
 #### Regular night attender admission
@@ -1013,7 +1047,8 @@ activity_distributions$`ip_regular_night_attender_beddays` |> purrr::walk(print)
 ```{r}
 #| label: pp-activity-distribution-ip-12
 
-activity_distributions$`ip_regular_night_attender_admissions` |> purrr::walk(print)
+activity_distributions$`ip_regular_night_attender_admissions` |>
+  purrr::walk(print)
 ```
 
 ### Outpatients

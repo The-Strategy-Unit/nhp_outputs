@@ -1,10 +1,13 @@
+get_tpma_name_lookup <- function() {
+  app_sys("app", "data", "mitigators.json") |>
+    yyjsonr::read_json_file() |>
+    purrr::simplify() |>
+    tibble::enframe("strategy", "mitigator_name")
+}
+
 info_params_fix_data <- function(df) {
   at <- get_activity_type_pod_measure_options() |>
-    dplyr::distinct(
-      dplyr::across(
-        tidyselect::starts_with("activity_type")
-      )
-    )
+    dplyr::distinct(dplyr::across(tidyselect::starts_with("activity_type")))
 
   specs <- get_tretspef_lookup() |>
     dplyr::select(
@@ -12,45 +15,39 @@ info_params_fix_data <- function(df) {
       "specialty_name" = "tretspef"
     )
 
-  strategies <- app_sys("app", "data", "mitigators.json") |>
-    yyjsonr::read_json_file() |>
-    unlist() |>
-    tibble::enframe("strategy", "mitigator_name")
+  tpma_name_lookup <- get_tpma_name_lookup()
 
   fix_activity_type <- function(df) {
     if (!"activity_type" %in% colnames(df)) {
-      return(df)
+      df
+    } else {
+      df |>
+        dplyr::inner_join(at, "activity_type") |>
+        dplyr::select(!"activity_type")
     }
-
-    df |>
-      dplyr::inner_join(at, by = dplyr::join_by("activity_type")) |>
-      dplyr::select(-"activity_type")
   }
 
   fix_specialty <- function(df) {
     if (!"specialty" %in% colnames(df)) {
-      return(df)
+      df
+    } else {
+      df |>
+        dplyr::left_join(specs, "specialty") |>
+        dplyr::mutate(dplyr::across("specialty_name", \(x) {
+          dplyr::if_else(is.na(x), .data[["specialty"]], x)
+        })) |>
+        dplyr::select(!"specialty")
     }
-
-    df |>
-      dplyr::left_join(specs, by = dplyr::join_by("specialty")) |>
-      dplyr::mutate(
-        dplyr::across(
-          "specialty_name",
-          \(.x) ifelse(is.na(.x), .data[["specialty"]], .x)
-        )
-      ) |>
-      dplyr::select(-"specialty")
   }
 
   fix_strategy <- function(df) {
     if (!"strategy" %in% colnames(df)) {
-      return(df)
+      df
+    } else {
+      df |>
+        dplyr::left_join(tpma_name_lookup, "strategy") |>
+        dplyr::select(!"strategy")
     }
-
-    df |>
-      dplyr::left_join(strategies, by = dplyr::join_by("strategy")) |>
-      dplyr::select(-"strategy")
   }
 
   df |>
@@ -95,7 +92,7 @@ info_params_table_baseline_adjustment <- function(p) {
     info_params_fix_data() |>
     dplyr::relocate("value", .after = tidyselect::everything()) |>
     tidyr::unnest("value") |>
-    gt::gt("specialty_name", c("activity_type_name", "pod")) |>
+    gt::gt("specialty_name", c("activity_type_label", "pod")) |>
     gt_theme()
 }
 
@@ -111,7 +108,7 @@ info_params_table_waiting_list_adjustment <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest("value") |>
     info_params_fix_data() |>
-    tidyr::pivot_wider(names_from = "activity_type_name") |>
+    tidyr::pivot_wider(names_from = "activity_type_label") |>
     gt::gt("specialty_name") |>
     gt::sub_missing(missing_text = "") |>
     gt_theme()
@@ -125,11 +122,9 @@ info_params_table_inequalities <- function(p) {
   )
 
   inequalities |>
-    purrr::map(\(choice) {
-      choice |> unlist() |> sort() |> paste(collapse = ", ")
-    }) |>
+    purrr::map(\(choice) paste(sort(unlist(choice)), collapse = ", ")) |>
     tibble::enframe("Option", "HRG codes") |>
-    dplyr::mutate("HRG codes" = unlist(.data$`HRG codes`)) |>
+    dplyr::mutate(dplyr::across("HRG codes", unlist)) |>
     gt::gt() |>
     gt_theme()
 }
@@ -157,7 +152,7 @@ info_params_table_expat_repat_adjustment <- function(p, type) {
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
     dplyr::relocate("lo", "hi", .after = tidyselect::everything()) |>
-    gt::gt("specialty_name", c("activity_type_name", "pod")) |>
+    gt::gt("specialty_name", c("activity_type_label", "pod")) |>
     gt_theme()
 }
 
@@ -173,7 +168,7 @@ info_params_table_non_demographic_adjustment <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     info_params_fix_data() |>
     tidyr::unnest_wider("value") |>
-    gt::gt("pod", "activity_type_name") |>
+    gt::gt("pod", "activity_type_label") |>
     gt_theme()
 }
 
@@ -190,8 +185,8 @@ info_params_table_activity_avoidance <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
-    gt::gt("mitigator_name", "activity_type_name") |>
+    dplyr::arrange(.data[["activity_type_label"]], .data[["mitigator_name"]]) |>
+    gt::gt("mitigator_name", "activity_type_label") |>
     gt_theme()
 }
 
@@ -208,7 +203,7 @@ info_params_table_efficiencies <- function(p) {
     dplyr::bind_rows(.id = "activity_type") |>
     tidyr::unnest_wider("value") |>
     info_params_fix_data() |>
-    dplyr::arrange("activity_type_name", "mitigator_name") |>
-    gt::gt("mitigator_name", "activity_type_name") |>
+    dplyr::arrange(.data[["activity_type_label"]], .data[["mitigator_name"]]) |>
+    gt::gt("mitigator_name", "activity_type_label") |>
     gt_theme()
 }

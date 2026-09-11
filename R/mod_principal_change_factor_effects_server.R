@@ -61,7 +61,7 @@ mod_principal_change_factor_effects_server <- function(
 
       pod_names <- get_activity_type_pod_measure_options() |>
         dplyr::filter(.data[["activity_type"]] == at) |>
-        dplyr::distinct(.data[["pod_name"]], .data[["pod"]]) |>
+        dplyr::distinct(.data[["pod_label"]], .data[["pod"]]) |>
         tibble::deframe()
 
       measure_names <- get_golem_config("measures")
@@ -90,35 +90,33 @@ mod_principal_change_factor_effects_server <- function(
     output$change_factors <- shiny::renderPlot({
       shiny::req(input$pods)
       selected_data()[["results"]] |>
-        reskit::compile_change_factor_data(
+        reskit::compile_grouped_impact_data(
           measure = input$measure,
           activity_type = input$activity_type,
           pods = input$pods,
           sites = selected_site(),
-          include_baseline = input$include_baseline,
-          tpma_lookup = reskit::get_tpma_label_lookup(),
           # detailed PODs because we need all A&E types for the waterfall
-          pod_lookup = reskit::get_detailed_pods()
+          pod_lookup = get_pod_lookup(),
+          tpma_lookup = reskit::get_tpma_label_lookup(),
+          include_baseline = input$include_baseline
         ) |>
-        require_rows() |>
-        reskit::make_overall_cf_plot() +
+        reskit::make_grouped_impact_plot() +
         ggplot2::theme(text = ggplot2::element_text(size = 16))
     })
 
     output$individual_change_factors <- shiny::renderPlot({
       shiny::req(input$pods)
       selected_data()[["results"]] |>
-        reskit::compile_indiv_change_factor_data(
+        reskit::compile_tpma_impact_data(
           measure = input$measure,
           activity_type = input$activity_type,
           pods = input$pods,
           sites = selected_site(),
-          sort_by = input$sort_type,
+          pod_lookup = get_pod_lookup(),
           tpma_lookup = reskit::get_tpma_label_lookup(),
-          pod_lookup = reskit::get_principal_pods()
+          sort_by = input$sort_type
         ) |>
-        require_rows() |>
-        reskit::make_individual_cf_plot() +
+        reskit::make_tpma_impact_plot() +
         ggplot2::theme(text = ggplot2::element_text(size = 16))
     })
   })

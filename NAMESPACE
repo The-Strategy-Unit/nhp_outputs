@@ -12,17 +12,4 @@ importFrom(rlang,
   .data,
   .env
 )
-importFrom(shiny,
-  HTML,
-  NS,
-  shinyApp,
-  tagAppendAttributes,
-  tagList,
-  tags
-)
-importFrom(stats,
-  approx,
-  density
-)
-importFrom(uuid,UUIDgenerate)
 importFrom(zeallot,"%<-%")

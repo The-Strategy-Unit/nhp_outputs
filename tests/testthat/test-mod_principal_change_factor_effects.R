@@ -6,7 +6,7 @@ library(mockery)
 # ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 atpmo_expected <- tibble::tribble(
-  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
+  ~activity_type, ~activity_type_label, ~pod, ~pod_label, ~measure,
   "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance",
   "aae", "A&E", "aae_type-01", "Type 1 Department", "walk-in",
   "ip", "Inpatients", "ip_elective_admission", "Elective Admission", "admissions",

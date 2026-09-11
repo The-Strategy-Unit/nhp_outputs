@@ -88,7 +88,7 @@ plot_activity_distributions <- function(
       activity_type = activity_type,
       pods = pod,
       sites = sites,
-      pod_lookup = reskit::get_detailed_pods()
+      pod_lookup = get_pod_lookup()
     ) |>
     require_rows()
 
