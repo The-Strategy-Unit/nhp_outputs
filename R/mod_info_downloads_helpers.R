@@ -13,12 +13,18 @@ mod_info_downloads_reformat_all_results <- function(r) {
 }
 
 mod_info_downloads_reformat_step_counts <- function(dat) {
+  # fmt: skip
+  grouping_cols <- c(
+    "activity_type", "sitetret", "pod", "change_factor", "strategy", "measure"
+  )
   dat |>
+    dplyr::filter_out(model_run == 0) |>
     dplyr::summarise(
-      .by = -c(.data$model_run, .data$value),
-      model_runs = list(.data$value),
-      value = purrr::map_dbl(.data$model_runs, mean)
-    )
+      dplyr::across("value", mean),
+      .by = tidyselect::all_of(grouping_cols)
+    ) |>
+    dplyr::left_join(get_tpma_lookup(), "strategy") |>
+    dplyr::relocate(c("tpma_label", "tpma_code"), .after = "strategy")
 }
 
 mod_info_downloads_reformat_results <- function(dat) {
@@ -68,11 +74,6 @@ mod_info_downloads_download_excel <- function(data) {
           default = "unknown"
         )
       )
-
-    # Add the mitigator reference numbers
-    results_dfs[["step_counts"]] <- results_dfs[["step_counts"]] |>
-      dplyr::left_join(get_tpma_lookup(), by = "strategy") |>
-      dplyr::relocate("tpma_label", "tpma_code", .after = "strategy")
 
     params_list <- data() |>
       purrr::pluck("params") |>
