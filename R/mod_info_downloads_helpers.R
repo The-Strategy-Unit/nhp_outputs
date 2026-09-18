@@ -1,126 +1,93 @@
 mod_info_downloads_reformat_all_results <- function(r) {
-  r$results <- purrr::imap(
-    r$results,
-    \(dat, dat_name) {
-      if (dat_name == "step_counts") {
-        mod_info_downloads_reformat_step_counts(dat)
-      } else {
-        mod_info_downloads_reformat_results(dat)
-      }
-    }
-  )
-  r
+  purrr::modify_at(r, "results", reformat_all_results)
 }
 
-mod_info_downloads_reformat_step_counts <- function(dat) {
-  dat |>
+reformat_all_results <- function(results_list) {
+  main_names <- setdiff(names(results_list), "step_counts")
+  results_list |>
+    purrr::modify_at("attendance_category", recode_attcat_table) |>
+    purrr::modify_at(main_names, add_stats_to_results_table) |>
+    purrr::modify_at("step_counts", reformat_step_counts)
+}
+
+reformat_step_counts <- function(tbl) {
+  group_cols <- setdiff(colnames(tbl), c("model_run", "value"))
+  tbl |>
+    dplyr::filter_out(model_run == 0) |>
     dplyr::summarise(
-      .by = -c(.data$model_run, .data$value),
-      model_runs = list(.data$value),
-      value = purrr::map_dbl(.data$model_runs, mean)
-    )
+      dplyr::across("value", mean),
+      .by = tidyselect::all_of(group_cols)
+    ) |>
+    dplyr::left_join(get_tpma_lookup(), "strategy") |>
+    dplyr::relocate(c("tpma_label", "tpma_code"), .after = "strategy")
 }
 
-mod_info_downloads_reformat_results <- function(dat) {
-  baseline <- dat |>
-    dplyr::filter(.data$model_run == 0) |>
-    dplyr::select(-.data$model_run) |>
-    dplyr::rename(baseline = .data$value)
-
-  summaries <- dat |>
-    dplyr::filter(.data$model_run != 0) |>
+add_stats_to_results_table <- function(tbl) {
+  group_cols <- setdiff(colnames(tbl), c("model_run", "value"))
+  stat_cols <- c("mean", "median", "p10", "p90")
+  tbl |>
+    dplyr::mutate(
+      stage = dplyr::if_else(.data[["model_run"]] == 0, "baseline", "principal")
+    ) |>
     dplyr::summarise(
-      .by = -c(.data$model_run, .data$value),
-      principal = mean(.data$value),
-      model_runs = list(.data$value),
-      median = stats::quantile(.data$value, 0.5),
-      lwr_pi = stats::quantile(.data$value, 0.1),
-      upr_pi = stats::quantile(.data$value, 0.9)
-    )
-
-  # Join by all common cols
-  join_cols <- intersect(names(baseline), names(summaries))
-  dplyr::left_join(baseline, summaries, by = join_cols)
+      mean = mean(.data[["value"]]),
+      median = stats::quantile(.data[["value"]], 0.5),
+      p10 = stats::quantile(.data[["value"]], 0.1),
+      p90 = stats::quantile(.data[["value"]], 0.9),
+      .by = tidyselect::all_of(group_cols)
+    ) |>
+    tidyr::pivot_longer(tidyselect::all_of(stat_cols), names_to = "stat") |>
+    tidyr::pivot_wider(names_from = "stage") |>
+    tidyr::pivot_wider(names_from = "stat", values_from = "principal") |>
+    dplyr::rename(principal = "mean", lwr_pi = "p10", upr_pi = "p90")
 }
 
-mod_info_downloads_download_excel <- function(data) {
-  function(file) {
-    results_dfs <- data() |>
-      purrr::pluck("results") |>
-      purrr::map(
-        dplyr::select,
-        -tidyselect::where(is.list)
+
+# https://www.datadictionary.nhs.uk/attributes/emergency_care_attendance_category.html
+recode_attcat_table <- function(tbl) {
+  tbl |>
+    dplyr::mutate(dplyr::across("attendance_category", \(x) {
+      dplyr::recode_values(
+        x,
+        "1" ~ "unplanned_first_attendance",
+        "2" ~ "unplanned_follow-up_attendance_this_department",
+        "3" ~ "unplanned_follow-up_attendance_another_department",
+        "4" ~ "planned_follow-up_attendance",
+        "X" ~ "not_applicable",
+        default = "unknown"
       )
-
-    # Rename as per
-    # https://www.datadictionary.nhs.uk/attributes/emergency_care_attendance_category.html
-    results_dfs[["attendance_category"]] <- results_dfs[[
-      "attendance_category"
-    ]] |>
-      dplyr::mutate(
-        attendance_category = dplyr::recode_values(
-          .data[["attendance_category"]],
-          "1" ~ "unplanned_first_attendance",
-          "2" ~ "unplanned_follow-up_attendance_this_department",
-          "3" ~ "unplanned_follow-up_attendance_another_department",
-          "4" ~ "planned_follow-up_attendance",
-          "X" ~ "not_applicable",
-          default = "unknown"
-        )
-      )
-
-    # Add the mitigator reference numbers
-    results_dfs[["step_counts"]] <- results_dfs[["step_counts"]] |>
-      dplyr::left_join(get_tpma_lookup(), by = "strategy") |>
-      dplyr::relocate("tpma_label", "tpma_code", .after = "strategy")
-
-    params_list <- data() |>
-      purrr::pluck("params") |>
-      purrr::keep(rlang::is_atomic)
-
-    params_list[["start_year"]] <- scales::number(
-      params_list[["start_year"]] +
-        ((params_list[["start_year"]] + 1) %% 100) / 100,
-      0.01,
-      big.mark = "",
-      decimal.mark = "/"
-    )
-
-    params_list[["end_year"]] <- scales::number(
-      params_list[["end_year"]] +
-        ((params_list[["end_year"]] + 1) %% 100) / 100,
-      0.01,
-      big.mark = "",
-      decimal.mark = "/"
-    )
-
-    params_list[["create_datetime"]] <- format_create_datetime(
-      params_list[["create_datetime"]]
-    )
-
-    params_df <- tibble::enframe(unlist(params_list))
-
-    data_dictionary <- yyjsonr::read_json_file(
-      app_sys("app", "data", "excel_dictionary.json")
-    )
-
-    c(list(metadata = params_df), data_dictionary, results_dfs) |>
-      writexl::write_xlsx(file)
-  }
+    }))
 }
 
-mod_info_downloads_download_json <- function(data) {
+
+mod_info_downloads_download_excel <- function(data, filename) {
+  results_dfs <- purrr::pluck(data(), "results")
+
+  params_df <- data() |>
+    purrr::pluck("params") |>
+    purrr::keep(rlang::is_atomic) |>
+    purrr::modify_at(c("start_year", "end_year"), reformat_fyear) |>
+    purrr::modify_at("create_datetime", format_create_datetime) |>
+    unlist() |>
+    tibble::enframe()
+
+  dict_file <- app_sys("app", "data", "excel_dictionary.json")
+  data_dict <- yyjsonr::read_json_file(dict_file)
+
+  rlang::inject(list(metadata = params_df, !!!data_dict, !!!results_dfs)) |>
+    writexl::write_xlsx(filename)
+}
+
+mod_info_downloads_download_json <- function(data, filename) {
   # TODO: should we just save the json file to disk when we download it, and
   # avoid re-serializing it here?
-  function(file) {
-    jsonlite::write_json(
-      data(),
-      file,
-      pretty = TRUE,
-      auto_unbox = TRUE,
-      digits = NA # max precision
-    )
-  }
+  jsonlite::write_json(
+    data(),
+    filename,
+    pretty = TRUE,
+    auto_unbox = TRUE,
+    digits = NA # max precision
+  )
 }
 
 mod_info_downloads_download_report_html <- function(
