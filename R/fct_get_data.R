@@ -83,11 +83,9 @@ patch_params <- function(r) {
   if (is.list(r)) {
     return(purrr::map(r, patch_params))
   }
-
   if (is.numeric(r) && length(r) == 2) {
     return(as.list(r))
   }
-
   r
 }
 

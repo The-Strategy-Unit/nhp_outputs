@@ -8,9 +8,8 @@ set_names <- \(x) rlang::set_names(x[[1]], x[[2]])
 `__BATCH_EP__` <- "https://batch.core.windows.net/" # nolint: object_name_linter
 `__STORAGE_EP__` <- "https://storage.azure.com/" # nolint: object_name_linter
 
-fyear_str <- function(y) {
-  glue::glue("{y}/{stringr::str_pad((y + 1) %% 100, 2, pad = '0')}")
-}
+reformat_fyear <- \(y) paste0(y, "/", pad((y + 1) %% 100))
+pad <- \(x) ifelse(x < 10, paste0("0", x), as.character(x))
 
 require_rows <- function(x) {
   shiny::req(x)
@@ -38,22 +37,18 @@ lookup_ods_org_code_name <- function(org_code) {
   )
 }
 
-get_model_run <- function(url_search) {
-  dataset_pattern <- "[a-z0-9]+"
-  uuid_pattern <- "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
+get_model_run <- function(url) {
+  hx <- "[0-9a-f]"
+  uuid_rx <- glue::glue("{hx}{8}-{hx}{4}-[1-5]{hx}{3}-[89ab]{hx}{3}-{hx}{12}")
+  uuid_rx_grp <- paste0("^\\?[:alnum:]+/(", uuid_rx, ")$")
 
-  regex <- stringr::regex(
-    as.character(glue::glue("^\\?({dataset_pattern})/({uuid_pattern})$")),
-    ignore_case = TRUE
-  )
-
-  c(f, dataset, model_run_id) %<-% stringr::str_match(url_search, regex)
-
+  dataset <- regmatches(url, regexpr("^\\?([:alnum:]+)", url))
+  run_id <- regmatches(url, regexpr(uuid_rx_grp, url))
   stopifnot(
-    "URL does not match expected pattern" = !is.na(f)
+    "URL does not match expected pattern" = all(!is.na(c(dataset, run_id)))
   )
 
-  get_model_run_from_ats(dataset, model_run_id)
+  get_model_run_from_ats(dataset, run_id)
 }
 
 user_requested_cache_reset <- function(session) {
@@ -97,25 +92,20 @@ format_create_datetime <- function(x, fmt = "%Y%m%d_%H%M%S") {
   if (is.null(x) || length(x) != 1 || !is.character(x) || is.na(x)) {
     return(NA_character_)
   }
-
   parsed <- tryCatch(
     lubridate::fast_strptime(x, fmt),
     error = function(e) NA
   )
-
   if (is.na(parsed)) {
     return(NA_character_)
   }
-
   format(parsed, "%d-%b-%Y %H:%M:%S")
 }
 
 md_file_to_html <- function(...) {
   file <- app_sys(...)
-
   if (!file.exists(file)) {
     return(NULL)
   }
-
   shiny::HTML(markdown::mark_html(file, output = FALSE, template = FALSE))
 }
