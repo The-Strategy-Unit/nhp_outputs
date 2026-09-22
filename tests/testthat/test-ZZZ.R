@@ -18,10 +18,10 @@ test_that("global variables are set correctly", {
   expect_equal(`__STORAGE_EP__`, "https://storage.azure.com/")
 })
 
-test_that("fyear_str formats years correctly", {
-  expect_equal(fyear_str(1999), "1999/00")
-  expect_equal(fyear_str(2018), "2018/19")
-  expect_equal(fyear_str(2020), "2020/21")
+test_that("format_fyear formats years correctly", {
+  expect_equal(format_fyear(1999), "1999/00")
+  expect_equal(format_fyear(2018), "2018/19")
+  expect_equal(format_fyear(2020), "2020/21")
 })
 
 test_that("lookup_ods_org_code_name returns correct names", {
