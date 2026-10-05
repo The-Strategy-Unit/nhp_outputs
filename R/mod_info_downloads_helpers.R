@@ -152,7 +152,9 @@ mod_info_downloads_download_report_html <- function(
 
     params$wd <- getwd()
 
-    env <- new.env(parent = globalenv())
+    # Parent is the package namespace so the report can see internal functions
+    # (e.g. app_sys, gt_theme, info_params_table_*), which are not exported.
+    env <- new.env(parent = topenv(environment(sys.function())))
     source(app_sys("report-helpers.R"), local = env)
 
     rmarkdown::render(
