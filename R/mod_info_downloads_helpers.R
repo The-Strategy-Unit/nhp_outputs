@@ -21,8 +21,9 @@ reformat_step_counts <- function(tbl) {
     dplyr::relocate(c("tpma_label", "tpma_code"), .after = "strategy")
 }
 
+
 add_stats_to_results_table <- function(tbl) {
-  group_cols <- setdiff(colnames(tbl), c("model_run", "value"))
+  group_cols <- sub("^model_run$", "stage", setdiff(colnames(tbl), "value"))
   stat_cols <- c("principal", "median", "lwr_pi", "upr_pi")
   tbl |>
     dplyr::mutate(
@@ -30,9 +31,9 @@ add_stats_to_results_table <- function(tbl) {
     ) |>
     dplyr::summarise(
       principal = mean(.data[["value"]]),
-      median = stats::quantile(.data[["value"]], 0.5),
-      lwr_pi = stats::quantile(.data[["value"]], 0.1),
-      upr_pi = stats::quantile(.data[["value"]], 0.9),
+      median = unname(stats::quantile(.data[["value"]], 0.5)),
+      lwr_pi = unname(stats::quantile(.data[["value"]], 0.1)),
+      upr_pi = unname(stats::quantile(.data[["value"]], 0.9)),
       .by = tidyselect::all_of(group_cols)
     ) |>
     tidyr::pivot_longer(tidyselect::all_of(stat_cols), names_to = "stat") |>
