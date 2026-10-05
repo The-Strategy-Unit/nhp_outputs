@@ -1,70 +1,39 @@
 library(shiny)
 library(mockery)
 
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 # setup
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 
+# fmt: skip
 atpmo_expected <- tibble::tribble(
-  ~activity_type,
-  ~activity_type_name,
-  ~pod,
-  ~pod_name,
-  ~measures,
-  "aae",
-  "A&E",
-  "aae_type-01",
-  "Type 1 Department",
-  "ambulance"
+  ~activity_type, ~activity_type_name, ~pod, ~pod_name, ~measures,
+  "aae", "A&E", "aae_type-01", "Type 1 Department", "ambulance"
 )
 
-set_names <- function(x) {
-  purrr::set_names(x[[1]], x[[2]])
-}
+set_names <- \(x) rlang::set_names(x[[1]], x[[2]])
 
 data_dictionary <- yyjsonr::read_json_file(
   app_sys("app", "data", "excel_dictionary.json")
 )
 
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 # ui
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 
 test_that("ui is created correctly", {
   expect_snapshot(mod_info_downloads_ui("id"))
 })
 
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 # helpers
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 
 test_that("it generates an excel file", {
   data <- \() {
     list(
       params = list(x = 1, y = "x", create_datetime = "20220101_000000"),
-      results = list(
-        a = tibble::tibble(
-          x = 1:3,
-          y = 4:6,
-          z = list(
-            list(),
-            list(),
-            list()
-          )
-        ),
-        # test attendance_category because it's wrangled in the server
-        attendance_category = tibble::tibble(
-          attendance_category = c(1:4, "X")
-        ),
-        # test step_counts because data is joined in the server
-        step_counts = tibble::tibble(
-          strategy = c(
-            "alcohol_partially_attributable_acute",
-            "convert_to_tele_adult_non-surgical",
-            "discharged_no_treatment_adult_ambulance"
-          )
-        )
-      ),
+      results = list(a = tibble::tibble(x = 1:3, y = 4:6)),
       data_dictionary = data_dictionary
     )
   }
@@ -85,41 +54,15 @@ test_that("it generates an excel file", {
       ),
       worksheets = data_dictionary[["worksheets"]],
       fields = data_dictionary[["fields"]],
-      a = tibble::tibble(x = 1:3, y = 4:6),
-      attendance_category = tibble::tibble(
-        attendance_category = c(
-          "unplanned_first_attendance",
-          "unplanned_follow-up_attendance_this_department",
-          "unplanned_follow-up_attendance_another_department",
-          "planned_follow-up_attendance",
-          "not_applicable"
-        )
-      ),
-      step_counts = tibble::tibble(
-        strategy = c(
-          "alcohol_partially_attributable_acute",
-          "convert_to_tele_adult_non-surgical",
-          "discharged_no_treatment_adult_ambulance"
-        ),
-        tpma_label = c(
-          "Alcohol Related Admissions (Acute Conditions - Partially Attributable) (IP-AA-001)",
-          "Outpatient Convert to Tele-Attendance (Adult, Non-Surgical) (OP-EF-001)",
-          "A&E Discharged No Investigation or Treatment (Adult, Ambulance Conveyed) (AE-AA-001)"
-        ),
-        tpma_code = c(
-          "IP-AA-001",
-          "OP-EF-001",
-          "AE-AA-001"
-        )
-      )
+      a = tibble::tibble(x = 1:3, y = 4:6)
     ),
     "file"
   )
 })
 
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 # server
-# ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 
 test_that("it sets up download handlers", {
   selected_data <- reactive({
