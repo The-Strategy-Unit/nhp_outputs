@@ -49,14 +49,25 @@ subtitle: "Scenario: `r params$r$params$scenario` (`r site_status`)"
 
 # Notes
 
-This report provides the outputs (tables and charts) from the selected model scenario (`r params$r$params$scenario`) for the following sites combined: `r selected_sites`.
+This report provides the outputs (tables and charts) from the selected model
+scenario (`r params$r$params$scenario`) for the following sites combined:
+`r selected_sites`.
 
-Note that some tables and charts won't be generated if there was insufficient data to produce them, given the combination of trust and site selections (if any).
+Note that some tables and charts won't be generated if there was insufficient
+data to produce them, given the combination of trust and site selections
+(if any).
 
-This document is produced dynamically and so plots may not be produced at optimal size.
-Please [contact The Strategy Unit Data Science team](mailto:mlcsu.su.datascience@nhs.net) if this is a problem.
+This document is produced dynamically and so plots may not be produced at
+optimal size.
+Please [contact The Strategy Unit Data Science team][suds_email] if this is a
+problem.
 
-See [the project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview of the model and its methodology.
+[suds_email]: mailto:mlcsu.su.datascience@nhs.net
+
+See [the project information site][proj_info] for an overview of the model and
+its methodology.
+
+[proj_info]: https://connect.strategyunitwm.nhs.uk/nhp/project_information
 
 # Metadata
 
@@ -69,19 +80,27 @@ p <- get_params(params$r)
 tabulate_model_run_info(p)
 ```
 
+```{r}
+#| label: isolate-results
+results <- params$r$results
+```
+
 # Principal projection
 
 ## Summary
 
-Bed-availability data is not available at site level. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+Bed-availability data is not available at site level.
+See [the model project information site][proj_gloss] for definitions of terms.
+
+[proj_gloss]: https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html
 
 ```{r}
 #| label: pp-summary
 
-params$r$results |>
+results |>
   reskit::compile_principal_pod_data(
-    sites = params$sites,
-    pod_lookup = get_condensed_pod_lookup()
+    get_condensed_pod_lookup(),
+    params$sites
   ) |>
   reskit::make_principal_pod_table() |>
   gt::tab_options(table.align = "left")
@@ -94,11 +113,11 @@ params$r$results |>
 ```{r}
 #| label: pp-summary-los-beddays
 
-params$r$results |>
+results |>
   reskit::compile_principal_los_data(
     measure = "beddays",
-    sites = params$sites,
-    pod_lookup = get_pod_lookup()
+    pod_lookup = get_pod_lookup(),
+    sites = params$sites
   ) |>
   reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
@@ -109,11 +128,11 @@ params$r$results |>
 ```{r}
 #| label: pp-summary-los-admissions
 
-params$r$results |>
+results |>
   reskit::compile_principal_los_data(
     measure = "admissions",
-    sites = params$sites,
-    pod_lookup = get_pod_lookup()
+    pod_lookup = get_pod_lookup(),
+    sites = params$sites
   ) |>
   reskit::make_principal_los_table() |>
   gt::tab_options(table.align = "left")
@@ -121,7 +140,10 @@ params$r$results |>
 
 ## Impact of changes
 
-The results should be regarded as rough, high-level estimates of the number of rows added/removed due to each parameter. The plots here show results for all points of delivery combined. See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+The results should be regarded as rough, high-level estimates of the number of
+rows added/removed due to each parameter.
+The plots here show results for all points of delivery combined.
+See [the model project information site][proj_gloss] for definitions of terms.
 
 ```{r}
 #| label: pp-impact-of-changes-setup
@@ -141,7 +163,7 @@ icf_font_size <- 10
 ```{r}
 #| label: pp-impact-of-changes-overall-ip-bed-days
 
-params$r$results |>
+results |>
   reskit::compile_grouped_impact_data(
     measure = "beddays",
     activity_type = "ip",
@@ -157,7 +179,7 @@ params$r$results |>
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-ip-bed-days
 
-params$r$results |>
+results |>
   reskit::compile_tpma_impact_data(
     measure = "beddays",
     activity_type = "ip",
@@ -176,7 +198,7 @@ params$r$results |>
 ```{r}
 #| label: pp-impact-of-changes-overall-ip-admissions
 
-params$r$results |>
+results |>
   reskit::compile_grouped_impact_data(
     measure = "admissions",
     activity_type = "ip",
@@ -192,7 +214,7 @@ params$r$results |>
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-ip-admissions
 
-params$r$results |>
+results |>
   reskit::compile_tpma_impact_data(
     measure = "admissions",
     activity_type = "ip",
@@ -213,7 +235,7 @@ params$r$results |>
 ```{r}
 #| label: pp-impact-of-changes-overall-op-attendances
 
-params$r$results |>
+results |>
   reskit::compile_grouped_impact_data(
     measure = "attendances",
     activity_type = "op",
@@ -229,7 +251,7 @@ params$r$results |>
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-op-attendances
 
-params$r$results |>
+results |>
   reskit::compile_tpma_impact_data(
     measure = "attendances",
     activity_type = "op",
@@ -248,7 +270,7 @@ params$r$results |>
 ```{r}
 #| label: pp-impact-of-changes-overall-op-tele-attendances
 
-params$r$results |>
+results |>
   reskit::compile_grouped_impact_data(
     measure = "tele_attendances",
     activity_type = "op",
@@ -264,7 +286,7 @@ params$r$results |>
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-op-tele-attendances
 
-params$r$results |>
+results |>
   reskit::compile_tpma_impact_data(
     measure = "tele_attendances",
     activity_type = "op",
@@ -285,7 +307,7 @@ params$r$results |>
 ```{r}
 #| label: pp-impact-of-changes-overall-aae-arrivals
 
-params$r$results |>
+results |>
   reskit::compile_grouped_impact_data(
     measure = "arrivals",
     activity_type = "aae",
@@ -301,7 +323,7 @@ params$r$results |>
 ```{r, fig.height=icf_fig_height}
 #| label: pp-impact-of-changes-individual-aae-arrivals
 
-params$r$results |>
+results |>
   reskit::compile_tpma_impact_data(
     measure = "arrivals",
     activity_type = "aae",
@@ -315,578 +337,131 @@ params$r$results |>
 
 ## Activity in detail
 
-See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+See [the model project information site][proj_gloss] for definitions of terms.
 
 ```{r}
 #| label: pp-activity-in-detail-setup
 
-# Prepare sets of inputs (activity, pods, measure, aggregation, sites)
+tretspef_lookup <- reskit::get_tretspef_lookup()
+horizon_year <- params$r$params[["end_year"]]
 
-pod_lookup <- get_pod_lookup()
-end_year <- params$r$params[["end_year"]]
 
-age_group_data <- list(
-  "sex+age_group" = params$r$results[["sex+age_group"]] |>
-    reskit:::filter_to_selected_sites(params$sites) |>
-    dplyr::mutate(
-      value_type = ifelse(.data[["model_run"]] == 0, "baseline", "principal")
-    ) |>
-    dplyr::summarise(
-      dplyr::across("value", sum),
-      .by = -c("value", "sitetret")
-    ) |>
-    dplyr::summarise(
-      dplyr::across("value", mean),
-      .by = -c("model_run", "value")
-    ) |>
-    tidyr::pivot_wider(
-      names_from = "value_type",
-      values_from = "value"
-    )
-) |>
-  reskit:::prepare_age_group_data() |>
-  dplyr::arrange(
-    .data[["pod"]],
-    .data[["sex"]],
-    .data[["measure"]],
-    .data[["age_group"]]
-  )
-
-tretspef_data <- list(
-  "sex+tretspef_grouped" = params$r$results[["sex+tretspef_grouped"]] |>
-    reskit:::filter_to_selected_sites(params$sites) |>
-    dplyr::mutate(
-      value_type = ifelse(.data[["model_run"]] == 0, "baseline", "principal")
-    ) |>
-    dplyr::summarise(
-      dplyr::across("value", sum),
-      .by = -c("value", "sitetret")
-    ) |>
-    dplyr::summarise(
-      dplyr::across("value", mean),
-      .by = -c("model_run", "value")
-    ) |>
-    tidyr::pivot_wider(
-      names_from = "value_type",
-      values_from = "value"
-    )
-) |>
-  reskit:::prepare_tretspef_data(reskit::get_tretspef_lookup()) |>
-  dplyr::relocate("tretspef", .before = tidyselect::everything()) |>
-  dplyr::arrange(
-    .data[["pod"]],
-    .data[["sex"]],
-    .data[["measure"]],
-    .data[["tretspef"]]
-  )
-
-activity_in_detail_data <- list(
-  "age_group" = age_group_data,
-  "tretspef" = tretspef_data
-) |>
-  purrr::imap(\(.x, .i) {
-    .x |>
-      dplyr::mutate(dplyr::across("sex", \(.x) {
-        forcats::fct(ifelse(.x == 1, "Male", "Female"))
-      })) |>
-      dplyr::group_nest(measure, pod) |>
-      reskit:::get_activity_type_from_pod() |>
-      reskit:::inner_join_for_labels(pod_lookup) |>
-      reskit:::relabel_pods() |>
-      dplyr::mutate(agg_col = .i) |>
-      dplyr::mutate(table_name = paste(pod, measure, agg_col, sep = "_")) |>
-      dplyr::select("table_name", "data") |>
-      tibble::deframe()
-  }) |>
-  unname() |>
-  purrr::list_flatten()
-
-activity_in_detail_tables <- purrr::map(
-  activity_in_detail_data,
-  \(.x) {
-    if (sum(.x$baseline + .x$principal) == 0) {
-      return("Insufficient information to produce this table.")
-    }
-
-    .x |>
-      dplyr::mutate(
-        change = .data[["principal"]] - .data[["baseline"]],
-        change_pct = .data[["change"]] / .data[["baseline"]]
-      ) |>
-      reskit::make_detailed_activity_table(final_year = end_year) |>
-      gt::tab_options(table.align = "left")
-  }
-)
-
-get_activity_in_detail_table <- function(pod, measure, agg_col) {
-  table_name <- paste(pod, measure, agg_col, sep = "_")
-
-  if (!table_name %in% names(activity_in_detail_tables)) {
-    return("Insufficient information to produce this table.")
-  }
-
-  activity_in_detail_tables[[table_name]]
+create_measure_label <- function(x) {
+  x <- reskit:::uppercase_init(sub("dd", "d d", gsub("_", "-", x)))
+  dplyr::if_else(x %in% c("Ambulance", "Walk-in"), paste(x, "arrivals"), x)
 }
-```
 
-### Inpatients
-
-#### Non-elective admission
-
-##### Bed days by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-1
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "non-elective_admission",
-  "beddays_age_group"
+compile_da_data <- function(tbl, aggregation, pod_lookup, sites) {
+  grp_cols <- c("pod", "measure", "sitetret", "model_run", "sex", aggregation)
+  arr_cols <- c("pod", "measure", "sex", aggregation)
+  tbl |>
+    dplyr::mutate(
+      dplyr::across("sex", reskit:::convert_sex_codes),
+      dplyr::across("sex", \(x) forcats::fct(x, c("Female", "Male")))
+    ) |>
+    reskit:::calculate_principal_stats(grp_cols) |>
+    reskit:::keep_mean_only() |>
+    reskit:::filter_to_selected_sites(sites) |>
+    reskit:::summarise_for_all_sites() |>
+    dplyr::left_join(pod_lookup, "pod") |>
+    dplyr::mutate(measure_label = create_measure_label(.data[["measure"]])) |>
+    reskit:::add_change_cols() |>
+    dplyr::arrange(dplyr::pick(tidyselect::all_of(arr_cols))) |>
+    dplyr::select(!c("pod", "measure")) |>
+    # as the two tables have different column names, we need to nest the data
+    # so we can `list_rbind()` without error
+    tidyr::nest(.by = tidyselect::ends_with("label"))
+}
+pt_compile_da_data <- purrr::partial(
+  compile_da_data,
+  # !! forces evaluation once on creation, not every run
+  pod_lookup = !!get_pod_lookup(),
+  sites = !!params$sites
 )
-```
 
-##### Bed days by treatment specialty
+
+make_da_table <- function(tbl, end_year) {
+  tbl |>
+    reskit::make_detailed_activity_table(end_year) |>
+    gt::tab_options(table.align = "left")
+}
+pt_make_da_table <- purrr::partial(make_da_table, end_year = horizon_year)
+
+handle_invalid_data <- function(tbl) {
+  stopifnot(all(c("baseline", "principal", "change_pct") %in% colnames(tbl)))
+  if (all(is.nan(tbl[["change_pct"]]))) {
+    "Insufficient information to produce this table."
+  } else if (all(c(tbl[["baseline"]], tbl[["principal"]]) == 0)) {
+    "Insufficient information to produce this table."
+  } else {
+    tbl |>
+      dplyr::mutate(dplyr::across("change_pct", \(x) {
+        dplyr::case_when(
+          all(c(.data[["baseline"]], .data[["principal"]]) == 0) ~ 0,
+          is.nan(x) ~ NA_real_,
+          .default = x
+        )
+      })) |>
+      pt_make_da_table()
+  }
+}
+
+detailed_activity_data <-
+  list(
+    age_group = reskit:::prepare_age_group_data(results),
+    tretspef = reskit:::prepare_tretspef_data(results, tretspef_lookup)
+  ) |>
+  purrr::modify_at("age_group", \(x) pt_compile_da_data(x, "age_group")) |>
+  purrr::modify_at("tretspef", \(x) pt_compile_da_data(x, "tretspef")) |>
+  rlang::set_names(c("age group", "treatment specialty")) |>
+  purrr::list_rbind(names_to = "aggregation") |>
+  dplyr::mutate(
+    chart_title = glue::glue("{measure_label} by {aggregation}"),
+    .keep = "unused"
+  ) |>
+  tidyr::nest(.by = "activity_type_label") |>
+  tibble::deframe() |>
+  purrr::map(\(x) tibble::deframe(tidyr::nest(x, .by = "pod_label"))) |>
+  purrr::map_depth(2, \(x) {
+    tibble::deframe(tidyr::nest(x, .by = "chart_title"))
+  }) |>
+  purrr::map_depth(3, \(x) tidyr::unnest(x, "data"))
+```
 
 ```{r}
-#| label: pp-activity-in-detail-ip-2
+#| label: detailed-activity-tables
 #| results: asis
 
-get_activity_in_detail_table("ip", "non-elective_admission", "beddays_tretspef")
+print_x <- \(x) if (is.character(x)) cat(x, "\n") else cat(knitr::knit_print(x))
+
+detailed_activity_data |>
+  purrr::iwalk(\(x, y) {
+    cat("\n")
+    cat("### ", y, "\n")
+    purrr::iwalk(x, \(x, y) {
+      cat("\n")
+      cat("#### ", y, "\n")
+      purrr::iwalk(x, \(x, y) {
+        cat("\n")
+        cat("##### ", y, "\n")
+        print_x(handle_invalid_data(x))
+        cat("\n")
+      })
+    })
+  })
 ```
 
-##### Admissions by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-3
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "non-elective_admission",
-  "admissions_age_group"
-)
-```
-
-##### Admissions by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-4
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "non-elective_admission",
-  "admissions_tretspef"
-)
-```
-
-#### Elective admission
-
-##### Bed days by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-5
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_admission", "beddays_age_group")
-```
-
-##### Bed days by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-6
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_admission", "beddays_tretspef")
-```
-
-##### Admissions by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-7
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_admission", "admissions_age_group")
-```
-
-##### Admissions by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-8
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_admission", "admissions_tretspef")
-```
-
-#### Daycase admission
-
-##### Bed days by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-9
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_daycase", "beddays_age_group")
-```
-
-##### Bed days by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-10
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_daycase", "beddays_tretspef")
-```
-
-##### Admissions by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-11
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_daycase", "admissions_age_group")
-```
-
-##### Admissions by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-12
-#| results: asis
-
-get_activity_in_detail_table("ip", "elective_daycase", "admissions_tretspef")
-```
-
-#### Maternity admission
-
-##### Bed days by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-13
-#| results: asis
-
-get_activity_in_detail_table("ip", "maternity_admission", "beddays_age_group")
-```
-
-##### Bed days by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-14
-#| results: asis
-
-get_activity_in_detail_table("ip", "maternity_admission", "beddays_tretspef")
-```
-
-##### Admissions by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-15
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "maternity_admission",
-  "admissions_age_group"
-)
-```
-
-##### Admissions by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-16
-#| results: asis
-
-get_activity_in_detail_table("ip", "maternity_admission", "admissions_tretspef")
-```
-
-#### Regular day attender admission
-
-##### Bed days by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-17
-#| results: asis
-
-get_activity_in_detail_table("ip", "regular_day_attender", "beddays_age_group")
-```
-
-##### Bed days by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-18
-#| results: asis
-
-get_activity_in_detail_table("ip", "regular_day_attender", "beddays_tretspef")
-```
-
-##### Admissions by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-19
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "regular_day_attender",
-  "admissions_age_group"
-)
-```
-
-##### Admissions by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-20
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "regular_day_attender",
-  "admissions_tretspef"
-)
-```
-
-#### Regular night attender admission
-
-##### Bed days by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-21
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "regular_night_attender",
-  "beddays_age_group"
-)
-```
-
-##### Bed days by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-22
-#| results: asis
-
-get_activity_in_detail_table("ip", "regular_night_attender", "beddays_tretspef")
-```
-
-##### Admissions by age group
-
-```{r}
-#| label: pp-activity-in-detail-ip-23
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "regular_night_attender",
-  "admissions_age_group"
-)
-```
-
-##### Admissions by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-ip-24
-#| results: asis
-
-get_activity_in_detail_table(
-  "ip",
-  "regular_night_attender",
-  "admissions_tretspef"
-)
-```
-
-
-
-### Outpatients
-
-#### First outpatient attendance
-
-##### Attendances by age group
-
-```{r}
-#| label: pp-activity-in-detail-op-1
-#| results: asis
-
-get_activity_in_detail_table("op", "first_attendances", "age_group")
-```
-
-##### Attendances by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-op-2
-#| results: asis
-
-get_activity_in_detail_table("op", "first_attendances", "tretspef")
-```
-
-##### Tele-attendances by age group
-
-```{r}
-#| label: pp-activity-in-detail-op-3
-#| results: asis
-
-get_activity_in_detail_table("op", "first_attendances", "age_group")
-```
-
-##### Tele-attendances by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-op-4
-#| results: asis
-
-get_activity_in_detail_table("op", "first_attendances", "tretspef")
-```
-
-#### Follow-up outpatient attendance
-
-##### Attendances by age group
-
-```{r}
-#| label: pp-activity-in-detail-op-5
-#| results: asis
-
-get_activity_in_detail_table("op", "follow-up_attendances", "age_group")
-```
-
-##### Attendances by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-op-6
-#| results: asis
-
-get_activity_in_detail_table("op", "follow-up_attendances", "tretspef")
-```
-
-##### Tele-attendances by age group
-
-```{r}
-#| label: pp-activity-in-detail-op-7
-#| results: asis
-
-get_activity_in_detail_table("op", "follow-up_attendances", "age_group")
-```
-
-##### Tele-attendances by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-op-8
-#| results: asis
-
-get_activity_in_detail_table("op", "follow-up_attendances", "tretspef")
-```
-
-#### Outpatient procedure
-
-##### Attendances by age group
-
-```{r}
-#| label: pp-activity-in-detail-op-9
-#| results: asis
-
-get_activity_in_detail_table("op", "procedure_attendances", "age_group")
-```
-
-##### Attendances by treatment specialty
-
-```{r}
-#| label: pp-activity-in-detail-op-10
-#| results: asis
-
-get_activity_in_detail_table("op", "procedure_attendances", "tretspef")
-```
-
-### A&E
-
-#### Type 1 department
-
-##### Ambulance arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-1
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-01", "ambulance_age_group")
-```
-
-##### Walk-in arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-3
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-01", "walk-in_age_group")
-```
-
-#### Type 2 department
-
-##### Ambulance arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-5
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-02", "ambulance_age_group")
-```
-
-##### Walk-in arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-7
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-02", "walk-in_age_group")
-```
-
-#### Type 3 department
-
-##### Ambulance arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-9
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-03", "ambulance_age_group")
-```
-
-##### Walk-in arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-11
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-03", "walk-in_age_group")
-```
-
-#### Type 4 department
-
-##### Ambulance arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-13
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-04", "ambulance_age_group")
-```
-
-##### Walk-in arrivals by age group
-
-```{r}
-#| label: pp-activity-in-detail-aae-15
-#| results: asis
-
-get_activity_in_detail_table("aae", "type-04", "walk-in_age_group")
-```
 
 # Distribution of projections
 
 ## Activity summary
 
-See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+See [the model project information site][proj_gloss] for definitions of terms.
 
 ```{r}
 #| label: dop-activity-summary
 
-params$r$results |>
+results |>
   reskit::compile_distribution_summary_data(
     value_type = "median",
     sites = params$sites,
@@ -898,16 +473,66 @@ params$r$results |>
 
 ## Activity distribution
 
-See [the model project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html) for definitions of terms.
+See [the model project information site][proj_gloss] for definitions of terms.
 
-In 'beeswarm' plots (showing model-run distributions), the red vertical dashed line is the principal value and the grey vertical continuous line is the baseline value.
+In 'beeswarm' plots (showing model-run distributions), the red vertical dashed
+line is the principal value and the grey vertical continuous line is the
+baseline value.
 
-In 'S-curve' plots (showing empirical cumulative distribution function), the red dashed line is the principal value, the blue dashed lines are the 10th and 90th percentiles and the grey vertical continuous line is the baseline value.
+In 'S-curve' plots (showing empirical cumulative distribution function), the
+red dashed line is the principal value, the blue dashed lines are the 10th and
+90th percentiles and the grey vertical continuous line is the baseline value.
 
 ```{r}
 #| label: dop-activity-distribution-setup
 
 # Prepare sets of inputs (activity, pods, measure, aggregation, sites)
+
+# A customised version of reskit::compile_distribution_plot_data()
+compile_distribution_plot_data <- function(results, pod_lookup, sites) {
+  key_cols <- c("measure", "activity_type_label")
+  group_cols <- c("pod_label", key_cols, "model_run")
+  fill_cols <- c("pod_label", key_cols)
+  arr_cols <- c("activity_type_label", "pod", "measure")
+
+  results |>
+    purrr::pluck("default") |>
+    reskit:::exclude_op_teleatt_procedures() |>
+    reskit:::join_for_labels(pod_lookup) |>
+    dplyr::mutate(
+      stage = dplyr::if_else(.data[["model_run"]] == 0, "baseline", "principal")
+    ) |>
+    reskit:::filter_to_selected_sites(sites) |>
+    dplyr::select(!"sitetret") |>
+    # sum across all (remaining) sites
+    dplyr::summarise(dplyr::across("value", sum), .by = !"value") |>
+    dplyr::mutate(
+      mean = mean(.data[["value"]]),
+      .by = tidyselect::all_of(reskit:::swap_modelrun_for_stage(group_cols))
+    ) |>
+    tidyr::pivot_wider(names_from = "stage", values_from = "mean") |>
+    tidyr::fill("baseline", .by = tidyselect::all_of(fill_cols)) |>
+    dplyr::filter(dplyr::if_any("model_run", \(x) x > 0)) |>
+    dplyr::mutate(measure_label = create_measure_label(.data[["measure"]])) |>
+    dplyr::arrange(dplyr::pick(tidyselect::all_of(arr_cols))) |>
+    dplyr::select(!c("pod", "measure"))
+}
+pt_compile_distribution_plot_data <- purrr::partial(
+  compile_distribution_plot_data,
+  # !! forces evaluation once on creation, not every time it's run
+  pod_lookup = !!get_pod_lookup(),
+  sites = !!params$sites
+)
+
+distribution_data <- results |>
+  pt_compile_distribution_plot_data() |>
+  tidyr::nest(.by = "activity_type_label") |>
+  tibble::deframe() |>
+  purrr::map(\(x) tibble::deframe(tidyr::nest(x, .by = "pod_label"))) |>
+  purrr::map_depth(2, \(x) {
+    tibble::deframe(tidyr::nest(x, .by = "measure_label"))
+  }) |>
+  purrr::map_depth(3, \(x) tidyr::unnest(x, "data"))
 
 atpmo_simplified <- get_activity_type_pod_measure_options() |>
   dplyr::select("activity_type", "pod", "measure")
