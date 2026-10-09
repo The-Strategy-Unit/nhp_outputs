@@ -17,8 +17,6 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE, out.width = "100%")
-
-library(reskit)
 pkgload::load_all(params$wd, quiet = TRUE)
 ```
 
@@ -484,38 +482,35 @@ red dashed line is the principal value, the blue dashed lines are the 10th and
 90th percentiles and the grey vertical continuous line is the baseline value.
 
 ```{r}
-#| label: dop-activity-distribution-setup
-
-# Prepare sets of inputs (activity, pods, measure, aggregation, sites)
+#| label: distribution-plot-data-setup
 
 # A customised version of reskit::compile_distribution_plot_data()
 compile_distribution_plot_data <- function(results, pod_lookup, sites) {
-  key_cols <- c("measure", "activity_type_label")
-  group_cols <- c("pod_label", key_cols, "model_run")
-  fill_cols <- c("pod_label", key_cols)
-  arr_cols <- c("activity_type_label", "pod", "measure")
+  core_cols <- c("pod", "measure")
+  group_cols <- c(core_cols, "model_run")
+  arr_cols <- c("activity_type_label", core_cols)
 
   results |>
     purrr::pluck("default") |>
     reskit:::exclude_op_teleatt_procedures() |>
-    reskit:::join_for_labels(pod_lookup) |>
-    dplyr::mutate(
-      stage = dplyr::if_else(.data[["model_run"]] == 0, "baseline", "principal")
-    ) |>
     reskit:::filter_to_selected_sites(sites) |>
     dplyr::select(!"sitetret") |>
     # sum across all (remaining) sites
     dplyr::summarise(dplyr::across("value", sum), .by = !"value") |>
     dplyr::mutate(
+      stage = dplyr::if_else(.data[["model_run"]] == 0, "baseline", "principal")
+    ) |>
+    dplyr::mutate(
       mean = mean(.data[["value"]]),
       .by = tidyselect::all_of(reskit:::swap_modelrun_for_stage(group_cols))
     ) |>
     tidyr::pivot_wider(names_from = "stage", values_from = "mean") |>
-    tidyr::fill("baseline", .by = tidyselect::all_of(fill_cols)) |>
+    tidyr::fill("baseline", .by = tidyselect::all_of(core_cols)) |>
     dplyr::filter(dplyr::if_any("model_run", \(x) x > 0)) |>
     dplyr::mutate(measure_label = create_measure_label(.data[["measure"]])) |>
+    reskit:::join_for_labels(pod_lookup) |>
     dplyr::arrange(dplyr::pick(tidyselect::all_of(arr_cols))) |>
-    dplyr::select(!c("pod", "measure"))
+    dplyr::select(!tidyselect::all_of(core_cols))
 }
 pt_compile_distribution_plot_data <- purrr::partial(
   compile_distribution_plot_data,
@@ -531,277 +526,28 @@ distribution_data <- results |>
   purrr::map(\(x) tibble::deframe(tidyr::nest(x, .by = "pod_label"))) |>
   purrr::map_depth(2, \(x) {
     tibble::deframe(tidyr::nest(x, .by = "measure_label"))
-  }) |>
-  purrr::map_depth(3, \(x) tidyr::unnest(x, "data"))
-
-atpmo_simplified <- get_activity_type_pod_measure_options() |>
-  dplyr::select("activity_type", "pod", "measure")
-
-activity_distribution_table_names <- atpmo_simplified |>
-  dplyr::mutate(table_name = paste(pod, measure, sep = "_")) |>
-  dplyr::pull()
-
-# Prepare a list of plots with each set of input combos
-
-possibly_plot_activity_distributions <- purrr::possibly(
-  plot_activity_distributions,
-  otherwise = "Insufficient information to produce this chart"
-)
-
-activity_distributions <- atpmo_simplified |>
-  purrr::pmap(
-    \(activity_type, pod, measure) {
-      possibly_plot_activity_distributions(
-        data = params$r,
-        sites = params$sites,
-        activity_type,
-        pod,
-        measure
-      )
-    }
-  ) |>
-  purrr::set_names(activity_distribution_table_names)
+  })
 ```
 
-### Inpatients
-
-#### Non-elective admission
-
-##### Bed days
-
 ```{r}
-#| label: pp-activity-distribution-ip-1
-
-activity_distributions$`ip_non-elective_admission_beddays` |> purrr::walk(print)
-```
-
-##### Admissions
-
-```{r}
-#| label: pp-activity-distribution-ip-2
-
-activity_distributions$`ip_non-elective_admission_admissions` |>
-  purrr::walk(print)
-```
-
-#### Elective admission
-
-##### Bed days
-
-```{r}
-#| label: pp-activity-distribution-ip-3
-
-activity_distributions$`ip_elective_admission_beddays` |> purrr::walk(print)
-```
-
-##### Admissions
-
-```{r}
-#| label: pp-activity-distribution-ip-4
-
-activity_distributions$`ip_elective_admission_admissions` |> purrr::walk(print)
-```
-
-#### Daycase admission
-
-##### Bed days
-
-```{r}
-#| label: pp-activity-distribution-ip-5
-
-activity_distributions$`ip_daycase_admission_beddays` |> purrr::walk(print)
-```
-
-##### Admissions
-
-```{r}
-#| label: pp-activity-distribution-ip-6
-
-activity_distributions$`ip_daycase_admission_admissions` |> purrr::walk(print)
-```
-
-#### Maternity admission
-
-##### Bed days
-
-```{r}
-#| label: pp-activity-distribution-ip-7
-
-activity_distributions$`ip_maternity_admission_beddays` |> purrr::walk(print)
-```
-
-##### Admissions
-
-```{r}
-#| label: pp-activity-distribution-ip-8
-
-activity_distributions$`ip_maternity_admission_admissions` |> purrr::walk(print)
-```
-
-#### Regular day attender admission
-
-##### Bed days
-
-```{r}
-#| label: pp-activity-distribution-ip-9
-
-activity_distributions$`ip_regular_day_attender_beddays` |> purrr::walk(print)
-```
-
-##### Admissions
-
-```{r}
-#| label: pp-activity-distribution-ip-10
-
-activity_distributions$`ip_regular_day_attender_admissions` |>
-  purrr::walk(print)
-```
-
-#### Regular night attender admission
-
-##### Bed days
-
-```{r}
-#| label: pp-activity-distribution-ip-11
-
-activity_distributions$`ip_regular_night_attender_beddays` |> purrr::walk(print)
-```
-
-##### Admissions
-
-```{r}
-#| label: pp-activity-distribution-ip-12
-
-activity_distributions$`ip_regular_night_attender_admissions` |>
-  purrr::walk(print)
-```
-
-### Outpatients
-
-#### First outpatient attendance
-
-##### Attendances
-
-```{r}
-#| label: pp-activity-distribution-op-1
-
-activity_distributions$`op_first_attendances` |> purrr::walk(print)
-```
-
-##### Tele-attendances
-
-```{r}
-#| label: pp-activity-distribution-op-2
-
-activity_distributions$`op_first_tele_attendances` |> purrr::walk(print)
-```
-
-#### Follow-up outpatient attendances
-
-##### Attendances
-
-```{r}
-#| label: pp-activity-distribution-op-3
-
-activity_distributions$`op_follow-up_attendances` |> purrr::walk(print)
-```
-
-##### Tele-attendances
-
-```{r}
-#| label: pp-activity-distribution-op-4
-
-activity_distributions$`op_follow-up_tele_attendances` |> purrr::walk(print)
-```
-
-#### Outpatient procedures
-
-##### Attendances
-
-```{r}
-#| label: pp-activity-distribution-op-5
-
-activity_distributions$`op_outpatient_attendances` |> purrr::walk(print)
-```
-
-##### Tele-attendances
-
-```{r}
-#| label: pp-activity-distribution-op-6
-
-activity_distributions$`op_outpatient_tele_attendances` |> purrr::walk(print)
-```
-
-### A&E
-
-#### Type 1 department
-
-##### Walk-in arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-1
-
-activity_distributions$`aae_type-01_walk-in` |> purrr::walk(print)
-```
-
-##### Ambulance arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-2
-
-activity_distributions$`aae_type-01_ambulance` |> purrr::walk(print)
-```
-
-#### Type 2 department
-
-##### Walk-in arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-3
-
-activity_distributions$`aae_type-02_walk-in` |> purrr::walk(print)
-```
-
-##### Ambulance arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-4
-
-activity_distributions$`aae_type-02_ambulance` |> purrr::walk(print)
-```
-
-#### Type 3 department
-
-##### Walk-in arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-5
-
-activity_distributions$`aae_type-03_walk-in` |> purrr::walk(print)
-```
-
-##### Ambulance arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-6
-
-activity_distributions$`aae_type-03_ambulance` |> purrr::walk(print)
-```
-
-#### Type 4 department
-
-##### Walk-in arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-7
-
-activity_distributions$`aae_type-04_walk-in` |> purrr::walk(print)
-```
-
-##### Ambulance arrivals
-
-```{r}
-#| label: pp-activity-distribution-aae-8
-
-activity_distributions$`aae_type-04_ambulance` |> purrr::walk(print)
+#| label: distribution-plots
+#| results: asis
+
+distribution_data |>
+  purrr::iwalk(\(x, y) {
+    cat("\n")
+    cat("### ", y, "\n")
+    purrr::iwalk(x, \(x, y) {
+      cat("\n")
+      cat("#### ", y, "\n")
+      purrr::iwalk(x, \(x, y) {
+        cat("\n")
+        cat("##### ", y, "\n")
+        knitr::knit_print(make_beeswarm_distrib_plot(x))
+        cat("\n")
+        knitr::knit_print(make_cumulative_distrib_plot(x))
+        cat("\n")
+      })
+    })
+  })
 ```
