@@ -481,3 +481,53 @@ test_that("trust_site_aggregation adds in a trust level aggregatrion", {
     tibble::tibble(x = c("a", "b", "c"), v = c(1, 5, 9))
   )
 })
+
+
+test_that("get_model_run_data correctly checks a URL", {
+  hx <- \(n) glue::glue("[0-9a-f]{{{n}}}")
+  uuid_rx <- glue::glue("{hx(8)}-{hx(4)}-[1-5]{hx(3)}-[89ab]{hx(3)}-{hx(12)}")
+  full_match <- glue::glue("^\\?[[:alnum:]]+/{uuid_rx}$")
+  uuid_rx_full <- glue::glue("^\\?[[:alnum:]]+/({uuid_rx})$")
+  pull_dataset <- \(url) sub("^\\?([[:alnum:]]+)/.*$", "\\1", url)
+  pull_run_id <- \(url) sub(uuid_rx_full, "\\1", url)
+
+  # 2 valid (though non-existent) URLs
+  eg1 <- "?ABC/49167280-9575-2e56-af04-c4356fd30bb9"
+  eg2 <- "?ABCc5/49167280-9575-2e56-af04-c4356fd30bb9"
+  # the following 6 are changed so they form invalid patterns in various ways
+  eg3 <- "ABC/49167280-9575-2e56-af04-c4356fd30bb9"
+  eg4 <- "?ABC/49167280-9575-2e56-af04c4356fd30bb9"
+  eg5 <- "?ABC#/49167280-9575-2e56-af04-c4356fd30bb9"
+  eg6 <- "?ABC/49167280-9575-0e56-af04-c4356fd30bb9"
+  eg7 <- "?ABC/49167280-9575-2e56-7f04-c4356fd30bb9"
+  eg8 <- "?ABC/49167280-9575-2e56-af04-c4356fd30bb97"
+
+  expect_match(eg1, full_match)
+  expect_match(eg2, full_match)
+  expect_no_match(eg3, full_match)
+  expect_no_match(eg4, full_match)
+  expect_no_match(eg5, full_match)
+  expect_no_match(eg6, full_match)
+  expect_no_match(eg7, full_match)
+  expect_no_match(eg8, full_match)
+
+  # check that we pass and fail for the right reasons (the right part)
+  expect_match(pull_dataset(eg1), "^[[:alnum:]]+$")
+  expect_match(pull_dataset(eg2), "^[[:alnum:]]+$")
+  expect_no_match(pull_dataset(eg3), "^[[:alnum:]]+$") # no initial "?"
+  expect_match(pull_dataset(eg4), "^[[:alnum:]]+$")
+  expect_no_match(pull_dataset(eg5), "^[[:alnum:]]+$") # non-alnum chr present
+  expect_match(pull_dataset(eg6), "^[[:alnum:]]+$")
+  expect_match(pull_dataset(eg7), "^[[:alnum:]]+$")
+  expect_match(pull_dataset(eg8), "^[[:alnum:]]+$")
+
+  # check that we pass and fail for the right reasons
+  expect_match(pull_run_id(eg1), glue::glue("^{uuid_rx}$"))
+  expect_match(pull_run_id(eg2), glue::glue("^{uuid_rx}$"))
+  expect_no_match(pull_run_id(eg3), glue::glue("^{uuid_rx}$")) # no initial "?"
+  expect_no_match(pull_run_id(eg4), glue::glue("^{uuid_rx}$")) # last "-" absent
+  expect_no_match(pull_run_id(eg5), glue::glue("^{uuid_rx}$")) # non-alnum chr
+  expect_no_match(pull_run_id(eg6), glue::glue("^{uuid_rx}$")) # invalid pattern
+  expect_no_match(pull_run_id(eg7), glue::glue("^{uuid_rx}$")) # invalid pattern
+  expect_no_match(pull_run_id(eg8), glue::glue("^{uuid_rx}$")) # extra chr added
+})
