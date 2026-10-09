@@ -24,41 +24,18 @@ get_params <- function(r) {
       purrr::discard(\(.y) length(.y) == 0) |>
       to_interval()
   }
-
   recursive_discard(r$params)
 }
 
 # Model run information ----
 
-#' Create a Table of Model Run Metadata
-#' @param p A list. Parameter selections for a given model scenario. Likely
-#'     read in with [get_params].
+#' Create a table of model run metadata
+#' @param params List: Parameter selections for a given model scenario. As read
+#'  in by [get_params]
 #' @noRd
-tabulate_model_run_info <- function(p) {
-  p_model_run <- purrr::keep(p, rlang::is_atomic)
-
-  p_model_run[["start_year"]] <- scales::number(
-    p_model_run[["start_year"]] +
-      ((p_model_run[["start_year"]] + 1) %% 100) / 100,
-    0.01,
-    big.mark = "",
-    decimal.mark = "/"
-  )
-
-  p_model_run[["end_year"]] <- scales::number(
-    p_model_run[["end_year"]] + ((p_model_run[["end_year"]] + 1) %% 100) / 100,
-    0.01,
-    big.mark = "",
-    decimal.mark = "/"
-  )
-
-  p_model_run[["create_datetime"]] <- p_model_run[["create_datetime"]] |>
-    lubridate::fast_strptime("%Y%m%d_%H%M%S") |>
-    format("%d-%b-%Y %H:%M:%S")
-
-  p_model_run |>
-    unlist() |>
-    tibble::enframe() |>
+tabulate_model_run_info <- function(params) {
+  params |>
+    format_params() |>
     gt::gt("name") |>
     gt_theme() |>
     gt::tab_options(table.align = "left")
@@ -107,13 +84,10 @@ plot_activity_distributions <- function(
 
 # Params ----
 
-#' Convert a List of Parameter Data to a List of 'gt' Objects
-#' @param p A list. Parameter selections for a given model scenario, likely
-#'     read in with [get_params].
-#' @details The output list will be 'expanded' into R markdown content by
-#'     [expand_param_tables_to_rmd].
+#' Convert a list of parameter data to a list of 'gt' objects
+#' @inheritParams tabulate_model_run_info
 #' @noRd
-param_tables_to_list <- function(p) {
+param_tables_to_list <- function(params) {
   # We can use some functions developed for the app but need to catch
   # shiny::need() errors as NULLs.
 
@@ -144,27 +118,27 @@ param_tables_to_list <- function(p) {
   )
 
   params_list <- list(
-    "Baseline adjustment" = possibly_table_baseline_adjustment(p),
-    "Demographic adjustment" = possibly_table_demographic_adjustment(p),
+    "Baseline adjustment" = possibly_table_baseline_adjustment(params),
+    "Demographic adjustment" = possibly_table_demographic_adjustment(params),
     "Waiting list adjustment" = list(
-      "Table" = possibly_table_waiting_list_adjustment(p)
+      "Table" = possibly_table_waiting_list_adjustment(params)
     ),
     "Expatriation" = list(
-      "Table" = possibly_table_expat_repat_adjustment(p, "expat")
+      "Table" = possibly_table_expat_repat_adjustment(params, "expat")
     ),
     "Repatriation (local)" = list(
-      "Table" = possibly_table_expat_repat_adjustment(p, "repat_local")
+      "Table" = possibly_table_expat_repat_adjustment(params, "repat_local")
     ),
     "Repatriation (non-local)" = list(
-      "Table" = possibly_table_expat_repat_adjustment(p, "repat_nonlocal")
+      "Table" = possibly_table_expat_repat_adjustment(params, "repat_nonlocal")
     ),
     "Non-demographic adjustment" = list(
       "Variant" = p[["non-demographic_adjustment"]][["variant"]],
       "Value type" = p[["non-demographic_adjustment"]][["value-type"]],
-      "Table" = possibly_table_non_demographic_adjustment(p)
+      "Table" = possibly_table_non_demographic_adjustment(params)
     ),
-    "Activity avoidance" = possibly_table_activity_avoidance(p),
-    "Efficiencies" = possibly_table_efficiencies(p)
+    "Activity avoidance" = possibly_table_activity_avoidance(params),
+    "Efficiencies" = possibly_table_efficiencies(params)
   ) |>
     purrr::compact()
 

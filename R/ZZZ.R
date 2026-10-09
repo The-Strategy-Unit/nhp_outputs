@@ -71,6 +71,17 @@ get_tpma_lookup <- function() {
     )
 }
 
+
+format_params <- function(params) {
+  params |>
+    purrr::keep(rlang::is_atomic) |>
+    purrr::modify_at(c("start_year", "end_year"), reformat_fyear) |>
+    purrr::modify_at("create_datetime", format_create_datetime) |>
+    unlist() |>
+    tibble::enframe()
+}
+
+
 # Params' create_datetime is expected to be a "%Y%m%d_%H%M%S" character
 # string, but older/malformed model runs may have it missing or of the
 # wrong type, so guard against that rather than erroring out of

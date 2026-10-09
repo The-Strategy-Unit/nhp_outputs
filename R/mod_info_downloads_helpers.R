@@ -61,16 +61,8 @@ recode_attcat_table <- function(tbl) {
 
 mod_info_downloads_download_excel <- function(reshaped_data) {
   function(file) {
-    results_dfs <- purrr::pluck(reshaped_data(), "results")
-
-    params_df <- reshaped_data() |>
-      purrr::pluck("params") |>
-      purrr::keep(rlang::is_atomic) |>
-      purrr::modify_at(c("start_year", "end_year"), reformat_fyear) |>
-      purrr::modify_at("create_datetime", format_create_datetime) |>
-      unlist() |>
-      tibble::enframe()
-
+    results_dfs <- reshaped_data()[["results"]]
+    params_df <- format_params(reshaped_data()[["params"]])
     dict_file <- app_sys("app", "data", "excel_dictionary.json")
     data_dict <- yyjsonr::read_json_file(dict_file)
 
