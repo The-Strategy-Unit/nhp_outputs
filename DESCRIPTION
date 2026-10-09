@@ -60,7 +60,7 @@ Suggests:
     withr
 Remotes:
     github::the-strategy-unit/azkit,
-    reskit=github::The-Strategy-Unit/nhp_reskit
+    reskit=github::The-Strategy-Unit/nhp_reskit@v1.2.0
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
