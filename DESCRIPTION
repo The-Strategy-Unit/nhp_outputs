@@ -6,7 +6,8 @@ Authors@R: c(
     person("Matt", "Dray", , "matt.dray@nhs.net", role = "aut"),
     person("Chris", "Beeley", role = "ctb"),
     person("Rhian", "Davies", role = "ctb"),
-    person("Gabriel", "Hobro", role = "ctb")
+    person("Gabriel", "Hobro", role = "ctb"),
+    person("Fran", "Barton", role = "ctb")
   )
 Description: A shiny app for showing outputs of the NHP model.
 License: MIT + file LICENSE
