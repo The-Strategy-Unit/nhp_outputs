@@ -15,7 +15,7 @@ golem::document_and_reload(export_all = TRUE)
 ns <- asNamespace("outputs")
 
 utils::assignInNamespace(
-  "get_model_run",
+  "get_model_run_data",
   function(...) list(aggregated_results_path = "inst/sample_results"),
   ns = ns
 )

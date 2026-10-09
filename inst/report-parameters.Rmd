@@ -9,7 +9,6 @@ output:
       collapsed: true
 params:
   r: NA
-  wd: ".."
 ---
 
 ```{r}
@@ -17,9 +16,6 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE)
-
-library(reskit)
-
 p <- get_params(params$r)
 ```
 
