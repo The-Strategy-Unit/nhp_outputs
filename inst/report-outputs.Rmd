@@ -16,7 +16,6 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE, out.width = "100%")
-pkgload::load_all(params$wd, quiet = TRUE)
 ```
 
 ```{r}
@@ -534,9 +533,9 @@ distribution_data |>
       purrr::iwalk(x, \(x, y) {
         cat("\n")
         cat("##### ", y, "\n")
-        knitr::knit_print(make_beeswarm_distrib_plot(x))
+        knitr::knit_print(reskit::make_beeswarm_distrib_plot(x))
         cat("\n")
-        knitr::knit_print(make_cumulative_distrib_plot(x))
+        knitr::knit_print(reskit::make_cumulative_distrib_plot(x))
         cat("\n")
       })
     })
