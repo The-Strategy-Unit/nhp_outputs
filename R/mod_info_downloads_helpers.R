@@ -118,8 +118,6 @@ mod_info_downloads_download_report_html <- function(
 
     on.exit(shiny::removeNotification(download_notification), add = TRUE)
 
-    params$wd <- getwd()
-
     # Parent is the package namespace so the report can see unexported functions
     env <- new.env(parent = topenv(environment(sys.function())))
     source(app_sys("report-helpers.R"), local = env)
