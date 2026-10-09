@@ -2541,9 +2541,9 @@
       "description": {
         "Package": "pillar",
         "Title": "Coloured Formatting for Columns",
-        "Version": "1.11.1.9011",
+        "Version": "1.11.1",
         "Authors@R": "\n    c(person(given = \"Kirill\",\n             family = \"M\\u00fcller\",\n             role = c(\"aut\", \"cre\"),\n             email = \"kirill@cynkra.com\",\n             comment = c(ORCID = \"0000-0002-1416-3412\")),\n      person(given = \"Hadley\",\n             family = \"Wickham\",\n             role = \"aut\"),\n      person(given = \"RStudio\",\n             role = \"cph\"))",
-        "Description": "Provides 'pillar' and 'colonnade' generics designed for\n        formatting columns of data using the full range of colours\n        provided by modern terminals.",
+        "Description": "Provides 'pillar' and 'colonnade' generics designed\n    for formatting columns of data using the full range of colours\n    provided by modern terminals.",
         "License": "MIT + file LICENSE",
         "URL": "https://pillar.r-lib.org/, https://github.com/r-lib/pillar",
         "BugReports": "https://github.com/r-lib/pillar/issues",
@@ -2551,7 +2551,6 @@
         "Suggests": "bit64, DBI, debugme, DiagrammeR, dplyr, formattable, ggplot2,\nknitr, lubridate, nanotime, nycflights13, palmerpenguins,\nrmarkdown, scales, stringi, survival, testthat (>= 3.1.1),\ntibble, units (>= 0.7.2), vdiffr, withr",
         "VignetteBuilder": "knitr",
         "Encoding": "UTF-8",
-        "Roxygen": "list(markdown = TRUE)",
         "RoxygenNote": "7.3.3.9000",
         "Config/testthat/edition": "3",
         "Config/testthat/parallel": "true",
@@ -2560,20 +2559,19 @@
         "Config/autostyle/strict": "true",
         "Config/gha/extra-packages": "units=?ignore-before-r=4.3.0",
         "Config/Needs/website": "tidyverse/tidytemplate",
-        "Repository": "https://cynkra.r-universe.dev",
-        "Date/Publication": "2026-04-22 03:50:57 UTC",
-        "RemoteUrl": "https://github.com/r-lib/pillar",
-        "RemoteRef": "pillar",
-        "RemoteSha": "1.11.1.9011",
         "NeedsCompilation": "no",
-        "Packaged": "2026-04-22 04:49:38 UTC; root",
+        "Packaged": "2025-09-17 03:59:12 UTC; kirill",
         "Author": "Kirill Müller [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-1416-3412>),\n  Hadley Wickham [aut],\n  RStudio [cph]",
         "Maintainer": "Kirill Müller <kirill@cynkra.com>",
-        "Built": "R 4.6.0; ; 2026-04-22 04:51:15 UTC; windows",
+        "Repository": "RSPM",
+        "Date/Publication": "2025-09-17 11:20:02 UTC",
+        "Built": "R 4.6.0; ; 2026-04-23 23:01:43 UTC; windows",
         "RemoteType": "standard",
         "RemotePkgRef": "pillar",
-        "RemoteRepos": "https://cynkra.r-universe.dev",
-        "RemotePkgPlatform": "i386+x86_64-w64-mingw32"
+        "RemoteRef": "pillar",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemotePkgPlatform": "i386+x86_64-w64-mingw32",
+        "RemoteSha": "1.11.1"
       }
     },
     "pkgbuild": {
@@ -3086,9 +3084,9 @@
       "description": {
         "Package": "rprojroot",
         "Title": "Finding Files in Project Subdirectories",
-        "Version": "2.1.1.9006",
+        "Version": "2.1.1",
         "Authors@R": "\n    person(given = \"Kirill\",\n           family = \"M\\u00fcller\",\n           role = c(\"aut\", \"cre\"),\n           email = \"kirill@cynkra.com\",\n           comment = c(ORCID = \"0000-0002-1416-3412\"))",
-        "Description": "Robust, reliable and flexible paths to files below a\n        project root. The 'root' of a project is defined as a directory\n        that matches a certain criterion, e.g., it contains a certain\n        regular file.",
+        "Description": "Robust, reliable and flexible paths to files below\n    a project root. The 'root' of a project is defined as a directory that\n    matches a certain criterion, e.g., it contains a certain regular file.",
         "License": "MIT + file LICENSE",
         "URL": "https://rprojroot.r-lib.org/, https://github.com/r-lib/rprojroot",
         "BugReports": "https://github.com/r-lib/rprojroot/issues",
@@ -3097,25 +3095,23 @@
         "VignetteBuilder": "knitr",
         "Config/testthat/edition": "3",
         "Encoding": "UTF-8",
-        "Roxygen": "list(markdown = TRUE, load = \"source\")",
-        "RoxygenNote": "7.3.3.9000",
+        "RoxygenNote": "7.3.2.9000",
         "Config/autostyle/scope": "line_breaks",
         "Config/autostyle/strict": "true",
         "Config/Needs/website": "tidyverse/tidytemplate",
-        "Repository": "https://cynkra.r-universe.dev",
-        "Date/Publication": "2026-03-08 03:19:39 UTC",
-        "RemoteUrl": "https://github.com/r-lib/rprojroot",
-        "RemoteRef": "rprojroot",
-        "RemoteSha": "2.1.1.9006",
         "NeedsCompilation": "no",
-        "Packaged": "2026-04-07 04:31:23 UTC; root",
+        "Packaged": "2025-08-26 15:22:42 UTC; kirill",
         "Author": "Kirill Müller [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-1416-3412>)",
         "Maintainer": "Kirill Müller <kirill@cynkra.com>",
-        "Built": "R 4.6.0; ; 2026-04-07 04:32:50 UTC; windows",
+        "Repository": "RSPM",
+        "Date/Publication": "2025-08-26 16:20:02 UTC",
+        "Built": "R 4.6.0; ; 2026-04-23 22:45:06 UTC; windows",
         "RemoteType": "standard",
         "RemotePkgRef": "rprojroot",
-        "RemoteRepos": "https://cynkra.r-universe.dev",
-        "RemotePkgPlatform": "i386+x86_64-w64-mingw32"
+        "RemoteRef": "rprojroot",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemotePkgPlatform": "i386+x86_64-w64-mingw32",
+        "RemoteSha": "2.1.1"
       }
     },
     "rstudioapi": {
@@ -3467,9 +3463,9 @@
       "description": {
         "Package": "tibble",
         "Title": "Simple Data Frames",
-        "Version": "3.3.1.9010",
+        "Version": "3.3.1",
         "Authors@R": "c(\n    person(\"Kirill\", \"Müller\", , \"kirill@cynkra.com\", role = c(\"aut\", \"cre\"),\n           comment = c(ORCID = \"0000-0002-1416-3412\")),\n    person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", role = \"aut\"),\n    person(\"Romain\", \"Francois\", , \"romain@r-enthusiasts.com\", role = \"ctb\"),\n    person(\"Jennifer\", \"Bryan\", , \"jenny@rstudio.com\", role = \"ctb\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"),\n           comment = c(ROR = \"03wc8by49\"))\n  )",
-        "Description": "Provides a 'tbl_df' class (the 'tibble') with stricter\n        checking and better formatting than the traditional data frame.",
+        "Description": "Provides a 'tbl_df' class (the 'tibble') with stricter\n    checking and better formatting than the traditional data frame.",
         "License": "MIT + file LICENSE",
         "URL": "https://tibble.tidyverse.org/, https://github.com/tidyverse/tibble",
         "BugReports": "https://github.com/tidyverse/tibble/issues",
@@ -3486,23 +3482,21 @@
         "Config/testthat/start-first": "vignette-formats, as_tibble, add,\ninvariants",
         "Config/usethis/last-upkeep": "2025-06-07",
         "Encoding": "UTF-8",
-        "Roxygen": "list(markdown = TRUE)",
         "RoxygenNote": "7.3.3.9000",
-        "Repository": "https://cynkra.r-universe.dev",
-        "Date/Publication": "2026-04-08 03:40:14 UTC",
-        "RemoteUrl": "https://github.com/tidyverse/tibble",
-        "RemoteRef": "tibble",
-        "RemoteSha": "3.3.1.9010",
         "NeedsCompilation": "yes",
-        "Packaged": "2026-04-22 04:58:00 UTC; root",
+        "Packaged": "2026-01-10 18:28:47 UTC; kirill",
         "Author": "Kirill Müller [aut, cre] (ORCID:\n    <https://orcid.org/0000-0002-1416-3412>),\n  Hadley Wickham [aut],\n  Romain Francois [ctb],\n  Jennifer Bryan [ctb],\n  Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
         "Maintainer": "Kirill Müller <kirill@cynkra.com>",
-        "Built": "R 4.6.0; x86_64-w64-mingw32; 2026-04-22 04:59:46 UTC; windows",
+        "Repository": "RSPM",
+        "Date/Publication": "2026-01-11 10:10:02 UTC",
+        "Built": "R 4.6.0; x86_64-w64-mingw32; 2026-04-23 23:07:42 UTC; windows",
         "Archs": "x64",
         "RemoteType": "standard",
         "RemotePkgRef": "tibble",
-        "RemoteRepos": "https://cynkra.r-universe.dev",
-        "RemotePkgPlatform": "x86_64-w64-mingw32"
+        "RemoteRef": "tibble",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemotePkgPlatform": "i386+x86_64-w64-mingw32",
+        "RemoteSha": "3.3.1"
       }
     },
     "tidyr": {
@@ -4176,7 +4170,7 @@
       "checksum": "f736e2ba995314b67b16f3ceb3862d7c"
     },
     "DESCRIPTION": {
-      "checksum": "853fae692a4dca7e2adb2a47f55bf9a5"
+      "checksum": "701ff02157db42ad4b15f524a65a831e"
     },
     "inst/app/data/excel_dictionary.json": {
       "checksum": "10c1f3ba35a58152dd950f16c5aed1b9"
@@ -4230,13 +4224,13 @@
       "checksum": "79fee045c0be360b170324d3fb6c1a69"
     },
     "inst/report-helpers.R": {
-      "checksum": "f937fe6e27a7280af2c88fd50492a052"
+      "checksum": "d5af3e646c528297aec3a184ed20917e"
     },
     "inst/report-outputs.Rmd": {
-      "checksum": "1776d674561dc83b5fa259e091f0663e"
+      "checksum": "1d93ed1c586f1244665d6a71be0982f2"
     },
     "inst/report-parameters.Rmd": {
-      "checksum": "f89e09ec82426730907d82971cfa8866"
+      "checksum": "20d2e9223ea508ca3abba380145315e8"
     },
     "inst/sample_params.json": {
       "checksum": "3c3b9e98f7edaaa2745af4de10ffc728"
@@ -4275,7 +4269,7 @@
       "checksum": "f1a48d9c2f74f75b0b88605b0bea4480"
     },
     "R/app_server.R": {
-      "checksum": "0330bcf8c11116fc5786158898f5fafd"
+      "checksum": "0758f8e75e2a630e24842f3285aab51b"
     },
     "R/app_ui.R": {
       "checksum": "b7670bfb4d12f68f4e6e5744d9bd83a7"
@@ -4287,13 +4281,13 @@
       "checksum": "df6d91b15f4e1d49c885b221d7066786"
     },
     "R/fct_get_data.R": {
-      "checksum": "c51236d2b243bc8bd943ddcc71c5c38d"
+      "checksum": "e9c469a9beab671cd2742cc63e91a1c7"
     },
     "R/fct_gt_theme.R": {
       "checksum": "d58018d302bd8ac0ee27fd45c20a7798"
     },
     "R/mod_info_downloads_helpers.R": {
-      "checksum": "d1f76bd5deafe1032ad18892b778fd68"
+      "checksum": "581def37878d2374b0feb2d1f70d40bb"
     },
     "R/mod_info_downloads_server.R": {
       "checksum": "2e11914511611e78634638790851689f"
@@ -4353,7 +4347,7 @@
       "checksum": "9694f2f8bfef558f5e460dc708db0954"
     },
     "R/mod_principal_summary_server.R": {
-      "checksum": "a8c06195c1a4c09958330f217497c641"
+      "checksum": "490f546cc0aa501a1b013f69f35d7c49"
     },
     "R/mod_principal_summary_ui.R": {
       "checksum": "a1ba26b72918fe0bd32179dd7057f389"
@@ -4362,7 +4356,7 @@
       "checksum": "1b62eac4daa60a53e8dc01661b63860a"
     },
     "R/ZZZ.R": {
-      "checksum": "cdeb8c4e6a5954c1668f1217baef3541"
+      "checksum": "e4067a2794fe605ed4b3b2ed1bfc2072"
     }
   },
   "users": null
