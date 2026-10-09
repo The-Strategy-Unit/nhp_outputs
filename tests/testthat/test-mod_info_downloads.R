@@ -94,3 +94,67 @@ test_that("it sets up download handlers", {
     }
   )
 })
+
+# Run the module's real `downloadHandler()`s against results with no A&E rows.
+# In `testServer()`, reading `output$<id>` runs the handler's `content`
+# function and returns the path of the file it wrote, so errors in the handler
+# surface here. The files are deleted when `testServer()` exits, so any checks
+# on their contents must happen inside it.
+with_downloads_server <- function(r, code) {
+  testServer(
+    mod_info_downloads_server,
+    args = list(
+      selected_data = shiny::reactive(r),
+      selected_site = shiny::reactive(NULL)
+    ),
+    {{ code }}
+  )
+}
+
+# Both report templates set `knitr::opts_chunk$set(error = TRUE)`, so a failing
+# chunk doesn't stop the render; the error is written into the HTML instead.
+html_chunk_errors <- function(file) {
+  grepv("^<pre><code>## Error", readLines(file, warn = FALSE))
+}
+
+r_no_aae <- remove_aae_results(mock_results())
+
+test_that("the mock results used below really have no A&E rows", {
+  expect_false(any(purrr::map_lgl(
+    r_no_aae$results,
+    \(x) any(grepl("^aae", x[["pod"]]))
+  )))
+})
+
+test_that("excel download works when results are missing aae", {
+  with_downloads_server(r_no_aae, {
+    path <- output$download_results_xlsx
+    expect_match(basename(path), "_results\\.xlsx$")
+    expect_gt(file.size(path), 0)
+  })
+})
+
+test_that("json download works when results are missing aae", {
+  with_downloads_server(r_no_aae, {
+    path <- output$download_results_json
+    expect_match(basename(path), "_results\\.json$")
+
+    json <- yyjsonr::read_json_file(path)
+    expect_setequal(names(json$results), names(r_no_aae$results))
+  })
+})
+
+test_that("report downloads work when results are missing aae", {
+  skip_if_not(rmarkdown::pandoc_available(), "pandoc is not available")
+  skip_on_cran()
+
+  with_downloads_server(r_no_aae, {
+    path <- output$download_report_parameters_html
+    expect_gt(file.size(path), 0)
+    expect_identical(html_chunk_errors(path), character())
+
+    path <- output$download_report_outputs_html
+    expect_gt(file.size(path), 0)
+    expect_identical(html_chunk_errors(path), character())
+  })
+})
