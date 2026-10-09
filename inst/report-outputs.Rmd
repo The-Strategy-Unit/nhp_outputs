@@ -377,15 +377,13 @@ pt_compile_da_data <- purrr::partial(
   sites = !!params$sites
 )
 
-
 make_da_table <- function(tbl, end_year) {
   tbl |>
     reskit::make_detailed_activity_table(end_year) |>
     gt::tab_options(table.align = "left")
 }
-pt_make_da_table <- purrr::partial(make_da_table, end_year = horizon_year)
 
-handle_invalid_data <- function(tbl) {
+handle_invalid_data <- function(tbl, horizon_year) {
   stopifnot(all(c("baseline", "principal", "change_pct") %in% colnames(tbl)))
   if (all(is.nan(tbl[["change_pct"]]))) {
     "Insufficient information to produce this table."
@@ -400,7 +398,7 @@ handle_invalid_data <- function(tbl) {
           .default = x
         )
       })) |>
-      pt_make_da_table()
+      make_da_table(end_year = horizon_year)
   }
 }
 
@@ -442,7 +440,7 @@ detailed_activity_data |>
       purrr::iwalk(x, \(x, y) {
         cat("\n")
         cat("##### ", y, "\n")
-        print_x(handle_invalid_data(x))
+        print_x(handle_invalid_data(x, horizon_year))
         cat("\n")
       })
     })
@@ -487,7 +485,7 @@ red dashed line is the principal value, the blue dashed lines are the 10th and
 # A customised version of reskit::compile_distribution_plot_data()
 compile_distribution_plot_data <- function(results, pod_lookup, sites) {
   core_cols <- c("pod", "measure")
-  group_cols <- c(core_cols, "model_run")
+  group_cols <- c(core_cols, "stage")
   arr_cols <- c("activity_type_label", core_cols)
 
   results |>
@@ -502,25 +500,19 @@ compile_distribution_plot_data <- function(results, pod_lookup, sites) {
     ) |>
     dplyr::mutate(
       mean = mean(.data[["value"]]),
-      .by = tidyselect::all_of(reskit:::swap_modelrun_for_stage(group_cols))
+      .by = tidyselect::all_of(group_cols)
     ) |>
     tidyr::pivot_wider(names_from = "stage", values_from = "mean") |>
     tidyr::fill("baseline", .by = tidyselect::all_of(core_cols)) |>
-    dplyr::filter(dplyr::if_any("model_run", \(x) x > 0)) |>
+    dplyr::filter(.data[["model_run"]] > 0) |>
     dplyr::mutate(measure_label = create_measure_label(.data[["measure"]])) |>
     reskit:::join_for_labels(pod_lookup) |>
     dplyr::arrange(dplyr::pick(tidyselect::all_of(arr_cols))) |>
     dplyr::select(!tidyselect::all_of(core_cols))
 }
-pt_compile_distribution_plot_data <- purrr::partial(
-  compile_distribution_plot_data,
-  # !! forces evaluation once on creation, not every time it's run
-  pod_lookup = !!get_pod_lookup(),
-  sites = !!params$sites
-)
 
 distribution_data <- results |>
-  pt_compile_distribution_plot_data() |>
+  compile_distribution_plot_data(get_pod_lookup(), params$sites) |>
   tidyr::nest(.by = "activity_type_label") |>
   tibble::deframe() |>
   purrr::map(\(x) tibble::deframe(tidyr::nest(x, .by = "pod_label"))) |>
