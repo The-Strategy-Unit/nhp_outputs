@@ -7,9 +7,9 @@ golem::document_and_reload(export_all = TRUE)
 
 # Patch the package namespace directly (rather than chaining
 # mockery::stub() calls through run_app(), which doesn't compose when
-# stubbing more than one target function -- each call narrows
-# environment(run_app) down to just the previous stub) so the app skips
-# the real model-run lookup (which expects a `?dataset/model_run_id` query
+# stubbing more than one target function; each call narrows
+# `environment(run_app)` down to just the previous stub) so the app skips
+# the real model-run lookup (which expects a `?dataset/run_id` query
 # string and Azure Table Storage access) and loads results from the local
 # sample directory instead of Azure.
 ns <- asNamespace("outputs")
