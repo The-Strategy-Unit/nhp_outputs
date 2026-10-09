@@ -37,19 +37,6 @@ lookup_ods_org_code_name <- function(org_code) {
   )
 }
 
-get_model_run <- function(url) {
-  hx <- "[0-9a-f]"
-  uuid_rx <- glue::glue("{hx}{8}-{hx}{4}-[1-5]{hx}{3}-[89ab]{hx}{3}-{hx}{12}")
-  uuid_rx_grp <- paste0("^\\?[:alnum:]+/(", uuid_rx, ")$")
-
-  dataset <- regmatches(url, regexpr("^\\?([:alnum:]+)", url))
-  run_id <- regmatches(url, regexpr(uuid_rx_grp, url))
-  stopifnot(
-    "URL does not match expected pattern" = !anyNA(c(dataset, run_id))
-  )
-
-  get_model_run_from_ats(dataset, run_id)
-}
 
 user_requested_cache_reset <- function(session) {
   if (!"nhp_devs" %in% session$groups) {
