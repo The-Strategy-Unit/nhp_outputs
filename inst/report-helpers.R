@@ -145,12 +145,12 @@ param_tables_to_list <- function(params) {
   invisible(params_list)
 }
 
-#' Expand a List of Parameter Tables to R Markdown
+#' Expand a list of parameter tables to RMarkdown
 #' @param param_tables_list A list. The outcome of passing a model parameter
-#'     object `p` to [param_tables_to_list]. Each element is a parameter group
-#'     ('baseline adjustment', etc) and contains a 'gt' table object
-#'     describing the parameter selections, or a further list with elements for
-#'     a 'gt' object and a character value.
+#'  object `params` to [param_tables_to_list]. Each element is a parameter group
+#'  ('baseline adjustment', etc) and contains a 'gt' table object describing
+#'  the parameter selections, or a further list with elements for a 'gt' object
+#'  and a character value.
 #' @noRd
 expand_param_tables_to_rmd <- function(param_tables_list) {
   l1_names <- names(param_tables_list) # 'l1' as in 'level 1' of the list
@@ -190,10 +190,10 @@ expand_param_tables_to_rmd <- function(param_tables_list) {
   }
 }
 
-#' Render a 'gt' Table of Parameter Selections as Raw HTML
+#' Render a 'gt' table of parameter selections as raw HTML
 #' @param param_table A data.frame. Contains parameter selections made in the
-#'     inputs app. The data.frame is an element of `param_tables_list` provided
-#'     to [expand_param_tables_to_rmd].
+#'  inputs app. The data.frame is an element of `param_tables_list` provided
+#'  to [expand_param_tables_to_rmd].
 #' @noRd
 render_params_gt <- function(param_table) {
   param_table |>
@@ -202,10 +202,10 @@ render_params_gt <- function(param_table) {
     cat()
 }
 
-#' Expand a List of Parameter-Selection Reasons to R Markdown
+#' Expand a list of parameter selection reasons to RMarkdown
 #' @param reasons_list A list. The 'reasons' element of a list `p` (i.e.
-#'     the parameter selections for a given model scenario). Each element is a
-#'     string describing the reason for a given parameter selection.
+#'  the parameter selections for a given model scenario). Each element is a
+#'  string describing the reason for a given parameter selection.
 #' @noRd
 expand_reasons_to_rmd <- function(reasons_list) {
   mitigators_json_path <- app_sys("app", "data", "mitigators.json")
@@ -275,11 +275,11 @@ expand_reasons_to_rmd <- function(reasons_list) {
   }
 }
 
-#' Rename Elements of a Nested List Regardless of Depth
+#' Rename elements of a nested list regardless of depth
 #' @param list_in List. The object for which you'd like to update element names
-#'     according to `names_lookup`.
+#'  according to `names_lookup`.
 #' @param names_lookup Character. A vector of replacement element names, named
-#'     for the element anme that they're replacing (e.g. `c("old" = "new")`).
+#'  for the element anme that they're replacing (e.g. `c("old" = "new")`).
 #' @noRd
 rename_recursively <- function(list_in, names_lookup) {
   name_exists <- names(list_in) %in% names(names_lookup)
@@ -292,9 +292,9 @@ rename_recursively <- function(list_in, names_lookup) {
   )
 }
 
-#' Remove Empty Strings from a (Possibly Nested) List
+#' Remove empty strings from a (possibly nested) list
 #' @param list_in List. A list for which you'd like to remove any blank (`""`)
-#'     elements.
+#'   elements.
 #' @noRd
 remove_blanks_recursively <- function(list_in) {
   if (!is.list(list_in)) {
