@@ -16,6 +16,9 @@ params:
 #| echo: false
 
 knitr::opts_chunk$set(error = TRUE, echo = FALSE, out.width = "100%")
+tpma_lookup <- reskit::get_tpma_label_lookup()
+tretspef_lookup <- reskit::get_tretspef_lookup()
+horizon_year <- params$r$params[["end_year"]]
 ```
 
 ```{r}
@@ -165,7 +168,7 @@ results |>
     activity_type = "ip",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_grouped_impact_plot()
 ```
@@ -181,7 +184,7 @@ results |>
     activity_type = "ip",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup(),
+    tpma_lookup = tpma_lookup,
     sort_by = "value"
   ) |>
   reskit::make_tpma_impact_plot()
@@ -200,7 +203,7 @@ results |>
     activity_type = "ip",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_grouped_impact_plot()
 ```
@@ -217,7 +220,7 @@ results |>
     sites = params$sites,
     sort_by = "value",
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_tpma_impact_plot()
 ```
@@ -237,7 +240,7 @@ results |>
     activity_type = "op",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_grouped_impact_plot()
 ```
@@ -254,7 +257,7 @@ results |>
     sites = params$sites,
     sort_by = "value",
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_tpma_impact_plot()
 ```
@@ -272,7 +275,7 @@ results |>
     activity_type = "op",
     sites = params$sites,
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_grouped_impact_plot()
 ```
@@ -289,7 +292,7 @@ results |>
     sites = params$sites,
     sort_by = "value",
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_tpma_impact_plot()
 ```
@@ -308,8 +311,8 @@ results |>
     measure = "arrivals",
     activity_type = "aae",
     sites = params$sites,
-    tpma_lookup = reskit::get_tpma_label_lookup(),
-    pod_lookup = get_pod_lookup()
+    pod_lookup = get_pod_lookup(),
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_grouped_impact_plot()
 ```
@@ -326,7 +329,7 @@ results |>
     sites = params$sites,
     sort_by = "value",
     pod_lookup = get_pod_lookup(),
-    tpma_lookup = reskit::get_tpma_label_lookup()
+    tpma_lookup = tpma_lookup
   ) |>
   reskit::make_tpma_impact_plot()
 ```
@@ -337,10 +340,6 @@ See [the model project information site][proj_gloss] for definitions of terms.
 
 ```{r}
 #| label: pp-activity-in-detail-setup
-
-tretspef_lookup <- reskit::get_tretspef_lookup()
-horizon_year <- params$r$params[["end_year"]]
-
 
 create_measure_label <- function(x) {
   x <- reskit:::uppercase_init(sub("dd", "d d", gsub("_", "-", x)))
