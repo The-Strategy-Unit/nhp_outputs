@@ -166,67 +166,23 @@ test_that("get_principal_high_level gets the results", {
   r <- list(
     results = list(
       default = tibble::tribble(
-        ~pod,
-        ~sitetret,
-        ~baseline,
-        ~principal,
-        ~measure,
-        "aae_1",
-        "a",
-        1,
-        2,
-        "attendances",
-        "aae_2",
-        "a",
-        2,
-        4,
-        "attendances",
-        "ip_1",
-        "a",
-        5,
-        6,
-        "admissions",
-        "ip_2",
-        "a",
-        7,
-        8,
-        "beddays",
-        "ip_3",
-        "a",
-        9,
-        10,
-        "procedures",
-        "op_1",
-        "a",
-        9,
-        10,
-        "attendances",
-        "op_2",
-        "a",
-        11,
-        12,
-        "tele_attendances"
+        ~pod, ~sitetret, ~baseline, ~principal, ~measure,
+        "aae_1", "a", 1, 2, "attendances",
+        "aae_2", "a", 2, 4, "attendances",
+        "ip_1", "a", 5, 6, "admissions",
+        "ip_2", "a", 7, 8, "beddays",
+        "ip_3", "a", 9, 10, "procedures",
+        "op_1", "a", 9, 10, "attendances",
+        "op_2", "a", 11, 12, "tele_attendances"
       )
     )
   )
 
   expected <- tibble::tribble(
-    ~pod,
-    ~sitetret,
-    ~baseline,
-    ~principal,
-    "aae",
-    "a",
-    3,
-    6,
-    "ip_1",
-    "a",
-    5,
-    6,
-    "op_1",
-    "a",
-    9,
-    10
+    ~pod, ~sitetret, ~baseline, ~principal,
+    "aae", "a", 3, 6,
+    "ip_1", "a", 5, 6,
+    "op_1", "a", 9, 10
   )
 
   actual <- get_principal_high_level(
@@ -283,65 +239,20 @@ test_that("get_model_run_distribution gets the results", {
   r <- list(
     results = list(
       default = tibble::tribble(
-        ~sitetret,
-        ~baseline,
-        ~principal,
-        ~model_runs,
-        ~pod,
-        ~measure,
-        "a",
-        100,
-        110,
-        c(100, 200, 300),
-        "a",
-        "a",
-        "a",
-        101,
-        111,
-        c(101, 201, 301),
-        "a",
-        "b",
-        "a",
-        102,
-        112,
-        c(102, 202, 302),
-        "b",
-        "a",
-        "a",
-        103,
-        113,
-        c(103, 203, 303),
-        "b",
-        "b"
+        ~sitetret, ~baseline, ~principal, ~model_runs, ~pod, ~measure,
+        "a", 100, 110, c(100, 200, 300), "a", "a",
+        "a", 101, 111, c(101, 201, 301), "a", "b",
+        "a", 102, 112, c(102, 202, 302), "b", "a",
+        "a", 103, 113, c(103, 203, 303), "b", "b"
       )
     )
   )
 
   expected <- tibble::tribble(
-    ~sitetret,
-    ~baseline,
-    ~principal,
-    ~model_run,
-    ~value,
-    ~variant,
-    "a",
-    100,
-    110,
-    1,
-    100,
-    "a",
-    "a",
-    100,
-    110,
-    2,
-    200,
-    "a",
-    "a",
-    100,
-    110,
-    3,
-    300,
-    "b"
+    ~sitetret, ~baseline, ~principal, ~model_run, ~value, ~variant,
+    "a", 100, 110, 1, 100, "a",
+    "a", 100, 110, 2, 200, "a",
+    "a", 100, 110, 3, 300, "b"
   )
 
   actual <- get_model_run_distribution(r, "a", "a", "a")
@@ -430,37 +341,19 @@ test_that("get_principal_change_factors validates the arguments", {
 
 test_that("trust_site_aggregation adds in a trust level aggregatrion", {
   df <- tibble::tribble(
-    ~sitetret,
-    ~x,
-    ~v,
-    "x",
-    "a",
-    1,
-    "x",
-    "b",
-    2,
-    "y",
-    "b",
-    3,
-    "x",
-    "c",
-    4,
-    "y",
-    "c",
-    5
+    ~sitetret, ~x, ~v,
+    "x", "a", 1,
+    "x", "b", 2,
+    "y", "b", 3,
+    "x", "c", 4,
+    "y", "c", 5
   )
 
   expected <- dplyr::bind_rows(
     tibble::tribble(
-      ~sitetret,
-      ~x,
-      ~v,
-      "trust",
-      "b",
-      5,
-      "trust",
-      "c",
-      9
+      ~sitetret, ~x, ~v,
+      "trust", "b", 5,
+      "trust", "c", 9
     ),
     df
   ) |>
