@@ -19,6 +19,8 @@ knitr::opts_chunk$set(error = TRUE, echo = FALSE, out.width = "100%")
 tpma_lookup <- reskit::get_tpma_label_lookup()
 tretspef_lookup <- reskit::get_tretspef_lookup()
 horizon_year <- params$r$params[["end_year"]]
+
+suppress_reskit <- purrr::partial(suppressMessages, classes = "reskit_no_data")
 ```
 
 ```{r}
@@ -170,6 +172,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_grouped_impact_plot()
 ```
 
@@ -187,6 +190,7 @@ results |>
     tpma_lookup = tpma_lookup,
     sort_by = "value"
   ) |>
+  suppress_reskit() |>
   reskit::make_tpma_impact_plot()
 ```
 
@@ -205,6 +209,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_grouped_impact_plot()
 ```
 
@@ -222,6 +227,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_tpma_impact_plot()
 ```
 
@@ -242,6 +248,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_grouped_impact_plot()
 ```
 
@@ -259,6 +266,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_tpma_impact_plot()
 ```
 
@@ -277,6 +285,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_grouped_impact_plot()
 ```
 
@@ -294,6 +303,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_tpma_impact_plot()
 ```
 
@@ -314,6 +324,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_grouped_impact_plot()
 ```
 
@@ -331,6 +342,7 @@ results |>
     pod_lookup = get_pod_lookup(),
     tpma_lookup = tpma_lookup
   ) |>
+  suppress_reskit() |>
   reskit::make_tpma_impact_plot()
 ```
 
@@ -454,12 +466,15 @@ See [the model project information site][proj_gloss] for definitions of terms.
 ```{r}
 #| label: dop-activity-summary
 
-results |>
+distribution_summary_data <- suppress_reskit({
   reskit::compile_distribution_summary_data(
-    value_type = "median",
-    sites = params$sites,
-    pod_lookup = get_pod_lookup()
-  ) |>
+    results,
+    "median",
+    get_pod_lookup(),
+    params$sites
+  )
+})
+distribution_summary_data |>
   reskit::make_distribution_summary_table() |>
   gt::tab_options(table.width = gt::pct(100))
 ```
