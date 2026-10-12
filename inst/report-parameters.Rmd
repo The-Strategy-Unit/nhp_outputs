@@ -21,9 +21,13 @@ p <- get_params(params$r)
 
 # Notes
 
-This report provides the parameter selections for the selected model scenario (`r params$r$params$scenario`) and the rationale given for these choices.
+This report provides the parameter selections for the selected model scenario
+(`r params$r$params$scenario`) and the rationale given for these choices.
 
-See [the project information site](https://connect.strategyunitwm.nhs.uk/nhp/project_information) for an overview of the model and its methodology.
+See [the project information site][proj_info] for an overview of the model and
+its methodology.
+
+[proj_info]: https://connect.strategyunitwm.nhs.uk/nhp/project_information
 
 # Metadata
 

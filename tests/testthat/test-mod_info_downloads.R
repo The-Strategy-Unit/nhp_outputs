@@ -95,11 +95,6 @@ test_that("it sets up download handlers", {
   )
 })
 
-# Run the module's real `downloadHandler()`s against results with no A&E rows.
-# In `testServer()`, reading `output$<id>` runs the handler's `content`
-# function and returns the path of the file it wrote, so errors in the handler
-# surface here. The files are deleted when `testServer()` exits, so any checks
-# on their contents must happen inside it.
 with_downloads_server <- function(r, code) {
   testServer(
     mod_info_downloads_server,
@@ -117,6 +112,7 @@ html_chunk_errors <- function(file) {
   grepv("^<pre><code>## Error", readLines(file, warn = FALSE))
 }
 
+# A set of tests in response to issue #461
 r_no_aae <- remove_aae_results(mock_results())
 
 test_that("the mock results used below really have no A&E rows", {

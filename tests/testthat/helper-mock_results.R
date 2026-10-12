@@ -1,9 +1,5 @@
 # Small synthetic stand-in for the output of `get_results_from_azure()` /
 # `get_results_from_local()`, so tests don't depend on inst/sample_results
-# (which isn't available on CI).
-#
-# The shape mirrors the real parquet outputs: one long table per aggregation,
-# with `model_run` (0 = baseline) and `value` columns.
 
 mock_results <- function(sites = c("AAA01", "AAA02"), n_runs = 3) {
   # fmt: skip
@@ -25,7 +21,10 @@ mock_results <- function(sites = c("AAA01", "AAA02"), n_runs = 3) {
   )
 
   add_dim <- \(df, ...) tidyr::expand_grid(df, ...)
-  add_value <- \(df) dplyr::mutate(df, value = round(stats::runif(dplyr::n(), 10, 100), 2))
+  add_value <- function(df) {
+    df |>
+      dplyr::mutate(value = round(stats::runif(dplyr::n(), 10, 100), 2))
+  }
   tidy_cols <- \(df, ...) dplyr::select(df, ..., "model_run", "value")
 
   withr::with_seed(5127, {
@@ -81,6 +80,7 @@ mock_results <- function(sites = c("AAA01", "AAA02"), n_runs = 3) {
       ) |>
       add_value() |>
       tidy_cols(
+        # fmt: skip
         "activity_type",
         "sitetret",
         "pod",
@@ -99,20 +99,17 @@ mock_results <- function(sites = c("AAA01", "AAA02"), n_runs = 3) {
     `tretspef+los_group` = tretspef_los_group
   )
 
-  params <- list(
-    params = yyjsonr::read_json_file(app_sys("sample_params.json")) |>
-      patch_params()
-  )$params
+  params <- yyjsonr::read_json_file(app_sys("sample_params.json")) |>
+    patch_params()
 
   list(params = params, population_variants = list(), results = results)
 }
 
-# Strip every A&E row (identified by pod prefix) from all results tables, to
-# mimic a model run that returned no A&E activity.
+# Mimic a model run that returned no A&E activity
+# (in response to issue #461)
 remove_aae_results <- function(r) {
-  r$results <- purrr::map(
-    r$results,
-    \(x) dplyr::filter_out(x, grepl("^aae", .data[["pod"]]))
-  )
-  r
+  r |>
+    purrr::modify_at("results", \(x) {
+      purrr::map(x, \(x) dplyr::filter_out(x, grepl("^aae", .data[["pod"]])))
+    })
 }
