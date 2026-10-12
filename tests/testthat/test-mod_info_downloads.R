@@ -148,6 +148,15 @@ test_that("report downloads work when results are missing aae", {
   skip_if_not(rmarkdown::pandoc_available(), "pandoc is not available")
   skip_on_cran()
 
+  tpma_label_lookup_fixture <- readRDS(test_path(
+    "fixtures",
+    "tpma_label_lookup.rds"
+  ))
+  local_mocked_bindings(
+    get_tpma_label_lookup = \() tpma_label_lookup_fixture,
+    .package = "reskit"
+  )
+
   with_downloads_server(r_no_aae, {
     path <- output$download_report_parameters_html
     expect_gt(file.size(path), 0)
