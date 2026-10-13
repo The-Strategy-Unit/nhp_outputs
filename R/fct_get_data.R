@@ -28,13 +28,20 @@ get_params <- function(r) {
   recursive_discard(r$params)
 }
 
-get_model_run_from_ats <- function(dataset, model_run_id) {
-  azkit::read_azure_table_single_entity(
-    Sys.getenv("AZ_TABLE_NAME"),
-    dataset,
-    model_run_id
-  )
+
+get_model_run_data <- function(url) {
+  hx <- \(n) glue::glue("[0-9a-f]{{{n}}}")
+  uuid_rx <- glue::glue("{hx(8)}-{hx(4)}-[1-5]{hx(3)}-[89ab]{hx(3)}-{hx(12)}")
+  full_match <- glue::glue("^\\?[[:alnum:]]+/{uuid_rx}$")
+  stopifnot("URL does not match expected pattern" = grepl(full_match, url))
+
+  dataset <- sub("^\\?([[:alnum:]]+)/.*$", "\\1", url)
+  run_id <- sub(glue::glue("^\\?[[:alnum:]]+/({uuid_rx})$"), "\\1", url)
+  table_name <- Sys.getenv("AZ_TABLE_NAME")
+  stopifnot(`"AZ_TABLE_NAME" variable must be set` = nzchar(table_name))
+  azkit::read_azure_table_single_entity(table_name, dataset, run_id)
 }
+
 
 get_results_from_azure <- function(directory) {
   container <- azkit::get_container(Sys.getenv("AZ_STORAGE_CONTAINER"))
@@ -83,11 +90,9 @@ patch_params <- function(r) {
   if (is.list(r)) {
     return(purrr::map(r, patch_params))
   }
-
   if (is.numeric(r) && length(r) == 2) {
     return(as.list(r))
   }
-
   r
 }
 

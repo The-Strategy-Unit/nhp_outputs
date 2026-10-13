@@ -48,10 +48,10 @@ test_that("it loads the modules correctly", {
   })
 })
 
-test_that("model_metadata calls get_model_run", {
+test_that("model_run_data calls get_model_run", {
   m <- mock(list(results_json_gz_path = "file"))
 
-  stub(app_server, "get_model_run", m)
+  stub(app_server, "get_model_run_data", m)
   stub(app_server, "server_get_results", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
@@ -83,16 +83,16 @@ test_that("model_metadata calls get_model_run", {
   stub(app_server, "mod_info_params_server", "mod_info_params_server")
 
   testServer(app_server, {
-    expect_equal(model_metadata(), list(results_json_gz_path = "file"))
+    expect_equal(model_run_data(), list(results_json_gz_path = "file"))
 
     expect_called(m, 1)
-    expect_call(m, 1, get_model_run(url_search))
+    expect_call(m, 1, get_model_run_data(url_search))
   })
 })
 
 test_that("selected_data calls get_results_from_azure", {
   m <- mock("results")
-  stub(app_server, "get_model_run", list(aggregated_results_path = "file"))
+  stub(app_server, "get_model_run_data", list(aggregated_results_path = "file"))
   stub(app_server, "get_results_from_azure", m)
   stub(app_server, "get_trust_sites", "trust_sites")
   stub(app_server, "mod_info_home_server", "mod_info_home_server")
@@ -128,7 +128,7 @@ test_that("selected_data calls get_results_from_azure", {
 test_that("if get_results_from_azure errors the app exits", {
   m <- mock()
 
-  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_model_run_data", list(results_json_gz_path = "file"))
   stub(app_server, "get_results_from_azure", \(...) stop("error occured"))
   stub(app_server, "get_trust_sites", "trust_sites")
 
@@ -177,7 +177,7 @@ test_that("if get_results_from_azure errors the app exits", {
 })
 
 test_that("selected_site uses the inputs values", {
-  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_model_run_data", list(results_json_gz_path = "file"))
   stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_trust_sites", "trust_sites")
 
@@ -223,7 +223,7 @@ test_that("selected_site uses the inputs values", {
 test_that("it gets the trust sites from the results", {
   m <- mock("trust_sites")
 
-  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_model_run_data", list(results_json_gz_path = "file"))
   stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_results", "results")
   stub(app_server, "get_trust_sites", m)
@@ -271,7 +271,7 @@ test_that("it gets the trust sites from the results", {
 test_that("it updates the site selection drop down", {
   m <- mock()
 
-  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_model_run_data", list(results_json_gz_path = "file"))
   stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_trust_sites", c("a", "b", "c"))
 
@@ -330,7 +330,7 @@ test_that("it updates the site selection drop down", {
 })
 
 test_that("it can reset the cache", {
-  stub(app_server, "get_model_run", list(results_json_gz_path = "file"))
+  stub(app_server, "get_model_run_data", list(results_json_gz_path = "file"))
   stub(app_server, "get_results_from_azure", "results")
   stub(app_server, "get_trust_sites", c("a", "b", "c"))
 
