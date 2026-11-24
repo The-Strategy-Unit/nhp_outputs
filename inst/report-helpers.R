@@ -173,7 +173,7 @@ expand_reasons_to_rmd <- function(reasons_list) {
   lookup <- c(
     yyjsonr::read_json_file(mitigators_json_path) |> unlist(),
     "baseline_adjustment" = "Baseline adjustment",
-    "demographic_factors" = "Demographic factors",
+    "demographic_adjustment" = "Demographic factors",
     "waiting_list_adjustment" = "Waiting list adjustment",
     "expat_repat" = "Expatriation and repatriation",
     "non-demographic_adjustment" = "Non-demographic adjustment",

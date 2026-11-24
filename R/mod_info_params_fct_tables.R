@@ -57,7 +57,7 @@ info_params_fix_data <- function(df) {
 }
 
 info_params_table_demographic_adjustment <- function(p) {
-  demographic_adjustment <- p[["demographic_factors"]]
+  demographic_adjustment <- p[["demographic_adjustment"]]
 
   shiny::validate(
     shiny::need(demographic_adjustment, "No parameters provided")
