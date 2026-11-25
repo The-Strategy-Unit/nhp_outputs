@@ -31,7 +31,7 @@
             </div>
           </div>
           <div class="card-body">
-            <div id="id-params_demographic_factors" class="shiny-html-output"></div>
+            <div id="id-params_demographic_adjustment" class="shiny-html-output"></div>
           </div>
         </div>
         <script type="application/json">{"title":"Demographic factors","solidHeader":true,"width":12,"collapsible":true,"closable":false,"maximizable":false,"gradient":false}</script>
