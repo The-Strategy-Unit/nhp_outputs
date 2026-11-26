@@ -3,7 +3,7 @@
     Code
       mod_info_home_ui("id")
     Output
-      <h1>NHP Model Results</h1>
+      <h1>OpenPlan Hospital Demand Model: Outputs</h1>
       <div class="row">
         <div class="col-sm-6">
           <div class="col-sm-12">
@@ -11,11 +11,12 @@
               <div class="card-header">
                 <h3 class="card-title">About</h3>
               </div>
-              <div class="card-body"><p>Welcome to this NHP online tool.</p>
-      <p>This tool is designed to help facilitate a demand and capacity modelling process to support the development of robust, local NHP proposals.</p>
-      <p>The New Hospital Programme requires estimates of future activity levels to inform the design of a new hospital.
+              <div class="card-body"><p>Welcome to the OpenPlan hospital demand model outputs app.</p>
+      <p>This tool is designed to help facilitate a demand modelling process, primarily to support the development of robust, local proposals for the New Hospital Programme (NHP).</p>
+      <p>The NHP requires estimates of future activity levels to inform the design of a new hospital.
       This tool is designed to help determine how hospital activity might change in the years to come (relative to a baseline year) and to provide a high-level view of the physical capacity required to meet that demand.</p>
-      <p>For more information or help, please visit the <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/">model information site</a> or contact the <a href="mailto:mlcsu.nhpanalytics@nhs.net">MLCSU NHP Analytics mailbox</a>.</p>
+      <p>This app allows results from modelled scenarios to be viewed and downloaded.</p>
+      <p>For more information or help, please visit <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information/">the OpenPlan hospital demand model documentation</a>, or contact the <a href="mailto:mlcsu.nhpanalytics@nhs.net">MLCSU NHP Analytics mailbox</a>.</p>
       </div>
             </div>
             <script type="application/json">{"title":"About","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
@@ -25,9 +26,12 @@
               <div class="card-header">
                 <h3 class="card-title">App notes</h3>
               </div>
-              <div class="card-body"><p>Select from the ‘Results’ section in the navbar (left) to view outputs from the selected model run.</p>
-      <p>Use the multi-choice ‘Site selection’ box in the navbar to filter results by sites.</p>
-      <p>From the ‘Information’ section you can download the results data and reports containing the parameters and outputs (by sites, if selected) for this model run.</p>
+              <div class="card-body"><p>From the sidebar you can:</p>
+      <ul>
+      <li>view outputs from the selected model run in the ‘Results’ section</li>
+      <li>filter results across the app with the multi-choice ‘Site Selection’ box (type a name to search)</li>
+      <li>download results data and input parameters from the ‘Information’ section</li>
+      </ul>
       </div>
             </div>
             <script type="application/json">{"title":"App notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>

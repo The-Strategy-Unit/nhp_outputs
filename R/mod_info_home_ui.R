@@ -6,7 +6,7 @@
 mod_info_home_ui <- function(id) {
   ns <- shiny::NS(id)
   shiny::tagList(
-    shiny::h1("NHP Model Results"),
+    shiny::h1("OpenPlan Hospital Demand Model: Outputs"),
     shiny::fluidRow(
       bs4Dash::column(
         width = 6,

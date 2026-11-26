@@ -13,11 +13,11 @@ mod_info_params_ui <- function(id) {
       collapsible = FALSE,
       width = 12,
       htmltools::p(
-        "This page contains a reminder of the parameter values you provided to the model inputs app.",
-        "Further information about the model and these outputs can be found on the",
+        "Expand sections to see the parameter values you provided for this scenario.",
+        "Further information about the model and these outputs can be found in",
         htmltools::a(
           href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information",
-          "model project information site."
+          "the OpenPlan hospital demand model documentation."
         ),
         "You can download a file of this information in the 'Downloads' tab."
       )

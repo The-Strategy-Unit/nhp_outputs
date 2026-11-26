@@ -26,7 +26,7 @@ mod_info_downloads_ui <- function(id) {
           "See details of the content on",
           htmltools::a(
             href = "https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/results.html",
-            "the project information site."
+            "the OpenPlan hospital demand model documentation."
           )
         ),
         shinyjs::disabled(

@@ -26,3 +26,4 @@ $run_dev.*
 ^[\.]?air\.toml$
 ^.*[.]code-workspace$
 ^\.git-blame-ignore-revs$
+^\.Renviron\.example$

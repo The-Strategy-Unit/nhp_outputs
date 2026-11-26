@@ -11,9 +11,9 @@
           </div>
           <div class="card-body">
             <p>
-              This page contains a reminder of the parameter values you provided to the model inputs app.
-              Further information about the model and these outputs can be found on the
-              <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site.</a>
+              Expand sections to see the parameter values you provided for this scenario.
+              Further information about the model and these outputs can be found in
+              <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">the OpenPlan hospital demand model documentation.</a>
               You can download a file of this information in the 'Downloads' tab.
             </p>
           </div>

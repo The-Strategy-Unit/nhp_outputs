@@ -1,5 +1,5 @@
 ---
-title: "NHP Outputs Report (Extract B)"
+title: "OpenPlan Hospital Demand Model: Outputs Report (Extract B)"
 output:
   html_document:
     toc: true
@@ -65,7 +65,7 @@ problem.
 
 [suds_email]: mailto:mlcsu.su.datascience@nhs.net
 
-See [the project information site][proj_info] for an overview of the model and
+See [the OpenPlan hospital demand model documentation][proj_info] for an overview of the model and
 its methodology.
 
 [proj_info]: https://connect.strategyunitwm.nhs.uk/nhp/project_information
@@ -91,7 +91,7 @@ results <- params$r$results
 ## Summary
 
 Bed-availability data is not available at site level.
-See [the model project information site][proj_gloss] for definitions of terms.
+See [the OpenPlan hospital demand model documentation][proj_gloss] for definitions of terms.
 
 [proj_gloss]: https://connect.strategyunitwm.nhs.uk/nhp/project_information/user_guide/glossary.html
 
@@ -144,7 +144,7 @@ results |>
 The results should be regarded as rough, high-level estimates of the number of
 rows added/removed due to each parameter.
 The plots here show results for all points of delivery combined.
-See [the model project information site][proj_gloss] for definitions of terms.
+See [the OpenPlan hospital demand model documentation][proj_gloss] for definitions of terms.
 
 ```{r}
 #| label: pp-impact-of-changes-setup
@@ -348,7 +348,7 @@ results |>
 
 ## Activity in detail
 
-See [the model project information site][proj_gloss] for definitions of terms.
+See [the OpenPlan hospital demand model documentation][proj_gloss] for definitions of terms.
 
 ```{r}
 #| label: pp-activity-in-detail-setup
@@ -461,7 +461,7 @@ detailed_activity_data |>
 
 ## Activity summary
 
-See [the model project information site][proj_gloss] for definitions of terms.
+See [the OpenPlan hospital demand model documentation][proj_gloss] for definitions of terms.
 
 ```{r}
 #| label: dop-activity-summary
@@ -481,7 +481,7 @@ distribution_summary_data |>
 
 ## Activity distribution
 
-See [the model project information site][proj_gloss] for definitions of terms.
+See [the OpenPlan hospital demand model documentation][proj_gloss] for definitions of terms.
 
 In 'beeswarm' plots (showing model-run distributions), the red vertical dashed
 line is the principal value and the grey vertical continuous line is the
