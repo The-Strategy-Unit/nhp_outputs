@@ -1,10 +1,6 @@
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# NHP Outputs
+# OpenPlan Hospital Demand Model: Outputs App
 
 <!-- badges: start -->
-
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -13,75 +9,78 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 
 ## About
 
-An app to explore the results of scenarios run through the New Hospital
-Programme (NHP) demand model. Provides interactive charts and tables, as
-well as downloads.
+An app to explore the results of scenarios run through the OpenPlan hospital demand model.
+Provides interactive charts and tables, as well as downloads.
 
-The app is [deployed to Posit
-Connect](https://connect.strategyunitwm.nhs.uk/nhp/outputs/). You must
-have an account and sufficient permissions to view it.
+The app is [deployed to Posit Connect](https://connect.strategyunitwm.nhs.uk/nhp/outputs/).
+You must have a Posit Connect account and sufficient permissions to view it.
 
-You can find more information on [the NHP model project information
-site](https://connect.strategyunitwm.nhs.uk/nhp/project_information/),
-including [a
-diagram](https://connect.strategyunitwm.nhs.uk/nhp/project_information/project_plan_and_summary/components-overview.html)
-of how the components of the modelling process fit together.
+You can find more information in the [OpenPlan hospital demand model documentation](https://connect.strategyunitwm.nhs.uk/nhp_project_information/).
+This includes [a diagram](https://connect.strategyunitwm.nhs.uk/nhp/project_information/project_plan_and_summary/components-overview.html) of how the components of the modelling process fit together.
 
-Packages used in the app are listed in `DESCRIPTION`, and can be
-installed with `devtools::install_deps(dependencies = TRUE)`.
 
 ## For developers
 
-The app is built and maintained by members of the Strategy Unit’s Data
-Science team.
+The app is built and maintained by members of the Strategy Unit's Data Science team.
+This section provides detail about development of the app.
 
 ### Structure
 
-The app is built primarily with [Shiny](https://shiny.posit.co/) and
-[the {golem} package](https://thinkr-open.github.io/golem/). Server and
-UI modules can be found in `R/`. Configuration files, report templates
-and supporting data and text are in `inst/`.
+The app is built primarily with [Shiny](https://shiny.posit.co/) and [the {golem} package](https://thinkr-open.github.io/golem/).
+Server and UI modules can be found in `R/`.
+Configuration files, report templates and supporting data and text are in `inst/`.
+
+Note that users of the app will land first on the results selection app, which is a separate Shiny app sourced from the results_selection_app branch of this repo.
+Once they've chosen a scenario, they are routed to a deployed version of the main outputs app.
+The version of the outputs app will match the model version used when running the selected scenario.
+
+### Prerequisites
+
+Add an `.Renviron` file to the project root that contains the required environment variables.
+Required keys are shown in the provided `.Renviron.example` file and values can be obtained from a member of the Data Science team.
+
+Packages used in the app are listed in the `DESCRIPTION` file and should be installed with `devtools::install_deps()`.
+
+The outputs app is on the `main` branch, but the selection app (where users choose a scenario) is in the `results_selection_app` branch.
+Use Git's `worktree` function to add that branch to its own folder in your development branch.
+From the command line:
+
+```
+git fetch origin results_selection_app
+git worktree add results_selection_app
+```
+
+The worktree folder name must remain as 'result_selection_app' so that it can be sourced correctly when launching the app.
+
+If you need to remove the selection-app folder at any point, you can do that on the command line with:
+
+```
+git worktree remove results_selection_app
+```
 
 ### Run locally
 
-Add an `.Renviron` file to the project root that contains the required
-environment variables. You can get these from a member of the Data
-Science team.
+To run the app from Positron or VS Code, run `source("dev/watch.R")`.
 
-The outputs app is on the `main` branch, but the selection app (where
-users choose a scenario) is in the `results_selection_app` branch. Use
-Git’s `worktree` function to add that branch to its own folder in your
-development branch:
+To run the app from RStudio, start up the selection app by opening the `dev/watch.R` script, go to the 'Background Jobs' tab of the console pane and click the 'Start Background Job' button.
+Hit 'Start' in the 'Run Script as Background Job' dialog box.
+When ready, the app will tell you to visit `http://127.0.0.1:9080/` in your browser.
 
-    git fetch origin results_selection_app
-    git worktree add results_selection_app results_selection_app
-
-To run the app from RStudio, start up the selection app by opening the
-`dev/watch.R` script, go to the ‘Background Jobs’ tab of the console
-pane and click the ‘Start Background Job’ button. Hit ‘Start’ in the
-‘Run Script as Background Job’ dialog box. When ready, the app will tell
-you to visit `http://127.0.0.1:9080/` in your browser. Note that your
-selections in the app remain local to you.
-
-If you need to remove the selection-app folder at any point, you can do
-that with:
-
-    git worktree remove results_selection_app 
+You'll be taken to the main app on load, but it will error because you must provide a scenario to load into the app.
+To do this, append `/?[scheme code]/[scenario GUID]` to the URL.
+You can get this information from the Azure Table Storage (ATS) table that the Data Science team uses as a model-run lookup, for example.
 
 ### Data collection
 
-The app displays scenario-specific results to users. The user creates
-scenarios in the app generated by the [the nhp_inputs
-repo](https://github.com/The-Strategy-Unit/nhp_inputs), the inputs are
-then processed by the model found in [the nhp_model
-repo](https://github.com/The-Strategy-Unit/nhp_data) and the subsequent
-results files are stored in Azure storage and read into the outputs app.
+The app displays scenario-specific results to users.
+The user creates scenarios in the app generated by the [the nhp_inputs repo](https://github.com/The-Strategy-Unit/nhp_inputs), the inputs are then processed by the model found in [the nhp_model repo](https://github.com/The-Strategy-Unit/nhp_data) and the subsequent results files are stored in Azure storage and read into the outputs app.
 
 ### Deployment
 
-Deployment is controlled by GitHub Actions, where:
+Deployment is controlled by the `.github/workflows/connect-publish-*.yaml` GitHub Actions.
+These are automatically fired with:
 
-- pushes to the `main` branch redeploy the app to /nhp/dev/outputs/ for
-  purposes of quality assurance
-- tagged releases trigger a new deployment to /nhp/vX-Y/outputs/, where
-  ‘vX-Y’ is the current version (note the hyphen)
+- pushes to the `main` branch, which redeploy the app to /nhp/dev/outputs/ for purposes of quality assurance
+- a tagged release, which triggers a new deployment to /nhp/vX-Y/outputs/, where 'vX-Y' (note the hyphen) is the current version of the OpenPlan hospital demand model
+
+Manual deployment is also possible from the `connect-publish-manual.yaml` workflow.
