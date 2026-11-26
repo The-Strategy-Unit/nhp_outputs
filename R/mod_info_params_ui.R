@@ -26,7 +26,7 @@ mod_info_params_ui <- function(id) {
       title = "Demographic factors",
       collapsed = TRUE,
       width = 12,
-      shiny::htmlOutput(ns("params_demographic_factors"))
+      shiny::htmlOutput(ns("params_demographic_adjustment"))
     ),
     bs4Dash::box(
       title = "Baseline adjustment",

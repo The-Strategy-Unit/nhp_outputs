@@ -9,7 +9,7 @@ mod_info_params_server <- function(id, selected_data) {
 
     # params
 
-    output$params_demographic_factors <- gt::render_gt({
+    output$params_demographic_adjustment <- gt::render_gt({
       info_params_table_demographic_adjustment(params_data())
     })
 
