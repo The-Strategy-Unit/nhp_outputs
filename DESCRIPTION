@@ -1,5 +1,5 @@
 Package: outputs
-Title: NHP Model Outputs
+Title: OpenPlan Hospital Demand Model Outputs App
 Version: 6.1.0
 Authors@R: c(
     person("Tom", "Jemmett", , "thomas.jemmett@nhs.net", role = c("cre", "aut")),
@@ -9,7 +9,8 @@ Authors@R: c(
     person("Gabriel", "Hobro", role = "ctb"),
     person("Fran", "Barton", role = "ctb")
   )
-Description: A shiny app for showing outputs of the NHP model.
+Description: A Shiny app to show and download results from scenarios run
+    through the OpenPlan hospital demand model.
 License: MIT + file LICENSE
 URL: https://github.com/The-Strategy-Unit/nhp_outputs
 BugReports: https://github.com/The-Strategy-Unit/nhp_outputs/issues
@@ -61,7 +62,7 @@ Suggests:
 Remotes:
     github::the-strategy-unit/azkit,
     reskit=github::The-Strategy-Unit/nhp_reskit@v1.2.0
+Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
-Config/roxygen2/version: 8.1.1
