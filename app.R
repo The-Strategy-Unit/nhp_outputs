@@ -174,7 +174,7 @@ server <- function(input, output, session) {
           lubridate::with_tz() |>
           format("%d/%m/%Y %H:%M:%S"),
         create_datetime_label = glue::glue(
-          "{.data[['create_datetime_dt']]} ({.data[['app_version']]})",
+          "{.data[['create_datetime_dt']]} ({.data[['app_version']]})"
         )
       ) |>
       dplyr::select(create_datetime_label, create_datetime) |>
