@@ -5,7 +5,7 @@
 #' @noRd
 app_ui <- function(request) {
   header <- bs4Dash::dashboardHeader(
-    title = "NHP Model Results",
+    title = "OpenPlan: Outputs",
     shiny::actionButton(
       inputId = "feedback",
       label = "Give feedback",
@@ -150,7 +150,7 @@ golem_add_external_resources <- function() {
     golem::favicon(),
     golem::bundle_resources(
       path = app_sys("app/www"),
-      app_title = "NHP: Outputs"
+      app_title = "OpenPlan Hospital Demand Model Outputs"
     )
   )
 }
