@@ -23,7 +23,7 @@
             </ul>
           </nav>
           <aside id="sidebarId" data-fixed="true" data-minified="TRUE" data-collapsed="FALSE" data-disable="FALSE" class="main-sidebar sidebar-light-primary elevation-4">
-            <div class="brand-link">NHP Model Results</div>
+            <div class="brand-link">OpenPlan: Outputs</div>
             <div class="sidebar" id="sidebarItemExpanded">
               <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column sidebar-menu nav-child-indent" data-widget="treeview" role="menu" data-accordion="true">
@@ -128,7 +128,7 @@
                       </div>
                       <div class="card-body"><p>Bed days are defined as the difference in days between discharge and admission, plus one day.
       One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.
-      See the <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a> for definitions of terms.</p>
+      See <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">the OpenPlan hospital demand model documentation</a> for definitions of terms.</p>
       </div>
                     </div>
                     <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>

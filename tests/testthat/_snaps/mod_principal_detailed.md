@@ -11,7 +11,7 @@
           </div>
           <div class="card-body"><p>Bed days are defined as the difference in days between discharge and admission, plus one day.
       One bed day is added to account for zero length of stay spells/partial days at the beginning and end of a spell.
-      See the <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">model project information site</a> for definitions of terms.</p>
+      See <a href="https://connect.strategyunitwm.nhs.uk/nhp/project_information">the OpenPlan hospital demand model documentation</a> for definitions of terms.</p>
       </div>
         </div>
         <script type="application/json">{"title":"Notes","solidHeader":true,"width":12,"collapsible":false,"closable":false,"maximizable":false,"gradient":false}</script>
