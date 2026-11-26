@@ -80,7 +80,7 @@ filter_result_sets <- function(result_sets, ds, sc, cd) {
 }
 
 ui_body <- bs4Dash::bs4DashBody(
-  shiny::h1("NHP Model Results"),
+  shiny::h1("OpenPlan Hospital Demand Model: Outputs Selection"),
   bs4Dash::box(
     title = "Make selections",
     collapsible = FALSE,
@@ -239,7 +239,7 @@ server <- function(input, output, session) {
 shiny::shinyApp(
   shiny::tagList(
     shiny::tags$head(
-      shiny::tags$title("NHP: Outputs Selection")
+      shiny::tags$title("OpenPlan Hospital Demand Model: Outputs Selection")
     ),
     ui
   ),

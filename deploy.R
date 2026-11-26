@@ -27,7 +27,7 @@ deploy <- function(server, app_id) {
     server = server,
     appFiles = files,
     appName = "nhp-outputs_selection",
-    appTitle = "NHP: Outputs Selection",
+    appTitle = "OpenPlan Hospital Demand Model: Outputs Selection",
     envVars = c(
       "R_CONFIG_ACTIVE"
     )
