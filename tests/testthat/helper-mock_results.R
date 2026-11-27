@@ -42,10 +42,10 @@ mock_results <- function(sites = c("AAA01", "AAA02"), n_runs = 3) {
       add_value() |>
       tidy_cols("pod", "sitetret", "tretspef", "measure")
 
-    sex_tretspef_grouped <- base |>
-      add_dim(sex = 1:2, tretspef_grouped = c("100", "110")) |>
+    sex_tretspef <- base |>
+      add_dim(sex = 1:2, tretspef = c("100", "110")) |>
       add_value() |>
-      tidy_cols("pod", "sitetret", "sex", "tretspef_grouped", "measure")
+      tidy_cols("pod", "sitetret", "sex", "tretspef", "measure")
 
     tretspef_los_group <- base |>
       dplyr::filter(
@@ -93,7 +93,7 @@ mock_results <- function(sites = c("AAA01", "AAA02"), n_runs = 3) {
   results <- list(
     default = default,
     `sex+age_group` = sex_age_group,
-    `sex+tretspef_grouped` = sex_tretspef_grouped,
+    `sex+tretspef` = sex_tretspef,
     step_counts = step_counts,
     tretspef = tretspef,
     `tretspef+los_group` = tretspef_los_group

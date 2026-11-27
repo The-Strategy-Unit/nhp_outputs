@@ -21,7 +21,7 @@ mod_principal_detailed_server <- function(id, selected_data, selected_site) {
 
       an <- c(
         "Age Group" = "age_group",
-        "Treatment Specialty" = "tretspef_grouped"
+        "Treatment Specialty" = "tretspef"
       )
 
       agg_choices <- an[an %in% a]
