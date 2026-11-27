@@ -154,12 +154,12 @@ test_that("report downloads work when results are missing aae", {
   )
 
   with_downloads_server(r_no_aae, {
-    path <- output$download_report_parameters_html
-    expect_gt(file.size(path), 0)
-    expect_identical(html_chunk_errors(path), character())
+    params_path <- output$download_report_parameters_html
+    expect_gt(file.size(params_path), 0)
+    expect_identical(html_chunk_errors(params_path), character())
 
-    path <- output$download_report_outputs_html
-    expect_gt(file.size(path), 0)
-    expect_identical(html_chunk_errors(path), character())
+    outputs_path <- output$download_report_outputs_html
+    expect_gt(file.size(outputs_path), 0)
+    expect_identical(html_chunk_errors(outputs_path), character())
   })
 })
